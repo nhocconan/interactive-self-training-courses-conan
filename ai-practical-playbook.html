@@ -61,7 +61,77 @@ tailwind.config = {
   .lesson { scroll-margin-top: 80px; }
   /* Prompt card */
   .prompt-card { position:relative; }
-  .prompt-card pre { white-space:pre-wrap; word-break:break-word; }
+  .prompt-card pre {
+    white-space: pre-wrap;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+    line-height: 1.6;
+    max-width: 100%;
+  }
+  /* Lesson navigation footer */
+  .lesson-nav {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 0.75rem;
+    margin: 1.5rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid #E5EBF4;
+  }
+  @media (min-width: 1024px) {
+    .lesson-nav { margin: 2rem 2.5rem 2.5rem; }
+  }
+  @media (min-width: 768px) {
+    .lesson-nav { grid-template-columns: 1fr auto 1fr; align-items: stretch; }
+  }
+  .lesson-nav .nav-prev, .lesson-nav .nav-next {
+    background: #F5F8FF;
+    border: 1px solid #C8D4E8;
+    border-radius: 12px;
+    padding: 14px 18px;
+    text-decoration: none;
+    color: #0B1329;
+    transition: all 200ms;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    min-height: 64px;
+  }
+  .lesson-nav .nav-prev:hover, .lesson-nav .nav-next:hover {
+    border-color: #2F7CFF;
+    background: white;
+    box-shadow: 0 4px 12px rgba(47,124,255,0.12);
+    transform: translateY(-1px);
+  }
+  .lesson-nav .nav-prev { text-align: left; }
+  .lesson-nav .nav-next { text-align: right; }
+  .lesson-nav .nav-label { font-size: 10px; letter-spacing: 0.18em; text-transform: uppercase; color: #2F7CFF; font-family: 'IBM Plex Mono', monospace; }
+  .lesson-nav .nav-title { font-weight: 600; font-size: 14px; margin-top: 4px; color: #0B1329; line-height: 1.3; }
+  .lesson-nav .nav-empty { background: transparent; border: 1px dashed #D8DEE9; color: #94A3B8; cursor: default; }
+  .lesson-nav .nav-empty:hover { transform: none; box-shadow: none; border-color: #D8DEE9; background: transparent; }
+  .lesson-nav .nav-empty .nav-label, .lesson-nav .nav-empty .nav-title { color: #94A3B8; }
+  .lesson-nav .nav-complete {
+    background: #0B1329;
+    color: white;
+    border: 1px solid #0B1329;
+    border-radius: 12px;
+    padding: 14px 22px;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 200ms;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    min-height: 64px;
+    white-space: nowrap;
+  }
+  .lesson-nav .nav-complete:hover { background: #2F7CFF; border-color: #2F7CFF; transform: translateY(-1px); }
+  .lesson-nav .nav-complete.done { background: linear-gradient(135deg, #25D0FF 0%, #2F7CFF 100%); color: white; border-color: #25D0FF; }
+  .lesson-nav .nav-complete.done:hover { transform: translateY(-1px); }
   .copy-btn {
     transition: all 150ms cubic-bezier(0.22,1,0.36,1);
   }
@@ -158,8 +228,7 @@ tailwind.config = {
       <span class="grad-text">cho mọi người</span>
     </h1>
     <p class="mt-6 text-lg lg:text-xl text-gray2-200 max-w-3xl">
-      Khóa interactive nội bộ chuyển ngữ &amp; mở rộng từ "AI Prompting for Everyone" của <span class="text-white font-semibold">Andrew Ng</span> (DeepLearning.AI),
-      được customize cho nhân viên Demo Group — cả tech và non-tech.
+      Course interactive nội bộ <span class="text-white font-semibold">chia sẻ cách dùng AI hiệu quả</span> trong công việc hàng ngày tại Demo Group — cập nhật theo các model và tool mới nhất trên thị trường tính đến tháng 05/2026.
     </p>
     <div class="h-1.5 w-40 grad-bar mt-8"></div>
 
@@ -170,7 +239,7 @@ tailwind.config = {
       </div>
       <div class="bg-navy-400/30 backdrop-blur rounded-xl p-4 border border-navy-400/50">
         <div class="mono text-3xl font-bold text-cyan2">24</div>
-        <div class="text-xs uppercase tracking-wider text-gray2-200 mt-1">Bài học</div>
+        <div class="text-xs uppercase tracking-wider text-gray2-200 mt-1">Chủ đề</div>
       </div>
       <div class="bg-navy-400/30 backdrop-blur rounded-xl p-4 border border-navy-400/50">
         <div class="mono text-3xl font-bold text-cyan2">40+</div>
@@ -184,7 +253,7 @@ tailwind.config = {
 
     <div class="mt-10 flex flex-wrap gap-3">
       <a href="#m1-l1" class="inline-flex items-center gap-2 bg-brand-400 hover:bg-brand-500 text-white font-semibold px-6 py-3 rounded-lg transition">
-        Bắt đầu học
+        Bắt đầu khám phá
         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
       </a>
       <button onclick="resetProgress()" class="inline-flex items-center gap-2 bg-navy-400/40 hover:bg-navy-400/60 text-white font-semibold px-6 py-3 rounded-lg transition border border-navy-400/60">
@@ -197,22 +266,23 @@ tailwind.config = {
 <!-- ============== INTRO ============== -->
 <section class="bg-mist py-16">
   <div class="max-w-5xl mx-auto px-6 lg:px-12">
-    <p class="mono text-xs tracking-[0.25em] uppercase text-brand-400">Giới thiệu khoá học</p>
-    <h2 class="mt-3 text-3xl lg:text-4xl font-extrabold text-navy-500">Tại sao team mình cần khoá này?</h2>
+    <p class="mono text-xs tracking-[0.25em] uppercase text-brand-400">Giới thiệu</p>
+    <h2 class="mt-3 text-3xl lg:text-4xl font-extrabold text-navy-500">Vì sao mình làm course này</h2>
     <div class="grid lg:grid-cols-2 gap-8 mt-8">
       <div class="space-y-4 text-gray2-700 text-[15px] leading-relaxed">
-        <p>Năm 2022 khi ChatGPT mới ra mắt, cách prompt rất khác bây giờ. Model giờ <strong>biết suy luận, có web search, có deep research, có agentic capabilities</strong>. Người biết tận dụng AI tốt đang làm được nhiều hơn gấp 3–5 lần người không biết.</p>
-        <p>Với Demo Group — nơi data và insight là sản phẩm cốt lõi — việc <strong>cả công ty</strong>, từ BD, Account, Research, Marketing, HR cho tới Tech, đều biết dùng AI hiệu quả là <em>lợi thế cạnh tranh trực tiếp</em>.</p>
-        <p>Course này không dạy "thần chú prompt" mà dạy cách <strong>hiểu AI hoạt động ra sao</strong> để khai thác đúng. Theo nguyên tắc của Andrew Ng: <em>understanding leads to mastery</em>.</p>
+        <p>Cuối 2025 đến giữa 2026, thị trường AI thay đổi gần như theo tuần. <strong>OpenAI release GPT-5.5</strong> (4/2026), <strong>Anthropic ship Claude Opus 4.7 và Mythos Preview</strong>, <strong>Google chuẩn bị Gemini 3.2</strong>, <strong>GPT Image 2 vượt Nano Banana Pro</strong> trên Image Arena, video gen như <strong>Seedance 2.0, Sora 2, Veo 3.1</strong> đã production-ready. Cách prompt 6 tháng trước giờ đã lạc hậu.</p>
+        <p>Với Demo Group — nơi data và insight là sản phẩm cốt lõi — việc <strong>cả team</strong>, từ BD, Account, Research, Marketing, HR cho tới Tech, cùng nắm được những thay đổi này là <em>lợi thế cạnh tranh trực tiếp</em>.</p>
+        <p>Đây không phải bộ "thần chú prompt". Đây là phần <strong>chia sẻ cách AI hoạt động</strong> và cách khai thác nó — để mỗi người tự build được workflow phù hợp với công việc của mình. Tài liệu sẽ được cập nhật khi có model/tool mới đáng chú ý.</p>
       </div>
       <div class="bg-white rounded-2xl p-6 border-l-4 border-brand-400 shadow-sm">
-        <div class="mono text-[10px] tracking-[0.2em] uppercase text-brand-400">Sau khi học xong</div>
-        <h3 class="font-bold text-xl text-navy-500 mt-1">Bạn sẽ làm được</h3>
+        <div class="mono text-[10px] tracking-[0.2em] uppercase text-brand-400">Sau khi đi hết course</div>
+        <h3 class="font-bold text-xl text-navy-500 mt-1">Bạn sẽ tự tin</h3>
         <ul class="mt-4 space-y-3 text-[14px] text-gray2-700">
           <li class="flex gap-3"><span class="text-brand-400 font-bold mt-0.5">→</span> Phân biệt khi nào dùng pretrained knowledge, khi nào web search, khi nào deep research.</li>
-          <li class="flex gap-3"><span class="text-brand-400 font-bold mt-0.5">→</span> Dùng AI làm thought partner: brainstorm, phản biện, viết, không "AI slop".</li>
-          <li class="flex gap-3"><span class="text-brand-400 font-bold mt-0.5">→</span> Làm việc với image, audio, doc, video qua AI.</li>
-          <li class="flex gap-3"><span class="text-brand-400 font-bold mt-0.5">→</span> Build mini app, dashboard, automation không cần code.</li>
+          <li class="flex gap-3"><span class="text-brand-400 font-bold mt-0.5">→</span> Chọn đúng model cho đúng task: GPT-5.5, Claude Opus 4.7, Gemini 3.x — không "one size fits all".</li>
+          <li class="flex gap-3"><span class="text-brand-400 font-bold mt-0.5">→</span> Dùng AI làm thought partner: brainstorm, phản biện, viết — không để rơi vào "AI slop".</li>
+          <li class="flex gap-3"><span class="text-brand-400 font-bold mt-0.5">→</span> Làm việc với image, video, audio, doc — qua các model mới nhất.</li>
+          <li class="flex gap-3"><span class="text-brand-400 font-bold mt-0.5">→</span> Build mini app, dashboard, Agent Skills — automation không cần code nặng.</li>
           <li class="flex gap-3"><span class="text-brand-400 font-bold mt-0.5">→</span> Áp dụng AI vào quy trình thực tế của bộ phận mình tại Demo.</li>
         </ul>
       </div>
@@ -246,13 +316,12 @@ tailwind.config = {
           <div class="mono text-[11px] tracking-[0.2em] uppercase text-cyan2">Bài 1.1 · 9 phút</div>
           <h3 class="text-2xl lg:text-3xl font-bold mt-1">AI Novice vs AI Power User</h3>
         </div>
-        <button class="complete-btn mono text-xs tracking-wider uppercase border border-brand-400 hover:bg-brand-400 text-white px-4 py-2 rounded-lg transition" onclick="markComplete('m1-l1')">Đánh dấu hoàn thành</button>
       </div>
     </header>
 
     <div class="p-6 lg:p-10 space-y-6">
       <p class="text-[15px] leading-relaxed text-gray2-700">
-        Andrew Ng quan sát: hai người cùng dùng ChatGPT/Claude, nhưng kết quả khác nhau gấp <strong>5–10 lần</strong>. Sự khác biệt không nằm ở "biết câu thần chú", mà ở <strong>tư duy tiếp cận</strong>.
+        Một quan sát rất rõ trong các team đang dùng AI: hai người cùng có quyền truy cập ChatGPT/Claude/Gemini, nhưng kết quả khác nhau gấp <strong>5–10 lần</strong>. Sự khác biệt không nằm ở "biết câu thần chú", mà ở <strong>tư duy tiếp cận</strong>.
       </p>
 
       <div class="grid md:grid-cols-2 gap-4">
@@ -363,7 +432,19 @@ tailwind.config = {
         </div>
       </div>
     </div>
-  </article>
+  
+      <div class="lesson-nav not-prose">
+        <div class="nav-prev nav-empty"><span class="nav-label">Start</span><span class="nav-title">Đây là bài đầu tiên</span></div>
+        <button class="nav-complete" data-lesson="m1-l1" onclick="markComplete('m1-l1')">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+          <span class="complete-label">Đánh dấu hoàn thành</span>
+        </button>
+        <a href="#m1-l2" class="nav-next">
+  <span class="nav-label">Module 1 · Bài 1.2 →</span>
+  <span class="nav-title">Pretrained Knowledge</span>
+</a>
+      </div>
+    </article>
 
   <!-- =================== LESSON 1.2 — PRETRAINED KNOWLEDGE =================== -->
   <article class="lesson mt-10 bg-white border border-brand-100 rounded-2xl overflow-hidden" id="m1-l2" data-lesson="m1-l2">
@@ -373,7 +454,6 @@ tailwind.config = {
           <div class="mono text-[11px] tracking-[0.2em] uppercase text-cyan2">Bài 1.2 · 6 phút</div>
           <h3 class="text-2xl lg:text-3xl font-bold mt-1">Pretrained Knowledge — AI biết gì sẵn?</h3>
         </div>
-        <button class="complete-btn mono text-xs tracking-wider uppercase border border-brand-400 hover:bg-brand-400 text-white px-4 py-2 rounded-lg transition" onclick="markComplete('m1-l2')">Đánh dấu hoàn thành</button>
       </div>
     </header>
     <div class="p-6 lg:p-10 space-y-6">
@@ -425,8 +505,7 @@ tailwind.config = {
           <span class="mono text-[10px] tracking-widest uppercase text-brand-400">Prompt mẫu · Kiểm tra hallucination</span>
           <button class="copy-btn mono text-[10px] tracking-widest uppercase border border-brand-400 text-brand-400 px-3 py-1 rounded" onclick="copyPrompt(this)">Copy</button>
         </div>
-        <pre class="mono text-[13px] p-4 text-gray2-700">Câu trả lời trên có dữ liệu cụ thể (số liệu, tên, năm).
-Với mỗi dữ liệu, hãy đánh giá theo thang:
+        <pre class="mono text-[13px] p-4 text-gray2-700">Câu trả lời trên có dữ liệu cụ thể (số liệu, tên, năm). Với mỗi dữ liệu, hãy đánh giá theo thang:
 - HIGH CONFIDENCE: chắc chắn đúng (kiến thức phổ biến)
 - MEDIUM: có thể đúng, nên verify
 - LOW: không chắc, có khả năng đã thay đổi hoặc bịa
@@ -447,7 +526,22 @@ Trả lại bảng markdown 3 cột: Dữ liệu | Confidence | Lý do</pre>
         </div>
       </div>
     </div>
-  </article>
+  
+      <div class="lesson-nav not-prose">
+        <a href="#m1-l1" class="nav-prev">
+  <span class="nav-label">← Module 1 · Bài 1.1</span>
+  <span class="nav-title">AI Novice vs Power User</span>
+</a>
+        <button class="nav-complete" data-lesson="m1-l2" onclick="markComplete('m1-l2')">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+          <span class="complete-label">Đánh dấu hoàn thành</span>
+        </button>
+        <a href="#m1-l3" class="nav-next">
+  <span class="nav-label">Module 1 · Bài 1.3 →</span>
+  <span class="nav-title">Web Search</span>
+</a>
+      </div>
+    </article>
 
   <!-- =================== LESSON 1.3 — WEB SEARCH =================== -->
   <article class="lesson mt-10 bg-white border border-brand-100 rounded-2xl overflow-hidden" id="m1-l3" data-lesson="m1-l3">
@@ -457,7 +551,6 @@ Trả lại bảng markdown 3 cột: Dữ liệu | Confidence | Lý do</pre>
           <div class="mono text-[11px] tracking-[0.2em] uppercase text-cyan2">Bài 1.3 · 5 phút</div>
           <h3 class="text-2xl lg:text-3xl font-bold mt-1">Web Search — Khi nào cần tìm trực tuyến?</h3>
         </div>
-        <button class="complete-btn mono text-xs tracking-wider uppercase border border-brand-400 hover:bg-brand-400 text-white px-4 py-2 rounded-lg transition" onclick="markComplete('m1-l3')">Đánh dấu hoàn thành</button>
       </div>
     </header>
     <div class="p-6 lg:p-10 space-y-6">
@@ -535,7 +628,22 @@ Trả lại bảng markdown 3 cột: Dữ liệu | Confidence | Lý do</pre>
         </div>
       </div>
     </div>
-  </article>
+  
+      <div class="lesson-nav not-prose">
+        <a href="#m1-l2" class="nav-prev">
+  <span class="nav-label">← Module 1 · Bài 1.2</span>
+  <span class="nav-title">Pretrained Knowledge</span>
+</a>
+        <button class="nav-complete" data-lesson="m1-l3" onclick="markComplete('m1-l3')">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+          <span class="complete-label">Đánh dấu hoàn thành</span>
+        </button>
+        <a href="#m1-l4" class="nav-next">
+  <span class="nav-label">Module 1 · Bài 1.4 →</span>
+  <span class="nav-title">Web Search Sources</span>
+</a>
+      </div>
+    </article>
 
   <!-- =================== LESSON 1.4 — WEB SEARCH SOURCES =================== -->
   <article class="lesson mt-10 bg-white border border-brand-100 rounded-2xl overflow-hidden" id="m1-l4" data-lesson="m1-l4">
@@ -545,7 +653,6 @@ Trả lại bảng markdown 3 cột: Dữ liệu | Confidence | Lý do</pre>
           <div class="mono text-[11px] tracking-[0.2em] uppercase text-cyan2">Bài 1.4 · 8 phút</div>
           <h3 class="text-2xl lg:text-3xl font-bold mt-1">Đánh giá nguồn — Source Quality</h3>
         </div>
-        <button class="complete-btn mono text-xs tracking-wider uppercase border border-brand-400 hover:bg-brand-400 text-white px-4 py-2 rounded-lg transition" onclick="markComplete('m1-l4')">Đánh dấu hoàn thành</button>
       </div>
     </header>
     <div class="p-6 lg:p-10 space-y-6">
@@ -620,7 +727,22 @@ Trả lại bảng markdown 3 cột: Dữ liệu | Confidence | Lý do</pre>
         </div>
       </div>
     </div>
-  </article>
+  
+      <div class="lesson-nav not-prose">
+        <a href="#m1-l3" class="nav-prev">
+  <span class="nav-label">← Module 1 · Bài 1.3</span>
+  <span class="nav-title">Web Search</span>
+</a>
+        <button class="nav-complete" data-lesson="m1-l4" onclick="markComplete('m1-l4')">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+          <span class="complete-label">Đánh dấu hoàn thành</span>
+        </button>
+        <a href="#m1-l5" class="nav-next">
+  <span class="nav-label">Module 1 · Bài 1.5 →</span>
+  <span class="nav-title">Deep Research</span>
+</a>
+      </div>
+    </article>
 
   <!-- =================== LESSON 1.5 — DEEP RESEARCH =================== -->
   <article class="lesson mt-10 bg-white border border-brand-100 rounded-2xl overflow-hidden" id="m1-l5" data-lesson="m1-l5">
@@ -630,7 +752,6 @@ Trả lại bảng markdown 3 cột: Dữ liệu | Confidence | Lý do</pre>
           <div class="mono text-[11px] tracking-[0.2em] uppercase text-cyan2">Bài 1.5 · 8 phút</div>
           <h3 class="text-2xl lg:text-3xl font-bold mt-1">Deep Research Mode — Khi cần đào sâu</h3>
         </div>
-        <button class="complete-btn mono text-xs tracking-wider uppercase border border-brand-400 hover:bg-brand-400 text-white px-4 py-2 rounded-lg transition" onclick="markComplete('m1-l5')">Đánh dấu hoàn thành</button>
       </div>
     </header>
     <div class="p-6 lg:p-10 space-y-6">
@@ -673,9 +794,7 @@ Trả lại bảng markdown 3 cột: Dữ liệu | Confidence | Lý do</pre>
           <span class="mono text-[10px] tracking-widest uppercase text-brand-400">Deep Research Prompt · Industry landscape</span>
           <button class="copy-btn mono text-[10px] tracking-widest uppercase border border-brand-400 text-brand-400 px-3 py-1 rounded" onclick="copyPrompt(this)">Copy</button>
         </div>
-        <pre class="mono text-[13px] p-4 text-gray2-700">Mục tiêu: viết landscape report về thị trường [Beauty &amp; Personal Care
-trên TikTok Shop Việt Nam 2025] cho team BD Demo Media pitch client
-Unilever.
+        <pre class="mono text-[13px] p-4 text-gray2-700">Mục tiêu: viết landscape report về thị trường [Beauty &amp; Personal Care trên TikTok Shop Việt Nam 2025] cho team BD Demo Media pitch client Unilever.
 
 Yêu cầu deep research:
 1. Market size 2024 vs 2025, growth rate, projections 2026.
@@ -714,7 +833,22 @@ Deliverable:
         </div>
       </div>
     </div>
-  </article>
+  
+      <div class="lesson-nav not-prose">
+        <a href="#m1-l4" class="nav-prev">
+  <span class="nav-label">← Module 1 · Bài 1.4</span>
+  <span class="nav-title">Web Search Sources</span>
+</a>
+        <button class="nav-complete" data-lesson="m1-l5" onclick="markComplete('m1-l5')">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+          <span class="complete-label">Đánh dấu hoàn thành</span>
+        </button>
+        <a href="#m1-l6" class="nav-next">
+  <span class="nav-label">Module 1 · Bài 1.6 →</span>
+  <span class="nav-title">Model Comparison 2026</span>
+</a>
+      </div>
+    </article>
 
   <!-- =================== LESSON 1.6 — MODEL COMPARISON LAB =================== -->
   <article class="lesson mt-10 bg-white border border-brand-100 rounded-2xl overflow-hidden" id="m1-l6" data-lesson="m1-l6">
@@ -724,70 +858,100 @@ Deliverable:
           <div class="mono text-[11px] tracking-[0.2em] uppercase text-cyan2">Bài 1.6 · Lab · 10 phút</div>
           <h3 class="text-2xl lg:text-3xl font-bold mt-1">So sánh model — Chọn AI cho đúng task</h3>
         </div>
-        <button class="complete-btn mono text-xs tracking-wider uppercase border border-brand-400 hover:bg-brand-400 text-white px-4 py-2 rounded-lg transition" onclick="markComplete('m1-l6')">Đánh dấu hoàn thành</button>
       </div>
     </header>
     <div class="p-6 lg:p-10 space-y-6">
       <p class="text-[15px] leading-relaxed text-gray2-700">
-        Không có "model tốt nhất" — chỉ có "model phù hợp task". Bảng này là khuyến nghị nội bộ Demo (cập nhật 2026, có thể thay đổi).
+        Không có "model tốt nhất" — chỉ có "model phù hợp task". Thị trường AI thay đổi gần như theo tuần (riêng tháng 4–5/2026 đã có loạt release lớn), nên đây là bản map cập nhật <strong>tháng 5/2026</strong>. Mình sẽ refresh khi có model mới đáng chú ý.
       </p>
+
+      <div class="bg-amber-50 border border-amber-200 rounded-xl p-5 text-[13px] text-amber-900">
+        <div class="mono text-[11px] tracking-wider uppercase text-amber-700 mb-2">🚀 Cập nhật T4–5/2026 — những release quan trọng</div>
+        <ul class="space-y-1.5 list-disc list-inside">
+          <li><strong>OpenAI GPT-5.5</strong> (23/4/2026) + <strong>GPT-5.5 Instant</strong> (5/5/2026 — replace 5.3 thành default ChatGPT, giảm hallucination ~52% trên topic high-stake)</li>
+          <li><strong>Anthropic Claude Opus 4.7</strong> — flagship coding/long-context · <strong>Claude Mythos Preview</strong> (7/4/2026, gated, không public)</li>
+          <li><strong>Google Gemini 3.1 Pro</strong> đang là main · <strong>Gemini 3.2 Flash</strong> leaked đầu tháng 5, dự kiến announce tại I/O 19–20/5</li>
+          <li><strong>OpenAI GPT Image 2</strong> (~21/4/2026) — dẫn đầu Image Arena +242 điểm, mạnh về text/typography · <strong>Nano Banana 2/Pro</strong> vẫn đỉnh về photorealism</li>
+          <li><strong>Video gen</strong>: Seedance 2.0, Veo 3.1 (native audio + 4K), Sora 2 (15–25s, physics)</li>
+        </ul>
+      </div>
 
       <div class="overflow-x-auto rounded-xl border border-brand-100">
         <table class="w-full text-[13px]">
           <thead class="bg-navy-500 text-white">
             <tr>
               <th class="text-left p-3 font-semibold">Use case</th>
-              <th class="text-left p-3 font-semibold">Khuyến nghị</th>
+              <th class="text-left p-3 font-semibold">Khuyến nghị (T5/2026)</th>
               <th class="text-left p-3 font-semibold">Vì sao</th>
             </tr>
           </thead>
           <tbody class="bg-white">
             <tr class="border-b border-brand-100">
               <td class="p-3 font-medium">Viết content tiếng Việt tự nhiên</td>
-              <td class="p-3 mono text-brand-400">Claude Opus / Sonnet</td>
-              <td class="p-3 text-gray2-700">Văn phong tiếng Việt mượt nhất, ít "dịch máy"</td>
+              <td class="p-3 mono text-brand-400">Claude Opus 4.7 / Sonnet 4.6</td>
+              <td class="p-3 text-gray2-700">Văn phong tiếng Việt mượt nhất, ít "dịch máy", giữ nuance cảm xúc tốt</td>
             </tr>
             <tr class="border-b border-brand-100 bg-mist/30">
-              <td class="p-3 font-medium">Code, dashboard, app</td>
-              <td class="p-3 mono text-brand-400">Claude Sonnet / Opus</td>
-              <td class="p-3 text-gray2-700">Đặc biệt qua Claude Code agent — strong nhất hiện tại</td>
+              <td class="p-3 font-medium">Agentic coding, build app, multi-step task</td>
+              <td class="p-3 mono text-brand-400">GPT-5.5 / Claude Opus 4.7 (qua Claude Code)</td>
+              <td class="p-3 text-gray2-700">GPT-5.5 hiện top Terminal-Bench (~82.7%); Claude Opus 4.7 mạnh nhất khi cần code chất lượng + reasoning kết hợp</td>
             </tr>
             <tr class="border-b border-brand-100">
-              <td class="p-3 font-medium">Data analysis &amp; reasoning sâu</td>
-              <td class="p-3 mono text-brand-400">GPT-5 thinking / Claude Opus thinking</td>
-              <td class="p-3 text-gray2-700">Cần model "extended thinking" — chậm hơn nhưng đúng hơn</td>
+              <td class="p-3 font-medium">Reasoning sâu, math, science, analysis phức tạp</td>
+              <td class="p-3 mono text-brand-400">GPT-5.5 Pro · Claude Opus 4.7 thinking · Gemini 3.1 Pro</td>
+              <td class="p-3 text-gray2-700">Model "extended thinking" — chậm hơn nhưng đúng hơn rất nhiều</td>
             </tr>
             <tr class="border-b border-brand-100 bg-mist/30">
+              <td class="p-3 font-medium">Daily chat, hỏi đáp nhanh, tóm tắt</td>
+              <td class="p-3 mono text-brand-400">GPT-5.5 Instant (free) · Claude Sonnet 4.6 · Gemini 3.1 Flash</td>
+              <td class="p-3 text-gray2-700">Default ChatGPT đã là 5.5 Instant; nhanh, ít hallucinate hơn 5.3 đáng kể</td>
+            </tr>
+            <tr class="border-b border-brand-100">
               <td class="p-3 font-medium">Search nhanh + tổng hợp tin</td>
-              <td class="p-3 mono text-brand-400">Gemini / ChatGPT Search</td>
-              <td class="p-3 text-gray2-700">Tích hợp Google search tốt, ngắn gọn</td>
-            </tr>
-            <tr class="border-b border-brand-100">
-              <td class="p-3 font-medium">Image generation chất lượng cao</td>
-              <td class="p-3 mono text-brand-400">Gemini Nano Banana / Midjourney</td>
-              <td class="p-3 text-gray2-700">Photorealistic + edit ảnh tốt; Midjourney mạnh aesthetic</td>
+              <td class="p-3 mono text-brand-400">Gemini (Google Search) · ChatGPT Search · Claude Web Search</td>
+              <td class="p-3 text-gray2-700">Gemini ăn được trực tiếp Google index; cả 3 đều mạnh, chọn theo ecosystem</td>
             </tr>
             <tr class="border-b border-brand-100 bg-mist/30">
-              <td class="p-3 font-medium">Audio / video understanding</td>
-              <td class="p-3 mono text-brand-400">Gemini 2.5 Pro / Flash</td>
-              <td class="p-3 text-gray2-700">Hỗ trợ native video, transcript Vietnamese tốt</td>
+              <td class="p-3 font-medium">Deep research — landscape, competitive report</td>
+              <td class="p-3 mono text-brand-400">ChatGPT Deep Research · Claude Research · Gemini Deep Research</td>
+              <td class="p-3 text-gray2-700">Workflow autonomous, đào nhiều nguồn, có citation đầy đủ</td>
             </tr>
-            <tr>
-              <td class="p-3 font-medium">Deep research landscape report</td>
-              <td class="p-3 mono text-brand-400">ChatGPT Deep Research / Claude Research</td>
-              <td class="p-3 text-gray2-700">Workflow autonomous, đào nhiều nguồn, có citation</td>
+            <tr class="border-b border-brand-100">
+              <td class="p-3 font-medium">Image generation — typography, KV có text</td>
+              <td class="p-3 mono text-brand-400">GPT Image 2</td>
+              <td class="p-3 text-gray2-700">Text accuracy ~99% (kể cả tiếng Việt), 50+ script. Dẫn đầu Image Arena tháng 5/2026</td>
+            </tr>
+            <tr class="border-b border-brand-100 bg-mist/30">
+              <td class="p-3 font-medium">Image generation — photorealism, product shot, portrait</td>
+              <td class="p-3 mono text-brand-400">Nano Banana 2 / Pro (Gemini Image)</td>
+              <td class="p-3 text-gray2-700">Skin, light, material chân thật nhất; support 14 reference image; SynthID watermark</td>
+            </tr>
+            <tr class="border-b border-brand-100">
+              <td class="p-3 font-medium">Image — aesthetic, mood, illustration</td>
+              <td class="p-3 mono text-brand-400">Midjourney v7 · Flux 1.5 Pro</td>
+              <td class="p-3 text-gray2-700">Style sense tốt nhất; phù hợp moodboard, key visual concept</td>
+            </tr>
+            <tr class="border-b border-brand-100 bg-mist/30">
+              <td class="p-3 font-medium">Video generation — short clip, social</td>
+              <td class="p-3 mono text-brand-400">Seedance 2.0 · Veo 3.1 · Sora 2</td>
+              <td class="p-3 text-gray2-700">Seedance: speed + character consistency · Veo 3.1: native audio + 4K · Sora 2: physics + 15–25s clip</td>
+            </tr>
+            <tr class="border-b border-brand-100">
+              <td class="p-3 font-medium">Audio / video understanding (transcript + analysis)</td>
+              <td class="p-3 mono text-brand-400">Gemini 3.1 Pro · GPT-5.5</td>
+              <td class="p-3 text-gray2-700">Gemini native multimodal, transcript Vietnamese ổn; GPT-5.5 mạnh khi cần vừa nghe vừa reason</td>
             </tr>
           </tbody>
         </table>
       </div>
 
       <div class="bg-mist border-l-4 border-brand-400 p-5 rounded-r-xl">
-        <div class="mono text-[10px] tracking-widest uppercase text-brand-400">Bài tập · 15 phút</div>
-        <p class="mt-2 font-semibold text-navy-500">Mở 3 model song song (ChatGPT, Claude, Gemini) và chạy cùng 1 prompt:</p>
+        <div class="mono text-[10px] tracking-widest uppercase text-brand-400">Cùng thử · 15 phút</div>
+        <p class="mt-2 font-semibold text-navy-500">Mở 3 model song song (ChatGPT 5.5, Claude Opus 4.7, Gemini 3.1 Pro) và chạy cùng 1 prompt:</p>
         <div class="mt-3 mono text-[12px] bg-white p-3 rounded border border-brand-100 text-gray2-700">
           Brief: viết caption Facebook 100 từ cho campaign launch sản phẩm sữa hạt mới của brand mid-tier Việt Nam, target Mom 28–40 tuổi, tone ấm áp nhưng có chút hài, không sáo rỗng.
         </div>
-        <p class="mt-3 text-[14px] text-gray2-700">So sánh: model nào có giọng tự nhiên nhất? Model nào sáng tạo nhất? Model nào sát brief nhất? Ghi note để chọn cho lần sau.</p>
+        <p class="mt-3 text-[14px] text-gray2-700">So sánh: model nào có giọng tự nhiên nhất? Model nào sáng tạo nhất? Model nào sát brief nhất? Ghi note để chọn cho lần sau — và share lại trên kênh <span class="mono text-brand-400">#ai-academy</span>.</p>
       </div>
 
       <div class="grad-bg text-white rounded-2xl p-6 lg:p-8 relative overflow-hidden">
@@ -797,12 +961,27 @@ Deliverable:
           <p class="mt-2 text-lg lg:text-xl font-semibold leading-snug">
             3 chế độ truy xuất thông tin: <span class="text-cyan2">Pretrained · Web Search · Deep Research</span>.
             Chọn theo độ mới của thông tin + độ sâu cần đào.
-            Mỗi model có thế mạnh — đừng đóng đinh 1 model cho mọi việc.
+            Mỗi model có thế mạnh — đừng đóng đinh 1 model cho mọi việc, đặc biệt khi thị trường đang update từng tuần.
           </p>
         </div>
       </div>
     </div>
-  </article>
+  
+      <div class="lesson-nav not-prose">
+        <a href="#m1-l5" class="nav-prev">
+  <span class="nav-label">← Module 1 · Bài 1.5</span>
+  <span class="nav-title">Deep Research</span>
+</a>
+        <button class="nav-complete" data-lesson="m1-l6" onclick="markComplete('m1-l6')">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+          <span class="complete-label">Đánh dấu hoàn thành</span>
+        </button>
+        <a href="#m2-l1" class="nav-next">
+  <span class="nav-label">Module 2 · Bài 2.1 →</span>
+  <span class="nav-title">Brainstorming với AI</span>
+</a>
+      </div>
+    </article>
 
 </section>
 
@@ -817,7 +996,7 @@ Deliverable:
   <h2 class="text-4xl lg:text-5xl font-extrabold text-navy-500 leading-tight">AI như người đồng hành trí tuệ</h2>
   <p class="mt-4 text-lg text-gray2-500 max-w-3xl">
     AI mạnh nhất khi bạn coi nó như <span class="text-navy-500 font-semibold">đồng đội suy nghĩ cùng</span>, không phải máy in ra câu trả lời.
-    Module này dạy brainstorm, context, reasoning, viết — và cách tránh để AI "nịnh bợ" mình.
+    Module này cùng nhau xem qua: brainstorm, context, reasoning, viết — và cách tránh để AI "nịnh bợ" mình.
   </p>
 
   <!-- =================== LESSON 2.1 — BRAINSTORMING =================== -->
@@ -828,7 +1007,6 @@ Deliverable:
           <div class="mono text-[11px] tracking-[0.2em] uppercase text-cyan2">Bài 2.1 · 9 phút</div>
           <h3 class="text-2xl lg:text-3xl font-bold mt-1">Brainstorming — Mở rộng ý tưởng cùng AI</h3>
         </div>
-        <button class="complete-btn mono text-xs tracking-wider uppercase border border-brand-400 hover:bg-brand-400 text-white px-4 py-2 rounded-lg transition" onclick="markComplete('m2-l1')">Đánh dấu hoàn thành</button>
       </div>
     </header>
     <div class="p-6 lg:p-10 space-y-6">
@@ -859,8 +1037,7 @@ Deliverable:
           <span class="mono text-[10px] tracking-widest uppercase text-brand-400">Prompt mẫu · Campaign brainstorm cho Marketing</span>
           <button class="copy-btn mono text-[10px] tracking-widest uppercase border border-brand-400 text-brand-400 px-3 py-1 rounded" onclick="copyPrompt(this)">Copy</button>
         </div>
-        <pre class="mono text-[13px] p-4 text-gray2-700">Tôi cần brainstorm content angle cho chiến dịch Tết 2026 của brand
-[X — nước giải khát có gas, giá tầm trung, target Gen Z].
+        <pre class="mono text-[13px] p-4 text-gray2-700">Tôi cần brainstorm content angle cho chiến dịch Tết 2026 của brand [X — nước giải khát có gas, giá tầm trung, target Gen Z].
 
 Vòng 1: cho tôi 25 content angle. Tiêu chí đa dạng:
 - 5 angle về cảm xúc (hoài niệm, kết nối, etc.)
@@ -917,7 +1094,22 @@ Format: số thứ tự + 1 câu tagline + 1 câu mô tả execution.</pre>
         </div>
       </div>
     </div>
-  </article>
+  
+      <div class="lesson-nav not-prose">
+        <a href="#m1-l6" class="nav-prev">
+  <span class="nav-label">← Module 1 · Bài 1.6</span>
+  <span class="nav-title">Model Comparison 2026</span>
+</a>
+        <button class="nav-complete" data-lesson="m2-l1" onclick="markComplete('m2-l1')">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+          <span class="complete-label">Đánh dấu hoàn thành</span>
+        </button>
+        <a href="#m2-l2" class="nav-next">
+  <span class="nav-label">Module 2 · Bài 2.2 →</span>
+  <span class="nav-title">Context — C.R.A.F.T</span>
+</a>
+      </div>
+    </article>
 
   <!-- =================== LESSON 2.2 — CONTEXT =================== -->
   <article class="lesson mt-10 bg-white border border-brand-100 rounded-2xl overflow-hidden" id="m2-l2" data-lesson="m2-l2">
@@ -927,7 +1119,6 @@ Format: số thứ tự + 1 câu tagline + 1 câu mô tả execution.</pre>
           <div class="mono text-[11px] tracking-[0.2em] uppercase text-cyan2">Bài 2.2 · 6 phút</div>
           <h3 class="text-2xl lg:text-3xl font-bold mt-1">Context — Vũ khí số 1 của Power User</h3>
         </div>
-        <button class="complete-btn mono text-xs tracking-wider uppercase border border-brand-400 hover:bg-brand-400 text-white px-4 py-2 rounded-lg transition" onclick="markComplete('m2-l2')">Đánh dấu hoàn thành</button>
       </div>
     </header>
     <div class="p-6 lg:p-10 space-y-6">
@@ -999,7 +1190,22 @@ Hãy giữ context này cho mọi câu trả lời tiếp theo.</pre>
         </div>
       </div>
     </div>
-  </article>
+  
+      <div class="lesson-nav not-prose">
+        <a href="#m2-l1" class="nav-prev">
+  <span class="nav-label">← Module 2 · Bài 2.1</span>
+  <span class="nav-title">Brainstorming với AI</span>
+</a>
+        <button class="nav-complete" data-lesson="m2-l2" onclick="markComplete('m2-l2')">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+          <span class="complete-label">Đánh dấu hoàn thành</span>
+        </button>
+        <a href="#m2-l3" class="nav-next">
+  <span class="nav-label">Module 2 · Bài 2.3 →</span>
+  <span class="nav-title">Desktop Apps & MCP</span>
+</a>
+      </div>
+    </article>
 
   <!-- =================== LESSON 2.3 — AI DESKTOP APPS =================== -->
   <article class="lesson mt-10 bg-white border border-brand-100 rounded-2xl overflow-hidden" id="m2-l3" data-lesson="m2-l3">
@@ -1009,7 +1215,6 @@ Hãy giữ context này cho mọi câu trả lời tiếp theo.</pre>
           <div class="mono text-[11px] tracking-[0.2em] uppercase text-cyan2">Bài 2.3 · 6 phút</div>
           <h3 class="text-2xl lg:text-3xl font-bold mt-1">AI Desktop Apps &amp; MCP — Khi AI làm việc trên máy bạn</h3>
         </div>
-        <button class="complete-btn mono text-xs tracking-wider uppercase border border-brand-400 hover:bg-brand-400 text-white px-4 py-2 rounded-lg transition" onclick="markComplete('m2-l3')">Đánh dấu hoàn thành</button>
       </div>
     </header>
     <div class="p-6 lg:p-10 space-y-6">
@@ -1106,7 +1311,22 @@ Hãy giữ context này cho mọi câu trả lời tiếp theo.</pre>
         </div>
       </div>
     </div>
-  </article>
+  
+      <div class="lesson-nav not-prose">
+        <a href="#m2-l2" class="nav-prev">
+  <span class="nav-label">← Module 2 · Bài 2.2</span>
+  <span class="nav-title">Context — C.R.A.F.T</span>
+</a>
+        <button class="nav-complete" data-lesson="m2-l3" onclick="markComplete('m2-l3')">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+          <span class="complete-label">Đánh dấu hoàn thành</span>
+        </button>
+        <a href="#m2-l4" class="nav-next">
+  <span class="nav-label">Module 2 · Bài 2.4 →</span>
+  <span class="nav-title">Reasoning Models</span>
+</a>
+      </div>
+    </article>
 
   <!-- =================== LESSON 2.4 — REASONING =================== -->
   <article class="lesson mt-10 bg-white border border-brand-100 rounded-2xl overflow-hidden" id="m2-l4" data-lesson="m2-l4">
@@ -1116,7 +1336,6 @@ Hãy giữ context này cho mọi câu trả lời tiếp theo.</pre>
           <div class="mono text-[11px] tracking-[0.2em] uppercase text-cyan2">Bài 2.4 · 8 phút</div>
           <h3 class="text-2xl lg:text-3xl font-bold mt-1">Reasoning Models — Khi cần AI "suy nghĩ kỹ"</h3>
         </div>
-        <button class="complete-btn mono text-xs tracking-wider uppercase border border-brand-400 hover:bg-brand-400 text-white px-4 py-2 rounded-lg transition" onclick="markComplete('m2-l4')">Đánh dấu hoàn thành</button>
       </div>
     </header>
     <div class="p-6 lg:p-10 space-y-6">
@@ -1154,17 +1373,13 @@ Hãy giữ context này cho mọi câu trả lời tiếp theo.</pre>
         </div>
         <pre class="mono text-[13px] p-4 text-gray2-700">Suy nghĩ kỹ trước khi trả lời.
 
-Tình huống: Demo ECI cần chọn 1 trong 2 cho client mới
-(brand mỹ phẩm Top 20 VN, budget 1.2 tỷ/quý):
+Tình huống: Demo ECI cần chọn 1 trong 2 cho client mới (brand mỹ phẩm Top 20 VN, budget 1.2 tỷ/quý):
 
-Option A — SocialHeat focus: deep social listening +
-sentiment + crisis monitoring.
-Option B — EcomHeat focus: e-commerce performance + share
-of voice trên Shopee/TikTok Shop.
+Option A — SocialHeat focus: deep social listening + sentiment + crisis monitoring.
+Option B — EcomHeat focus: e-commerce performance + share of voice trên Shopee/TikTok Shop.
 
 Phân tích cân nhắc:
-1. Liệt kê 5 tiêu chí ra quyết định (KPI, ROI, retention,
-   upsell potential, fit với pain point hiện tại của client).
+1. Liệt kê 5 tiêu chí ra quyết định (KPI, ROI, retention, upsell potential, fit với pain point hiện tại của client).
 2. Cho mỗi tiêu chí, đánh giá A vs B (1–5).
 3. Trọng số nào quan trọng nhất với client này — vì sao?
 4. Recommendation cuối cùng.
@@ -1193,7 +1408,22 @@ Trình bày suy nghĩ từng bước, đừng nhảy thẳng tới kết luận.
         </div>
       </div>
     </div>
-  </article>
+  
+      <div class="lesson-nav not-prose">
+        <a href="#m2-l3" class="nav-prev">
+  <span class="nav-label">← Module 2 · Bài 2.3</span>
+  <span class="nav-title">Desktop Apps & MCP</span>
+</a>
+        <button class="nav-complete" data-lesson="m2-l4" onclick="markComplete('m2-l4')">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+          <span class="complete-label">Đánh dấu hoàn thành</span>
+        </button>
+        <a href="#m2-l5" class="nav-next">
+  <span class="nav-label">Module 2 · Bài 2.5 →</span>
+  <span class="nav-title">Chống Sycophancy</span>
+</a>
+      </div>
+    </article>
 
   <!-- =================== LESSON 2.5 — SYCOPHANCY =================== -->
   <article class="lesson mt-10 bg-white border border-brand-100 rounded-2xl overflow-hidden" id="m2-l5" data-lesson="m2-l5">
@@ -1203,7 +1433,6 @@ Trình bày suy nghĩ từng bước, đừng nhảy thẳng tới kết luận.
           <div class="mono text-[11px] tracking-[0.2em] uppercase text-cyan2">Bài 2.5 · 5 phút</div>
           <h3 class="text-2xl lg:text-3xl font-bold mt-1">Sycophancy — Khi AI nịnh bợ bạn</h3>
         </div>
-        <button class="complete-btn mono text-xs tracking-wider uppercase border border-brand-400 hover:bg-brand-400 text-white px-4 py-2 rounded-lg transition" onclick="markComplete('m2-l5')">Đánh dấu hoàn thành</button>
       </div>
     </header>
     <div class="p-6 lg:p-10 space-y-6">
@@ -1247,12 +1476,9 @@ Trình bày suy nghĩ từng bước, đừng nhảy thẳng tới kết luận.
         <pre class="mono text-[13px] p-4 text-gray2-700">Quy tắc cho cuộc trò chuyện này:
 
 1. KHÔNG khen ý tưởng của tôi để tôi thấy vui.
-2. Nếu thấy lỗ hổng logic, gap thông tin, assumption sai →
-   nói thẳng, không dùng "tuy nhiên", "có thể bạn muốn xem xét".
-3. Khi tôi đề xuất plan/idea, mặc định đóng vai senior reviewer
-   của agency competitor — họ sẽ chỉ ra điểm yếu để win deal.
-4. Nếu tôi push back yếu, bạn vẫn giữ quan điểm khi đúng.
-   Đừng đổi ý chỉ vì tôi không thích câu trả lời.
+2. Nếu thấy lỗ hổng logic, gap thông tin, assumption sai → nói thẳng, không dùng "tuy nhiên", "có thể bạn muốn xem xét".
+3. Khi tôi đề xuất plan/idea, mặc định đóng vai senior reviewer của agency competitor — họ sẽ chỉ ra điểm yếu để win deal.
+4. Nếu tôi push back yếu, bạn vẫn giữ quan điểm khi đúng. Đừng đổi ý chỉ vì tôi không thích câu trả lời.
 5. Khi không chắc, nói "không chắc" — không bịa.
 
 Confirm hiểu, rồi tôi sẽ paste nội dung cần review.</pre>
@@ -1287,7 +1513,22 @@ Confirm hiểu, rồi tôi sẽ paste nội dung cần review.</pre>
         </div>
       </div>
     </div>
-  </article>
+  
+      <div class="lesson-nav not-prose">
+        <a href="#m2-l4" class="nav-prev">
+  <span class="nav-label">← Module 2 · Bài 2.4</span>
+  <span class="nav-title">Reasoning Models</span>
+</a>
+        <button class="nav-complete" data-lesson="m2-l5" onclick="markComplete('m2-l5')">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+          <span class="complete-label">Đánh dấu hoàn thành</span>
+        </button>
+        <a href="#m2-l6" class="nav-next">
+  <span class="nav-label">Module 2 · Bài 2.6 →</span>
+  <span class="nav-title">Writing với AI</span>
+</a>
+      </div>
+    </article>
 
   <!-- =================== LESSON 2.6 — WRITING =================== -->
   <article class="lesson mt-10 bg-white border border-brand-100 rounded-2xl overflow-hidden" id="m2-l6" data-lesson="m2-l6">
@@ -1297,7 +1538,6 @@ Confirm hiểu, rồi tôi sẽ paste nội dung cần review.</pre>
           <div class="mono text-[11px] tracking-[0.2em] uppercase text-cyan2">Bài 2.6 · 7 phút</div>
           <h3 class="text-2xl lg:text-3xl font-bold mt-1">Viết với AI — Tránh "AI slop"</h3>
         </div>
-        <button class="complete-btn mono text-xs tracking-wider uppercase border border-brand-400 hover:bg-brand-400 text-white px-4 py-2 rounded-lg transition" onclick="markComplete('m2-l6')">Đánh dấu hoàn thành</button>
       </div>
     </header>
     <div class="p-6 lg:p-10 space-y-6">
@@ -1346,8 +1586,7 @@ Confirm hiểu, rồi tôi sẽ paste nội dung cần review.</pre>
 QUY TẮC TUYỆT ĐỐI:
 - Tiếng Việt mạch lạc. Khi giữ thuật ngữ tiếng Anh, không in-line dịch sang Việt nếu nghĩa đã rõ.
 - Câu trung bình ≤ 22 từ. Tránh câu lồng nhiều mệnh đề.
-- KHÔNG dùng: "trong thời đại 4.0/số", "kỷ nguyên", "leverage", "unlock", "delve into", "đáng kể", "vượt bậc",
-  "rất [adj]", "vô cùng [adj]", "có thể nói là", "không thể phủ nhận".
+- KHÔNG dùng: "trong thời đại 4.0/số", "kỷ nguyên", "leverage", "unlock", "delve into", "đáng kể", "vượt bậc", "rất [adj]", "vô cùng [adj]", "có thể nói là", "không thể phủ nhận".
 - KHÔNG mở đầu bằng "Trong bối cảnh..." hoặc "Trong thời đại...".
 - KHÔNG kết bằng "Tóm lại" / "Tóm lược" / "Nhìn chung".
 - Em dash (—) chỉ dùng tối đa 1 lần/đoạn, không spam.
@@ -1398,7 +1637,22 @@ DỪNG khi đủ. Không thêm "hy vọng giúp được bạn".</pre>
         </div>
       </div>
     </div>
-  </article>
+  
+      <div class="lesson-nav not-prose">
+        <a href="#m2-l5" class="nav-prev">
+  <span class="nav-label">← Module 2 · Bài 2.5</span>
+  <span class="nav-title">Chống Sycophancy</span>
+</a>
+        <button class="nav-complete" data-lesson="m2-l6" onclick="markComplete('m2-l6')">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+          <span class="complete-label">Đánh dấu hoàn thành</span>
+        </button>
+        <a href="#m2-l7" class="nav-next">
+  <span class="nav-label">Module 2 · Bài 2.7 →</span>
+  <span class="nav-title">AI Critique</span>
+</a>
+      </div>
+    </article>
 
   <!-- =================== LESSON 2.7 — AI CRITIQUE =================== -->
   <article class="lesson mt-10 bg-white border border-brand-100 rounded-2xl overflow-hidden" id="m2-l7" data-lesson="m2-l7">
@@ -1408,7 +1662,6 @@ DỪNG khi đủ. Không thêm "hy vọng giúp được bạn".</pre>
           <div class="mono text-[11px] tracking-[0.2em] uppercase text-cyan2">Bài 2.7 · 9 phút</div>
           <h3 class="text-2xl lg:text-3xl font-bold mt-1">AI Critique — Để AI phản biện chính bạn</h3>
         </div>
-        <button class="complete-btn mono text-xs tracking-wider uppercase border border-brand-400 hover:bg-brand-400 text-white px-4 py-2 rounded-lg transition" onclick="markComplete('m2-l7')">Đánh dấu hoàn thành</button>
       </div>
     </header>
     <div class="p-6 lg:p-10 space-y-6">
@@ -1455,8 +1708,7 @@ DỪNG khi đủ. Không thêm "hy vọng giúp được bạn".</pre>
           <span class="mono text-[10px] tracking-widest uppercase text-brand-400">Multi-persona critique prompt</span>
           <button class="copy-btn mono text-[10px] tracking-widest uppercase border border-brand-400 text-brand-400 px-3 py-1 rounded" onclick="copyPrompt(this)">Copy</button>
         </div>
-        <pre class="mono text-[13px] p-4 text-gray2-700">Tôi sẽ paste 1 proposal phía dưới. Đánh giá từ 5 góc nhìn,
-mỗi góc nhìn 1 section:
+        <pre class="mono text-[13px] p-4 text-gray2-700">Tôi sẽ paste 1 proposal phía dưới. Đánh giá từ 5 góc nhìn, mỗi góc nhìn 1 section:
 
 1. CFO khách hàng (tập trung ROI, hidden cost, payback):
    - 3 câu hỏi khó nhất CFO sẽ hỏi
@@ -1518,7 +1770,22 @@ Cuối cùng tổng hợp:
         </div>
       </div>
     </div>
-  </article>
+  
+      <div class="lesson-nav not-prose">
+        <a href="#m2-l6" class="nav-prev">
+  <span class="nav-label">← Module 2 · Bài 2.6</span>
+  <span class="nav-title">Writing với AI</span>
+</a>
+        <button class="nav-complete" data-lesson="m2-l7" onclick="markComplete('m2-l7')">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+          <span class="complete-label">Đánh dấu hoàn thành</span>
+        </button>
+        <a href="#m3-l1" class="nav-next">
+  <span class="nav-label">Module 3 · Bài 3.1 →</span>
+  <span class="nav-title">Multimedia Data</span>
+</a>
+      </div>
+    </article>
 
 </section>
 
@@ -1544,7 +1811,6 @@ Cuối cùng tổng hợp:
           <div class="mono text-[11px] tracking-[0.2em] uppercase text-cyan2">Bài 3.1 · 10 phút</div>
           <h3 class="text-2xl lg:text-3xl font-bold mt-1">Multimedia Data — Audio, Video, PDF, Doc</h3>
         </div>
-        <button class="complete-btn mono text-xs tracking-wider uppercase border border-brand-400 hover:bg-brand-400 text-white px-4 py-2 rounded-lg transition" onclick="markComplete('m3-l1')">Đánh dấu hoàn thành</button>
       </div>
     </header>
     <div class="p-6 lg:p-10 space-y-6">
@@ -1626,7 +1892,22 @@ Cuối cùng tổng hợp:
         </div>
       </div>
     </div>
-  </article>
+  
+      <div class="lesson-nav not-prose">
+        <a href="#m2-l7" class="nav-prev">
+  <span class="nav-label">← Module 2 · Bài 2.7</span>
+  <span class="nav-title">AI Critique</span>
+</a>
+        <button class="nav-complete" data-lesson="m3-l1" onclick="markComplete('m3-l1')">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+          <span class="complete-label">Đánh dấu hoàn thành</span>
+        </button>
+        <a href="#m3-l2" class="nav-next">
+  <span class="nav-label">Module 3 · Bài 3.2 →</span>
+  <span class="nav-title">Image Understanding</span>
+</a>
+      </div>
+    </article>
 
   <!-- =================== LESSON 3.2 — IMAGE UNDERSTANDING =================== -->
   <article class="lesson mt-10 bg-white border border-brand-100 rounded-2xl overflow-hidden" id="m3-l2" data-lesson="m3-l2">
@@ -1636,7 +1917,6 @@ Cuối cùng tổng hợp:
           <div class="mono text-[11px] tracking-[0.2em] uppercase text-cyan2">Bài 3.2 · 4 phút</div>
           <h3 class="text-2xl lg:text-3xl font-bold mt-1">Image Understanding — AI đọc hình</h3>
         </div>
-        <button class="complete-btn mono text-xs tracking-wider uppercase border border-brand-400 hover:bg-brand-400 text-white px-4 py-2 rounded-lg transition" onclick="markComplete('m3-l2')">Đánh dấu hoàn thành</button>
       </div>
     </header>
     <div class="p-6 lg:p-10 space-y-6">
@@ -1715,7 +1995,22 @@ Sau khi phân tích cả 3:
         </div>
       </div>
     </div>
-  </article>
+  
+      <div class="lesson-nav not-prose">
+        <a href="#m3-l1" class="nav-prev">
+  <span class="nav-label">← Module 3 · Bài 3.1</span>
+  <span class="nav-title">Multimedia Data</span>
+</a>
+        <button class="nav-complete" data-lesson="m3-l2" onclick="markComplete('m3-l2')">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+          <span class="complete-label">Đánh dấu hoàn thành</span>
+        </button>
+        <a href="#m3-l3" class="nav-next">
+  <span class="nav-label">Module 3 · Bài 3.3 →</span>
+  <span class="nav-title">Image Generation</span>
+</a>
+      </div>
+    </article>
 
   <!-- =================== LESSON 3.3 — IMAGE GENERATION =================== -->
   <article class="lesson mt-10 bg-white border border-brand-100 rounded-2xl overflow-hidden" id="m3-l3" data-lesson="m3-l3">
@@ -1725,16 +2020,54 @@ Sau khi phân tích cả 3:
           <div class="mono text-[11px] tracking-[0.2em] uppercase text-cyan2">Bài 3.3 · 8 phút</div>
           <h3 class="text-2xl lg:text-3xl font-bold mt-1">Image Generation — Tạo hình từ prompt</h3>
         </div>
-        <button class="complete-btn mono text-xs tracking-wider uppercase border border-brand-400 hover:bg-brand-400 text-white px-4 py-2 rounded-lg transition" onclick="markComplete('m3-l3')">Đánh dấu hoàn thành</button>
       </div>
     </header>
     <div class="p-6 lg:p-10 space-y-6">
       <p class="text-[15px] leading-relaxed text-gray2-700">
-        Image generation hiện đại (Gemini Nano Banana, Midjourney, DALL-E) cho phép tạo <strong>concept visual chất lượng cao trong 30 giây</strong>. Không thay thế designer — nhưng tăng tốc giai đoạn mock-up và concept.
+        Tháng 4–5/2026 image generation thay đổi mạnh: <strong>OpenAI GPT Image 2</strong> vượt lên dẫn đầu Image Arena (+242 điểm — khoảng cách lớn nhất từng ghi nhận) đặc biệt về text/typography, trong khi <strong>Google Nano Banana 2/Pro</strong> vẫn là vua photorealism. Không có winner duy nhất — chọn theo task.
       </p>
 
+      <div class="overflow-x-auto rounded-xl border border-brand-100">
+        <table class="w-full text-[13px]">
+          <thead class="bg-navy-500 text-white">
+            <tr>
+              <th class="text-left p-3 font-semibold">Model</th>
+              <th class="text-left p-3 font-semibold">Mạnh ở</th>
+              <th class="text-left p-3 font-semibold">Yếu ở</th>
+              <th class="text-left p-3 font-semibold">Use case Demo</th>
+            </tr>
+          </thead>
+          <tbody class="bg-white">
+            <tr class="border-b border-brand-100">
+              <td class="p-3 font-medium mono text-brand-400">GPT Image 2</td>
+              <td class="p-3 text-gray2-700">Text ~99% (đa ngôn ngữ, kể cả tiếng Việt), typography, UI mock, layout có chữ, structure</td>
+              <td class="p-3 text-gray2-700">Face/portrait đôi khi uncanny, less photorealistic</td>
+              <td class="p-3 text-gray2-700">KV có headline, banner ads, infographic, pitch deck cover có text</td>
+            </tr>
+            <tr class="border-b border-brand-100 bg-mist/30">
+              <td class="p-3 font-medium mono text-brand-400">Nano Banana 2 / Pro</td>
+              <td class="p-3 text-gray2-700">Photorealism (skin/light/material), edit ảnh real, 14 reference image, character ID 5 người</td>
+              <td class="p-3 text-gray2-700">Text trong ảnh chưa bằng GPT Image 2</td>
+              <td class="p-3 text-gray2-700">Product shot, mock người mẫu, photo-style KV, edit ảnh thật</td>
+            </tr>
+            <tr class="border-b border-brand-100">
+              <td class="p-3 font-medium mono text-brand-400">Midjourney v7</td>
+              <td class="p-3 text-gray2-700">Aesthetic, mood, illustration, style sense tốt nhất</td>
+              <td class="p-3 text-gray2-700">Control thấp hơn, không phải photo realistic</td>
+              <td class="p-3 text-gray2-700">Moodboard, concept art, style exploration</td>
+            </tr>
+            <tr>
+              <td class="p-3 font-medium mono text-brand-400">Flux 1.5 Pro / Seedream 4.5</td>
+              <td class="p-3 text-gray2-700">Open ecosystem, cost thấp, control qua ComfyUI</td>
+              <td class="p-3 text-gray2-700">Cần thiết lập nhiều hơn</td>
+              <td class="p-3 text-gray2-700">Tech team build pipeline, batch generation</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
       <div class="bg-navy-500 text-white rounded-xl p-6">
-        <div class="mono text-[11px] tracking-[0.2em] uppercase text-cyan2 mb-3">Cấu trúc prompt 6 layer</div>
+        <div class="mono text-[11px] tracking-[0.2em] uppercase text-cyan2 mb-3">Cấu trúc prompt 6 layer (áp dụng được cho mọi model)</div>
         <div class="grid sm:grid-cols-3 gap-3 text-[13px]">
           <div class="bg-navy-400/30 p-3 rounded">
             <strong class="text-cyan2">① Subject</strong><br>
@@ -1768,22 +2101,9 @@ Sau khi phân tích cả 3:
           <span class="mono text-[10px] tracking-widest uppercase text-brand-400">Prompt · KV mock cho FMCG sữa</span>
           <button class="copy-btn mono text-[10px] tracking-widest uppercase border border-brand-400 text-brand-400 px-3 py-1 rounded" onclick="copyPrompt(this)">Copy</button>
         </div>
-        <pre class="mono text-[13px] p-4 text-gray2-700">[Subject] Một người mẹ Việt 30 tuổi, mặc áo lụa trắng, tóc búi nhẹ,
-  đang rót sữa từ pitcher gốm trắng vào ly thuỷ tinh,
-  ánh mắt nhìn xuống ấm áp.
-[Style] Premium lifestyle photography, fine art direction,
-  inspired by Loewe campaigns.
-[Composition] Medium close-up, off-center 1/3 left,
-  background bokeh nhẹ.
-[Lighting] Soft natural side light từ cửa sổ bên phải,
-  highlight bột ngô trong ly, shadow mềm dưới cằm.
-[Color] Cream white, warm ivory, dusty pink accent,
-  no oversaturation.
-[Technical] 3:4 aspect ratio, 85mm lens look, shallow DOF,
-  shot on medium format, 16 megapixel quality.
+        <pre class="mono text-[13px] p-4 text-gray2-700">[Subject] Một người mẹ Việt 30 tuổi, mặc áo lụa trắng, tóc búi nhẹ, đang rót sữa từ pitcher gốm trắng vào ly thuỷ tinh, ánh mắt nhìn xuống ấm áp. [Style] Premium lifestyle photography, fine art direction, inspired by Loewe campaigns. [Composition] Medium close-up, off-center 1/3 left, background bokeh nhẹ. [Lighting] Soft natural side light từ cửa sổ bên phải, highlight bột ngô trong ly, shadow mềm dưới cằm. [Color] Cream white, warm ivory, dusty pink accent, no oversaturation. [Technical] 3:4 aspect ratio, 85mm lens look, shallow DOF, shot on medium format, 16 megapixel quality.
 
-Brand này tránh: graphics flat, cartoon, neon, oversaturation,
-mom-style nhếch nhác, "stock photo perfect family" vibe.</pre>
+Brand này tránh: graphics flat, cartoon, neon, oversaturation, mom-style nhếch nhác, "stock photo perfect family" vibe.</pre>
       </div>
 
       <div class="bg-mist border-l-4 border-brand-400 rounded-r-xl p-5">
@@ -1836,17 +2156,171 @@ mom-style nhếch nhác, "stock photo perfect family" vibe.</pre>
         </div>
       </div>
     </div>
-  </article>
+  
+      <div class="lesson-nav not-prose">
+        <a href="#m3-l2" class="nav-prev">
+  <span class="nav-label">← Module 3 · Bài 3.2</span>
+  <span class="nav-title">Image Understanding</span>
+</a>
+        <button class="nav-complete" data-lesson="m3-l3" onclick="markComplete('m3-l3')">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+          <span class="complete-label">Đánh dấu hoàn thành</span>
+        </button>
+        <a href="#m3-l4" class="nav-next">
+  <span class="nav-label">Module 3 · Bài 3.4 →</span>
+  <span class="nav-title">Video Generation</span>
+</a>
+      </div>
+    </article>
 
-  <!-- =================== LESSON 3.4 — BUILDING APPS =================== -->
+  <!-- =================== LESSON 3.4 — VIDEO GENERATION =================== -->
   <article class="lesson mt-10 bg-white border border-brand-100 rounded-2xl overflow-hidden" id="m3-l4" data-lesson="m3-l4">
     <header class="bg-navy-500 text-white p-6 lg:p-8">
       <div class="flex items-center justify-between flex-wrap gap-3">
         <div>
-          <div class="mono text-[11px] tracking-[0.2em] uppercase text-cyan2">Bài 3.4 · 5 phút</div>
+          <div class="mono text-[11px] tracking-[0.2em] uppercase text-cyan2">Bài 3.4 · 10 phút · NEW</div>
+          <h3 class="text-2xl lg:text-3xl font-bold mt-1">Video Generation — Từ prompt ra clip 4K trong vài phút</h3>
+        </div>
+      </div>
+    </header>
+    <div class="p-6 lg:p-10 space-y-6">
+      <p class="text-[15px] leading-relaxed text-gray2-700">
+        Đầu 2026 video generation đã <strong>cross qua ngưỡng production-ready</strong>: native 4K, native audio, multi-shot, character consistency, physics gần thật. Không còn "AI weird tay 6 ngón" — bây giờ các brand đã dùng AI video cho social, B-roll, product demo, ad concept.
+      </p>
+
+      <div class="overflow-x-auto rounded-xl border border-brand-100">
+        <table class="w-full text-[13px]">
+          <thead class="bg-navy-500 text-white">
+            <tr>
+              <th class="text-left p-3 font-semibold">Model</th>
+              <th class="text-left p-3 font-semibold">Length</th>
+              <th class="text-left p-3 font-semibold">Mạnh ở</th>
+              <th class="text-left p-3 font-semibold">Use case Demo</th>
+            </tr>
+          </thead>
+          <tbody class="bg-white">
+            <tr class="border-b border-brand-100">
+              <td class="p-3 font-medium mono text-brand-400">Seedance 2.0<br><span class="text-[11px] text-gray2-500">(ByteDance, 2/2026)</span></td>
+              <td class="p-3 text-gray2-700">4–15s · 2K</td>
+              <td class="p-3 text-gray2-700">Multi-shot native, character consistency, unified audio-video, lip-sync phoneme-level, nhanh nhất, rẻ (~$0.30/clip)</td>
+              <td class="p-3 text-gray2-700">Series content (1 nhân vật chạy nhiều clip), TikTok/Reels mass production</td>
+            </tr>
+            <tr class="border-b border-brand-100 bg-mist/30">
+              <td class="p-3 font-medium mono text-brand-400">Veo 3.1<br><span class="text-[11px] text-gray2-500">(Google)</span></td>
+              <td class="p-3 text-gray2-700">5–8s · native 4K, chain 60s+</td>
+              <td class="p-3 text-gray2-700">Native audio + ambient + dialogue, color science broadcast, scene extend, photorealism cao</td>
+              <td class="p-3 text-gray2-700">Premium ad concept, brand film, hero KV động</td>
+            </tr>
+            <tr class="border-b border-brand-100">
+              <td class="p-3 font-medium mono text-brand-400">Sora 2<br><span class="text-[11px] text-gray2-500">(OpenAI)</span></td>
+              <td class="p-3 text-gray2-700">5–25s · 1080p</td>
+              <td class="p-3 text-gray2-700">Physics simulation đỉnh, fluid/gravity chân thật, creative/artistic style, longer storytelling</td>
+              <td class="p-3 text-gray2-700">Product demo có physics (rót, đổ, vỡ), B-roll thiên nhiên, hậu kỳ creative</td>
+            </tr>
+            <tr class="border-b border-brand-100 bg-mist/30">
+              <td class="p-3 font-medium mono text-brand-400">Kling 3.0</td>
+              <td class="p-3 text-gray2-700">5–10s · 1080p</td>
+              <td class="p-3 text-gray2-700">Motion reference: upload video → transfer motion sang nhân vật mới</td>
+              <td class="p-3 text-gray2-700">Choreography, dance, sport action — nội dung cần motion phức tạp</td>
+            </tr>
+            <tr>
+              <td class="p-3 font-medium mono text-brand-400">Runway Gen-4.5</td>
+              <td class="p-3 text-gray2-700">5–10s · 4K</td>
+              <td class="p-3 text-gray2-700">Pro toolchain (camera control, mask, inpaint), API mature</td>
+              <td class="p-3 text-gray2-700">Tech/Design team build pipeline production</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="bg-navy-500 text-white rounded-xl p-6">
+        <div class="mono text-[11px] tracking-[0.2em] uppercase text-cyan2 mb-3">Prompt structure cho video (8 layer)</div>
+        <div class="grid sm:grid-cols-2 gap-3 text-[13px]">
+          <div class="bg-navy-400/30 p-3 rounded"><strong class="text-cyan2">① Subject + Action</strong><br>Ai/cái gì đang làm gì</div>
+          <div class="bg-navy-400/30 p-3 rounded"><strong class="text-cyan2">② Setting</strong><br>Bối cảnh, thời gian, không gian</div>
+          <div class="bg-navy-400/30 p-3 rounded"><strong class="text-cyan2">③ Camera</strong><br>Static, pan, dolly-in, tracking, drone</div>
+          <div class="bg-navy-400/30 p-3 rounded"><strong class="text-cyan2">④ Shot type</strong><br>Wide, medium, close-up, OTS</div>
+          <div class="bg-navy-400/30 p-3 rounded"><strong class="text-cyan2">⑤ Lighting + mood</strong><br>Golden hour, neon, soft window</div>
+          <div class="bg-navy-400/30 p-3 rounded"><strong class="text-cyan2">⑥ Style</strong><br>Cinematic, documentary, anime, 3D</div>
+          <div class="bg-navy-400/30 p-3 rounded"><strong class="text-cyan2">⑦ Audio</strong><br>(nếu Veo) ambient, dialogue, SFX</div>
+          <div class="bg-navy-400/30 p-3 rounded"><strong class="text-cyan2">⑧ Technical</strong><br>Aspect, duration, FPS, resolution</div>
+        </div>
+      </div>
+
+      <div class="prompt-card border border-brand-100 rounded-xl bg-mist/30">
+        <div class="flex items-center justify-between px-4 py-2 bg-mist border-b border-brand-100">
+          <span class="mono text-[10px] tracking-widest uppercase text-brand-400">Prompt · Product demo cho FMCG đồ uống</span>
+          <button class="copy-btn mono text-[10px] tracking-widest uppercase border border-brand-400 text-brand-400 px-3 py-1 rounded" onclick="copyPrompt(this)">Copy</button>
+        </div>
+<pre class="mono text-[13px] p-4 text-gray2-700">[Subject + Action] Một lon trà xanh lạnh đang được rót slow-motion vào ly thủy tinh, hơi nước bốc nhẹ trên thành ly, vài giọt nước condensation đang chảy xuống. [Setting] Bàn gỗ vintage, background bokeh nhẹ với vài lá tre xanh, ngoài cửa sổ là khu vườn buổi sáng. [Camera] Slow tracking-in từ medium shot vào close-up khi nước chạm đáy ly, parallax nhẹ. [Shot type] Close-up sản phẩm, 1/3 frame trái, không gian âm bên phải để đặt logo. [Lighting] Soft natural side light, golden hour 7AM, highlight trên nước đổ, reflection sang trên thành lon nhôm. [Style] Cinematic commercial, inspired by Japanese tea brand ads. [Audio] Ambient: tiếng chim sáng, tiếng nước rót nhẹ, không nhạc. [Technical] 9:16 vertical (cho TikTok/Reels), 8 giây, 4K, 30fps, shallow DOF.</pre>
+      </div>
+
+      <div class="grid md:grid-cols-2 gap-3">
+        <div class="bg-mist/50 rounded-lg p-4 border-l-2 border-brand-400">
+          <div class="mono text-[10px] uppercase tracking-widest text-brand-400">Marketing / Social</div>
+          <p class="text-[13px] text-gray2-700 mt-1">B-roll TikTok/Reels, product demo 5–8s, mood video cho post chính, thumbnail động.</p>
+        </div>
+        <div class="bg-mist/50 rounded-lg p-4 border-l-2 border-brand-400">
+          <div class="mono text-[10px] uppercase tracking-widest text-brand-400">Account / BD pitch</div>
+          <p class="text-[13px] text-gray2-700 mt-1">Concept video trong pitch deck — show "video sẽ trông như thế này", không chờ shoot.</p>
+        </div>
+        <div class="bg-mist/50 rounded-lg p-4 border-l-2 border-brand-400">
+          <div class="mono text-[10px] uppercase tracking-widest text-brand-400">Research / Insight</div>
+          <p class="text-[13px] text-gray2-700 mt-1">Visualize finding ra video 30s: "Gen Z HCMC mua sắm thế nào" → present cho client sinh động hơn slide.</p>
+        </div>
+        <div class="bg-mist/50 rounded-lg p-4 border-l-2 border-brand-400">
+          <div class="mono text-[10px] uppercase tracking-widest text-brand-400">Creative / Production</div>
+          <p class="text-[13px] text-gray2-700 mt-1">Storyboard động cho TVC trước khi shoot, test mood/lighting trước khi book ekip.</p>
+        </div>
+      </div>
+
+      <div class="bg-yellow-50 border-l-4 border-yellow-400 p-5 rounded-r-xl">
+        <div class="mono text-[10px] tracking-widest uppercase text-yellow-700">Lưu ý quan trọng · Disclosure &amp; Bản quyền</div>
+        <ul class="text-[13px] text-gray2-700 mt-2 space-y-1.5 list-disc list-inside">
+          <li>AI video cho client/public — nên disclose là AI-generated (đặc biệt theo guideline mới của Meta/TikTok 2026).</li>
+          <li>Không generate video người thật cụ thể (KOL, celebrity, employee) khi chưa có consent.</li>
+          <li>Không reproduce style của studio/đạo diễn còn copyright cho commercial work.</li>
+          <li>Output AI video luôn cần qua editor/director review trước khi publish — vẫn còn artifact nhỏ.</li>
+        </ul>
+      </div>
+
+      <div class="grad-bg text-white rounded-2xl p-6 lg:p-8 relative overflow-hidden">
+        <div class="absolute inset-0 decision-grid opacity-20"></div>
+        <div class="relative">
+          <div class="mono text-[11px] tracking-[0.25em] uppercase text-cyan2">Takeaway</div>
+          <p class="mt-2 text-lg lg:text-xl font-semibold leading-snug">
+            Video gen 2026 = <span class="text-cyan2">production-ready cho concept &amp; social</span>.
+            Seedance cho speed + consistency, Veo cho audio + 4K, Sora cho physics.
+            8 layer prompt → output predictable hơn nhiều prompt ngắn.
+          </p>
+        </div>
+      </div>
+    </div>
+  
+      <div class="lesson-nav not-prose">
+        <a href="#m3-l3" class="nav-prev">
+  <span class="nav-label">← Module 3 · Bài 3.3</span>
+  <span class="nav-title">Image Generation</span>
+</a>
+        <button class="nav-complete" data-lesson="m3-l4" onclick="markComplete('m3-l4')">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+          <span class="complete-label">Đánh dấu hoàn thành</span>
+        </button>
+        <a href="#m3-l5" class="nav-next">
+  <span class="nav-label">Module 3 · Bài 3.5 →</span>
+  <span class="nav-title">Building Apps</span>
+</a>
+      </div>
+    </article>
+
+  <!-- =================== LESSON 3.5 — BUILDING APPS =================== -->
+  <article class="lesson mt-10 bg-white border border-brand-100 rounded-2xl overflow-hidden" id="m3-l5" data-lesson="m3-l5">
+    <header class="bg-navy-500 text-white p-6 lg:p-8">
+      <div class="flex items-center justify-between flex-wrap gap-3">
+        <div>
+          <div class="mono text-[11px] tracking-[0.2em] uppercase text-cyan2">Bài 3.5 · 5 phút</div>
           <h3 class="text-2xl lg:text-3xl font-bold mt-1">Build App — Không cần code vẫn có công cụ riêng</h3>
         </div>
-        <button class="complete-btn mono text-xs tracking-wider uppercase border border-brand-400 hover:bg-brand-400 text-white px-4 py-2 rounded-lg transition" onclick="markComplete('m3-l4')">Đánh dấu hoàn thành</button>
       </div>
     </header>
     <div class="p-6 lg:p-10 space-y-6">
@@ -1889,22 +2363,18 @@ mom-style nhếch nhác, "stock photo perfect family" vibe.</pre>
         <pre class="mono text-[13px] p-4 text-gray2-700">Tạo 1 single-file HTML+JS tool cho team Account Demo Media:
 
 CHỨC NĂNG:
-- Input: paste danh sách mentions (1 mention/dòng, format
-  "channel | author | sentiment | text").
+- Input: paste danh sách mentions (1 mention/dòng, format "channel | author | sentiment | text").
 - Hiển thị bảng có filter theo channel, sentiment.
 - Tính tổng mentions, % sentiment positive/negative/neutral.
 - Có nút Export CSV.
 
 DESIGN:
-- Style theo brand Demo Group: navy #0B1329, blue #2F7CFF,
-  cyan accent #25D0FF, white BG, font Plus Jakarta Sans.
+- Style theo brand Demo Group: navy #0B1329, blue #2F7CFF, cyan accent #25D0FF, white BG, font Plus Jakarta Sans.
 - UI gọn, professional, dùng được trên laptop.
 
 CONSTRAINT:
-- 1 file HTML duy nhất, không backend, không dependency
-  ngoài trừ Tailwind CDN.
-- Lưu data trong React useState (KHÔNG localStorage —
-  artifact không support).
+- 1 file HTML duy nhất, không backend, không dependency ngoài trừ Tailwind CDN.
+- Lưu data trong React useState (KHÔNG localStorage — artifact không support).
 
 Trả về full code chạy được.</pre>
       </div>
@@ -1930,17 +2400,31 @@ Trả về full code chạy được.</pre>
         </div>
       </div>
     </div>
-  </article>
+  
+      <div class="lesson-nav not-prose">
+        <a href="#m3-l4" class="nav-prev">
+  <span class="nav-label">← Module 3 · Bài 3.4</span>
+  <span class="nav-title">Video Generation</span>
+</a>
+        <button class="nav-complete" data-lesson="m3-l5" onclick="markComplete('m3-l5')">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+          <span class="complete-label">Đánh dấu hoàn thành</span>
+        </button>
+        <a href="#m3-l6" class="nav-next">
+  <span class="nav-label">Module 3 · Bài 3.6 →</span>
+  <span class="nav-title">Data Analysis</span>
+</a>
+      </div>
+    </article>
 
-  <!-- =================== LESSON 3.5 — DATA ANALYSIS =================== -->
-  <article class="lesson mt-10 bg-white border border-brand-100 rounded-2xl overflow-hidden" id="m3-l5" data-lesson="m3-l5">
+  <!-- =================== LESSON 3.6 — DATA ANALYSIS =================== -->
+  <article class="lesson mt-10 bg-white border border-brand-100 rounded-2xl overflow-hidden" id="m3-l6" data-lesson="m3-l6">
     <header class="bg-navy-500 text-white p-6 lg:p-8">
       <div class="flex items-center justify-between flex-wrap gap-3">
         <div>
-          <div class="mono text-[11px] tracking-[0.2em] uppercase text-cyan2">Bài 3.5 · 8 phút</div>
+          <div class="mono text-[11px] tracking-[0.2em] uppercase text-cyan2">Bài 3.6 · 8 phút</div>
           <h3 class="text-2xl lg:text-3xl font-bold mt-1">Data Analysis — Phân tích spreadsheet với AI</h3>
         </div>
-        <button class="complete-btn mono text-xs tracking-wider uppercase border border-brand-400 hover:bg-brand-400 text-white px-4 py-2 rounded-lg transition" onclick="markComplete('m3-l5')">Đánh dấu hoàn thành</button>
       </div>
     </header>
     <div class="p-6 lg:p-10 space-y-6">
@@ -1965,8 +2449,7 @@ Trả về full code chạy được.</pre>
         </div>
         <pre class="mono text-[13px] p-4 text-gray2-700">[Upload mentions.csv]
 
-Bạn là senior insight analyst tại Demo Media. Phân tích file này
-(export từ SocialHeat, brand mỹ phẩm X, tháng 11/2025):
+Bạn là senior insight analyst tại Demo Media. Phân tích file này (export từ SocialHeat, brand mỹ phẩm X, tháng 11/2025):
 
 EXPLORATION:
 1. Show df.head(), df.info(), describe.
@@ -1974,14 +2457,10 @@ EXPLORATION:
 3. Top 10 influencer theo reach &amp; engagement.
 
 ANALYSIS:
-4. Trend mentions theo ngày — có spike nào? Spike đó liên quan
-   event gì (search context nếu cần)?
-5. Sentiment phân theo channel — channel nào negative cao bất
-   thường?
-6. Topic cluster (dùng simple keyword grouping): 5 cụm chủ đề
-   chính được nói nhiều nhất.
-7. KOL tier nào (mega/macro/micro/nano) có engagement rate cao
-   nhất với brand này?
+4. Trend mentions theo ngày — có spike nào? Spike đó liên quan event gì (search context nếu cần)?
+5. Sentiment phân theo channel — channel nào negative cao bất thường?
+6. Topic cluster (dùng simple keyword grouping): 5 cụm chủ đề chính được nói nhiều nhất.
+7. KOL tier nào (mega/macro/micro/nano) có engagement rate cao nhất với brand này?
 
 INSIGHT:
 8. 3 finding quan trọng nhất → mỗi cái 1 câu chốt.
@@ -1991,8 +2470,7 @@ INSIGHT:
    - Effort (low/med/high)
 10. Risk lớn nhất nếu không action gì → vì sao.
 
-Vẽ chart minh hoạ với matplotlib, palette navy/blue/cyan
-(theo brand Demo).</pre>
+Vẽ chart minh hoạ với matplotlib, palette navy/blue/cyan (theo brand Demo).</pre>
       </div>
 
       <div class="bg-yellow-50 border-l-4 border-yellow-400 p-5 rounded-r-xl">
@@ -2035,10 +2513,25 @@ Vẽ chart minh hoạ với matplotlib, palette navy/blue/cyan
         </div>
       </div>
     </div>
-  </article>
+  
+      <div class="lesson-nav not-prose">
+        <a href="#m3-l5" class="nav-prev">
+  <span class="nav-label">← Module 3 · Bài 3.5</span>
+  <span class="nav-title">Building Apps</span>
+</a>
+        <button class="nav-complete" data-lesson="m3-l6" onclick="markComplete('m3-l6')">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+          <span class="complete-label">Đánh dấu hoàn thành</span>
+        </button>
+        <a href="#m3-l7" class="nav-next">
+  <span class="nav-label">Module 3 · Final →</span>
+  <span class="nav-title">Capstone Project</span>
+</a>
+      </div>
+    </article>
 
-  <!-- =================== LESSON 3.6 — FINAL PROJECT =================== -->
-  <article class="lesson mt-10 bg-navy-500 text-white border border-brand-400 rounded-2xl overflow-hidden glow" id="m3-l6" data-lesson="m3-l6">
+  <!-- =================== LESSON 3.7 — FINAL PROJECT =================== -->
+  <article class="lesson mt-10 bg-navy-500 text-white border border-brand-400 rounded-2xl overflow-hidden glow" id="m3-l7" data-lesson="m3-l7">
     <div class="absolute inset-0 decision-grid opacity-10 pointer-events-none"></div>
     <header class="p-6 lg:p-8 border-b border-navy-400/40">
       <div class="flex items-center justify-between flex-wrap gap-3">
@@ -2046,7 +2539,6 @@ Vẽ chart minh hoạ với matplotlib, palette navy/blue/cyan
           <div class="mono text-[11px] tracking-[0.2em] uppercase text-cyan2">Final Project · ≥ 1 giờ</div>
           <h3 class="text-2xl lg:text-3xl font-bold mt-1">Capstone — Build something useful cho team bạn</h3>
         </div>
-        <button class="complete-btn mono text-xs tracking-wider uppercase border border-cyan2 hover:bg-cyan2 hover:text-navy-500 text-cyan2 px-4 py-2 rounded-lg transition" onclick="markComplete('m3-l6')">Đánh dấu hoàn thành</button>
       </div>
     </header>
     <div class="p-6 lg:p-10 space-y-6">
@@ -2088,7 +2580,22 @@ Vẽ chart minh hoạ với matplotlib, palette navy/blue/cyan
         </ul>
       </div>
     </div>
-  </article>
+  
+      <div class="lesson-nav not-prose">
+        <a href="#m3-l6" class="nav-prev">
+  <span class="nav-label">← Module 3 · Bài 3.6</span>
+  <span class="nav-title">Data Analysis</span>
+</a>
+        <button class="nav-complete" data-lesson="m3-l7" onclick="markComplete('m3-l7')">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+          <span class="complete-label">Đánh dấu hoàn thành</span>
+        </button>
+        <a href="#m4-l1" class="nav-next">
+  <span class="nav-label">Module 4 · Bài 4.1 →</span>
+  <span class="nav-title">Safety & Privacy</span>
+</a>
+      </div>
+    </article>
 
 </section>
 
@@ -2101,7 +2608,7 @@ Vẽ chart minh hoạ với matplotlib, palette navy/blue/cyan
     </div>
     <h2 class="text-3xl lg:text-5xl font-bold tracking-tight">Vận hành AI <span class="grad-text">trong môi trường doanh nghiệp</span></h2>
     <p class="mt-5 text-lg text-gray-600 max-w-3xl">
-      3 chủ đề Andrew không cover sâu nhưng cực kỳ quan trọng khi mình dùng AI ở Demo: <strong>bảo mật dữ liệu</strong>, <strong>prompt patterns nâng cao</strong>, và <strong>integrate AI vào workflow team</strong>. Sau module này, bạn không chỉ biết prompt — bạn biết cách scale AI cho cả team mà không gây rủi ro.
+      4 chủ đề rất quan trọng khi dùng AI trong môi trường doanh nghiệp như Demo: <strong>bảo mật dữ liệu</strong>, <strong>prompt patterns nâng cao</strong>, <strong>Agent Skills</strong>, và <strong>integrate AI vào workflow team</strong>. Đây là phần "vận hành" — không phải chỉ biết prompt giỏi mà còn scale AI cho cả team mà không gây rủi ro.
     </p>
   </div>
 
@@ -2114,12 +2621,11 @@ Vẽ chart minh hoạ với matplotlib, palette navy/blue/cyan
           <div class="mono text-[11px] tracking-[0.2em] uppercase text-cyan2">Lesson 4.1 · 18 phút</div>
           <h3 class="text-2xl lg:text-3xl font-bold mt-1">AI Safety &amp; Data Privacy — Đừng làm leak dữ liệu khách hàng</h3>
         </div>
-        <button class="complete-btn mono text-xs tracking-wider uppercase border border-brand-400 hover:bg-brand-400 text-white px-4 py-2 rounded-lg transition" onclick="markComplete('m4-l1')">Đánh dấu hoàn thành</button>
       </div>
     </header>
     <div class="bg-white border border-gray2-200/60 border-t-0 rounded-b-2xl p-6 lg:p-10 space-y-6 shadow-sm">
       <p class="text-lg text-gray-700">
-        Demo làm việc với hàng trăm brand: NDA, raw mention data, internal financial, employee PII. Một câu prompt sai chỗ có thể đưa toàn bộ dữ liệu khách hàng lên server bên thứ ba. Lesson này dạy bạn phân loại dữ liệu trước khi prompt.
+        Demo làm việc với hàng trăm brand: NDA, raw mention data, internal financial, employee PII. Một câu prompt sai chỗ có thể đưa toàn bộ dữ liệu khách hàng lên server bên thứ ba. Phần này cùng nhau xem qua cách phân loại dữ liệu trước khi prompt.
       </p>
 
       <div class="grid md:grid-cols-3 gap-4">
@@ -2195,7 +2701,22 @@ Vẽ chart minh hoạ với matplotlib, palette navy/blue/cyan
         </p>
       </div>
     </div>
-  </article>
+  
+      <div class="lesson-nav not-prose">
+        <a href="#m3-l7" class="nav-prev">
+  <span class="nav-label">← Module 3 · Final</span>
+  <span class="nav-title">Capstone Project</span>
+</a>
+        <button class="nav-complete" data-lesson="m4-l1" onclick="markComplete('m4-l1')">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+          <span class="complete-label">Đánh dấu hoàn thành</span>
+        </button>
+        <a href="#m4-l2" class="nav-next">
+  <span class="nav-label">Module 4 · Bài 4.2 →</span>
+  <span class="nav-title">Prompt Patterns nâng cao</span>
+</a>
+      </div>
+    </article>
 
   <!-- ===== Lesson 4.2 ===== -->
   <article id="m4-l2" class="lesson max-w-5xl mx-auto mt-12 px-6 lg:px-12">
@@ -2206,7 +2727,6 @@ Vẽ chart minh hoạ với matplotlib, palette navy/blue/cyan
           <div class="mono text-[11px] tracking-[0.2em] uppercase text-cyan2">Lesson 4.2 · 22 phút</div>
           <h3 class="text-2xl lg:text-3xl font-bold mt-1">Prompt Patterns nâng cao — 5 kỹ thuật nhân đôi chất lượng output</h3>
         </div>
-        <button class="complete-btn mono text-xs tracking-wider uppercase border border-brand-400 hover:bg-brand-400 text-white px-4 py-2 rounded-lg transition" onclick="markComplete('m4-l2')">Đánh dấu hoàn thành</button>
       </div>
     </header>
     <div class="bg-white border border-gray2-200/60 border-t-0 rounded-b-2xl p-6 lg:p-10 space-y-6 shadow-sm">
@@ -2229,14 +2749,11 @@ Vẽ chart minh hoạ với matplotlib, palette navy/blue/cyan
             </div>
 <pre class="mono text-[12px] text-gray-800 whitespace-pre-wrap">Viết subject line email gửi client theo style Demo. Đây là 3 ví dụ:
 
-Input: Báo cáo weekly social listening cho brand X
-Output: [SocialHeat] Brand X Weekly Pulse — 3 insight cần action
+Input: Báo cáo weekly social listening cho brand X Output: [SocialHeat] Brand X Weekly Pulse — 3 insight cần action
 
-Input: Gửi proposal pricing campaign Tet
-Output: [Proposal] Tet 2026 Campaign — Investment & Expected Impact
+Input: Gửi proposal pricing campaign Tet Output: [Proposal] Tet 2026 Campaign — Investment & Expected Impact
 
-Input: Reschedule meeting do conflict
-Output: [Reschedule] [Topic] — Đề xuất 3 slot mới
+Input: Reschedule meeting do conflict Output: [Reschedule] [Topic] — Đề xuất 3 slot mới
 
 Bây giờ generate cho: "Notify client về crisis bùng phát"</pre>
           </div>
@@ -2258,11 +2775,7 @@ Bây giờ generate cho: "Notify client về crisis bùng phát"</pre>
             </div>
 <pre class="mono text-[12px] text-gray-800 whitespace-pre-wrap">Phân tích xem post viral này (15k share) có phải organic hay seeding.
 
-Hãy suy luận TỪNG BƯỚC:
-Bước 1: Phân tích pattern engagement (like/share/comment ratio)
-Bước 2: Đọc qua 20 comment đầu tiên — có dấu hiệu copy-paste không?
-Bước 3: Check timing — share tăng dần tự nhiên hay đột biến?
-Bước 4: Kết luận + độ tin cậy (%)
+Hãy suy luận TỪNG BƯỚC: Bước 1: Phân tích pattern engagement (like/share/comment ratio) Bước 2: Đọc qua 20 comment đầu tiên — có dấu hiệu copy-paste không? Bước 3: Check timing — share tăng dần tự nhiên hay đột biến? Bước 4: Kết luận + độ tin cậy (%)
 
 [Paste data]</pre>
           </div>
@@ -2293,22 +2806,13 @@ Bước 4: Kết luận + độ tin cậy (%)
               <div class="mono text-[10px] uppercase text-gray-500">Template chuẩn cho task phức tạp</div>
               <button onclick="copyPrompt(this)" class="copy-btn mono text-[10px] uppercase text-brand-400">Copy</button>
             </div>
-<pre class="mono text-[12px] text-gray-800 whitespace-pre-wrap">&lt;context&gt;
-Demo Media, social listening agency. Client: [BRAND].
-Audience report: Gen Z 18-24 HCMC.
-&lt;/context&gt;
+<pre class="mono text-[12px] text-gray-800 whitespace-pre-wrap">&lt;context&gt; Demo Media, social listening agency. Client: [BRAND]. Audience report: Gen Z 18-24 HCMC. &lt;/context&gt;
 
-&lt;data&gt;
-[Paste 50 mention top engagement]
-&lt;/data&gt;
+&lt;data&gt; [Paste 50 mention top engagement] &lt;/data&gt;
 
-&lt;task&gt;
-Identify top 3 conversation theme và sentiment cho mỗi theme.
-&lt;/task&gt;
+&lt;task&gt; Identify top 3 conversation theme và sentiment cho mỗi theme. &lt;/task&gt;
 
-&lt;format&gt;
-Markdown table với cột: Theme | Volume | Sentiment | Quote ví dụ
-&lt;/format&gt;</pre>
+&lt;format&gt; Markdown table với cột: Theme | Volume | Sentiment | Quote ví dụ &lt;/format&gt;</pre>
           </div>
         </div>
       </div>
@@ -2347,7 +2851,22 @@ Input mention: "[paste mention]"</pre>
         </p>
       </div>
     </div>
-  </article>
+  
+      <div class="lesson-nav not-prose">
+        <a href="#m4-l1" class="nav-prev">
+  <span class="nav-label">← Module 4 · Bài 4.1</span>
+  <span class="nav-title">Safety & Privacy</span>
+</a>
+        <button class="nav-complete" data-lesson="m4-l2" onclick="markComplete('m4-l2')">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+          <span class="complete-label">Đánh dấu hoàn thành</span>
+        </button>
+        <a href="#m4-l3" class="nav-next">
+  <span class="nav-label">Module 4 · Bài 4.3 →</span>
+  <span class="nav-title">Scale AI cho team</span>
+</a>
+      </div>
+    </article>
 
   <!-- ===== Lesson 4.3 ===== -->
   <article id="m4-l3" class="lesson max-w-5xl mx-auto mt-12 px-6 lg:px-12">
@@ -2358,7 +2877,6 @@ Input mention: "[paste mention]"</pre>
           <div class="mono text-[11px] tracking-[0.2em] uppercase text-cyan2">Lesson 4.3 · 25 phút</div>
           <h3 class="text-2xl lg:text-3xl font-bold mt-1">Integrate AI vào workflow team — Từ cá nhân lên scale doanh nghiệp</h3>
         </div>
-        <button class="complete-btn mono text-xs tracking-wider uppercase border border-brand-400 hover:bg-brand-400 text-white px-4 py-2 rounded-lg transition" onclick="markComplete('m4-l3')">Đánh dấu hoàn thành</button>
       </div>
     </header>
     <div class="bg-white border border-gray2-200/60 border-t-0 rounded-b-2xl p-6 lg:p-10 space-y-6 shadow-sm">
@@ -2457,7 +2975,296 @@ Input mention: "[paste mention]"</pre>
         </p>
       </div>
     </div>
-  </article>
+  
+      <div class="lesson-nav not-prose">
+        <a href="#m4-l2" class="nav-prev">
+  <span class="nav-label">← Module 4 · Bài 4.2</span>
+  <span class="nav-title">Prompt Patterns nâng cao</span>
+</a>
+        <button class="nav-complete" data-lesson="m4-l3" onclick="markComplete('m4-l3')">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+          <span class="complete-label">Đánh dấu hoàn thành</span>
+        </button>
+        <a href="#m4-l4" class="nav-next">
+  <span class="nav-label">Module 4 · Bài 4.4 →</span>
+  <span class="nav-title">Custom AI Assistants</span>
+</a>
+      </div>
+    </article>
+
+  <!-- ===== Lesson 4.4 — Agent Skills ===== -->
+  <article id="m4-l4" class="lesson max-w-5xl mx-auto mt-12 px-6 lg:px-12">
+    <header class="bg-navy-500 text-white rounded-t-2xl px-6 lg:px-10 py-6 relative overflow-hidden">
+      <div class="absolute inset-0 decision-grid opacity-30"></div>
+      <div class="relative flex items-center justify-between flex-wrap gap-3">
+        <div>
+          <div class="mono text-[11px] tracking-[0.2em] uppercase text-cyan2">Lesson 4.4 · 25 phút · NEW</div>
+          <h3 class="text-2xl lg:text-3xl font-bold mt-1">Custom AI Assistants — Đóng gói knowledge cho cả team</h3>
+        </div>
+      </div>
+    </header>
+    <div class="bg-white border border-gray2-200/60 border-t-0 rounded-b-2xl p-6 lg:p-10 space-y-6 shadow-sm">
+      <p class="text-lg text-gray-700">
+        Khi prompt template tốt được dùng đi dùng lại, bước tiếp theo là <strong>đóng gói nó thành 1 "AI assistant riêng"</strong> — load sẵn brand guideline, quy trình team, template báo cáo. Member chỉ cần mở lên là dùng, không paste lại context mỗi lần. Mỗi ecosystem có cách làm khác nhau, nhưng có một điểm quan trọng: <strong>Agent Skills là open standard</strong> — build 1 lần, chạy nhiều nơi.
+      </p>
+
+      <div class="bg-emerald-50 border border-emerald-200 rounded-xl p-5 text-[13.5px] text-emerald-900">
+        <div class="mono text-[11px] tracking-wider uppercase text-emerald-700 mb-2">✓ Quan trọng — Agent Skills là portable</div>
+        <p class="mb-2">Anthropic mở chuẩn này tại <span class="mono">agentskills.io</span>. Build 1 SKILL.md folder ở chỗ nào cũng được — sau đó chạy ở mọi tool support SKILL.md spec:</p>
+        <div class="grid sm:grid-cols-2 gap-2 mt-3 text-[13px]">
+          <div class="bg-white rounded px-3 py-2 border border-emerald-200">✓ Claude.ai (web/desktop/mobile)</div>
+          <div class="bg-white rounded px-3 py-2 border border-emerald-200">✓ Claude Code (terminal/VS Code/JetBrains)</div>
+          <div class="bg-white rounded px-3 py-2 border border-emerald-200">✓ Cursor</div>
+          <div class="bg-white rounded px-3 py-2 border border-emerald-200">✓ Codex CLI</div>
+          <div class="bg-white rounded px-3 py-2 border border-emerald-200">✓ GitHub Copilot</div>
+          <div class="bg-white rounded px-3 py-2 border border-emerald-200">✓ Gemini CLI</div>
+          <div class="bg-white rounded px-3 py-2 border border-emerald-200">✓ Antigravity IDE</div>
+          <div class="bg-white rounded px-3 py-2 border border-emerald-200">✓ Claude Cowork (cho non-tech)</div>
+        </div>
+        <p class="mt-3 text-[12.5px]">→ Ví dụ thực tế: build skill <em>"slide report theo template từ xlsx"</em> ở Claude Cowork, sau đó cùng skill đó chạy được ngon ở Codex CLI khi cần automation, hoặc Cursor khi muốn debug. <strong>Không lock-in</strong>.</p>
+      </div>
+
+      <div class="bg-amber-50 border border-amber-200 rounded-xl p-5 text-[13px] text-amber-900">
+        <div class="mono text-[11px] tracking-wider uppercase text-amber-700 mb-2">💡 Concept chung — chỉ là tên gọi khác nhau</div>
+        <p>Tất cả đều trả lời cùng 1 câu hỏi: <em>"Làm sao đưa kiến thức + quy trình của team vào AI một cách bền vững, không phải paste lại mỗi chat?"</em>. Khác nhau ở: độ linh hoạt, độ portable, khả năng tích hợp file/tool, ai chia sẻ được với ai.</p>
+      </div>
+
+      <!-- Comparison table -->
+      <div class="overflow-x-auto rounded-xl border border-gray2-200">
+        <table class="w-full text-[13px]">
+          <thead class="bg-navy-500 text-white">
+            <tr>
+              <th class="text-left p-3 font-semibold">Platform</th>
+              <th class="text-left p-3 font-semibold">Tên gọi</th>
+              <th class="text-left p-3 font-semibold">Mạnh ở</th>
+              <th class="text-left p-3 font-semibold">Hạn chế</th>
+              <th class="text-left p-3 font-semibold">Phù hợp</th>
+            </tr>
+          </thead>
+          <tbody class="bg-white">
+            <tr class="border-b border-gray2-200">
+              <td class="p-3 font-medium mono text-brand-400">OpenAI</td>
+              <td class="p-3"><strong>Custom GPTs</strong><br><span class="text-[11px] text-gray-500">(GPT Store)</span></td>
+              <td class="p-3 text-gray2-700">UI dễ nhất, build 5 phút không cần code. Upload file knowledge, custom action gọi API. Share qua link với team/public</td>
+              <td class="p-3 text-gray2-700">Chỉ chạy trong ChatGPT, chỉ dùng GPT model. Knowledge file size hạn chế</td>
+              <td class="p-3 text-gray2-700">Non-tech team, share nhanh, demo client</td>
+            </tr>
+            <tr class="border-b border-gray2-200 bg-mist/30">
+              <td class="p-3 font-medium mono text-brand-400">Google</td>
+              <td class="p-3"><strong>Gems</strong><br><span class="text-[11px] text-gray-500">(Gemini app)</span></td>
+              <td class="p-3 text-gray2-700">Tích hợp sâu Google Workspace (Drive, Docs, Gmail). Build trong Gemini app, share trong workspace organization</td>
+              <td class="p-3 text-gray2-700">Locked vào Gemini ecosystem. Custom action hạn chế hơn GPTs</td>
+              <td class="p-3 text-gray2-700">Team đã chạy Google Workspace, cần đọc Drive nhiều</td>
+            </tr>
+            <tr class="border-b border-gray2-200">
+              <td class="p-3 font-medium mono text-brand-400">Anthropic<br><span class="text-[10px] text-emerald-600 font-normal">⚡ open standard</span></td>
+              <td class="p-3"><strong>Agent Skills</strong><br><span class="text-[11px] text-gray-500">(claude.ai · Claude Code · Cowork · Cursor · Codex · Copilot)</span></td>
+              <td class="p-3 text-gray2-700"><strong>Portable nhất</strong> — build 1 SKILL.md folder, chạy ở mọi tool support spec (Claude family, Cursor, Codex, Copilot, Gemini CLI, Antigravity). Có thể chứa Python script, asset, brand kit. Auto-load khi task match. Version control qua Git</td>
+              <td class="p-3 text-gray2-700">Setup tốn công hơn (cần biết viết YAML + Markdown). Skill cá nhân chưa shared org-wide auto</td>
+              <td class="p-3 text-gray2-700">Workflow phức tạp, cần script + asset, hoặc team muốn future-proof không lock vendor</td>
+            </tr>
+            <tr>
+              <td class="p-3 font-medium mono text-brand-400">Microsoft</td>
+              <td class="p-3"><strong>Copilot Agents</strong><br><span class="text-[11px] text-gray-500">(Copilot Studio)</span></td>
+              <td class="p-3 text-gray2-700">Tích hợp toàn bộ Microsoft 365 (Teams, Outlook, SharePoint). Enterprise governance mạnh. No-code builder</td>
+              <td class="p-3 text-gray2-700">Phụ thuộc license Copilot/M365. Quality model output thấp hơn frontier model</td>
+              <td class="p-3 text-gray2-700">Enterprise đã chạy Microsoft full stack</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Decision tree -->
+      <div class="bg-navy-500 text-white rounded-xl p-6">
+        <div class="mono text-[11px] tracking-[0.2em] uppercase text-cyan2 mb-3">Khi nào dùng cái nào — quy tắc đơn giản</div>
+        <div class="space-y-2.5 text-[14px]">
+          <div class="flex gap-3 items-start"><span class="mono text-cyan2 shrink-0">→</span><div><strong>Task đơn giản, share nhanh cho non-tech:</strong> <span class="mono text-cyan2">Custom GPT</span>. Build 5 phút, gửi link là xong.</div></div>
+          <div class="flex gap-3 items-start"><span class="mono text-cyan2 shrink-0">→</span><div><strong>Team chủ yếu xài Google Workspace:</strong> <span class="mono text-cyan2">Gems</span>. Đọc Drive/Docs trực tiếp, không export đi export lại.</div></div>
+          <div class="flex gap-3 items-start"><span class="mono text-cyan2 shrink-0">→</span><div><strong>Workflow cần Python script + asset + version control:</strong> <span class="mono text-cyan2">Agent Skills</span>. Đặc biệt khi muốn dùng cho cả Claude API/Claude Code trong product.</div></div>
+          <div class="flex gap-3 items-start"><span class="mono text-cyan2 shrink-0">→</span><div><strong>Enterprise governance, cần audit log:</strong> <span class="mono text-cyan2">Copilot Agents</span> hoặc Claude Enterprise.</div></div>
+          <div class="flex gap-3 items-start"><span class="mono text-cyan2 shrink-0">→</span><div><strong>Vẫn đang test ý tưởng, chưa biết format ra sao:</strong> Đừng vội build assistant — viết prompt template trước, dùng 5–10 lần, khi nào ổn định mới đóng gói.</div></div>
+        </div>
+      </div>
+
+      <!-- Concrete example with all 3 -->
+      <div class="border border-gray2-200 rounded-xl overflow-hidden">
+        <div class="bg-gray2-100 px-5 py-3 border-b border-gray2-200">
+          <h4 class="font-bold">Cùng 1 task "Weekly Client Report" — implement ở 3 platform khác nhau</h4>
+        </div>
+        <div class="p-5 space-y-4 text-[13px]">
+
+          <!-- Custom GPT -->
+          <div class="bg-mist/40 rounded-lg p-4 border-l-2 border-brand-400">
+            <div class="font-bold text-navy-500">① Custom GPT (đơn giản nhất)</div>
+            <ol class="mt-2 text-gray-700 space-y-1 list-decimal list-inside">
+              <li>Mở ChatGPT → "Explore GPTs" → "+ Create"</li>
+              <li>Trả lời chat: "Tao muốn 1 GPT giúp viết weekly report cho client agency, format Demo, có exec summary 3 dòng + 3 finding + 3 action"</li>
+              <li>Upload <code class="mono text-brand-400">template.docx</code> + 2 ví dụ report tốt vào "Knowledge"</li>
+              <li>Save, share link cho team Account. Xong trong 10 phút.</li>
+            </ol>
+          </div>
+
+          <!-- Gem -->
+          <div class="bg-mist/40 rounded-lg p-4 border-l-2 border-brand-400">
+            <div class="font-bold text-navy-500">② Google Gem (nếu team xài Workspace)</div>
+            <ol class="mt-2 text-gray-700 space-y-1 list-decimal list-inside">
+              <li>Gemini app → "Gem manager" → "New Gem"</li>
+              <li>Paste instructions: rule format, tone, banned phrase</li>
+              <li>Connect Drive folder chứa template + raw data tuần</li>
+              <li>Gem có thể đọc file Drive trực tiếp khi cần — không cần upload lại</li>
+            </ol>
+          </div>
+
+          <!-- Skill -->
+          <div class="bg-emerald-50 rounded-lg p-4 border-l-2 border-emerald-500">
+            <div class="font-bold text-navy-500">③ Agent Skill (portable, mạnh nhất, tốn công nhất)</div>
+            <pre class="mono text-[11.5px] bg-navy-500 text-gray2-200 p-3 rounded mt-2 overflow-x-auto">demo-weekly-report/
+├── SKILL.md
+├── template.docx
+├── examples/{good_report.md, bad_report.md}
+└── scripts/format_data.py    ← auto clean raw export</pre>
+            <p class="text-gray-700 mt-2">SKILL.md có YAML frontmatter để AI tự load khi task match. Có thể chạy script Python để clean data trước khi viết. Version control qua Git.</p>
+            <div class="mt-3 bg-white rounded-md p-3 border border-emerald-200">
+              <div class="mono text-[10px] tracking-wider uppercase text-emerald-700 mb-1">🔄 Cross-tool workflow đã được verified</div>
+              <p class="text-[12.5px] text-gray-700">Build skill này ở <strong>Claude Cowork</strong> (non-tech team build dễ hơn) → upload lên Git/Drive nội bộ → team Account dùng ở <strong>claude.ai</strong> chạy weekly → team Tech mở folder skill bằng <strong>Codex CLI</strong> hoặc <strong>Cursor</strong> để debug script. Cùng 1 SKILL.md, không edit gì thêm.</p>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- Mini SKILL.md example -->
+      <div class="border border-gray2-200 rounded-xl overflow-hidden">
+        <div class="bg-gray2-100 px-5 py-3 border-b border-gray2-200">
+          <h4 class="font-bold">SKILL.md tối thiểu — copy về tweak là dùng được</h4>
+        </div>
+        <div class="p-5">
+          <pre class="mono text-[12px] bg-mist p-4 rounded-lg border border-gray2-200 text-gray-800 overflow-x-auto">---
+name: demo-weekly-report
+description: Tạo weekly client report theo template Demo
+  chuẩn. Dùng khi user paste raw data tuần và yêu cầu
+  báo cáo gửi client.
+---
+
+# Demo Weekly Report Skill
+
+## Quy tắc
+1. Luôn bắt đầu bằng Executive Summary 3 dòng.
+2. Đúng 3 finding + 3 action item.
+3. Tone professional, không buzzword "thời đại 4.0".
+4. Số liệu format: 12,345 (không 12345 hoặc 12.345).
+5. Nếu thiếu data, KHÔNG bịa — note "data unavailable".
+
+## Workflow
+1. Đọc template tại template.docx
+2. Mapping field từ raw data sang template
+3. Generate draft
+4. Self-check theo checklist ở examples/good_report.md</pre>
+        </div>
+      </div>
+
+      <!-- Demo assistants suggested -->
+      <div class="bg-mist border-l-4 border-brand-400 p-5 rounded-r-xl">
+        <div class="mono text-[10px] tracking-widest uppercase text-brand-400">Assistant nên build ở Demo (bất kỳ platform nào)</div>
+        <div class="grid md:grid-cols-2 gap-3 mt-3 text-[13px]">
+          <div class="bg-white rounded-lg p-3 border border-gray2-200">
+            <div class="mono text-[11px] text-brand-400">✓ Đã có (Skill)</div>
+            <div class="font-semibold">branded-image-gen</div>
+            <p class="text-gray-600 mt-1">Pack brand profile Demo Media cho Nano Banana / GPT Image 2.</p>
+          </div>
+          <div class="bg-white rounded-lg p-3 border border-gray2-200">
+            <div class="mono text-[11px] text-brand-400">✓ Đã có (Skill)</div>
+            <div class="font-semibold">demo-group-brand-identity</div>
+            <p class="text-gray-600 mt-1">Brand guideline cho presentation/website.</p>
+          </div>
+          <div class="bg-white rounded-lg p-3 border border-gray2-200">
+            <div class="mono text-[11px] text-brand-400">→ Account/BD</div>
+            <div class="font-semibold">client-weekly-report</div>
+            <p class="text-gray-600 mt-1">Custom GPT đơn giản — chỉ cần template + 2 ví dụ.</p>
+          </div>
+          <div class="bg-white rounded-lg p-3 border border-gray2-200">
+            <div class="mono text-[11px] text-brand-400">→ Research</div>
+            <div class="font-semibold">socialheat-mention-cluster</div>
+            <p class="text-gray-600 mt-1">Skill (cần script Python clean data trước khi cluster).</p>
+          </div>
+          <div class="bg-white rounded-lg p-3 border border-gray2-200">
+            <div class="mono text-[11px] text-brand-400">→ Marketing</div>
+            <div class="font-semibold">caption-multi-platform</div>
+            <p class="text-gray-600 mt-1">Custom GPT — generate caption FB/IG/TikTok/LinkedIn từ 1 brief.</p>
+          </div>
+          <div class="bg-white rounded-lg p-3 border border-gray2-200">
+            <div class="mono text-[11px] text-brand-400">→ HR</div>
+            <div class="font-semibold">jd-screener</div>
+            <p class="text-gray-600 mt-1">Custom GPT/Gem — paste CV, output screening report theo Demo criteria.</p>
+          </div>
+          <div class="bg-white rounded-lg p-3 border border-gray2-200">
+            <div class="mono text-[11px] text-brand-400">→ Tech / Ops</div>
+            <div class="font-semibold">tiktok-overclaim-check</div>
+            <p class="text-gray-600 mt-1">Skill — cần script extract transcript, dùng cho pharma/F&amp;B compliance.</p>
+          </div>
+          <div class="bg-white rounded-lg p-3 border border-gray2-200">
+            <div class="mono text-[11px] text-brand-400">→ Creative</div>
+            <div class="font-semibold">pitch-deck-demo</div>
+            <p class="text-gray-600 mt-1">Skill — generate pptx theo brand Demo, có hero image gen tự động.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Build process -->
+      <div class="bg-navy-500 text-white rounded-xl p-6">
+        <div class="mono text-[11px] tracking-[0.2em] uppercase text-cyan2 mb-3">Quy trình build 1 assistant (áp dụng cho mọi platform — 3 bước)</div>
+        <ol class="space-y-3 text-[14px] list-decimal list-inside text-gray2-200">
+          <li><strong>Identify task lặp lại:</strong> Task gì paste cùng 1 đoạn context ≥ 3 lần/tuần? Đó là candidate.</li>
+          <li><strong>Draft + test với 5 case thật:</strong> Build minimum viable assistant. Test với 5 case khác nhau. Tune instruction cho đến khi 4/5 case output gửi được luôn.</li>
+          <li><strong>Share + version:</strong> Share link/Skill cho team. Member khác dùng → feedback → update. Define rõ owner để maintain.</li>
+        </ol>
+      </div>
+
+      <!-- Security -->
+      <div class="bg-rose-50 border-l-4 border-rose-400 rounded-r-xl p-5">
+        <div class="mono text-[11px] tracking-wider uppercase text-rose-700 mb-2">⚠️ Security cho mọi platform</div>
+        <ul class="text-[13px] text-rose-900/80 space-y-1.5 list-disc list-inside">
+          <li><strong>Knowledge file:</strong> không upload contract, NDA, raw client data có brand name vào Custom GPT/Gem public — anonymize trước.</li>
+          <li><strong>Custom action / API key:</strong> đặt ở backend, không nhúng key vào instruction GPT — instruction có thể bị extract.</li>
+          <li><strong>Skill từ source ngoài:</strong> treat như installing software — audit kỹ script, file fetch URL, bash command.</li>
+          <li><strong>Share scope:</strong> default là internal team thôi. Public chỉ khi đã review không có data nhạy cảm.</li>
+          <li><strong>Enterprise plan:</strong> dùng plan có data-not-trained (Claude Enterprise, ChatGPT Enterprise, Gemini for Workspace Enterprise) cho assistant chứa knowledge nội bộ.</li>
+        </ul>
+      </div>
+
+      <!-- Follow-up course teaser -->
+      <div class="bg-gradient-to-br from-purple2/15 to-brand-400/15 border border-brand-400/30 rounded-xl p-6">
+        <div class="mono text-[11px] tracking-wider uppercase text-brand-400 mb-2">📦 Sắp tới · Course chuyên sâu</div>
+        <h4 class="font-bold text-navy-500 text-lg">"Build AI Assistants cho công việc hàng ngày"</h4>
+        <p class="text-[13.5px] text-gray2-700 mt-2 leading-relaxed">
+          Course training cơ bản này dừng ở mức <strong>overview + concept</strong>. Phần thực sự build từng assistant cho từng workflow lặp đi lặp lại của team — như auto-generate weekly report cho khách hàng theo template Demo, auto-tag 500 mention SocialHeat, scoring CV theo criteria HR — sẽ tách ra thành <strong>course riêng cho từng bộ phận</strong>.
+        </p>
+        <p class="text-[13px] text-gray2-700 mt-2">
+          Mỗi course sẽ là hands-on workshop 2–3 buổi, kết thúc là team mình có ít nhất 2–3 assistant production-ready. Sẽ announce trên <span class="mono text-brand-400">#ai-academy</span> khi schedule confirmed.
+        </p>
+      </div>
+
+      <div class="grad-bar h-1 rounded-full"></div>
+      <div class="bg-gradient-to-br from-navy-500 to-brand-400 text-white rounded-xl p-6">
+        <div class="mono text-[11px] tracking-[0.2em] uppercase text-cyan2 mb-2">💡 Takeaway</div>
+        <p class="text-[15px] leading-relaxed">
+          4 cách giải cùng 1 bài toán đóng gói knowledge cho AI. Custom GPT &amp; Gem là <strong>nhanh nhất</strong> nhưng lock vendor. <strong>Agent Skills là portable</strong> — build 1 SKILL.md ở Cowork hay Claude Code, đem qua Cursor/Codex/Copilot vẫn chạy. Đầu tư công sức hơn nhưng future-proof. Chọn theo (1) stack team đang dùng, (2) độ phức tạp workflow, (3) muốn lock vendor hay không. Đừng over-engineer: nếu Custom GPT giải quyết được trong 10 phút, đừng build Skill mất 2 ngày.
+        </p>
+      </div>
+    </div>
+  
+      <div class="lesson-nav not-prose">
+        <a href="#m4-l3" class="nav-prev">
+  <span class="nav-label">← Module 4 · Bài 4.3</span>
+  <span class="nav-title">Scale AI cho team</span>
+</a>
+        <button class="nav-complete" data-lesson="m4-l4" onclick="markComplete('m4-l4')">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+          <span class="complete-label">Đánh dấu hoàn thành</span>
+        </button>
+        <a href="#references" class="nav-next"><span class="nav-label">Hoàn thành →</span><span class="nav-title">Xem references &amp; finish</span></a>
+      </div>
+    </article>
 </section>
 
 <!-- ============== CLOSING ============== -->
@@ -2495,7 +3302,7 @@ Input mention: "[paste mention]"</pre>
 
     <div class="mt-12 flex flex-wrap gap-4">
       <button onclick="window.scrollTo({top:0,behavior:'smooth'})" class="bg-cyan2 text-navy-500 font-bold px-8 py-4 rounded-lg hover:bg-white transition">↑ Quay lại đầu trang</button>
-      <a href="https://www.deeplearning.ai/courses/ai-prompting-for-everyone" target="_blank" rel="noopener" class="border border-cyan2 text-cyan2 font-semibold px-8 py-4 rounded-lg hover:bg-cyan2 hover:text-navy-500 transition">Xem course gốc của Andrew Ng →</a>
+      <a href="#references" class="border border-cyan2 text-cyan2 font-semibold px-8 py-4 rounded-lg hover:bg-cyan2 hover:text-navy-500 transition">Xem tài liệu tham khảo ↓</a>
     </div>
 
     <div class="mt-20 pt-12 border-t border-navy-400/60">
@@ -2523,6 +3330,162 @@ Input mention: "[paste mention]"</pre>
   </div>
 </section>
 
+<!-- ============== REFERENCES ============== -->
+<section id="references" class="bg-mist py-20">
+  <div class="max-w-5xl mx-auto px-6 lg:px-12">
+    <div class="flex items-center gap-3 mb-3">
+      <span class="mono text-xs tracking-[0.25em] uppercase text-brand-400">Tài liệu tham khảo</span>
+      <span class="h-px flex-1 bg-gradient-to-r from-brand-400 to-transparent"></span>
+    </div>
+    <h2 class="text-3xl lg:text-4xl font-extrabold text-navy-500 tracking-tight">References &amp; Further reading</h2>
+    <p class="mt-4 text-[15px] text-gray2-700 max-w-3xl">
+      Course này tổng hợp từ nhiều nguồn — các course public, official documentation từ AI lab, và benchmark độc lập tính đến tháng 5/2026. Bookmark phần này để check khi cần đào sâu hoặc verify thông tin model mới.
+    </p>
+
+    <div class="grid lg:grid-cols-2 gap-6 mt-10">
+
+      <!-- Courses -->
+      <div class="bg-white rounded-2xl p-6 border-l-4 border-brand-400 shadow-sm">
+        <div class="mono text-[11px] tracking-widest uppercase text-brand-400 mb-3">📚 Courses &amp; Foundational Reading</div>
+        <ul class="space-y-3 text-[13.5px] text-gray2-700">
+          <li>
+            <a href="https://www.deeplearning.ai/courses/ai-prompting-for-everyone" target="_blank" rel="noopener" class="font-semibold text-navy-500 hover:text-brand-400">AI Prompting for Everyone — Andrew Ng (DeepLearning.AI)</a>
+            <p class="text-gray2-700 mt-0.5 text-[12.5px]">Course nền tảng được dùng làm khung cấu trúc cho Module 1–3. Free, English subtitles.</p>
+          </li>
+          <li>
+            <a href="https://www.deeplearning.ai/short-courses/" target="_blank" rel="noopener" class="font-semibold text-navy-500 hover:text-brand-400">DeepLearning.AI Short Courses</a>
+            <p class="text-gray2-700 mt-0.5 text-[12.5px]">Library short course chuyên sâu: ChatGPT Prompt Engineering, LangChain, Function Calling, RAG.</p>
+          </li>
+          <li>
+            <a href="https://www.anthropic.com/learn" target="_blank" rel="noopener" class="font-semibold text-navy-500 hover:text-brand-400">Anthropic Learn</a>
+            <p class="text-gray2-700 mt-0.5 text-[12.5px]">Cookbook và interactive tutorial về Claude — đặc biệt mạnh phần prompt engineering có ví dụ thực tế.</p>
+          </li>
+        </ul>
+      </div>
+
+      <!-- AI Lab Official Docs -->
+      <div class="bg-white rounded-2xl p-6 border-l-4 border-cyan2 shadow-sm">
+        <div class="mono text-[11px] tracking-widest uppercase text-cyan2 mb-3">🔧 Official Documentation</div>
+        <ul class="space-y-3 text-[13.5px] text-gray2-700">
+          <li>
+            <a href="https://docs.claude.com" target="_blank" rel="noopener" class="font-semibold text-navy-500 hover:text-brand-400">Anthropic Claude Docs</a>
+            <p class="text-gray2-700 mt-0.5 text-[12.5px]">Claude Opus 4.7, Sonnet 4.6, Haiku 4.5, Agent Skills, Computer Use, MCP.</p>
+          </li>
+          <li>
+            <a href="https://platform.openai.com/docs" target="_blank" rel="noopener" class="font-semibold text-navy-500 hover:text-brand-400">OpenAI Platform Docs</a>
+            <p class="text-gray2-700 mt-0.5 text-[12.5px]">GPT-5.5, GPT Image 2, Codex, Sora 2, Realtime API.</p>
+          </li>
+          <li>
+            <a href="https://ai.google.dev/docs" target="_blank" rel="noopener" class="font-semibold text-navy-500 hover:text-brand-400">Google AI for Developers</a>
+            <p class="text-gray2-700 mt-0.5 text-[12.5px]">Gemini 3.x, Nano Banana 2/Pro, Veo 3.1, AI Studio.</p>
+          </li>
+          <li>
+            <a href="https://docs.claude.com/en/docs/agents-and-tools/agent-skills/overview" target="_blank" rel="noopener" class="font-semibold text-navy-500 hover:text-brand-400">Agent Skills — Anthropic docs</a>
+            <p class="text-gray2-700 mt-0.5 text-[12.5px]">Spec đầy đủ về SKILL.md, YAML frontmatter, best practices, security model.</p>
+          </li>
+          <li>
+            <a href="https://github.com/anthropics/skills" target="_blank" rel="noopener" class="font-semibold text-navy-500 hover:text-brand-400">anthropics/skills (GitHub)</a>
+            <p class="text-gray2-700 mt-0.5 text-[12.5px]">Repo open source: pdf, docx, pptx, xlsx skill có thể tham khảo build skill custom.</p>
+          </li>
+        </ul>
+      </div>
+
+      <!-- Model release notes -->
+      <div class="bg-white rounded-2xl p-6 border-l-4 border-purple-400 shadow-sm">
+        <div class="mono text-[11px] tracking-widest uppercase text-purple-600 mb-3">🚀 Release Notes &amp; Updates</div>
+        <ul class="space-y-3 text-[13.5px] text-gray2-700">
+          <li>
+            <a href="https://openai.com/index/introducing-gpt-5-5/" target="_blank" rel="noopener" class="font-semibold text-navy-500 hover:text-brand-400">Introducing GPT-5.5 (OpenAI, 23/4/2026)</a>
+            <p class="text-gray2-700 mt-0.5 text-[12.5px]">Agentic coding, computer use, 1M context. System card có chi tiết safeguard.</p>
+          </li>
+          <li>
+            <a href="https://openai.com/index/gpt-5-5-instant/" target="_blank" rel="noopener" class="font-semibold text-navy-500 hover:text-brand-400">GPT-5.5 Instant (OpenAI, 5/5/2026)</a>
+            <p class="text-gray2-700 mt-0.5 text-[12.5px]">Default ChatGPT model mới — giảm 52% hallucination trên high-stakes prompts.</p>
+          </li>
+          <li>
+            <a href="https://www.anthropic.com/glasswing" target="_blank" rel="noopener" class="font-semibold text-navy-500 hover:text-brand-400">Claude Mythos Preview &amp; Project Glasswing (Anthropic, 7/4/2026)</a>
+            <p class="text-gray2-700 mt-0.5 text-[12.5px]">Frontier model cybersecurity — gated, không public. Đọc để hiểu hướng đi cuối 2026.</p>
+          </li>
+          <li>
+            <a href="https://blog.google/technology/google-deepmind/" target="_blank" rel="noopener" class="font-semibold text-navy-500 hover:text-brand-400">Google DeepMind Blog</a>
+            <p class="text-gray2-700 mt-0.5 text-[12.5px]">Updates Gemini 3.x, Veo, Nano Banana. Theo dõi sát quanh Google I/O 19–20/5/2026.</p>
+          </li>
+        </ul>
+      </div>
+
+      <!-- Benchmarks & Independent eval -->
+      <div class="bg-white rounded-2xl p-6 border-l-4 border-emerald-400 shadow-sm">
+        <div class="mono text-[11px] tracking-widest uppercase text-emerald-600 mb-3">📊 Benchmarks &amp; Independent Eval</div>
+        <ul class="space-y-3 text-[13.5px] text-gray2-700">
+          <li>
+            <a href="https://lmarena.ai" target="_blank" rel="noopener" class="font-semibold text-navy-500 hover:text-brand-400">LMArena (Chatbot Arena)</a>
+            <p class="text-gray2-700 mt-0.5 text-[12.5px]">Blind A/B vote giữa các model — leaderboard cập nhật real-time, ít bias hơn benchmark fixed.</p>
+          </li>
+          <li>
+            <a href="https://artificialanalysis.ai" target="_blank" rel="noopener" class="font-semibold text-navy-500 hover:text-brand-400">Artificial Analysis</a>
+            <p class="text-gray2-700 mt-0.5 text-[12.5px]">Independent benchmark cost vs quality vs speed cho mọi major model.</p>
+          </li>
+          <li>
+            <a href="https://www.swebench.com" target="_blank" rel="noopener" class="font-semibold text-navy-500 hover:text-brand-400">SWE-Bench (Verified &amp; Pro)</a>
+            <p class="text-gray2-700 mt-0.5 text-[12.5px]">Benchmark code engineering. GPT-5.5: 88.7%, Mythos: 93.9%, Opus 4.7: ~85%.</p>
+          </li>
+          <li>
+            <a href="https://imagearena.ai" target="_blank" rel="noopener" class="font-semibold text-navy-500 hover:text-brand-400">Image Arena</a>
+            <p class="text-gray2-700 mt-0.5 text-[12.5px]">Leaderboard image gen blind vote. GPT Image 2 dẫn đầu T5/2026 với +242 điểm.</p>
+          </li>
+        </ul>
+      </div>
+
+      <!-- Vietnamese resources -->
+      <div class="bg-white rounded-2xl p-6 border-l-4 border-rose-400 shadow-sm">
+        <div class="mono text-[11px] tracking-widest uppercase text-rose-600 mb-3">🇻🇳 Vietnamese Resources</div>
+        <ul class="space-y-3 text-[13.5px] text-gray2-700">
+          <li>
+            <span class="font-semibold text-navy-500">Demo #ai-academy (Slack/internal)</span>
+            <p class="text-gray2-700 mt-0.5 text-[12.5px]">Kênh nội bộ share prompt template, workflow, kinh nghiệm. Đây là kênh chính của course này.</p>
+          </li>
+          <li>
+            <span class="font-semibold text-navy-500">Demo AI Champion network</span>
+            <p class="text-gray2-700 mt-0.5 text-[12.5px]">Mỗi team có ít nhất 1 champion — liên hệ trực tiếp qua HR/L&amp;D nếu cần buddy session.</p>
+          </li>
+        </ul>
+      </div>
+
+      <!-- Industry & Trends -->
+      <div class="bg-white rounded-2xl p-6 border-l-4 border-amber-400 shadow-sm">
+        <div class="mono text-[11px] tracking-widest uppercase text-amber-600 mb-3">📰 Industry News &amp; Trends</div>
+        <ul class="space-y-3 text-[13.5px] text-gray2-700">
+          <li>
+            <a href="https://techcrunch.com/category/artificial-intelligence/" target="_blank" rel="noopener" class="font-semibold text-navy-500 hover:text-brand-400">TechCrunch AI</a>
+            <p class="text-gray2-700 mt-0.5 text-[12.5px]">Release announcement &amp; industry analysis nhanh.</p>
+          </li>
+          <li>
+            <a href="https://the-decoder.com" target="_blank" rel="noopener" class="font-semibold text-navy-500 hover:text-brand-400">The Decoder</a>
+            <p class="text-gray2-700 mt-0.5 text-[12.5px]">In-depth technical analysis, ít hype hơn báo mainstream.</p>
+          </li>
+          <li>
+            <a href="https://simonwillison.net" target="_blank" rel="noopener" class="font-semibold text-navy-500 hover:text-brand-400">Simon Willison's Blog</a>
+            <p class="text-gray2-700 mt-0.5 text-[12.5px]">Một trong những blog độc lập sát thực tế nhất về LLM, có ví dụ code chạy được.</p>
+          </li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="mt-12 bg-navy-500 text-white rounded-2xl p-6 lg:p-8 relative overflow-hidden">
+      <div class="absolute inset-0 decision-grid opacity-20"></div>
+      <div class="relative">
+        <div class="mono text-[11px] tracking-[0.2em] uppercase text-cyan2 mb-2">Course versioning</div>
+        <p class="text-[14px] text-gray2-200 leading-relaxed">
+          <strong>v1.1 · May 2026</strong> — Updated với GPT-5.5, GPT Image 2, Claude Opus 4.7, Mythos Preview, Gemini 3.1/3.2, Seedance 2.0, Veo 3.1, Sora 2, Agent Skills. Lần update tiếp theo dự kiến sau Google I/O 2026 (chính thức Gemini 3.2) và các major release Q3/2026.
+        </p>
+        <p class="text-[13px] text-gray2-200 mt-3">
+          <span class="mono text-cyan2">Đề xuất topic mới / sửa nội dung:</span> ping trên #ai-academy hoặc gửi note cho L&amp;D team.
+        </p>
+      </div>
+    </div>
+  </div>
+</section>
+
 </main>
 
 <!-- ============== JAVASCRIPT ============== -->
@@ -2538,7 +3501,7 @@ const ALL_LESSONS = [
   {id:'m1-l3', mod:1, title:'Web Search'},
   {id:'m1-l4', mod:1, title:'Web Search Sources'},
   {id:'m1-l5', mod:1, title:'Deep Research'},
-  {id:'m1-l6', mod:1, title:'Model Comparison'},
+  {id:'m1-l6', mod:1, title:'Model Comparison 2026'},
   {id:'m2-l1', mod:2, title:'Brainstorming'},
   {id:'m2-l2', mod:2, title:'Context — C.R.A.F.T'},
   {id:'m2-l3', mod:2, title:'Desktop Apps & MCP'},
@@ -2549,18 +3512,20 @@ const ALL_LESSONS = [
   {id:'m3-l1', mod:3, title:'Multimedia Data'},
   {id:'m3-l2', mod:3, title:'Image Understanding'},
   {id:'m3-l3', mod:3, title:'Image Generation'},
-  {id:'m3-l4', mod:3, title:'Building Apps'},
-  {id:'m3-l5', mod:3, title:'Data Analysis'},
-  {id:'m3-l6', mod:3, title:'Capstone Project'},
+  {id:'m3-l4', mod:3, title:'Video Generation ⚡'},
+  {id:'m3-l5', mod:3, title:'Building Apps'},
+  {id:'m3-l6', mod:3, title:'Data Analysis'},
+  {id:'m3-l7', mod:3, title:'Capstone Project'},
   {id:'m4-l1', mod:4, title:'Safety & Privacy'},
   {id:'m4-l2', mod:4, title:'Prompt Patterns nâng cao'},
   {id:'m4-l3', mod:4, title:'Scale AI cho team'},
+  {id:'m4-l4', mod:4, title:'Custom AI Assistants ⚡'},
 ];
 const MODULE_TITLES = {
-  1: 'Module 01 · Tìm kiếm thông tin',
-  2: 'Module 02 · Thought Partner',
-  3: 'Module 03 · Multimedia & Code',
-  4: 'Module 04 · Bonus Demo',
+  1: 'M1 · Tìm kiếm thông tin',
+  2: 'M2 · Thought Partner',
+  3: 'M3 · Multimedia & Code',
+  4: 'M4 · Vận hành doanh nghiệp',
 };
 
 // ---------- Storage helpers (window.storage with localStorage fallback) ----------
@@ -2601,25 +3566,37 @@ function buildNav() {
     groups[l.mod].push(l);
   });
   Object.keys(groups).forEach(mod => {
-    const header = document.createElement('div');
-    header.className = 'mono text-[10px] tracking-[0.2em] uppercase text-cyan2/80 mt-5 mb-2 px-3';
-    header.textContent = MODULE_TITLES[mod];
-    navList.appendChild(header);
+    // Module section separator
+    const moduleBlock = document.createElement('div');
+    moduleBlock.className = 'module-group mt-6 first:mt-2';
 
-    groups[mod].forEach(l => {
+    const header = document.createElement('div');
+    header.className = 'flex items-center gap-2 px-3 mb-2.5';
+    header.innerHTML = `
+      <span class="mono text-[10px] tracking-[0.18em] uppercase text-cyan2 font-semibold">${MODULE_TITLES[mod]}</span>
+      <span class="flex-1 h-px bg-gradient-to-r from-cyan2/40 to-transparent"></span>
+    `;
+    moduleBlock.appendChild(header);
+
+    groups[mod].forEach((l, idx) => {
       const a = document.createElement('a');
       a.href = '#' + l.id;
-      a.className = 'nav-link group flex items-center gap-3 px-3 py-2 rounded-lg text-[13px] text-gray2-200 hover:bg-navy-400/50 hover:text-white transition';
+      a.className = 'nav-link group flex items-center gap-2.5 px-3 py-2 rounded-md text-[13px] text-gray2-200/90 hover:bg-navy-400/50 hover:text-white transition relative';
       a.dataset.lesson = l.id;
+      // Lesson number shown as small badge before title
+      const lessonNum = l.id.split('-l')[1];
       a.innerHTML = `
-        <span class="check-dot w-2 h-2 rounded-full bg-navy-400 shrink-0"></span>
+        <span class="check-dot w-1.5 h-1.5 rounded-full bg-navy-400 shrink-0"></span>
+        <span class="mono text-[10px] text-gray2-200/50 shrink-0 w-3">${lessonNum}</span>
         <span class="flex-1 truncate">${l.title}</span>
       `;
       a.addEventListener('click', () => {
         if (window.innerWidth < 1024) document.getElementById('sidebar').classList.remove('open');
       });
-      navList.appendChild(a);
+      moduleBlock.appendChild(a);
     });
+
+    navList.appendChild(moduleBlock);
   });
 }
 
@@ -2654,22 +3631,20 @@ async function hydrateCompletion() {
 }
 
 function markUI(lessonId, done) {
-  const lesson = document.getElementById(lessonId);
-  if (lesson) {
-    const btn = lesson.querySelector('.complete-btn');
-    if (btn) {
-      if (done) {
-        btn.textContent = '✓ Đã hoàn thành';
-        btn.classList.add('bg-brand-400', 'text-white');
-        btn.classList.remove('border-brand-400');
-      } else {
-        btn.textContent = 'Đánh dấu hoàn thành';
-        btn.classList.remove('bg-brand-400', 'text-white');
-        btn.classList.add('border-brand-400');
-      }
+  // Update the new footer complete button
+  const navBtn = document.querySelector(`.nav-complete[data-lesson="${lessonId}"]`);
+  if (navBtn) {
+    const label = navBtn.querySelector('.complete-label');
+    if (done) {
+      navBtn.classList.add('done');
+      if (label) label.textContent = '✓ Đã hoàn thành';
+    } else {
+      navBtn.classList.remove('done');
+      if (label) label.textContent = 'Đánh dấu hoàn thành';
     }
   }
-  const navLink = document.querySelector(`[data-lesson="${lessonId}"]`);
+  // Update sidebar nav dot
+  const navLink = document.querySelector(`a.nav-link[data-lesson="${lessonId}"]`);
   if (navLink) {
     const dot = navLink.querySelector('.check-dot');
     if (dot) {
@@ -2782,14 +3757,18 @@ function setupScrollSpy() {
         const id = entry.target.id;
         document.querySelectorAll('.nav-link').forEach(link => {
           if (link.dataset.lesson === id) {
-            link.classList.add('bg-navy-400/60', 'text-white');
+            link.classList.add('active', 'bg-brand-400/20', 'text-white');
+            link.style.borderLeft = '2px solid #25D0FF';
+            link.style.paddingLeft = 'calc(0.75rem - 2px)';
           } else {
-            link.classList.remove('bg-navy-400/60', 'text-white');
+            link.classList.remove('active', 'bg-brand-400/20', 'text-white');
+            link.style.borderLeft = '';
+            link.style.paddingLeft = '';
           }
         });
       }
     });
-  }, { rootMargin: '-30% 0px -60% 0px' });
+  }, { rootMargin: '-25% 0px -65% 0px' });
   document.querySelectorAll('.lesson').forEach(el => observer.observe(el));
 }
 
