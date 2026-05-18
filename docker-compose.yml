@@ -1,0 +1,52 @@
+# Demo Learning Portal — full stack
+# `bash scripts/start-dev.sh` brings everything up.
+#
+# Security defaults:
+#   • All host-port bindings are 127.0.0.1-only — nothing on your LAN can reach
+#     the DB or the portal. For prod, put behind nginx / Cloudflare.
+#   • There is no DB web UI exposed. To inspect the DB, use `psql` over the
+#     loopback port, or run a one-shot Postgres client container.
+
+services:
+  db:
+    image: postgres:16-alpine
+    container_name: lms-db
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: lms
+      POSTGRES_PASSWORD: lms
+      POSTGRES_DB: lms
+    ports:
+      - "127.0.0.1:3942:5432"
+    volumes:
+      - lms-pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U lms -d lms"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  web:
+    build:
+      context: ./app
+      dockerfile: Dockerfile
+    container_name: lms-web
+    restart: unless-stopped
+    environment:
+      DATABASE_URL: postgresql://lms:lms@db:5432/lms?schema=public
+      AUTH_SECRET: ${AUTH_SECRET:-demo-lms-please-change-this-in-prod-0123456789abcdef}
+      AUTH_TRUST_HOST: "true"
+      NEXTAUTH_URL: ${NEXTAUTH_URL:-http://localhost:3940}
+      COURSES_DIR: /courses
+      NODE_ENV: production
+      PORT: "3940"
+    ports:
+      - "127.0.0.1:3940:3940"
+    volumes:
+      - ./courses:/courses:ro
+    depends_on:
+      db:
+        condition: service_healthy
+
+volumes:
+  lms-pgdata:

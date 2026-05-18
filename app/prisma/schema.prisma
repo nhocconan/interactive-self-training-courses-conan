@@ -1,0 +1,559 @@
+// Demo Learning Portal - Prisma schema (P1.5)
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum Role {
+  USER
+  HR
+  ADMIN
+}
+
+enum AuthSource {
+  LOCAL
+  LDAP
+}
+
+enum QuestionKind {
+  SINGLE_CHOICE
+  MULTI_CHOICE
+  TRUE_FALSE
+  FILL_BLANK
+  SHORT_ANSWER
+}
+
+enum AiProviderKind {
+  OPENAI
+  ANTHROPIC
+  GOOGLE
+  OPENAI_COMPATIBLE
+  /// Ollama — cloud (Turbo / Pro) by default, or self-hosted (e.g. http://host:11434).
+  OLLAMA
+}
+
+enum AiFeatureKey {
+  CHAT
+  SUMMARY
+  EXPLAIN
+  QUIZ_GENERATION
+  TAG_SUGGESTION
+}
+
+enum NotificationKind {
+  ANNOUNCEMENT
+  COURSE_ASSIGNED
+  CERTIFICATE_EARNED
+  CERTIFICATE_EXPIRING
+  QUIZ_GRADED
+  PATH_ASSIGNED
+  GENERAL
+}
+
+/// Source format of a course's content. Determines how the viewer renders.
+///   HTML            — interactive HTML in `htmlPath` (legacy default)
+///   VIDEO_FILE      — uploaded mp4/webm at `contentUrl` (served from /courses-asset/…)
+///   VIDEO_EMBED     — YouTube / Vimeo / Loom URL in `embedUrl`
+///   PDF             — uploaded PDF at `contentUrl`
+///   PPTX / PPT      — uploaded slide deck; viewer uses Office Online viewer if `embedUrl` set,
+///                     otherwise offers download
+///   SLIDES_GOOGLE   — Google Slides / Google Docs share URL in `embedUrl`
+///   MARKDOWN        — `contentMd` rendered in-app (lightweight)
+///   SCORM           — reserved for P3
+enum CourseKind {
+  HTML
+  VIDEO_FILE
+  VIDEO_EMBED
+  PDF
+  PPTX
+  PPT
+  SLIDES_GOOGLE
+  MARKDOWN
+  SCORM
+}
+
+model User {
+  id           String     @id @default(cuid())
+  email        String     @unique
+  username     String?    @unique
+  name         String
+  passwordHash String?
+  role         Role       @default(USER)
+  source       AuthSource @default(LOCAL)
+  department   String?
+  jobTitle     String?
+  locale       String? // "vi" | "en"
+  isActive     Boolean    @default(true)
+  createdAt    DateTime   @default(now())
+  updatedAt    DateTime   @updatedAt
+  lastLoginAt  DateTime?
+  /// Full DN of the LDAP/AD object, captured when a user is provisioned
+  /// either via login bind OR through the admin "Add from AD" picker.
+  ldapDn       String?
+  /// When the periodic LDAP sync job last refreshed name/dept/title.
+  ldapSyncedAt DateTime?
+
+  enrollments     Enrollment[]
+  categoryGrants  CategoryGrant[]
+  progress        CourseProgress[]
+  quizAttempts    QuizAttempt[]
+  certificates    Certificate[]
+  pathEnrollments LearningPathEnrollment[]
+  notifications   Notification[]
+  aiUsage         AiUsage[]
+  auditLogs       AuditLog[]               @relation("AuditActor")
+
+  @@index([department, isActive])
+  @@index([role, isActive])
+  @@index([lastLoginAt])
+}
+
+model Category {
+  id          String   @id @default(cuid())
+  slug        String   @unique
+  name        String
+  description String?
+  color       String?
+  iconName    String?
+  sortOrder   Int      @default(0)
+  createdAt   DateTime @default(now())
+
+  courses Course[]
+  grants  CategoryGrant[]
+}
+
+model Course {
+  id          String     @id @default(cuid())
+  slug        String     @unique
+  title       String
+  description String
+  /// One of CourseKind. Default HTML keeps existing rows working.
+  kind        CourseKind @default(HTML)
+  /// HTML courses only — relative path under COURSES_DIR.
+  htmlPath    String
+  /// Uploaded asset key (URL path under /courses-asset/…), for VIDEO_FILE/PDF/PPTX/PPT.
+  contentUrl  String?
+  /// External embed URL for VIDEO_EMBED, SLIDES_GOOGLE, or Office Online viewer.
+  embedUrl    String?
+  /// Inline markdown for MARKDOWN courses.
+  contentMd   String?
+  /// File size in bytes (uploads only).
+  fileSize    Int?
+  /// MIME type recorded at upload time.
+  mimeType    String?
+  thumbnail   String?
+  level       String?
+  durationMin Int?
+  tags        String[]   @default([])
+  isPublished Boolean    @default(true)
+  isMandatory Boolean    @default(false)
+  createdAt   DateTime   @default(now())
+  updatedAt   DateTime   @updatedAt
+
+  categoryId String?
+  category   Category? @relation(fields: [categoryId], references: [id], onDelete: SetNull)
+
+  enrollments  Enrollment[]
+  progress     CourseProgress[]
+  quizzes      Quiz[]
+  certificates Certificate[]
+  pathSteps    LearningPathStep[]
+  skillLinks   CourseSkill[]
+}
+
+model Enrollment {
+  id         String   @id @default(cuid())
+  userId     String
+  courseId   String
+  assignedBy String?
+  createdAt  DateTime @default(now())
+
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  course Course @relation(fields: [courseId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, courseId])
+}
+
+model CategoryGrant {
+  id         String   @id @default(cuid())
+  userId     String
+  categoryId String
+  assignedBy String?
+  createdAt  DateTime @default(now())
+
+  user     User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  category Category @relation(fields: [categoryId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, categoryId])
+}
+
+model CourseProgress {
+  id          String    @id @default(cuid())
+  userId      String
+  courseId    String
+  percent     Int       @default(0)
+  position    String?
+  startedAt   DateTime  @default(now())
+  completedAt DateTime?
+  lastSeenAt  DateTime  @default(now())
+
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  course Course @relation(fields: [courseId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, courseId])
+  @@index([userId, completedAt])
+  @@index([courseId, completedAt])
+  @@index([lastSeenAt])
+}
+
+// ─── Quizzes ──────────────────────────────────────────────────────────────
+
+model Quiz {
+  id           String   @id @default(cuid())
+  courseId     String
+  title        String
+  description  String?
+  passPercent  Int      @default(70)
+  maxAttempts  Int? // null = unlimited
+  timeLimitSec Int? // null = no limit
+  shuffle      Boolean  @default(true)
+  isPublished  Boolean  @default(true)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  course    Course        @relation(fields: [courseId], references: [id], onDelete: Cascade)
+  questions Question[]
+  attempts  QuizAttempt[]
+}
+
+model Question {
+  id          String       @id @default(cuid())
+  quizId      String
+  kind        QuestionKind
+  prompt      String
+  /// options is JSON array of strings (choices). For SHORT_ANSWER it's [].
+  options     Json         @default("[]")
+  /// answer is JSON. Shape depends on kind:
+  /// - SINGLE_CHOICE / TRUE_FALSE: { "index": 0 }
+  /// - MULTI_CHOICE: { "indices": [0, 2] }
+  /// - FILL_BLANK / SHORT_ANSWER: { "accept": ["string", "another"] }
+  answer      Json         @default("{}")
+  explanation String?
+  points      Int          @default(1)
+  sortOrder   Int          @default(0)
+
+  quiz Quiz @relation(fields: [quizId], references: [id], onDelete: Cascade)
+}
+
+model QuizAttempt {
+  id          String    @id @default(cuid())
+  quizId      String
+  userId      String
+  score       Int       @default(0) // 0..100
+  passed      Boolean   @default(false)
+  startedAt   DateTime  @default(now())
+  submittedAt DateTime?
+  durationSec Int?
+  /// answers: array of { questionId, value, correct, awardedPoints }
+  answers     Json      @default("[]")
+
+  quiz Quiz @relation(fields: [quizId], references: [id], onDelete: Cascade)
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId, quizId])
+}
+
+// ─── Certificates ─────────────────────────────────────────────────────────
+
+model Certificate {
+  id        String    @id @default(cuid())
+  code      String    @unique // public verifiable code
+  userId    String
+  courseId  String? // null if path certificate
+  pathId    String? // null if course certificate
+  title     String
+  issuedAt  DateTime  @default(now())
+  expiresAt DateTime?
+  /// metadata: arbitrary JSON for future use (score, evaluator, etc.)
+  metadata  Json      @default("{}")
+
+  user   User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+  course Course?       @relation(fields: [courseId], references: [id], onDelete: SetNull)
+  path   LearningPath? @relation(fields: [pathId], references: [id], onDelete: SetNull)
+
+  @@index([userId])
+  @@index([code])
+  @@index([courseId])
+  @@index([pathId])
+}
+
+// ─── Learning paths ───────────────────────────────────────────────────────
+
+model LearningPath {
+  id          String   @id @default(cuid())
+  slug        String   @unique
+  title       String
+  description String
+  color       String?
+  isPublished Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  steps        LearningPathStep[]
+  enrollments  LearningPathEnrollment[]
+  certificates Certificate[]
+}
+
+model LearningPathStep {
+  id        String  @id @default(cuid())
+  pathId    String
+  courseId  String
+  sortOrder Int     @default(0)
+  required  Boolean @default(true)
+
+  path   LearningPath @relation(fields: [pathId], references: [id], onDelete: Cascade)
+  course Course       @relation(fields: [courseId], references: [id], onDelete: Cascade)
+
+  @@unique([pathId, courseId])
+}
+
+model LearningPathEnrollment {
+  id          String    @id @default(cuid())
+  userId      String
+  pathId      String
+  startedAt   DateTime  @default(now())
+  completedAt DateTime?
+
+  user User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+  path LearningPath @relation(fields: [pathId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, pathId])
+}
+
+// ─── AI providers ─────────────────────────────────────────────────────────
+
+model AiProvider {
+  id             String         @id @default(cuid())
+  name           String
+  kind           AiProviderKind
+  /// Encrypted API key (AEAD via AUTH_SECRET); never returned to the client.
+  apiKey         String
+  /// For OPENAI_COMPATIBLE (Azure, Together, …)
+  baseUrl        String?
+  isEnabled      Boolean        @default(true)
+  /// Cached model list pulled from provider's /models endpoint
+  modelsCache    Json           @default("[]")
+  modelsCachedAt DateTime?
+  createdAt      DateTime       @default(now())
+  updatedAt      DateTime       @updatedAt
+
+  modelChoices AiModelChoice[]
+  usage        AiUsage[]
+}
+
+/// Maps a feature (e.g. CHAT) to a provider+model. One choice per feature.
+model AiModelChoice {
+  id         String       @id @default(cuid())
+  feature    AiFeatureKey
+  providerId String
+  model      String
+  /// 0 = primary, 1+ = fallback rank. runFeature tries low → high.
+  priority   Int          @default(0)
+
+  provider AiProvider @relation(fields: [providerId], references: [id], onDelete: Cascade)
+
+  @@unique([feature, priority])
+  @@index([feature])
+}
+
+model AiUsage {
+  id           String       @id @default(cuid())
+  userId       String?
+  providerId   String?
+  feature      AiFeatureKey
+  model        String
+  inputTokens  Int          @default(0)
+  outputTokens Int          @default(0)
+  costUSD      Float        @default(0) // estimated, in USD
+  latencyMs    Int          @default(0)
+  ok           Boolean      @default(true)
+  errorMsg     String?
+  createdAt    DateTime     @default(now())
+
+  user     User?       @relation(fields: [userId], references: [id], onDelete: SetNull)
+  provider AiProvider? @relation(fields: [providerId], references: [id], onDelete: SetNull)
+
+  @@index([userId, createdAt])
+  @@index([providerId, createdAt])
+}
+
+// ─── Notifications & announcements ────────────────────────────────────────
+
+model Notification {
+  id        String           @id @default(cuid())
+  userId    String
+  kind      NotificationKind
+  title     String
+  body      String?
+  href      String?
+  readAt    DateTime?
+  createdAt DateTime         @default(now())
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId, readAt])
+}
+
+model Announcement {
+  id        String   @id @default(cuid())
+  title     String
+  body      String
+  audience  String   @default("ALL") // "ALL" | "USER" | "HR" | "ADMIN"
+  pinned    Boolean  @default(false)
+  createdBy String
+  createdAt DateTime @default(now())
+}
+
+// ─── Audit log ────────────────────────────────────────────────────────────
+
+model AuditLog {
+  id        String   @id @default(cuid())
+  actorId   String? // who did it
+  action    String // verb-object, e.g. "user.create"
+  target    String? // id of the affected entity
+  /// diff: { before: {...}, after: {...} }
+  diff      Json     @default("{}")
+  ip        String?
+  userAgent String?
+  createdAt DateTime @default(now())
+
+  actor User? @relation("AuditActor", fields: [actorId], references: [id], onDelete: SetNull)
+
+  @@index([createdAt])
+  @@index([actorId])
+}
+
+// ─── Skills (P1 stub; full taxonomy P2) ───────────────────────────────────
+
+model Skill {
+  id      String        @id @default(cuid())
+  slug    String        @unique
+  name    String
+  parent  String?
+  courses CourseSkill[]
+}
+
+model CourseSkill {
+  id       String @id @default(cuid())
+  courseId String
+  skillId  String
+  weight   Int    @default(1)
+
+  course Course @relation(fields: [courseId], references: [id], onDelete: Cascade)
+  skill  Skill  @relation(fields: [skillId], references: [id], onDelete: Cascade)
+
+  @@unique([courseId, skillId])
+}
+
+// ─── LDAP config (singleton) ──────────────────────────────────────────────
+
+model LdapConfig {
+  id           Int      @id @default(1)
+  enabled      Boolean  @default(false)
+  url          String?
+  bindDN       String?
+  bindPassword String?
+  baseDN       String?
+  /// Newline-separated list of sub-OUs to search when admins use
+  /// "Add user from AD" (the picker). If empty, falls back to baseDN.
+  subtreeOUs   String?
+  userFilter   String?  @default("(|(sAMAccountName={username})(userPrincipalName={username}))")
+  emailAttr    String?  @default("mail")
+  nameAttr     String?  @default("displayName")
+  deptAttr     String?  @default("department")
+  titleAttr    String?  @default("title")
+  defaultRole  Role     @default(USER)
+  startTls     Boolean  @default(false)
+  /// When true, a nightly job refreshes user attributes for LDAP-sourced users.
+  syncEnabled  Boolean  @default(false)
+  updatedAt    DateTime @updatedAt
+}
+
+// ─── RBAC: fine-grained permissions ───────────────────────────────────────
+// Roles remain coarse (USER/HR/ADMIN) for routing. Permissions add a
+// per-capability check; helpers in src/lib/rbac.ts compose them.
+//
+// Defaults are seeded in prisma/seed.ts. Admins may grant additional
+// permissions to HR (e.g. allow HR to view audit log) or revoke defaults.
+
+model Permission {
+  id          String  @id @default(cuid())
+  /// Stable key like "users.create", "courses.publish".
+  key         String  @unique
+  label       String
+  description String?
+  /// Logical group for the admin UI (e.g. "Users", "Courses").
+  group       String
+
+  roles RolePermission[]
+}
+
+model RolePermission {
+  id           String @id @default(cuid())
+  role         Role
+  permissionId String
+
+  permission Permission @relation(fields: [permissionId], references: [id], onDelete: Cascade)
+
+  @@unique([role, permissionId])
+}
+
+// ─── Site Security & Site Settings (singletons) ───────────────────────────
+
+model SiteSecurity {
+  id                   Int      @id @default(1)
+  /// Minimum password length for LOCAL users.
+  pwdMinLength         Int      @default(10)
+  /// Require chars from at least N classes (lower/upper/digit/symbol).
+  pwdMinClasses        Int      @default(3)
+  /// Days until a local password must be rotated. 0 = never.
+  pwdMaxAgeDays        Int      @default(0)
+  /// Threshold of consecutive failed logins before lockout.
+  loginMaxFailures     Int      @default(8)
+  /// Cool-down minutes after the threshold is hit.
+  loginCooldownMinutes Int      @default(5)
+  /// Idle session timeout (minutes). 0 = follow JWT default (24h).
+  sessionIdleMinutes   Int      @default(0)
+  /// If set, restrict local sign-up + LDAP provisioning to these email domains
+  /// (comma-separated, no @). Empty = no restriction.
+  allowedEmailDomains  String?
+  /// CIDR allowlist for admin console access. Empty = no IP restriction.
+  adminIpAllowlist     String?
+  /// Force HTTPS via HSTS header in production.
+  forceHsts            Boolean  @default(true)
+  /// Require admins to re-authenticate every N hours for sensitive ops.
+  adminReauthHours     Int      @default(8)
+  updatedAt            DateTime @updatedAt
+}
+
+model SiteSetting {
+  id              Int      @id @default(1)
+  siteName        String   @default("Demo Learning")
+  /// URL or data: URI for the masthead logo.
+  logoUrl         String?
+  /// "vi" or "en" — the fallback locale for unauthenticated pages.
+  defaultLocale   String   @default("en")
+  /// Visible at /login: "Need help? Email …".
+  supportEmail    String?
+  /// Allow self-signup for users on allowedEmailDomains.
+  allowSelfSignup Boolean  @default(false)
+  /// HR can mark courses as mandatory for a department.
+  enableMandatory Boolean  @default(true)
+  /// Show "Powered by Demo" footer.
+  showBranding    Boolean  @default(true)
+  updatedAt       DateTime @updatedAt
+}
