@@ -48,6 +48,8 @@ export default auth((req) => {
     "/brand",
     "/logo",
     "/verify",
+    "/prd",
+    "/manual",
   ];
   if (publicPaths.some((p) => path.startsWith(p))) {
     return withHeaders(NextResponse.next(), path);
