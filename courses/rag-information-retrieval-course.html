@@ -289,7 +289,7 @@ code{font-family:var(--mono);font-size:13px;background:rgba(10,14,10,0.06);paddi
     <li><a href="#ch8" data-ch="8"><span class="toc-num">08</span><span>Cross-encoder rerank</span><span class="toc-status"></span></a></li>
     <li><a href="#ch9" data-ch="9"><span class="toc-num">09</span><span>CRAG quality gate</span><span class="toc-status"></span></a></li>
     <li><a href="#ch10" data-ch="10"><span class="toc-num">10</span><span>Entity-aware planning</span><span class="toc-status"></span></a></li>
-    <li><a href="#ch11" data-ch="11"><span class="toc-num">11</span><span>Proposed enhancements</span><span class="toc-status"></span></a></li>
+    <li><a href="#ch11" data-ch="11"><span class="toc-num">11</span><span>2026-Q3 layer (shipped)</span><span class="toc-status"></span></a></li>
     <li><a href="#ch12" data-ch="12"><span class="toc-num">12</span><span>Full picture</span><span class="toc-status"></span></a></li>
   </ul>
   <h4 style="margin-top:32px">Companion files</h4>
@@ -1047,7 +1047,7 @@ code{font-family:var(--mono);font-size:13px;background:rgba(10,14,10,0.06);paddi
     <div class="step"><span class="step-n">C</span><span>Final top-1 is the actual Demo AM trial section.</span></div>
   </div>
 
-  <p class="code-ref">Reranker client: <code>apps/api/src/modules/rag/reranker.service.ts</code>. Configurable via <code>RERANKER_URL</code>, <code>RERANKER_API_KEY</code>, <code>RERANKER_MODEL</code>. Falls back to the existing domain-aware ranker when unset.</p>
+  <p class="code-ref">Reranker dispatcher: <code>apps/api/src/modules/rag/reranker.service.ts</code> with 5 adapters under <code>reranker/</code> (<code>jina</code>, <code>cohere</code>, <code>openrouter</code>, <code>voyage</code>, <code>llm</code>). Configured by the super-admin in the dashboard (<code>Admin → Settings → Reranking</code>) — see <strong>Chapter 11 § Reranking dispatcher</strong> for why and how. DISABLED by default; if disabled or unreachable, the pipeline falls back to the domain-aware ranker.</p>
 
   <div class="quiz">
     <div class="quiz-label">Test yourself</div>
@@ -1245,13 +1245,19 @@ code{font-family:var(--mono);font-size:13px;background:rgba(10,14,10,0.06);paddi
 <section class="chapter" id="ch11">
   <header class="chapter-head">
     <div class="chapter-num">Chapter 11</div>
-    <h2>Proposed enhancements <em>— what the next layer looks like</em></h2>
-    <p class="chapter-lede">The full proposal lives in <code>docs/proposal/proposal-rag-distillation-2026.md</code>. This chapter is the educational walk-through.</p>
+    <h2>The 2026-Q3 layer <em>— distillation + dispatcher + surgical curation, shipped</em></h2>
+    <p class="chapter-lede">Original proposal: <code>docs/proposal/proposal-rag-distillation-2026.md</code>. Everything in this chapter is live in production now — this is the educational walk-through of what landed and why.</p>
   </header>
 
-  <p>Most RAG features in this codebase are 2024-vintage techniques shipped well. Three opportunities remain that the upstream literature (Anthropic Contextual Retrieval, Blockify IdeaBlocks, the broader 2026 RAG conversations) suggests would still move the needle. Each one targets a different failure mode that survives the current pipeline.</p>
+  <p>The earlier chapters (00-10) cover the 2024-vintage RAG techniques the codebase already ran. Q3 of 2026 brought a layered upgrade in three waves, each targeting a different failure mode the older pipeline still produced. The three waves and what each one fixes:</p>
 
-  <h3>Enhancement A — Semantic deduplication</h3>
+  <ol>
+    <li><strong>Distillation</strong> (A-C below) — reshape the corpus so retrieval has cleaner candidates to work with: semantic dedup, optional Q→A index, <code>versionState</code> lifecycle.</li>
+    <li><strong>Reranking dispatcher</strong> (D) — replace the single-vendor reranker stub with a 5-provider catalog the super-admin opts into.</li>
+    <li><strong>Surgical curation</strong> (E-G) — per-page metadata override, chatbot <code>scopeMode</code>, synonym entity merge. These cover the failure modes that hit operators in production after the distillation layer was live.</li>
+  </ol>
+
+  <h3>A. Semantic deduplication <em>— shipped</em></h3>
 
   <p>Demo tenants frequently train one chatbot on three overlapping sources: a PDF, a website page, and a manually-typed FAQ — all describing the same product. After ingestion, the index holds 5–15 near-duplicate vectors per fact. Top-K retrieval distributes probability mass across them, suppressing the canonical version.</p>
 
@@ -1301,13 +1307,13 @@ code{font-family:var(--mono);font-size:13px;background:rgba(10,14,10,0.06);paddi
     <div class="diagram-cap"><span>Fig 11a · Semantic dedup collapses competing near-duplicates</span><a href="rag-course-diagrams/11a-dedup.excalidraw">Open in Excalidraw →</a></div>
   </div>
 
-  <h3>Enhancement B — Optional Q→A index</h3>
+  <h3>B. Optional Q→A index <em>— shipped (opt-in per chatbot)</em></h3>
 
   <p>Queries are questions; chunks are prose. Even with contextual chunking, the <em>shape</em> mismatch costs retrieval precision. The proposal: for high-value sources (canonical pricing, policy, product docs), generate 3–8 question/answer pairs per chunk during ingestion. Store them as a parallel <code>kind='qa'</code> row alongside the prose, with a <code>parentChunkId</code> back-reference so citations still point at the prose.</p>
 
   <p>Why parallel rows, not replacement: long-form support and explainer queries still want narrative prose. The QA index <em>augments</em> rather than replacing — best of both retrieval shapes, fused via the existing RRF step.</p>
 
-  <h3>Enhancement C — versionState lifecycle field</h3>
+  <h3>C. <code>versionState</code> lifecycle field <em>— shipped</em></h3>
 
   <p>When a tenant uploads <code>pricing-2025.pdf</code> then later <code>pricing-2026.pdf</code> without deleting the old one, both index simultaneously. Today there's no signal to demote the older one. The proposal adds a <code>versionState ∈ {draft, current, approved, deprecated}</code> field to the metadata contract, and a one-line filter on retrieval: only return rows where <code>versionState IN ('current', 'approved')</code>.</p>
 
@@ -1347,12 +1353,187 @@ code{font-family:var(--mono);font-size:13px;background:rgba(10,14,10,0.06);paddi
     <div class="diagram-cap"><span>Fig 11b · The four version states and what retrieval does with each</span><a href="rag-course-diagrams/11b-version-state.excalidraw">Open in Excalidraw →</a></div>
   </div>
 
-  <p class="code-ref">Full proposal: <code>docs/proposal/proposal-rag-distillation-2026.md</code> with companion excalidraw and the migration plan (<code>0028_rag_dedup_metadata.sql</code>, <code>0029_rag_version_state.sql</code>).</p>
+  <p class="code-ref">Migrations: <code>apps/api/drizzle/0030_rag_distillation_metadata.sql</code> (partial indexes for <code>dedupOf</code> / <code>kind</code> / <code>versionState</code>), <code>0031_website_pages_metadata.sql</code> (per-page override column). Full proposal still at <code>docs/proposal/proposal-rag-distillation-2026.md</code>.</p>
 
-  <div class="callout">
-    <div class="callout-label">Recommended ship order</div>
-    <p>1. <strong>versionState first</strong> — lowest risk, ~1 day of work, immediate governance value. 2. <strong>Dedup next</strong> — measurable accuracy lift, ~3–5 days with pilot. 3. <strong>Q→A index last</strong> — opt-in pilot first, decide after dedup metrics land. The full proposal expands the rationale, validation plan, and cost ceilings.</p>
+  <h3>D. Reranking dispatcher <em>— 5 providers, opt-in</em></h3>
+
+  <p>Chapter 8 introduced the cross-encoder rerank stage. In the original codebase that stage spoke to a single hard-coded vendor via env vars (<code>RERANKER_URL</code>, …). The 2026-Q3 update replaced it with a provider-agnostic dispatcher + 5 adapters. The super-admin opts in from the dashboard, picks one of the five, pastes a key, hits Test. No env vars touch the secrets path.</p>
+
+  <p>Why 5 providers, not 1: each one is a different cost / quality / vendor-lock-in tradeoff. Most platforms only need one at a time, but which one depends on the team.</p>
+
+  <table class="compare-table">
+    <thead><tr><th>Adapter</th><th>Wire format</th><th>Cost</th><th>Free tier</th><th>When to pick</th></tr></thead>
+    <tbody>
+      <tr><td><code>llm</code></td><td><code>AiProvidersService.chatCompletion</code> with structured JSON</td><td>Chat-provider rates</td><td>n/a</td><td>No new vendor. NDCG ≈ 0.66-0.68. Default-friendly.</td></tr>
+      <tr><td><code>jina</code></td><td>POST <code>/v1/rerank</code></td><td>$0.02/M tokens in+out</td><td><strong>10M tokens</strong> per new key</td><td>Cheapest purpose-built cross-encoder. Multilingual.</td></tr>
+      <tr><td><code>cohere</code></td><td>POST <code>/v2/rerank</code></td><td>$2 / 1k searches</td><td>1k calls/mo trial</td><td>Highest NDCG@10 ≈ 0.74. Per-search pricing is predictable.</td></tr>
+      <tr><td><code>openrouter</code></td><td>Cohere shape via OpenRouter proxy</td><td>Cohere + markup</td><td>OpenRouter trial</td><td>Already paying OpenRouter for chat? One key, one bill.</td></tr>
+      <tr><td><code>voyage</code></td><td>POST <code>/v1/rerank</code> (uses <code>data</code> not <code>results</code>)</td><td>$0.02-0.05/M tokens</td><td><strong>200M tokens</strong> shared with embeddings</td><td>Already on Voyage embeddings.</td></tr>
+    </tbody>
+  </table>
+
+  <div class="diagram-wrap">
+    <svg viewBox="0 0 760 320" xmlns="http://www.w3.org/2000/svg" font-family="Inter,sans-serif" font-size="13">
+      <rect x="280" y="20" width="200" height="56" fill="#ebe5d4" stroke="#0a0e0a" rx="3"/>
+      <text x="380" y="42" text-anchor="middle" font-weight="600" font-size="13">Top-30 fused candidates</text>
+      <text x="380" y="60" text-anchor="middle" font-size="11" fill="#555">from RRF (Ch 5)</text>
+
+      <path d="M 380 76 L 380 110" stroke="#0a0e0a" marker-end="url(#a11d)"/>
+
+      <rect x="240" y="110" width="280" height="60" fill="#fff7d6" stroke="#7a6800" stroke-width="2" rx="3"/>
+      <text x="380" y="132" text-anchor="middle" font-weight="600" font-size="13" fill="#7a6800">RerankerService.dispatch()</text>
+      <text x="380" y="148" text-anchor="middle" font-size="10" fill="#555">resolveConfig: bot opt-out → bot BYOK → admin → off</text>
+      <text x="380" y="162" text-anchor="middle" font-size="10" fill="#555">picks 1 of 5 adapters by provider name</text>
+
+      <path d="M 290 170 L 110 220" stroke="#7a6800" marker-end="url(#a11d)"/>
+      <path d="M 340 170 L 250 220" stroke="#7a6800" marker-end="url(#a11d)"/>
+      <path d="M 380 170 L 380 220" stroke="#7a6800" marker-end="url(#a11d)"/>
+      <path d="M 420 170 L 510 220" stroke="#7a6800" marker-end="url(#a11d)"/>
+      <path d="M 470 170 L 650 220" stroke="#7a6800" marker-end="url(#a11d)"/>
+
+      <rect x="40" y="220" width="140" height="48" fill="#d3f9d8" stroke="#1a4d2e" rx="3"/>
+      <text x="110" y="240" text-anchor="middle" font-size="12" font-weight="600">LLM</text>
+      <text x="110" y="256" text-anchor="middle" font-size="10" fill="#555">existing chat provider</text>
+
+      <rect x="190" y="220" width="120" height="48" fill="#fff" stroke="#2563a8" rx="3"/>
+      <text x="250" y="240" text-anchor="middle" font-size="12" font-weight="600" fill="#2563a8">Jina v2</text>
+      <text x="250" y="256" text-anchor="middle" font-size="10" fill="#555">multilingual</text>
+
+      <rect x="320" y="220" width="120" height="48" fill="#fff" stroke="#8b1a1a" rx="3"/>
+      <text x="380" y="240" text-anchor="middle" font-size="12" font-weight="600" fill="#8b1a1a">Cohere v3.5</text>
+      <text x="380" y="256" text-anchor="middle" font-size="10" fill="#555">per-search</text>
+
+      <rect x="450" y="220" width="120" height="48" fill="#fff" stroke="#c9a227" rx="3"/>
+      <text x="510" y="240" text-anchor="middle" font-size="12" font-weight="600" fill="#7a6800">OpenRouter</text>
+      <text x="510" y="256" text-anchor="middle" font-size="10" fill="#555">proxies Cohere</text>
+
+      <rect x="580" y="220" width="140" height="48" fill="#fff" stroke="#1a4d2e" rx="3"/>
+      <text x="650" y="240" text-anchor="middle" font-size="12" font-weight="600" fill="#1a4d2e">Voyage 2.5</text>
+      <text x="650" y="256" text-anchor="middle" font-size="10" fill="#555">shared budget</text>
+
+      <text x="380" y="298" text-anchor="middle" font-size="11" fill="#555" font-style="italic">All adapters return the same shape: {id, relevanceScore}[]. Fail-soft — empty array means fall back to heuristic rank.</text>
+
+      <defs><marker id="a11d" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0,0 L10,5 L0,10 Z" fill="#0a0e0a"/></marker></defs>
+    </svg>
+    <div class="diagram-cap"><span>Fig 11d · One dispatcher, five interchangeable rerank adapters</span><a href="rag-course-diagrams/11d-reranking-dispatcher.excalidraw">Open in Excalidraw →</a></div>
   </div>
+
+  <p>Config lives in <code>system_settings.rerank</code> (admin level) and <code>chatbots.providerConfig.rerank.byok</code> (per-bot override, encrypted at rest). Default state is <code>{ enabled: false }</code>: NO chat query goes through any reranker until a super-admin explicitly turns it on. That keeps cost-bearing features out of the on-by-default path.</p>
+
+  <h3>E. Per-page metadata override <em>— migration 0031</em></h3>
+
+  <p>Source-level metadata (trust, role, intentAllowlist, priority, …) only goes so far. A Website source crawling 30+ URLs inherits one config for all of them. That breaks down when one URL inside the source is noisy — e.g. <code>/license-agreement/</code> is legal terms but kept winning pricing queries because "license" appears hundreds of times.</p>
+
+  <p>The workaround was "split it into its own website source". Migration 0031 added a per-page solution: a sparse JSONB <code>metadata</code> column on <code>website_pages</code>. Operators open a slider dialog on any URL row and override individual fields — <code>sourceRole</code>, <code>intentAllowlist</code>, <code>versionState</code>, <code>trustLevel</code>, <code>canonicalSource</code>. Empty = inherit source.</p>
+
+  <p>The merge happens in <code>KnowledgeMetadataService.buildSourceMetadata</code> at chunk-build time:</p>
+
+  <pre><code>const sourceConfig = source.config;
+const pageOverride = page.metadata;
+const config = { ...sourceConfig, ...pageOverride };  // sparse merge — page wins per-key
+// → flows into chunk.metadata, which retrieval reads at query time</code></pre>
+
+  <div class="diagram-wrap">
+    <svg viewBox="0 0 760 280" xmlns="http://www.w3.org/2000/svg" font-family="Inter,sans-serif" font-size="13">
+      <rect x="20" y="40" width="220" height="100" fill="#d0ebff" stroke="#2563a8" rx="3"/>
+      <text x="130" y="62" text-anchor="middle" font-weight="600" fill="#2563a8">training_sources.config</text>
+      <text x="130" y="80" text-anchor="middle" font-size="11" fill="#555">(applies to every page)</text>
+      <text x="35" y="102" font-family="JetBrains Mono,monospace" font-size="10">sourceRole: "general"</text>
+      <text x="35" y="118" font-family="JetBrains Mono,monospace" font-size="10">intentAllowlist: [ ]</text>
+      <text x="35" y="134" font-family="JetBrains Mono,monospace" font-size="10">trustLevel: "high"</text>
+
+      <rect x="20" y="170" width="220" height="100" fill="#ffedd5" stroke="#9a3412" stroke-width="2" rx="3"/>
+      <text x="130" y="192" text-anchor="middle" font-weight="600" fill="#9a3412">website_pages.metadata</text>
+      <text x="130" y="210" text-anchor="middle" font-size="11" fill="#555">(sparse, per URL — NEW)</text>
+      <text x="35" y="232" font-family="JetBrains Mono,monospace" font-size="10">sourceRole: "policy"</text>
+      <text x="35" y="248" font-family="JetBrains Mono,monospace" font-size="10">intentAllowlist: ["policy"]</text>
+
+      <path d="M 240 105 L 320 165" stroke="#0a0e0a" marker-end="url(#a11e)"/>
+      <path d="M 240 220 L 320 175" stroke="#9a3412" stroke-width="2" marker-end="url(#a11ee)"/>
+
+      <rect x="320" y="140" width="180" height="80" fill="#fff" stroke="#0a0e0a" rx="3"/>
+      <text x="410" y="162" text-anchor="middle" font-weight="600" font-size="12">sparse merge</text>
+      <text x="410" y="180" text-anchor="middle" font-size="10" fill="#555">{ ...source, ...page }</text>
+      <text x="410" y="200" text-anchor="middle" font-size="10" fill="#9a3412">page wins per key</text>
+
+      <path d="M 500 180 L 540 180" stroke="#0a0e0a" marker-end="url(#a11e)"/>
+
+      <rect x="540" y="140" width="200" height="80" fill="#d3f9d8" stroke="#1a4d2e" stroke-width="2" rx="3"/>
+      <text x="640" y="162" text-anchor="middle" font-weight="600" fill="#1a4d2e">chunk.metadata</text>
+      <text x="555" y="184" font-family="JetBrains Mono,monospace" font-size="10" fill="#1a4d2e">sourceRole: "policy"</text>
+      <text x="555" y="200" font-family="JetBrains Mono,monospace" font-size="10" fill="#1a4d2e">intentAllowlist: ["policy"]</text>
+      <text x="555" y="216" font-family="JetBrains Mono,monospace" font-size="10" fill="#1a4d2e">trustLevel: "high"</text>
+
+      <text x="380" y="36" text-anchor="middle" font-size="11" fill="#555" font-style="italic">Example: demote /license-agreement/ to policy-only without splitting it out of the Website source.</text>
+
+      <defs>
+        <marker id="a11e" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0,0 L10,5 L0,10 Z" fill="#0a0e0a"/></marker>
+        <marker id="a11ee" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0,0 L10,5 L0,10 Z" fill="#9a3412"/></marker>
+      </defs>
+    </svg>
+    <div class="diagram-cap"><span>Fig 11e · Page override merges over source config — sparse, key-by-key</span><a href="rag-course-diagrams/11e-per-page-override.excalidraw">Open in Excalidraw →</a></div>
+  </div>
+
+  <p>Note <code>priority</code> intentionally stays on <code>training_sources.priority</code> (a column the retrieval SQL reads via JOIN). For per-page demote/promote, <code>sourceRole</code> + <code>intentAllowlist</code> are the right knobs anyway — they route on intent, not a fixed bias.</p>
+
+  <h3>F. Chatbot <code>scopeMode</code> <em>— single_product vs multi_product</em></h3>
+
+  <p>The planner (Chapter 10) refuses to answer when two sibling entities tie on score — it asks the user to clarify. That's correct for a bot covering many products but actively harmful for a bot covering exactly one: synonyms in the entity catalog (EN + VI names of the same concept) end up looking like siblings and the bot loops "Bạn đang hỏi A hay B?".</p>
+
+  <p>Field on <code>chatbots.providerConfig.scopeMode</code>:</p>
+
+  <table class="compare-table">
+    <thead><tr><th>Mode</th><th>Planner behavior on entity tie</th><th>Use for</th></tr></thead>
+    <tbody>
+      <tr><td><code>multi_product</code> (default)</td><td>Ask clarification</td><td>Bots covering many distinct products / companies</td></tr>
+      <tr><td><code>single_product</code></td><td>Suppress clarification, take top entity</td><td>Bots covering exactly one product (phpFox bot, single-tenant bots)</td></tr>
+    </tbody>
+  </table>
+
+  <p>Query-time switch — no retrain. Toggle in <code>Chatbot → Settings → AI Provider → Topical Scope</code>.</p>
+
+  <h3>G. Synonym entity merge <em>— planner-side</em></h3>
+
+  <p>Same root cause as F (sibling clarification fires on synonyms), different fix. When the planner loads the entity catalog, it now computes pairwise overlap coefficient on <code>[name, ...aliases]</code> token sets (after dropping stop-tokens like "the", "của", "với", single letters). When overlap ≥ 0.75 AND intersection ≥ 2 tokens, the entities merge — higher-ranked entity keeps its <code>entityId</code> + <code>name</code>; the other's name and aliases get appended as additional aliases.</p>
+
+  <p>Example: "Upgrade V4 to V5" vs "Chuyển đổi từ phpfox V4 lên V5 (MetaFox)". Shared tokens after stop-word strip = <code>{phpfox, v4, v5}</code> (alias adds phpfox), overlap = 1.0 → merge. Empirically conservative enough that "Demo AM Guide" vs "Demo Media Guide" (overlap 0.67) stays split.</p>
+
+  <p>Why overlap-coefficient not Jaccard: cross-language synonyms have a long tail of language-specific tokens. Jaccard <code>|A∩B|/|A∪B|</code> penalises that tail and misses legitimate synonyms; overlap <code>|A∩B|/min(|A|,|B|)</code> asks the better question.</p>
+
+  <div class="diagram-wrap">
+    <svg viewBox="0 0 760 280" xmlns="http://www.w3.org/2000/svg" font-family="Inter,sans-serif" font-size="13">
+      <rect x="280" y="20" width="200" height="50" fill="#ebe5d4" stroke="#0a0e0a" rx="3"/>
+      <text x="380" y="42" text-anchor="middle" font-weight="600" font-size="13">User query (VI)</text>
+      <text x="380" y="60" text-anchor="middle" font-size="11" fill="#555" font-style="italic">'Chuyển đổi V4 lên V5'</text>
+
+      <path d="M 380 70 L 380 100" stroke="#0a0e0a" marker-end="url(#a11f)"/>
+
+      <rect x="240" y="100" width="280" height="60" fill="#fff5e0" stroke="#0a0e0a" rx="3"/>
+      <text x="380" y="122" text-anchor="middle" font-weight="600" font-size="13">Planner entity match</text>
+      <text x="380" y="140" text-anchor="middle" font-size="11" fill="#555">'Upgrade V4 to V5'  ~tied~  'Chuyển đổi V4 V5 (MetaFox)'</text>
+      <text x="380" y="155" text-anchor="middle" font-size="11" fill="#8b1a1a">→ would ask for clarification</text>
+
+      <path d="M 320 160 L 180 200" stroke="#0a0e0a" marker-end="url(#a11f)"/>
+      <path d="M 440 160 L 580 200" stroke="#0a0e0a" marker-end="url(#a11f)"/>
+
+      <rect x="20" y="200" width="320" height="70" fill="#ffedd5" stroke="#9a3412" stroke-width="2" rx="3"/>
+      <text x="180" y="222" text-anchor="middle" font-weight="600" font-size="12" fill="#9a3412">Fix G · Synonym entity merge (catalog)</text>
+      <text x="180" y="240" text-anchor="middle" font-size="11" fill="#555">overlap({phpfox,v4,v5}) = 1.0 ≥ 0.75</text>
+      <text x="180" y="258" text-anchor="middle" font-size="11" fill="#1a4d2e" font-weight="600">→ merge into one entity. No tie.</text>
+
+      <rect x="420" y="200" width="320" height="70" fill="#ffedd5" stroke="#9a3412" stroke-width="2" rx="3"/>
+      <text x="580" y="222" text-anchor="middle" font-weight="600" font-size="12" fill="#9a3412">Fix F · scopeMode = single_product</text>
+      <text x="580" y="240" text-anchor="middle" font-size="11" fill="#555">check chatbots.providerConfig.scopeMode</text>
+      <text x="580" y="258" text-anchor="middle" font-size="11" fill="#1a4d2e" font-weight="600">→ suppress clarify, take top entity</text>
+
+      <defs><marker id="a11f" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0,0 L10,5 L0,10 Z" fill="#0a0e0a"/></marker></defs>
+    </svg>
+    <div class="diagram-cap"><span>Fig 11f · Two complementary fixes for the clarification loop on single-product bots</span><a href="rag-course-diagrams/11f-scope-mode-synonym-merge.excalidraw">Open in Excalidraw →</a></div>
+  </div>
+
+  <h3>The deploy + curation tooling</h3>
+
+  <p>One-shot script ships secret-free deploys: <code>scripts/deploy-rag-update.sh</code> runs <code>docker compose down/up --build</code>, verifies migrations applied, optionally backfills dedup, optionally applies per-bot curation from <code>scripts/curation-configs/*.json</code>. API keys for rerankers stay in the admin UI, NEVER in scripts or config files. See <code>docs/DEPLOY-RAG-UPDATE.md</code> for the full deploy procedure.</p>
 
   <div class="quiz">
     <div class="quiz-label">Test yourself</div>
@@ -1365,6 +1546,21 @@ code{font-family:var(--mono);font-size:13px;background:rgba(10,14,10,0.06);paddi
       <h4>Why generate Q→A pairs only for high-value sources, not all chunks?</h4>
       <button class="quiz-toggle">Show answer</button>
       <div class="quiz-answer">Cost. Each pair generation is an LLM call. Across thousands of chunks, the cost stacks up fast — and most chunks (release notes, generic policies, etc.) don't have a clean question/answer shape anyway. Gating on <code>trustLevel ∈ {canonical, authoritative}</code> AND <code>sourceRole ∈ {pricing, policy, product_overview, faq}</code> typically captures 15–25% of chunks while concentrating the cost where the lift is highest.</div>
+    </div>
+    <div class="quiz-q">
+      <h4>Why is the reranker disabled by default, even though benchmarks say it always helps?</h4>
+      <button class="quiz-toggle">Show answer</button>
+      <div class="quiz-answer">Every rerank call costs money — either provider fees (Jina, Cohere, Voyage) or LLM tokens (the <code>llm</code> adapter). On-by-default would charge every chatbot the moment they deploy, before the operator decided whether to pay for that quality lift. Off-by-default + explicit Admin → Reranking toggle keeps cost in the operator's control. The dispatcher itself is zero-cost when disabled (early return in <code>resolveConfig</code>).</div>
+    </div>
+    <div class="quiz-q">
+      <h4>Why expose per-page <code>sourceRole</code> + <code>intentAllowlist</code> but not per-page <code>priority</code>?</h4>
+      <button class="quiz-toggle">Show answer</button>
+      <div class="quiz-answer"><code>priority</code> lives as a column on <code>training_sources</code> that the retrieval SQL reads via JOIN — adding a per-page priority would mean either two scoring inputs (chunk metadata + row JOIN, with merge logic) or a much bigger SQL refactor. Empirically <code>sourceRole</code> + <code>intentAllowlist</code> are the right knobs anyway: they route on intent match (page only boosts on intents you whitelisted), not a fixed bias. If a per-page priority is ever truly needed, the existing workaround — split the URL into its own 1-URL Website source with its own priority — still works.</div>
+    </div>
+    <div class="quiz-q">
+      <h4>Why use overlap coefficient instead of Jaccard for synonym entity merge?</h4>
+      <button class="quiz-toggle">Show answer</button>
+      <div class="quiz-answer">Cross-language synonyms have a long tail of language-specific tokens. "Upgrade V4 to V5" and "Chuyển đổi từ phpfox V4 lên V5 (MetaFox)" share <code>{phpfox, v4, v5}</code> but the second one carries 4 extra Vietnamese tokens. Jaccard <code>|A∩B|/|A∪B|</code> divides by the union, so the tail tokens dilute the score and the pair misses the merge threshold. Overlap coefficient <code>|A∩B|/min(|A|,|B|)</code> divides by the smaller set, asking the right question: "what fraction of the smaller side is shared?" — robust to long-tail asymmetry.</div>
     </div>
   </div>
 
@@ -1382,7 +1578,7 @@ code{font-family:var(--mono);font-size:13px;background:rgba(10,14,10,0.06);paddi
     <p class="chapter-lede">Every layer in this course running together, on a single user query, in the production codebase.</p>
   </header>
 
-  <p>This is the assembled diagram. Yellow boxes are proposed enhancements (Chapter 11); everything else is shipped today.</p>
+  <p>This is the assembled diagram as of 2026-Q3. Orange highlights are the 2026-Q3 additions covered in Chapter 11 (distillation + dispatcher + surgical curation); everything else is the 2024-vintage pipeline from Chapters 0-10. There is no "proposed" content in this diagram anymore — the proposal shipped.</p>
 
   <div class="diagram-wrap">
     <svg viewBox="0 0 920 580" xmlns="http://www.w3.org/2000/svg" font-family="Inter,sans-serif" font-size="11.5">
@@ -1411,7 +1607,7 @@ code{font-family:var(--mono);font-size:13px;background:rgba(10,14,10,0.06);paddi
       <path d="M 530 92 L 560 92" stroke="#0a0e0a" marker-end="url(#a12)"/>
       <rect x="560" y="68" width="120" height="48" fill="#ffec99" stroke="#7a6800" stroke-width="2" rx="3"/>
       <text x="620" y="86" text-anchor="middle" font-size="11" font-weight="600">Q→A expand</text>
-      <text x="620" y="102" text-anchor="middle" font-size="9" fill="#555">Ch 11 · proposed</text>
+      <text x="620" y="102" text-anchor="middle" font-size="9" fill="#555">Ch 11 · opt-in</text>
 
       <path d="M 680 92 L 710 92" stroke="#0a0e0a" marker-end="url(#a12)"/>
       <rect x="710" y="68" width="100" height="48" fill="#ebe5d4" stroke="#0a0e0a" rx="3"/>
@@ -1427,7 +1623,7 @@ code{font-family:var(--mono);font-size:13px;background:rgba(10,14,10,0.06);paddi
 
       <path d="M 640 220 L 720 220" stroke="#7a6800" stroke-width="2" marker-end="url(#a12y)"/>
       <rect x="720" y="190" width="180" height="60" fill="#ffec99" stroke="#7a6800" stroke-width="2" rx="3"/>
-      <text x="810" y="212" text-anchor="middle" font-weight="600" font-size="11">Dedup pass (proposed)</text>
+      <text x="810" y="212" text-anchor="middle" font-weight="600" font-size="11">Dedup pass (Ch 11)</text>
       <text x="810" y="230" text-anchor="middle" font-size="10">cluster + tag dedupOf</text>
       <text x="810" y="244" text-anchor="middle" font-size="10" fill="#555">async BullMQ</text>
       <path d="M 720 240 L 640 240" stroke="#7a6800" stroke-dasharray="4 3" marker-end="url(#a12y)"/>
@@ -1496,22 +1692,22 @@ code{font-family:var(--mono);font-size:13px;background:rgba(10,14,10,0.06);paddi
 
       <text x="20" y="490" font-family="JetBrains Mono,monospace" font-size="10" fill="#555">Legend:</text>
       <rect x="80" y="478" width="14" height="14" fill="#ebe5d4" stroke="#0a0e0a"/>
-      <text x="100" y="490" font-size="10" fill="#555">shipped</text>
-      <rect x="160" y="478" width="14" height="14" fill="#ffec99" stroke="#7a6800"/>
-      <text x="180" y="490" font-size="10" fill="#555">proposed</text>
-      <rect x="240" y="478" width="14" height="14" fill="#d0ebff" stroke="#1971c2"/>
-      <text x="260" y="490" font-size="10" fill="#555">storage</text>
-      <rect x="310" y="478" width="14" height="14" fill="#d3f9d8" stroke="#1a4d2e"/>
-      <text x="330" y="490" font-size="10" fill="#555">final answer</text>
+      <text x="100" y="490" font-size="10" fill="#555">2024 layer</text>
+      <rect x="170" y="478" width="14" height="14" fill="#ffec99" stroke="#7a6800"/>
+      <text x="190" y="490" font-size="10" fill="#555">2026-Q3 layer (Ch 11)</text>
+      <rect x="320" y="478" width="14" height="14" fill="#d0ebff" stroke="#1971c2"/>
+      <text x="340" y="490" font-size="10" fill="#555">storage</text>
+      <rect x="390" y="478" width="14" height="14" fill="#d3f9d8" stroke="#1a4d2e"/>
+      <text x="410" y="490" font-size="10" fill="#555">final answer</text>
 
-      <text x="460" y="540" text-anchor="middle" font-size="11" fill="#555" font-style="italic">Twelve concepts. One pipeline. Each layer fixes one failure mode of the layer below it.</text>
+      <text x="460" y="540" text-anchor="middle" font-size="11" fill="#555" font-style="italic">Thirteen concepts. One pipeline. Each layer fixes one failure mode of the layer below it.</text>
 
       <defs>
         <marker id="a12" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0,0 L10,5 L0,10 Z" fill="#0a0e0a"/></marker>
         <marker id="a12y" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0,0 L10,5 L0,10 Z" fill="#7a6800"/></marker>
       </defs>
     </svg>
-    <div class="diagram-cap"><span>Fig 12 · The whole pipeline, with proposed enhancements highlighted</span><a href="rag-course-diagrams/12-full-picture.excalidraw">Open in Excalidraw →</a></div>
+    <div class="diagram-cap"><span>Fig 12 · The whole pipeline as of 2026-Q3 (orange = the new layer from Ch 11)</span><a href="rag-course-diagrams/12-full-picture.excalidraw">Open in Excalidraw →</a></div>
   </div>
 
   <h3>Where to look in the code, by chapter</h3>
@@ -1525,17 +1721,19 @@ code{font-family:var(--mono);font-size:13px;background:rgba(10,14,10,0.06);paddi
       <tr><td>RRF (Ch 5)</td><td><code>apps/api/src/modules/rag/rrf.ts</code></td></tr>
       <tr><td>Multi-query (Ch 6)</td><td><code>apps/api/src/modules/rag/multi-query.service.ts</code></td></tr>
       <tr><td>Contextual chunking (Ch 7)</td><td><code>apps/api/src/modules/rag/contextual-chunker.service.ts</code></td></tr>
-      <tr><td>Reranker (Ch 8)</td><td><code>apps/api/src/modules/rag/reranker.service.ts</code></td></tr>
+      <tr><td>Reranker dispatcher (Ch 8 + Ch 11 § D)</td><td><code>apps/api/src/modules/rag/reranker.service.ts</code> + 5 adapters under <code>reranker/</code></td></tr>
       <tr><td>CRAG (Ch 9)</td><td><code>apps/api/src/modules/rag/quality-validator.service.ts</code></td></tr>
-      <tr><td>Planner (Ch 10)</td><td><code>apps/api/src/modules/rag/retrieval-planner.service.ts</code></td></tr>
-      <tr><td>Orchestrator</td><td><code>apps/api/src/modules/rag/retrieval.service.ts</code> (1,753 lines — the conductor)</td></tr>
-      <tr><td>Proposal (Ch 11)</td><td><code>docs/proposal/proposal-rag-distillation-2026.md</code></td></tr>
+      <tr><td>Planner (Ch 10) + scopeMode + synonym merge (Ch 11 § F, G)</td><td><code>apps/api/src/modules/rag/retrieval-planner.service.ts</code></td></tr>
+      <tr><td>Orchestrator</td><td><code>apps/api/src/modules/rag/retrieval.service.ts</code> (the conductor)</td></tr>
+      <tr><td>Dedup / Q→A / versionState (Ch 11 § A, B, C)</td><td><code>apps/api/src/modules/rag/dedup.service.ts</code>, <code>qa-expander.service.ts</code>, migration <code>0030</code></td></tr>
+      <tr><td>Per-page metadata override (Ch 11 § E)</td><td><code>apps/api/src/modules/website-pages/website-pages.service.ts</code> + migration <code>0031</code></td></tr>
+      <tr><td>Deploy + curation scripts</td><td><code>scripts/deploy-rag-update.sh</code>, <code>scripts/curation-configs/*.json</code>, <code>apps/api/src/scripts/curate-bot-metadata.ts</code></td></tr>
     </tbody>
   </table>
 
   <div class="callout tip">
     <div class="callout-label">What to read next</div>
-    <p>1. <code>docs/KNOWLEDGE-RETRIEVAL-ARCHITECTURE.md</code> — the production source-of-truth. Every quality rule, every config flag, every edge case is documented there. 2. The proposal in <code>docs/proposal/</code> — extends what you just learned. 3. Anthropic's "Contextual Retrieval" announcement post — the original write-up of Chapter 7's technique with benchmarks.</p>
+    <p>1. <code>docs/KNOWLEDGE-RETRIEVAL-ARCHITECTURE.md</code> — the production source-of-truth. Every quality rule, every config flag, every edge case is documented there, including the 2026-Q3 update. 2. <code>docs/USER-MANUAL.md § How to set KB priority</code> — operator-facing playbook for the curation layer covered in Chapter 11 § E-G. 3. <code>docs/DEPLOY-RAG-UPDATE.md</code> — the production deploy procedure for the 2026-Q3 layer. 4. Anthropic's "Contextual Retrieval" announcement post — the original write-up of Chapter 7's technique with benchmarks.</p>
   </div>
 
   <div class="quiz">
@@ -1543,7 +1741,12 @@ code{font-family:var(--mono);font-size:13px;background:rgba(10,14,10,0.06);paddi
     <div class="quiz-q">
       <h4>A user reports: "When I ask 'What's Demo AM trial period?', the bot answers about Demo Media." Which layers should you investigate, in what order?</h4>
       <button class="quiz-toggle">Show answer</button>
-      <div class="quiz-answer">Walk up the stack. <strong>(1) Planner (Ch 10)</strong>: did entity resolution fire? Open the Retrieval Debug panel and check matched entities. If the planner didn't resolve "Demo AM" as the entity, the catalog is missing or the alias rules are wrong. <strong>(2) Lexical path (Ch 4)</strong>: did <code>"Demo AM"</code> lexical-match outrank the sibling? If lexical signal is weak, the chunk's <code>search_vector</code> may be missing or section titles unhelpful. <strong>(3) Reranker (Ch 8)</strong>: did the cross-encoder see the resolved entity in the query? If it's still hallucinating, the rerank prompt may not include the entity-anchored variant. <strong>(4) Metadata (Ch 3)</strong>: do the chunks themselves carry <code>metadata.entities[]</code> with the right entityId, or did the ingestion bug copy the full source catalog into every chunk (the anti-pattern called out in Ch 3)? <strong>(5) Future:</strong> dedup (Ch 11) might also help if multiple sibling chunks are sharing rank — but only after the above four are clean.</div>
+      <div class="quiz-answer">Walk up the stack. <strong>(1) Planner (Ch 10)</strong>: did entity resolution fire? Open the Retrieval Debug panel and check matched entities. If the planner didn't resolve "Demo AM" as the entity, the catalog is missing or the alias rules are wrong. <strong>(2) Synonym merge (Ch 11 § G)</strong>: are "Demo AM" and "Demo Media" accidentally being merged because they share too many tokens? Check the overlap-coefficient threshold. <strong>(3) Lexical path (Ch 4)</strong>: did <code>"Demo AM"</code> lexical-match outrank the sibling? If lexical signal is weak, the chunk's <code>search_vector</code> may be missing or section titles unhelpful. <strong>(4) Reranker (Ch 8 + Ch 11 § D)</strong>: is rerank enabled? If yes, did the cross-encoder distinguish AM from Media (it usually does when both entity names appear in the query)? If rerank is off, this might be the cheapest fix. <strong>(5) Metadata (Ch 3 + Ch 11 § E)</strong>: do the chunks carry the right <code>entities[]</code>? Is there a per-page override on a Media page accidentally boosting it? <strong>(6) Dedup (Ch 11 § A)</strong>: if multiple sibling chunks are sharing rank, the canonical pick may be wrong.</div>
+    </div>
+    <div class="quiz-q">
+      <h4>Same user reports a follow-up: the bot keeps asking "Are you asking about Upgrade V4 to V5 or Chuyển đổi từ phpfox V4 lên V5?" Where do you fix this?</h4>
+      <button class="quiz-toggle">Show answer</button>
+      <div class="quiz-answer">Two options, both in Chapter 11. <strong>Cheaper</strong>: set <code>scopeMode = single_product</code> on the chatbot (Ch 11 § F) — suppresses the clarification when there's an entity tie, takes the top-scoring entity directly. This is correct for any bot covering exactly one product. <strong>More structural</strong>: clean up the entity catalog so EN + VI versions of the same concept aren't separate entities — either consolidate them or let the synonym entity merge (Ch 11 § G) do it automatically. The merge fires when overlap ≥ 0.75 AND intersection ≥ 2 tokens; "phpfox v4 v5" shared in both passes the bar.</div>
     </div>
   </div>
 
