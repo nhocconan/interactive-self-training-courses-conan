@@ -52,7 +52,8 @@ A LOCAL user is created by the seed; you can also enable LDAP/AD via
 │   ├── src/components/   Design-system primitives
 │   └── prisma/           Schema + seed
 ├── courses/              Interactive HTML courses (served via signed-in iframe)
-│   ├── demo-ai-prompting-course.html
+│   ├── ai-practical-playbook.html        (VI · Demo AI Practical Playbook)
+│   ├── ai-practical-playbook.en.html     (EN mirror)
 │   ├── rag-information-retrieval-course.html
 │   ├── ai-context-engineering-harness-engineering-course-v2.html
 │   └── rag-course-diagrams/

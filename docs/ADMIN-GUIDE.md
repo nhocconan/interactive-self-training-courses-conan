@@ -59,7 +59,7 @@ Pick a **Content type** — HTML, Video (file or URL), PDF, PPTX/PPT,
 Google Slides, or Markdown. The form reveals the right inputs for each.
 
 - **HTML file path** is the file name *under `./courses/`* — e.g.
-  `demo-ai-prompting-course.html`. The path is resolved server-side and
+  `ai-practical-playbook.html`. The path is resolved server-side and
   cannot escape the courses directory.
 - **Upload** kinds save the file to `COURSE_ASSETS_DIR` and write the
   generated URL into `contentUrl`. Files are gated by the same access

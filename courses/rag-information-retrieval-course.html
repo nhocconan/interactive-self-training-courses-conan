@@ -290,7 +290,8 @@ code{font-family:var(--mono);font-size:13px;background:rgba(10,14,10,0.06);paddi
     <li><a href="#ch9" data-ch="9"><span class="toc-num">09</span><span>CRAG quality gate</span><span class="toc-status"></span></a></li>
     <li><a href="#ch10" data-ch="10"><span class="toc-num">10</span><span>Entity-aware planning</span><span class="toc-status"></span></a></li>
     <li><a href="#ch11" data-ch="11"><span class="toc-num">11</span><span>2026-Q3 layer (shipped)</span><span class="toc-status"></span></a></li>
-    <li><a href="#ch12" data-ch="12"><span class="toc-num">12</span><span>Full picture</span><span class="toc-status"></span></a></li>
+    <li><a href="#ch12" data-ch="12"><span class="toc-num">12</span><span>Caching · cost &amp; latency</span><span class="toc-status"></span></a></li>
+    <li><a href="#ch13" data-ch="13"><span class="toc-num">13</span><span>Full picture</span><span class="toc-status"></span></a></li>
   </ul>
   <h4 style="margin-top:32px">Companion files</h4>
   <ul class="toc">
@@ -1361,16 +1362,31 @@ code{font-family:var(--mono);font-size:13px;background:rgba(10,14,10,0.06);paddi
 
   <p>Why 5 providers, not 1: each one is a different cost / quality / vendor-lock-in tradeoff. Most platforms only need one at a time, but which one depends on the team.</p>
 
+  <p>The 2026-05-23 catalog refresh (no code-path change, only ordering + pricing) made <strong><code>voyage</code> the recommended default</strong>: it has by far the most generous free tier in May 2026 and no minimum top-up. Dropdown order in <code>Admin → Settings → Reranking</code> and <code>Chatbot → AI Provider → Reranking</code> is recommended-first, served by <code>apps/api/src/modules/rag/reranker/provider-catalog.ts</code>. Persisted enum values and adapter wire formats are unchanged — existing configs keep working.</p>
+
   <table class="compare-table">
-    <thead><tr><th>Adapter</th><th>Wire format</th><th>Cost</th><th>Free tier</th><th>When to pick</th></tr></thead>
+    <thead><tr><th>Adapter</th><th>Wire format</th><th>Cost (May 2026)</th><th>Free tier</th><th>When to pick</th></tr></thead>
     <tbody>
-      <tr><td><code>llm</code></td><td><code>AiProvidersService.chatCompletion</code> with structured JSON</td><td>Chat-provider rates</td><td>n/a</td><td>No new vendor. NDCG ≈ 0.66-0.68. Default-friendly.</td></tr>
-      <tr><td><code>jina</code></td><td>POST <code>/v1/rerank</code></td><td>$0.02/M tokens in+out</td><td><strong>10M tokens</strong> per new key</td><td>Cheapest purpose-built cross-encoder. Multilingual.</td></tr>
-      <tr><td><code>cohere</code></td><td>POST <code>/v2/rerank</code></td><td>$2 / 1k searches</td><td>1k calls/mo trial</td><td>Highest NDCG@10 ≈ 0.74. Per-search pricing is predictable.</td></tr>
-      <tr><td><code>openrouter</code></td><td>Cohere shape via OpenRouter proxy</td><td>Cohere + markup</td><td>OpenRouter trial</td><td>Already paying OpenRouter for chat? One key, one bill.</td></tr>
-      <tr><td><code>voyage</code></td><td>POST <code>/v1/rerank</code> (uses <code>data</code> not <code>results</code>)</td><td>$0.02-0.05/M tokens</td><td><strong>200M tokens</strong> shared with embeddings</td><td>Already on Voyage embeddings.</td></tr>
+      <tr><td><code>voyage</code> ★</td><td>POST <code>/v1/rerank</code> (uses <code>data</code> not <code>results</code>)</td><td>$0.02/M (<code>rerank-2.5-lite</code>) or $0.05/M (<code>rerank-2.5</code>) tokens</td><td><strong>200M tokens / month</strong> shared with embeddings</td><td><strong>Recommended default.</strong> No minimum top-up. Multilingual. <em>Gotcha:</em> accounts without a payment method on file are throttled to ~3 RPM / 10K TPM even within free quota — add a card to unlock standard limits (the 200M tokens stay free).</td></tr>
+      <tr><td><code>cohere</code></td><td>POST <code>/v2/rerank</code></td><td>$2 / 1k searches (1 search = 1 query × ≤100 docs)</td><td>1k calls/mo trial</td><td>Highest NDCG@10 ≈ 0.74 on long documents. Per-search pricing is predictable regardless of doc length.</td></tr>
+      <tr><td><code>jina</code></td><td>POST <code>/v1/rerank</code></td><td>$0.05/M tokens (v2 / v3), <strong>$50 minimum top-up</strong></td><td>10M tokens trial, one-shot per account</td><td>Pricing raised May 2026 from $0.02/M, and free tokens are no longer per-key. Pick only if you already have Jina credit.</td></tr>
+      <tr><td><code>openrouter</code></td><td>Cohere shape via OpenRouter proxy</td><td>Cohere rates + OpenRouter markup</td><td>OpenRouter trial</td><td>Already paying OpenRouter for chat? One key, one bill.</td></tr>
+      <tr><td><code>llm</code></td><td><code>AiProvidersService.chatCompletion</code> with structured JSON</td><td>Existing chat-provider rates</td><td>n/a</td><td>No new vendor. Pointwise JSON scoring in one batched call. Burns chat-LLM tokens; NDCG@10 ≈ 0.66-0.68, slightly below cross-encoders.</td></tr>
     </tbody>
   </table>
+
+  <p>★ Recommended default. Catalog ordering above matches the Admin and per-bot dropdown order.</p>
+
+  <div class="callout tip">
+    <div class="callout-label">Live measurement — 2026-05-22, phpFox bot, 10 audit queries</div>
+    <p>Via <code>pnpm --filter api compare-rerank &lt;key&gt; voyage</code>:</p>
+    <ul>
+      <li>Voyage <code>rerank-2.5-lite</code> reranked 10/10 queries successfully, no timeouts or silent fall-backs once a payment method was on file.</li>
+      <li>Top-1 chunk changed on 10/10 queries between rerank-off and rerank-on. 4 cross-language Vietnamese queries (e.g. "Mua bản phpFox loại nào?", "Pro license và Ultimate license khác nhau gì?") moved from generic website noise to the canonical curated doc (<code>01-pricing.md</code>, <code>02-migration.md</code>, <code>03-customization.md</code>). 5 more queries moved from a peripheral subsection of the right doc to its main sales-reference section. 1 single-word query ("Migrate") shifted between two defensible interpretations — not a regression but worth noting that very short queries remain ambiguous.</li>
+      <li>CRAG quality stayed <code>confident</code> for all 10 queries in both modes — the recall path was already strong; reranking re-ordered the same candidate set rather than rescuing missing recall.</li>
+    </ul>
+    <p>This closes the verification gap noted in commit <code>2390dca</code> ("true quality measurement still pending a reachable rerank provider"). The cross-language failure mode that motivated the dispatcher is now quantitatively confirmed and the recommended-default provider is proven end-to-end.</p>
+  </div>
 
   <div class="diagram-wrap">
     <svg viewBox="0 0 760 320" xmlns="http://www.w3.org/2000/svg" font-family="Inter,sans-serif" font-size="13">
@@ -1566,19 +1582,197 @@ const config = { ...sourceConfig, ...pageOverride };  // sparse merge — page w
 
   <footer class="chapter-footer">
     <button class="mark-done" data-ch="11">Mark complete</button>
-    <div class="chapter-nav"><a href="#ch10">← Prev</a><a href="#ch12">Next: Full picture →</a></div>
+    <div class="chapter-nav"><a href="#ch10">← Prev</a><a href="#ch12">Next: Caching →</a></div>
   </footer>
 </section>
 
-<!-- ============== CH 12 ============== -->
+<!-- ============== CH 12 · CACHING ============== -->
 <section class="chapter" id="ch12">
   <header class="chapter-head">
     <div class="chapter-num">Chapter 12</div>
+    <h2>Caching <em>— cutting token cost &amp; latency for many bots, many users</em></h2>
+    <p class="chapter-lede">Source-of-truth: <code>docs/CACHING-ARCHITECTURE.md</code>. Everything here is live in production — the educational walk-through of the cache stack that landed and the measured numbers it produced.</p>
+  </header>
+
+  <p>Chapters 0–11 made retrieval <em>good</em>. This chapter makes it <em>cheap and fast at scale</em>. Chatbot Center is multi-tenant: many organizations, each with many bots, each serving many users at once. Every one of those users sends a <em>different</em> question — but to the <em>same</em> bot, whose system prompt, business context and instructions are identical for everyone. Without caching the platform re-bills those shared input tokens and re-runs the entire retrieve → generate pipeline on every single turn, of every user, of every bot.</p>
+
+  <p>The fix is the converged 2025–2026 industry pattern: a <strong>four-layer cache stack</strong>, checked cheapest-and-most-specific first, with <em>every</em> key namespaced by tenant (<code>organization_id</code> + <code>chatbot_id</code>). The layers are complementary, not competing — each catches a cost the others miss.</p>
+
+  <div class="diagram-wrap">
+    <svg viewBox="0 0 820 470" xmlns="http://www.w3.org/2000/svg" font-family="Inter,sans-serif" font-size="12">
+      <text x="20" y="26" font-family="JetBrains Mono,monospace" font-size="11" fill="#888">READ PATH · cheapest &amp; most-specific first</text>
+
+      <!-- query -->
+      <rect x="40" y="44" width="180" height="40" fill="#ebe5d4" stroke="#0a0e0a" rx="3"/>
+      <text x="130" y="68" text-anchor="middle" font-weight="600">User question</text>
+      <path d="M 130 84 L 130 108" stroke="#0a0e0a" marker-end="url(#a12c)"/>
+
+      <!-- L1 -->
+      <rect x="40" y="108" width="300" height="46" fill="#e7f3e7" stroke="#1a4d2e" stroke-width="2" rx="3"/>
+      <text x="56" y="128" font-weight="600" fill="#1a4d2e">L1 · exact-match answer (Redis)</text>
+      <text x="56" y="145" font-size="10.5" fill="#1a4d2e">hash of {bot, normalized question} · sub-ms · 0 false positives</text>
+      <path d="M 340 131 L 600 131" stroke="#1a4d2e" stroke-dasharray="4 3" marker-end="url(#a12g)"/>
+      <text x="470" y="124" text-anchor="middle" font-size="10" fill="#1a4d2e">hit</text>
+      <path d="M 190 154 L 190 178" stroke="#0a0e0a" marker-end="url(#a12c)"/><text x="205" y="172" font-size="10" fill="#8b1a1a">miss</text>
+
+      <!-- L2 -->
+      <rect x="40" y="178" width="300" height="46" fill="#e7f3e7" stroke="#1a4d2e" stroke-width="2" rx="3"/>
+      <text x="56" y="198" font-weight="600" fill="#1a4d2e">L2 · semantic answer (pgvector) · opt-in</text>
+      <text x="56" y="215" font-size="10.5" fill="#1a4d2e">embed → nearest in THIS bot · cosine ≥ 0.95 · ~11ms</text>
+      <path d="M 340 201 L 600 201 L 600 145" stroke="#1a4d2e" stroke-dasharray="4 3" fill="none" marker-end="url(#a12g)"/>
+      <text x="470" y="194" text-anchor="middle" font-size="10" fill="#1a4d2e">hit</text>
+      <path d="M 190 224 L 190 248" stroke="#0a0e0a" marker-end="url(#a12c)"/><text x="205" y="242" font-size="10" fill="#8b1a1a">miss</text>
+
+      <!-- L3 -->
+      <rect x="40" y="248" width="300" height="46" fill="#d0ebff" stroke="#1971c2" stroke-width="2" rx="3"/>
+      <text x="56" y="268" font-weight="600" fill="#1971c2">L3 · retrieval-result (Redis · single-flight)</text>
+      <text x="56" y="285" font-size="10.5" fill="#1971c2">cached ranked chunks · skips embed+search+RRF+rerank</text>
+      <path d="M 190 294 L 190 318" stroke="#0a0e0a" marker-end="url(#a12c)"/><text x="205" y="312" font-size="10" fill="#555">hit → skip search · miss → run Ch 0–11 pipeline</text>
+
+      <!-- generate + L0 -->
+      <rect x="40" y="318" width="300" height="58" fill="#ffec99" stroke="#7a6800" stroke-width="2" rx="3"/>
+      <text x="56" y="340" font-weight="600" fill="#7a6800">L0 · provider prompt caching</text>
+      <text x="56" y="357" font-size="10.5" fill="#555">stable system prefix reused at the LLM (~10% input price)</text>
+      <text x="56" y="371" font-size="10.5" fill="#555">applies to EVERY generation — even a brand-new question</text>
+
+      <!-- cached answer target -->
+      <rect x="600" y="100" width="180" height="80" fill="#1a4d2e" stroke="#0a4d2e" rx="4"/>
+      <text x="690" y="135" text-anchor="middle" fill="#fff" font-weight="700" font-size="14">⚡ instant answer</text>
+      <text x="690" y="156" text-anchor="middle" fill="#cfe9d6" font-size="10.5">retrieval AND LLM skipped</text>
+      <text x="690" y="170" text-anchor="middle" fill="#cfe9d6" font-size="10.5">measured 6.4s → 0.08s</text>
+
+      <!-- footnote -->
+      <text x="40" y="408" font-size="11" fill="#555" font-style="italic">A hit on an inner layer saves strictly more than an outer one, so we probe cheapest-first.</text>
+      <text x="40" y="426" font-size="11" fill="#555" font-style="italic">L0 isn't a layer you "check" — it's how the prompt is assembled so the provider can reuse the prefix.</text>
+      <text x="40" y="450" font-size="10.5" fill="#888" font-family="JetBrains Mono,monospace">every key namespaced by organization_id + chatbot_id → no cross-tenant leakage</text>
+
+      <defs>
+        <marker id="a12c" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0,0 L10,5 L0,10 Z" fill="#0a0e0a"/></marker>
+        <marker id="a12g" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0,0 L10,5 L0,10 Z" fill="#1a4d2e"/></marker>
+      </defs>
+    </svg>
+    <div class="diagram-cap"><span>Fig 12a · The four-layer cache stack and what each hit saves</span><a href="rag-course-diagrams/12-caching.excalidraw">Open in Excalidraw →</a></div>
+  </div>
+
+  <h3>L1 · Exact-match answer cache <em>— Redis, the zero-risk fast path</em></h3>
+
+  <p>The narrowest, cheapest layer. The key is a SHA-256 of <code>{organizationId, chatbotId, normalized question, system prompt, provider, model, config}</code>; a hit returns the stored answer in sub-millisecond Redis time and skips retrieval <em>and</em> generation. Because it is an exact hash there are zero false positives — it only fires when a user asks a byte-identical question (after whitespace/case normalization). First-turn only, so the answer never depends on conversation state. This layer pre-existed; the new layers wrap around it.</p>
+
+  <h3>L2 · Semantic answer cache <em>— pgvector, paraphrase-aware (opt-in)</em></h3>
+
+  <p>Exact-match misses on paraphrases: "What's the refund window?" vs "How long do I have to get a refund?" are different bytes but the same question. L2 embeds the normalized question (reusing the <strong>same query-embedding cache</strong> retrieval already uses — Chapter 1 — so a repeat costs zero extra embedding calls), then finds the nearest cached answer <em>for this bot</em> in the <code>response_cache</code> pgvector table. If cosine similarity ≥ the threshold (default <strong>0.95</strong>) and the entry is fresh and the embedding model + knowledge version match, it returns the stored answer — skipping retrieval and the LLM entirely.</p>
+
+  <div class="callout warn">
+    <div class="callout-label">Why it ships OFF by default</div>
+    <p>A semantic cache can return a <em>wrong</em> answer on a false-positive match — "when does the store open?" vs "when does it close?" can score ~0.85. A wrong cached answer is a worse outcome than a cache miss. So L2 is opt-in per platform, defaults to a strict 0.95 threshold (high precision), and is excluded for personalized / escalation / booking turns (those return before the cache path). Tune the threshold up for regulated domains, down only for high-volume FAQ where false positives are tolerable.</p>
+  </div>
+
+  <h3>L3 · Retrieval-result cache <em>— Redis, the follow-up-turn win</em></h3>
+
+  <p>The answer caches (L1/L2) only fire on the first turn. L3 covers everything else: it caches the <em>entire</em> ranked retrieval result (chunks + plan + trace) per <code>{chatbot, normalized query, knowledge version}</code> in Redis. A hit skips multi-query expansion (Ch 6), embedding (Ch 1), the vector + lexical search (Ch 4), RRF (Ch 5) and the reranker HTTP/LLM call (Ch 8) — the LLM still generates, so this is the win on follow-up turns and on rerank/embedding cost. It uses <strong>single-flight</strong> (one request rebuilds a hot expired key while the rest wait) plus ±10% TTL jitter to prevent a cache stampede.</p>
+
+  <h3>L0 · Provider prompt caching <em>— the structural win on every generation</em></h3>
+
+  <p>The other three layers help <em>repeated</em> questions. L0 helps <strong>every</strong> generation — even a unique, never-seen question — because the LLM provider can reuse the already-processed <em>stable prefix</em> of the prompt (the bot's persona + business context + instructions, identical for every user of that bot) at roughly 10% of the input price (Anthropic) or 50–90% off (OpenAI/Gemini). The catch: the provider only reuses a prefix that is <strong>byte-identical</strong> across requests.</p>
+
+  <h3>The relocation trick <em>— the single highest-ROI change</em></h3>
+
+  <p>The legacy prompt interleaved stable content (persona) with per-request content (visitor name, today's date, retrieved RAG chunks). That moving content sits <em>inside</em> the would-be cached prefix, so the prefix changes every request and the provider can never reuse it. The fix is to <strong>relocate</strong>: put all bot-identical content first as one stable block, and all per-request content after it.</p>
+
+  <div class="diagram-wrap">
+    <svg viewBox="0 0 760 250" xmlns="http://www.w3.org/2000/svg" font-family="Inter,sans-serif" font-size="12">
+      <text x="20" y="28" font-family="JetBrains Mono,monospace" font-size="11" fill="#8b1a1a">❌ BEFORE · interleaved → prefix changes every request → 0% reuse</text>
+      <rect x="20" y="40" width="90" height="34" fill="#fff" stroke="#888"/><text x="65" y="61" text-anchor="middle" font-size="11">persona</text>
+      <rect x="114" y="40" width="90" height="34" fill="#fff" stroke="#888"/><text x="159" y="61" text-anchor="middle" font-size="11">business</text>
+      <rect x="208" y="40" width="80" height="34" fill="#fff5f3" stroke="#8b1a1a"/><text x="248" y="61" text-anchor="middle" font-size="11" fill="#8b1a1a">visitor 🔁</text>
+      <rect x="292" y="40" width="70" height="34" fill="#fff5f3" stroke="#8b1a1a"/><text x="327" y="61" text-anchor="middle" font-size="11" fill="#8b1a1a">date 🔁</text>
+      <rect x="366" y="40" width="80" height="34" fill="#fff5f3" stroke="#8b1a1a"/><text x="406" y="61" text-anchor="middle" font-size="11" fill="#8b1a1a">RAG 🔁</text>
+      <rect x="450" y="40" width="110" height="34" fill="#fff" stroke="#888"/><text x="505" y="61" text-anchor="middle" font-size="11">instructions</text>
+
+      <text x="20" y="124" font-family="JetBrains Mono,monospace" font-size="11" fill="#1a4d2e">✅ AFTER · stable prefix first → reused across all users &amp; turns</text>
+      <rect x="20" y="136" width="380" height="46" fill="#e7f3e7" stroke="#1a4d2e" stroke-width="2" rx="3"/>
+      <text x="210" y="158" text-anchor="middle" font-weight="600" fill="#1a4d2e" font-size="12">persona + business + instructions</text>
+      <text x="210" y="174" text-anchor="middle" font-size="10.5" fill="#1a4d2e">📌 STABLE · cache_control breakpoint</text>
+      <rect x="408" y="136" width="332" height="46" fill="#fff5f3" stroke="#8b1a1a" rx="3"/>
+      <text x="574" y="158" text-anchor="middle" font-weight="600" fill="#8b1a1a" font-size="12">visitor + date + RAG + pricing</text>
+      <text x="574" y="174" text-anchor="middle" font-size="10.5" fill="#8b1a1a">🔁 DYNAMIC · after the breakpoint</text>
+
+      <text x="20" y="214" font-size="11" fill="#555" font-style="italic">Anthropic: cache_control on the stable block. OpenAI/Gemini: caching is automatic — ordering is the only lever.</text>
+      <text x="20" y="232" font-size="11" fill="#555" font-style="italic">OpenAI prompt_cache_key = "org:bot" isolates each tenant's prefix. The internal cache flag is stripped before the wire.</text>
+    </svg>
+    <div class="diagram-cap"><span>Fig 12b · The relocation trick — make the prefix byte-stable so the provider reuses it</span><a href="rag-course-diagrams/12-caching.excalidraw">Open in Excalidraw →</a></div>
+  </div>
+
+  <p>For Anthropic the adapter emits the system field as a block array and marks the stable block:</p>
+
+  <pre><span class="c">// apps/api/src/modules/ai-providers/adapters/anthropic.adapter.ts</span>
+system: [
+  { type: <span class="s">'text'</span>, text: stablePrefix, cache_control: { type: <span class="s">'ephemeral'</span> } }, <span class="c">// 📌 cached</span>
+  { type: <span class="s">'text'</span>, text: dynamicSuffix }, <span class="c">// 🔁 RAG / visitor / date — not cached</span>
+]
+<span class="c">// response.usage.cache_read_input_tokens  →  billed at 0.1x input</span>
+<span class="c">// response.usage.cache_creation_input_tokens →  billed at 1.25x (5m) once</span></pre>
+
+  <p class="code-ref">L0 split lives in <code>chat-engine.service.ts</code> (<code>STATIC_RESPONSE_INSTRUCTIONS</code> + <code>stableSystemPrefix</code>/<code>dynamicSystemSuffix</code>). The cache services are in <code>apps/api/src/common/cache/</code>; the L2 table is migration <code>0032_response_cache.sql</code>.</p>
+
+  <h3>Proven numbers <em>— measured, not promised</em></h3>
+
+  <p>Evidence tiers: <strong>(A)</strong> measured in the live app, <strong>(B)</strong> measured against real pgvector + Redis, <strong>(D)</strong> modeled from <em>verified</em> provider pricing (live LLM keys weren't available, so L0 dollars are modeled), <strong>(E)</strong> verified published figures.</p>
+
+  <table class="compare-table">
+    <thead><tr><th>What</th><th>Result</th><th>Tier</th></tr></thead>
+    <tbody>
+      <tr><td>Exact-match repeat (live app)</td><td><strong>6.40 s → 0.081 s · ~79× faster (−98.7%)</strong></td><td>A · measured</td></tr>
+      <tr><td>Semantic lookup over 1,000-entry bot cache</td><td>p50 <strong>10.85 ms</strong> / p95 14.97 ms (vs multi-second LLM)</td><td>B · measured</td></tr>
+      <tr><td>Redis GET (L1/L3 backing)</td><td>p50 <strong>0.57 ms</strong></td><td>B · measured</td></tr>
+      <tr><td>Provider prompt-cache input cost</td><td><strong>−25% … −68%</strong> (model-dependent)</td><td>D · modeled</td></tr>
+      <tr><td>Anthropic prompt caching (published)</td><td>up to <strong>90% cost / 85% TTFT</strong> reduction</td><td>E · cited</td></tr>
+      <tr><td>ProjectDiscovery (Opus 4.5, published)</td><td>59–70% LLM cost cut; prompt-cache hit <strong>7% → 84%</strong></td><td>E · cited</td></tr>
+      <tr><td>AWS semantic cache, 63,796 queries @ 0.95</td><td>56% hit · 92.6% accuracy · 51.9% cost · 57.7% latency</td><td>E · cited</td></tr>
+    </tbody>
+  </table>
+
+  <div class="callout tip">
+    <div class="callout-label">Operating it</div>
+    <p>Config lives in <code>system_settings.cache</code> (toggles + TTLs + threshold), tunable via <code>PATCH /admin/settings/cache</code>. Effectiveness is live at <code>GET /admin/settings/cache/stats</code> — per-layer hit rates, cached-token ratio, estimated cost reduction. Caches invalidate <em>automatically</em> on retrain (the post-ingest <code>clearChatbot</code> fans out to all layers) and on provider changes; <code>POST /admin/settings/cache/chat-answers/clear</code> flushes manually. Prompt caching is transparent (default ON); semantic is opt-in (default OFF).</p>
+  </div>
+
+  <div class="quiz">
+    <div class="quiz-label">Check yourself</div>
+    <div class="quiz-q">
+      <h4>Why probe the exact-match cache (L1) before the semantic cache (L2), when L2 catches strictly more questions?</h4>
+      <button class="quiz-toggle">Show answer</button>
+      <div class="quiz-answer">Cost and safety, not coverage. L1 is a sub-millisecond Redis hash lookup with <em>zero</em> false positives; L2 needs an embedding call (or cache read) plus a vector scan (~11 ms) and carries a small false-positive risk. If L1 already has the answer, paying for L2 is pure waste. The ordering is "cheapest and safest first, fall through on miss" — a hit on the inner layer is strictly better, so you never reach the outer one needlessly.</div>
+    </div>
+    <div class="quiz-q">
+      <h4>A bot's system prompt is 1,800 tokens and it runs on Claude Haiku. Why does provider prompt caching save nothing here, and what changes on Sonnet?</h4>
+      <button class="quiz-toggle">Show answer</button>
+      <div class="quiz-answer">Per-model minimum cacheable prefix. Haiku 4.5 (and Opus 4.5+) require <strong>4,096</strong> tokens before a prefix is cached; 1,800 &lt; 4,096, so the prefix is silently not cached (no penalty, just no benefit). Sonnet 4.x needs only <strong>1,024</strong> tokens, so the same 1,800-token prefix <em>is</em> cached — modeled at ~−40% total input cost (−84% on the prefix portion). The lever: don't hardcode; read the model from config and only expect L0 savings above its minimum. A knowledge-rich bot (~6k-token prefix) caches on every model.</div>
+    </div>
+    <div class="quiz-q">
+      <h4>The #1 risk of a naive semantic cache is cross-tenant leakage. What two mechanisms prevent Bot A from ever receiving Bot B's cached answer?</h4>
+      <button class="quiz-toggle">Show answer</button>
+      <div class="quiz-answer">(1) <strong>Key/scope namespacing</strong>: every L1/L3 key embeds <code>chatbot_id</code>, and every L2 pgvector lookup carries a <code>WHERE chatbot_id = …</code> predicate — the nearest-neighbour search physically can't see another bot's rows. (2) <strong>Provider isolation</strong>: Anthropic caches are workspace-scoped (never cross-org), and OpenAI's <code>prompt_cache_key = "org:bot"</code> isolates routing per tenant. Research shows a query-only-keyed cache leaks on up to 95% of queries — so "never key a cache on query text alone" is the rule.</div>
+    </div>
+  </div>
+
+  <footer class="chapter-footer">
+    <button class="mark-done" data-ch="12">Mark complete</button>
+    <div class="chapter-nav"><a href="#ch11">← Prev</a><a href="#ch13">Next: Full picture →</a></div>
+  </footer>
+</section>
+
+<!-- ============== CH 13 ============== -->
+<section class="chapter" id="ch13">
+  <header class="chapter-head">
+    <div class="chapter-num">Chapter 13</div>
     <h2>The full picture <em>— end to end with all layers in place</em></h2>
     <p class="chapter-lede">Every layer in this course running together, on a single user query, in the production codebase.</p>
   </header>
 
   <p>This is the assembled diagram as of 2026-Q3. Orange highlights are the 2026-Q3 additions covered in Chapter 11 (distillation + dispatcher + surgical curation); everything else is the 2024-vintage pipeline from Chapters 0-10. There is no "proposed" content in this diagram anymore — the proposal shipped.</p>
+
+  <p>Wrapping <em>around</em> this whole pipeline is the four-layer cache stack from Chapter 12: the answer caches (L1/L2) can short-circuit the entire diagram on a repeated question, the retrieval-result cache (L3) skips the blue retrieval band on a repeated query, and provider prompt caching (L0) cheapens the final generation step on every turn. Retrieval makes the answer <em>correct</em>; caching makes it <em>cheap and fast at scale</em>.</p>
 
   <div class="diagram-wrap">
     <svg viewBox="0 0 920 580" xmlns="http://www.w3.org/2000/svg" font-family="Inter,sans-serif" font-size="11.5">
@@ -1751,8 +1945,8 @@ const config = { ...sourceConfig, ...pageOverride };  // sparse merge — page w
   </div>
 
   <footer class="chapter-footer">
-    <button class="mark-done" data-ch="12">Mark complete</button>
-    <div class="chapter-nav"><a href="#">↑ Back to top</a></div>
+    <button class="mark-done" data-ch="13">Mark complete</button>
+    <div class="chapter-nav"><a href="#ch12">← Prev</a><a href="#">↑ Back to top</a></div>
   </footer>
 </section>
 
@@ -1761,7 +1955,7 @@ const config = { ...sourceConfig, ...pageOverride };  // sparse merge — page w
 </div>
 
 <script>
-const CH_COUNT = 13;
+const CH_COUNT = 14;
 const STORE = 'rag-course-progress';
 function loadState(){ try { return JSON.parse(localStorage.getItem(STORE)) || {}; } catch(e){ return {}; } }
 function saveState(s){ localStorage.setItem(STORE, JSON.stringify(s)); }

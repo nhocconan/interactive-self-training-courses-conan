@@ -24,19 +24,19 @@ const CATEGORIES = [
 const COURSES = [
   {
     slug: "demo-ai-prompting",
-    title: "Demo AI Prompting Fundamentals",
-    description: "Interactive course on prompt engineering for production work at Demo — from clear instructions to evaluation loops.",
-    htmlPath: "demo-ai-prompting-course.html",
+    title: "Demo AI Practical Playbook",
+    description: "Hands-on AI playbook for production work at Demo — model selection (incl. Opus 4.8 + Dynamic Workflows), prompting patterns, agents, and evaluation loops. Bilingual VI/EN.",
+    htmlPath: "ai-practical-playbook.html",
     categorySlug: "ai-engineering",
-    level: "Beginner", durationMin: 90, tags: ["AI", "Prompting", "LLM", "Fundamentals"],
+    level: "Beginner", durationMin: 120, tags: ["AI", "Prompting", "Models", "Playbook"],
   },
   {
     slug: "rag-information-retrieval",
     title: "RAG & Information Retrieval",
-    description: "Hands-on tour of RAG: chunking, embeddings, vector search, re-ranking and evaluation.",
+    description: "Hands-on tour of RAG: chunking, embeddings, vector search, re-ranking, multi-layer caching (prompt/semantic/retrieval) and evaluation.",
     htmlPath: "rag-information-retrieval-course.html",
     categorySlug: "data-engineering",
-    level: "Intermediate", durationMin: 120, tags: ["RAG", "Embeddings", "Retrieval"],
+    level: "Intermediate", durationMin: 135, tags: ["RAG", "Embeddings", "Retrieval", "Caching"],
   },
   {
     slug: "harness-engineering",
