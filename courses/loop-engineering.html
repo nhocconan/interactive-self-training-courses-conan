@@ -1,0 +1,1325 @@
+<!DOCTYPE html>
+<!-- Loop Engineering — Vietnamese · house standard (interactive-course-builder) · theme: loop (slate/cyan navy family) -->
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Loop Engineering · Kỹ nghệ vòng lặp tự hành cho phát triển phần mềm</title>
+<meta name="description" content="Khóa học tương tác từ nền tảng đến chuyên gia về Loop Engineering — thiết kế, đặt biên, đóng vòng và điều phối các vòng lặp agent tự hành để tự động hóa phát triển phần mềm. Cập nhật công cụ 2026.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --brand-navy:#0a2540; --brand-navy-deep:#061b33; --brand-sky:#2563eb;
+  --brand-coral:#ea403f; --brand-gold:#ffe14e; --brand-red:#d82827;
+  --accent:#14314f; --accent-2:#0ea5e9; --accent-3:#f59e0b;
+  --grad:linear-gradient(135deg,var(--accent) 0%,var(--accent-2) 55%,var(--accent-3) 100%);
+  --grad-bar:linear-gradient(90deg,var(--accent) 0%,var(--accent-2) 55%,var(--accent-3) 100%);
+  --bg:#ffffff; --surface:#ffffff; --surface-2:#f1f5f9; --surface-3:#eef2f7;
+  --border:#e2e8f0; --border-strong:#cbd5e1;
+  --ink:#0a2540; --ink-2:#475569; --ink-3:#64748b; --on-accent:#ffffff;
+  --success:#15a37a; --success-bg:#ecfdf5; --warning:#d97706; --warning-bg:#fffbeb;
+  --danger:#dc2626; --danger-bg:#fef2f2; --info:#0ea5e9; --info-bg:#eff6ff;
+  --font-body:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;
+  --font-mono:'IBM Plex Mono',ui-monospace,'SF Mono',Consolas,monospace;
+  --radius:16px; --radius-sm:10px; --radius-lg:22px;
+  --shadow-sm:0 1px 2px rgba(10,37,64,.06),0 1px 3px rgba(10,37,64,.05);
+  --shadow-md:0 4px 12px rgba(10,37,64,.10);
+  --shadow-lg:0 18px 48px -12px rgba(10,37,64,.28);
+  --sidebar-w:288px; --maxw:820px;
+  --focus:0 0 0 2px var(--bg),0 0 0 4px var(--accent-2);
+}
+@media (prefers-color-scheme: dark){
+  :root{
+    --bg:#0a0d18; --surface:#11141f; --surface-2:#161a27; --surface-3:#1b2130;
+    --border:#232938; --border-strong:#333b50;
+    --ink:#e7e9f1; --ink-2:#9aa3b8; --ink-3:#7d879c;
+    --accent:#7dd3fc; --accent-2:#38bdf8;
+    --success:#2dd4a8; --success-bg:#0c2a22; --warning:#fbbf24; --warning-bg:#2a2109;
+    --danger:#f87171; --danger-bg:#2a1213; --info:#38bdf8; --info-bg:#0e223f;
+    --shadow-lg:0 18px 48px -12px rgba(0,0,0,.6);
+  }
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth;-webkit-text-size-adjust:100%}
+@media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}*{animation-duration:.001ms!important;transition-duration:.001ms!important}}
+body{font-family:var(--font-body);background:var(--bg);color:var(--ink);font-size:16px;line-height:1.68;-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility}
+h1,h2,h3,h4,h5{line-height:1.22;font-weight:700;letter-spacing:-.02em;color:var(--ink)}
+a{color:var(--accent-2);text-decoration:none}a:hover{text-decoration:underline}
+strong{font-weight:700;color:var(--ink)}em{font-style:italic}
+code{font-family:var(--font-mono);font-size:.85em;background:var(--surface-2);padding:.12em .4em;border-radius:6px;border:1px solid var(--border);color:var(--ink)}
+:focus-visible{outline:none;box-shadow:var(--focus);border-radius:6px}
+.mono{font-family:var(--font-mono)}
+.eyebrow{font-family:var(--font-mono);font-size:11px;letter-spacing:.22em;text-transform:uppercase;color:var(--accent-2);font-weight:600}
+.grad-text{background:var(--grad);-webkit-background-clip:text;background-clip:text;color:transparent}
+.skip-link{position:fixed;top:-60px;left:12px;z-index:200;background:var(--accent);color:#fff;padding:10px 16px;border-radius:8px;transition:top .15s}
+.skip-link:focus{top:12px;text-decoration:none}
+.layout{display:flex;min-height:100vh}
+.sidebar{position:fixed;inset:0 auto 0 0;width:var(--sidebar-w);height:100vh;background:var(--surface);border-right:1px solid var(--border);display:flex;flex-direction:column;z-index:40}
+.sidebar-brand{padding:20px 20px 14px;border-bottom:1px solid var(--border)}
+.sidebar-brand-title{font-size:17px;font-weight:800;letter-spacing:-.02em}
+.sidebar-brand-title em{font-style:normal;color:var(--accent-3)}
+.sidebar-brand-sub{font-family:var(--font-mono);font-size:10.5px;color:var(--ink-3);letter-spacing:.08em;text-transform:uppercase;margin-top:4px}
+.progress-wrap{padding:12px 20px;border-bottom:1px solid var(--border)}
+.progress-meta{display:flex;justify-content:space-between;font-family:var(--font-mono);font-size:10.5px;color:var(--ink-3);text-transform:uppercase;letter-spacing:.08em;margin-bottom:6px}
+.progress-track{height:6px;background:var(--surface-2);border-radius:99px;overflow:hidden}
+.progress-fill{height:100%;width:0;background:var(--grad-bar);border-radius:99px;transition:width .3s ease}
+.nav-scroll{flex:1;overflow-y:auto;padding:12px 10px 24px}
+.nav-scroll::-webkit-scrollbar{width:6px}.nav-scroll::-webkit-scrollbar-thumb{background:var(--border-strong);border-radius:3px}
+.nav-group{margin-top:18px}.nav-group:first-child{margin-top:4px}
+.nav-part{display:flex;align-items:center;gap:8px;padding:0 10px 8px;font-family:var(--font-mono);font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--accent);font-weight:600}
+.nav-part::after{content:"";flex:1;height:1px;background:var(--border)}
+.nav-link{display:flex;align-items:center;gap:10px;padding:8px 10px;border-radius:8px;font-size:13.5px;color:var(--ink-2);cursor:pointer;transition:background .12s;border-left:2px solid transparent}
+.nav-link:hover{background:var(--surface-2);text-decoration:none}
+.nav-link.active{background:var(--surface-2);color:var(--ink);font-weight:600;border-left-color:var(--accent-2)}
+.nav-dot{width:7px;height:7px;border-radius:99px;background:var(--border-strong);flex-shrink:0;transition:background .2s}
+.nav-link.done .nav-dot{background:var(--success);box-shadow:0 0 8px color-mix(in srgb,var(--success) 45%,transparent)}
+.nav-num{font-family:var(--font-mono);font-size:10px;color:var(--ink-3);width:18px;flex-shrink:0}
+.nav-title{flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.main{flex:1;margin-left:var(--sidebar-w);min-width:0}
+.container{max-width:var(--maxw);margin:0 auto;padding:0 24px}
+.mobile-toggle{display:none;position:fixed;top:14px;left:14px;z-index:60;background:var(--accent);color:#fff;border:none;border-radius:10px;padding:9px;cursor:pointer;box-shadow:var(--shadow-md)}
+.backdrop{display:none;position:fixed;inset:0;background:rgba(10,14,10,.5);z-index:35}
+@media (max-width:1024px){.sidebar{transform:translateX(-100%);transition:transform .25s ease;box-shadow:var(--shadow-lg)}.sidebar.open{transform:translateX(0)}.main{margin-left:0}.mobile-toggle{display:block}.backdrop.show{display:block}.container{padding:0 18px}.main .topbar{padding-left:66px}.main .topbar-mini{display:none}}
+.topbar{position:sticky;top:0;z-index:30;background:color-mix(in srgb,var(--bg) 85%,transparent);backdrop-filter:blur(10px);border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;padding:10px 24px;font-family:var(--font-mono);font-size:11px;color:var(--ink-2)}
+#tb-crumb{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;min-width:0}
+.topbar-mini{height:3px;background:var(--surface-2);border-radius:99px;flex:1;max-width:180px;margin:0 16px;overflow:hidden}
+.topbar-mini-fill{height:100%;width:0;background:var(--grad-bar);transition:width .3s}
+.topbar a{color:var(--ink-2)}
+.hero{position:relative;overflow:hidden;border-bottom:1px solid var(--border);background:var(--surface);
+  background-image:radial-gradient(760px 300px at 88% -12%,color-mix(in srgb,var(--brand-gold) 22%,transparent),transparent 60%),radial-gradient(640px 380px at 6% 112%,color-mix(in srgb,var(--accent-2) 16%,transparent),transparent 60%),radial-gradient(560px 340px at 50% 0%,color-mix(in srgb,var(--accent) 10%,transparent),transparent 65%)}
+.hero-inner{max-width:var(--maxw);margin:0 auto;padding:72px 24px 60px}
+.hero-kicker{display:inline-flex;align-items:center;gap:8px;font-family:var(--font-mono);font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:var(--accent-2);border:1px solid var(--border);border-radius:99px;padding:5px 12px;background:var(--surface)}
+.hero h1{font-size:clamp(2.1rem,5vw,3.3rem);font-weight:800;margin:20px 0 0;letter-spacing:-.03em;line-height:1.1}
+.hero-sub{font-size:clamp(1rem,2vw,1.18rem);color:var(--ink-2);margin-top:18px;max-width:62ch}
+.hero-meta{display:flex;flex-wrap:wrap;gap:10px;margin-top:26px}
+.chip{display:inline-flex;align-items:center;gap:6px;font-family:var(--font-mono);font-size:11px;color:var(--ink-2);background:var(--surface);border:1px solid var(--border);border-radius:99px;padding:6px 12px}
+.btn{display:inline-flex;align-items:center;gap:8px;font-weight:600;font-size:14px;padding:12px 22px;border-radius:12px;cursor:pointer;border:1px solid transparent;transition:transform .15s,box-shadow .15s}
+.btn-primary{background:var(--accent);color:var(--on-accent)}.btn-primary:hover{text-decoration:none;transform:translateY(-1px);box-shadow:var(--shadow-md)}
+.btn-ghost{background:var(--surface);color:var(--ink);border-color:var(--border)}.btn-ghost:hover{text-decoration:none;border-color:var(--accent-2)}
+.section-pad{padding:56px 0}
+.section-head{display:flex;align-items:baseline;gap:14px;margin-bottom:22px}
+.section-head h2{font-size:1.9rem}.section-head .line{flex:1;height:1px;background:var(--border)}
+.toc-part-label{font-family:var(--font-mono);font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--accent);font-weight:600;margin:26px 0 12px}
+.toc-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:12px}
+.toc-card{display:flex;gap:14px;align-items:flex-start;padding:16px;border:1px solid var(--border);border-radius:var(--radius);background:var(--surface);cursor:pointer;transition:transform .15s,box-shadow .15s,border-color .15s}
+.toc-card:hover{transform:translateY(-2px);box-shadow:var(--shadow-md);border-color:var(--accent-2);text-decoration:none}
+.toc-card-num{font-family:var(--font-mono);font-size:20px;font-weight:700;color:var(--accent-2);line-height:1}
+.toc-card-title{display:block;font-weight:700;font-size:15px;color:var(--ink)}
+.toc-card-desc{display:block;font-size:12.5px;color:var(--ink-2);margin-top:4px;line-height:1.5}
+.toc-card>span:last-child{display:block}
+.module-header,.lesson,.pane{display:none}
+.module-header.active,.lesson.active,.pane.active{display:block;animation:fade .3s ease}
+@keyframes fade{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+.module-header{padding:44px 0 6px}
+.module-header .eyebrow{margin-bottom:10px;display:block}
+.module-header h2{font-size:clamp(1.8rem,4vw,2.5rem);font-weight:800}
+.module-header p{color:var(--ink-2);margin-top:14px;font-size:1.05rem;max-width:64ch}
+.lesson{margin:22px 0 40px;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);overflow:hidden;box-shadow:var(--shadow-sm)}
+.lesson-head{background:var(--grad);color:#fff;padding:26px 30px}
+.lesson-head .eyebrow{color:color-mix(in srgb,var(--brand-gold) 92%,#fff)}
+.lesson-head h3{color:#fff;font-size:clamp(1.4rem,3vw,1.9rem);margin-top:4px}
+.lesson-body{padding:26px 30px 6px;font-size:16px}
+.lesson-body>*+*{margin-top:18px}
+.lesson-body h4{font-size:1.05rem;margin-top:6px}
+.lesson-body ul,.lesson-body ol{padding-left:22px}.lesson-body li+li{margin-top:6px}
+@media (max-width:640px){.lesson-head,.lesson-body{padding-left:20px;padding-right:20px}}
+.level-badge{display:inline-flex;align-items:center;gap:6px;font-family:var(--font-mono);font-size:10px;letter-spacing:.1em;text-transform:uppercase;font-weight:600;padding:4px 10px;border-radius:99px;background:rgba(255,255,255,.16);color:#fff;border:1px solid rgba(255,255,255,.3)}
+.level-dots{display:inline-flex;gap:3px}.level-dots i{width:5px;height:5px;border-radius:99px;background:rgba(255,255,255,.35)}.level-dots i.on{background:var(--brand-gold)}
+.objectives{background:var(--surface-2);border:1px solid var(--border);border-radius:var(--radius);padding:18px 20px}
+.objectives .eyebrow{margin-bottom:8px;display:block}.objectives ul{list-style:none;padding:0}
+.objectives li{position:relative;padding-left:26px;color:var(--ink-2);font-size:14.5px}
+.objectives li::before{content:"→";position:absolute;left:4px;color:var(--accent-2);font-weight:700}
+.callout{border-radius:var(--radius);padding:16px 18px 16px 46px;position:relative;border:1px solid var(--border);background:var(--surface-2)}
+.callout::before{position:absolute;left:16px;top:15px;font-size:17px;line-height:1}
+.callout-title{font-weight:700;font-size:14px;margin-bottom:3px}.callout p{font-size:14.5px;color:var(--ink-2)}
+.callout.info{border-color:color-mix(in srgb,var(--info) 40%,var(--border));background:var(--info-bg)}.callout.info::before{content:"ℹ️"}
+.callout.warn{border-color:color-mix(in srgb,var(--warning) 45%,var(--border));background:var(--warning-bg)}.callout.warn::before{content:"⚠️"}
+.callout.success{border-color:color-mix(in srgb,var(--success) 45%,var(--border));background:var(--success-bg)}.callout.success::before{content:"✅"}
+.callout.danger{border-color:color-mix(in srgb,var(--danger) 45%,var(--border));background:var(--danger-bg)}.callout.danger::before{content:"🛑"}
+.callout.insight{border-color:color-mix(in srgb,var(--accent-2) 40%,var(--border));background:var(--info-bg)}.callout.insight::before{content:"💡"}
+.compare{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+@media (max-width:640px){.compare{grid-template-columns:1fr}}
+.compare-col{border-radius:var(--radius);padding:16px 18px;border-left:4px solid}
+.compare-col .eyebrow{margin-bottom:6px;display:block}
+.compare-col pre{font-family:var(--font-mono);font-size:12px;line-height:1.55;white-space:pre-wrap;word-break:break-word;margin:2px 0 6px;color:var(--ink)}
+.compare-col ul{list-style:none;padding:0;font-size:14px}
+.compare-col li{position:relative;padding-left:18px;margin-top:7px;color:var(--ink-2)}
+.compare-col li::before{position:absolute;left:0;font-weight:700}
+.compare-col.bad{border-color:var(--danger);background:var(--danger-bg)}.compare-col.bad .eyebrow{color:var(--danger)}.compare-col.bad li::before{content:"✕";color:var(--danger)}
+.compare-col.good{border-color:var(--success);background:var(--success-bg)}.compare-col.good .eyebrow{color:var(--success)}.compare-col.good li::before{content:"✓";color:var(--success)}
+.concept{background:var(--surface-2);border:1px solid var(--border);border-radius:var(--radius);padding:20px 22px}
+.concept .eyebrow{margin-bottom:8px;display:flex;align-items:center;gap:8px}.concept .eyebrow::before{content:"";width:8px;height:8px;border-radius:99px;background:var(--accent-2)}
+.concept h4{margin-bottom:6px}
+.figure{margin:4px 0;border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;background:var(--surface)}
+.figure svg{display:block;width:100%;height:auto;background:var(--surface)}
+.figure figcaption{padding:10px 16px;font-size:12.5px;color:var(--ink-2);border-top:1px solid var(--border);background:var(--surface-2)}
+.figure figcaption b{color:var(--ink)}
+.dgm-box{fill:var(--surface-2);stroke:var(--border-strong)}
+.dgm-accent{fill:color-mix(in srgb,var(--accent-2) 14%,var(--surface));stroke:var(--accent-2)}
+.dgm-warn{fill:var(--warning-bg);stroke:var(--warning)}
+.dgm-ink{fill:var(--ink)}.dgm-ink2{fill:var(--ink-2)}.dgm-line{stroke:var(--ink-3);fill:none}.dgm-flow{stroke:var(--accent-2);fill:none}
+.stack{display:flex;flex-direction:column;gap:8px}
+.stack-layer{border-radius:var(--radius-sm);padding:14px 18px;border:1px solid var(--border);display:flex;flex-direction:column;gap:2px}
+.stack-layer .sl-name{font-weight:700;font-size:15px}
+.stack-layer .sl-desc{font-family:var(--font-mono);font-size:11.5px;color:var(--ink-2)}
+.stack-layer.top{background:color-mix(in srgb,var(--brand-gold) 16%,var(--surface));border-color:color-mix(in srgb,var(--warning) 40%,var(--border))}
+.stack-layer.mid{background:color-mix(in srgb,var(--accent-2) 12%,var(--surface));border-color:color-mix(in srgb,var(--accent-2) 40%,var(--border))}
+.stack-layer.bot{background:color-mix(in srgb,var(--accent) 12%,var(--surface));border-color:color-mix(in srgb,var(--accent) 45%,var(--border))}
+.stack-caption{font-family:var(--font-mono);font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-3);margin-bottom:10px}
+.prompt-card,.code-card{border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;background:var(--surface)}
+.prompt-head{display:flex;align-items:center;justify-content:space-between;padding:9px 14px;background:var(--surface-2);border-bottom:1px solid var(--border);font-family:var(--font-mono);font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-2)}
+.copy-btn{font-family:var(--font-mono);font-size:10.5px;letter-spacing:.06em;text-transform:uppercase;background:var(--surface);border:1px solid var(--border);border-radius:7px;padding:4px 10px;cursor:pointer;color:var(--ink-2);transition:all .15s}
+.copy-btn:hover{background:var(--accent);color:#fff;border-color:var(--accent)}.copy-btn.copied{background:var(--success);color:#fff;border-color:var(--success)}
+.prompt-card pre,.code-card pre{margin:0;padding:16px;overflow-x:auto;font-family:var(--font-mono);font-size:13px;line-height:1.6;white-space:pre-wrap;word-break:break-word;color:var(--ink)}
+.code-card pre{white-space:pre;word-break:normal}
+.steps{list-style:none;padding:0;counter-reset:s}
+.steps li{position:relative;padding:0 0 16px 44px;counter-increment:s}
+.steps li::before{content:counter(s);position:absolute;left:0;top:0;width:28px;height:28px;border-radius:99px;background:var(--accent);color:var(--on-accent);font-family:var(--font-mono);font-size:13px;font-weight:600;display:flex;align-items:center;justify-content:center}
+.steps li::after{content:"";position:absolute;left:13px;top:30px;bottom:2px;width:2px;background:var(--border)}
+.steps li:last-child::after{display:none}
+.steps h4{font-size:15px;margin-bottom:2px}.steps p{font-size:14px;color:var(--ink-2)}
+.table-wrap{overflow-x:auto;border:1px solid var(--border);border-radius:var(--radius)}
+table{width:100%;border-collapse:collapse;font-size:14px;min-width:520px}
+thead th{background:var(--surface-2);text-align:left;padding:11px 14px;font-family:var(--font-mono);font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:var(--ink-2);border-bottom:1px solid var(--border)}
+tbody td{padding:11px 14px;border-bottom:1px solid var(--border);color:var(--ink);vertical-align:top}
+tbody tr:last-child td{border-bottom:none}tbody tr:hover{background:var(--surface-2)}
+.badge{display:inline-block;font-family:var(--font-mono);font-size:10px;letter-spacing:.06em;text-transform:uppercase;font-weight:600;padding:2px 8px;border-radius:99px;background:color-mix(in srgb,var(--accent) 14%,var(--surface));color:var(--accent);border:1px solid color-mix(in srgb,var(--accent) 30%,var(--border))}
+.badge.warn{background:var(--warning-bg);color:var(--warning);border-color:color-mix(in srgb,var(--warning) 40%,var(--border))}
+.badge.bad{background:var(--danger-bg);color:var(--danger);border-color:color-mix(in srgb,var(--danger) 40%,var(--border))}
+.badge.ok{background:var(--success-bg);color:var(--success);border-color:color-mix(in srgb,var(--success) 40%,var(--border))}
+.exercise{border:1px dashed var(--border-strong);border-radius:var(--radius);padding:18px 20px;background:var(--surface)}
+.exercise h5{font-size:14px;display:flex;align-items:center;gap:8px;margin-bottom:8px}
+.exercise h5::before{content:"🎯";font-size:15px}
+.exercise ol,.exercise ul{padding-left:20px;font-size:14.5px;color:var(--ink-2)}
+.takeaway{background:var(--grad);color:#fff;border-radius:var(--radius);padding:22px 26px;position:relative;overflow:hidden}
+.takeaway .eyebrow{color:color-mix(in srgb,var(--brand-gold) 92%,#fff);margin-bottom:8px;display:flex;align-items:center;gap:8px}
+.takeaway p{color:#fff;font-size:1.12rem;font-weight:600;line-height:1.5}.takeaway .hl{color:var(--brand-gold)}
+.quiz{border:1px solid var(--border);border-radius:var(--radius);padding:20px 22px;background:var(--surface-2)}
+.quiz .eyebrow{margin-bottom:8px;display:block}.quiz-q{font-weight:700;color:var(--ink);margin-bottom:14px}
+.quiz-opt{display:flex;gap:12px;align-items:flex-start;width:100%;text-align:left;border:2px solid var(--border);border-radius:var(--radius-sm);padding:12px 14px;background:var(--surface);cursor:pointer;font-size:14.5px;color:var(--ink);transition:all .13s}
+.quiz-opt+.quiz-opt{margin-top:8px}.quiz-opt:hover:not(:disabled){border-color:var(--accent-2);background:var(--info-bg)}.quiz-opt:disabled{cursor:default}
+.quiz-letter{font-family:var(--font-mono);font-weight:600;color:var(--ink-2);flex-shrink:0}
+.quiz-opt.correct{background:var(--success);color:#fff;border-color:var(--success)}.quiz-opt.correct .quiz-letter{color:#fff}
+.quiz-opt.wrong{background:var(--danger);color:#fff;border-color:var(--danger)}.quiz-opt.wrong .quiz-letter{color:#fff}
+.quiz-feedback{margin-top:14px;font-size:14px;padding:12px 14px;border-radius:var(--radius-sm);display:none;line-height:1.6}
+.quiz-feedback.show{display:block}
+.quiz-feedback.ok{background:var(--success-bg);color:var(--success);border:1px solid color-mix(in srgb,var(--success) 40%,transparent)}
+.quiz-feedback.no{background:var(--danger-bg);color:var(--danger);border:1px solid color-mix(in srgb,var(--danger) 40%,transparent)}
+.lesson-nav{display:grid;grid-template-columns:1fr auto 1fr;gap:12px;padding:22px 30px 28px;border-top:1px solid var(--border);margin-top:22px}
+@media (max-width:720px){.lesson-nav{grid-template-columns:1fr}}
+.lesson-nav a,.lesson-nav button{display:flex;flex-direction:column;justify-content:center;min-height:62px;border-radius:12px;padding:12px 18px;border:1px solid var(--border);background:var(--surface-2);cursor:pointer;transition:all .15s;text-decoration:none}
+.lesson-nav a:hover{border-color:var(--accent-2);background:var(--surface);transform:translateY(-1px);box-shadow:var(--shadow-md);text-decoration:none}
+.lesson-nav .nav-next{text-align:right}
+.lesson-nav .nl-label{font-family:var(--font-mono);font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--ink-3)}
+.lesson-nav .nl-title{font-weight:600;font-size:14px;color:var(--ink);margin-top:3px}
+.lesson-nav .nav-empty{opacity:.4;pointer-events:none;border-style:dashed}
+.nav-complete{background:var(--accent);color:var(--on-accent);border-color:var(--accent);align-items:center;flex-direction:row;justify-content:center;gap:8px;font-family:var(--font-mono);font-size:11px;letter-spacing:.08em;text-transform:uppercase;font-weight:600}
+.nav-complete:hover{background:var(--brand-navy-deep);transform:translateY(-1px)}.nav-complete.done{background:var(--grad)}
+.complete{text-align:center;padding:70px 24px}
+.complete-badge{width:76px;height:76px;border-radius:99px;background:var(--grad);display:flex;align-items:center;justify-content:center;margin:0 auto 22px;color:#fff;font-size:34px}
+.complete h2{font-size:2.2rem}.complete p{color:var(--ink-2);max-width:56ch;margin:14px auto 0}
+footer.site{border-top:1px solid var(--border);padding:26px 24px;text-align:center;font-family:var(--font-mono);font-size:11px;color:var(--ink-3)}
+</style>
+</head>
+<body data-theme="loop">
+<a href="#main" class="skip-link">Tới nội dung</a>
+<button class="mobile-toggle" aria-label="Mở điều hướng" onclick="toggleSidebar()">
+  <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+</button>
+<div class="backdrop" id="backdrop" onclick="toggleSidebar()"></div>
+
+<div class="layout">
+  <aside class="sidebar" id="sidebar" aria-label="Điều hướng khóa học">
+    <div class="sidebar-brand">
+      <div class="sidebar-brand-title">Loop <em>Engineering</em></div>
+      <div class="sidebar-brand-sub">Vòng lặp tự hành · bản 2026</div>
+    </div>
+    <div class="progress-wrap">
+      <div class="progress-meta"><span>Tiến độ</span><span><b id="pg-done">0</b>/<span id="pg-total">0</span> · <span id="pg-pct">0</span>%</span></div>
+      <div class="progress-track"><div class="progress-fill" id="pg-fill"></div></div>
+    </div>
+    <nav class="nav-scroll" id="nav-list" aria-label="Danh sách bài học"></nav>
+  </aside>
+
+  <main class="main" id="main">
+    <div class="topbar">
+      <span class="mono" id="tb-crumb">Tổng quan</span>
+      <div class="topbar-mini"><div class="topbar-mini-fill" id="tb-fill"></div></div>
+      <div style="display:flex;align-items:center;gap:14px">
+        <span class="mono" style="color:var(--ink-3)">← → chuyển bài</span>
+        <a href="#overview" class="mono">↺ Về đầu</a>
+      </div>
+    </div>
+
+    <section class="pane" id="overview" data-pane>
+      <div class="hero">
+        <div class="hero-inner">
+          <span class="hero-kicker">Khóa học tương tác · Cập nhật 2026</span>
+          <h1><span class="grad-text">Loop Engineering</span><br>Kỹ nghệ vòng lặp tự hành</h1>
+          <p class="hero-sub">Một lệnh gọi model là một câu trả lời. Một <strong>vòng lặp</strong> được thiết kế tốt là một <em>đồng nghiệp tự hành</em>. Khóa học dạy bạn thiết kế, đặt biên, đóng vòng và điều phối các loop agent — bậc tiếp theo của tự động hóa phát triển phần mềm sau Context &amp; Harness Engineering.</p>
+          <div class="hero-meta">
+            <span class="chip">⏱ ~5–6 giờ</span>
+            <span class="chip">📶 L1 → L5</span>
+            <span class="chip">🔁 10 bài</span>
+            <span class="chip">✅ Quiz + takeaway mỗi bài</span>
+            <span class="chip">🇻🇳 Tiếng Việt</span>
+          </div>
+          <div style="margin-top:28px;display:flex;gap:12px;flex-wrap:wrap">
+            <a class="btn btn-primary" id="start-btn">Bắt đầu học →</a>
+            <a class="btn btn-ghost" href="#curriculum">Xem lộ trình</a>
+          </div>
+        </div>
+      </div>
+      <div class="container section-pad" id="curriculum">
+        <div class="section-head"><h2>Lộ trình</h2><span class="line"></span><span class="mono" style="font-size:11px;color:var(--ink-3)">bấm vào bài bất kỳ</span></div>
+        <div id="toc-body"></div>
+        <div class="callout insight" style="margin-top:26px"><div class="callout-title">Nên học sau Context &amp; Harness Engineering</div><p>Khóa này giả định bạn đã hiểu vòng lặp agent là một trong năm trụ của harness. Ở đây ta <em>đào sâu chính cái vòng lặp đó</em>: làm sao để nó tự chạy nhiều bước, tự sửa, và đáng tin đến mức bạn dám rời tay — mà không đốt tiền hay phá hỏng thứ gì.</p></div>
+
+        <div class="toc-part-label" style="margin-top:34px">Bảng thuật ngữ</div>
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th style="width:210px">Thuật ngữ</th><th>Nghĩa trong khóa này</th></tr></thead>
+            <tbody>
+              <tr><td><span class="badge">agentic loop</span></td><td>Vòng lặp tự hành: model lặp Plan→Act→Observe→Reflect nhiều bước, tự quan sát hệ quả và đổi hướng — không phải một lần gọi.</td></tr>
+              <tr><td><span class="badge">verifier</span></td><td>Nguồn sự thật khách quan đóng vòng lặp (test, typecheck, lint, eval) — thứ nói "đúng chưa" thay cho cảm nhận của agent.</td></tr>
+              <tr><td><span class="badge">ground truth</span></td><td>Chuẩn đối chiếu tin cậy để đo đúng/sai; không có nó, thêm vòng lặp chỉ thêm trôi dạt.</td></tr>
+              <tr><td><span class="badge">reflection / critique</span></td><td>Bước agent tự (hoặc nhờ model khác) phê bình output của chính nó rồi sửa — mạnh nhưng phải độc lập, cụ thể, biết điểm dừng.</td></tr>
+              <tr><td><span class="badge">LLM-as-judge</span></td><td>Dùng một model chấm chất lượng output theo rubric — verifier mềm, dùng khi không có verifier cứng.</td></tr>
+              <tr><td><span class="badge">fan-out</span></td><td>Chia một việc thành nhiều nhánh chạy song song rồi gộp lại — nhanh nhưng đốt rate limit song song.</td></tr>
+              <tr><td><span class="badge">pipeline</span></td><td>Chuỗi bước tuần tự, output bước này là input bước sau; điều phối tất định do code, không do model.</td></tr>
+              <tr><td><span class="badge">barrier</span></td><td>Điểm chờ mọi nhánh song song hoàn tất trước khi bước sau chạy — chỉ dùng khi bước sau cần đủ mọi kết quả.</td></tr>
+              <tr><td><span class="badge">human in/on/out-of-the-loop</span></td><td>Ba mức tự chủ: người duyệt từng bước / giám sát &amp; can thiệp khi cần / để loop tự chạy — chọn theo đảo-ngược × bán-kính.</td></tr>
+              <tr><td><span class="badge">bán kính thiệt hại (blast radius)</span></td><td>Phạm vi hư hại tối đa khi loop sai; càng lớn càng cần cổng người &amp; sandbox.</td></tr>
+              <tr><td><span class="badge">pattern Ralph</span></td><td>Loop nền chạy dai quanh một state bền vững, tự đánh thức để làm tiếp; an toàn chỉ khi có verifier + biên + state.</td></tr>
+              <tr><td><span class="badge">kill switch</span></td><td>Cơ chế dừng tức thì một loop đang chạy; đi kèm trần chi phí &amp; cảnh báo là lớp guardrail cuối.</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <div class="container">
+      <!-- ============ CHƯƠNG 1 ============ -->
+      <header class="module-header" data-module="1">
+        <span class="eyebrow">Chương 01 · Phần I · Nền tảng</span>
+        <h2>Phổ tự động hóa — từ prompt tới agent tự hành</h2>
+        <p>"Tự động hóa" không phải công tắc bật/tắt mà là một <em>phổ</em>. Biết bạn đang ở nấc nào, và nấc kế tiếp đòi hỏi gì, là điều kiện tiên quyết để leo lên an toàn.</p>
+      </header>
+      <article class="lesson" id="m1-l1" data-lesson>
+        <div class="lesson-head">
+          <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px">
+            <div><span class="eyebrow">Bài 1.1</span><h3>Phổ tự động hóa &amp; vì sao cần vòng lặp</h3></div>
+            <div style="display:flex;gap:8px;flex-wrap:wrap"><span class="level-badge">L1 · Nền tảng <span class="level-dots"><i class="on"></i><i></i><i></i><i></i><i></i></span></span><span class="level-badge">⏱ ~3 phút</span></div>
+          </div>
+        </div>
+        <div class="lesson-body">
+          <div class="objectives">
+            <span class="eyebrow">Học xong bài này bạn có thể</span>
+            <ul>
+              <li>Định vị công việc của mình trên phổ tự động hóa 5 nấc.</li>
+              <li>Giải thích vì sao "một lệnh gọi" khác về chất so với "một vòng lặp".</li>
+              <li>Biết nấc kế tiếp đòi hỏi gì trước khi leo lên.</li>
+            </ul>
+          </div>
+          <p>Ở khóa Context &amp; Harness, vòng lặp agent là <em>một</em> trong năm trụ. Khóa này lấy đúng cái vòng lặp đó và hỏi: làm sao để nó chạy 5, 50, 500 bước mà vẫn đúng hướng, tự sửa, và không đốt tiền? Bắt đầu bằng bản đồ.</p>
+
+          <div class="concept">
+            <span class="eyebrow">Vòng lặp là gì (nhắc lại, rồi đào sâu)</span>
+            <p>Một <em>lệnh gọi</em> đơn: prompt vào → câu trả lời ra. Một <em>vòng lặp</em>: gọi model → nếu model muốn dùng tool, chạy tool, nối kết quả → gọi lại → lặp tới khi xong hoặc chạm biên. Điểm mấu chốt: vòng lặp cho agent <strong>quan sát hệ quả hành động của chính nó rồi điều chỉnh</strong>. Đó là bước nhảy về chất — từ "trả lời" sang "hành động &amp; thích nghi".</p>
+          </div>
+
+          <figure class="figure">
+            <svg viewBox="0 0 660 210" role="img" aria-label="Phổ tự động hóa 5 nấc từ trái sang phải: gợi ý, một lệnh, vòng lặp có giám sát, vòng lặp tự hành có biên, đội agent tự hành; mức tự chủ và rủi ro tăng dần">
+              <defs><marker id="a1" markerWidth="9" markerHeight="9" refX="7" refY="4.5" orient="auto"><path d="M0 0 L9 4.5 L0 9 z" fill="var(--accent-2)"/></marker></defs>
+              <line class="dgm-line" x1="24" y1="150" x2="636" y2="150" stroke-width="1.5" marker-end="url(#a1)"/>
+              <text class="dgm-ink2" x="24" y="176" font-size="10" font-family="IBM Plex Mono">tự chủ ↑ · rủi ro ↑ · cần guardrail ↑</text>
+              <g font-family="IBM Plex Mono">
+                <rect class="dgm-box" x="24" y="40" width="108" height="84" rx="9"/>
+                <text class="dgm-ink" x="78" y="70" text-anchor="middle" font-size="11" font-weight="700">L1</text>
+                <text class="dgm-ink2" x="78" y="90" text-anchor="middle" font-size="9.5">Gợi ý</text>
+                <text class="dgm-ink2" x="78" y="104" text-anchor="middle" font-size="8.5">autocomplete</text>
+                <rect class="dgm-box" x="150" y="40" width="108" height="84" rx="9"/>
+                <text class="dgm-ink" x="204" y="70" text-anchor="middle" font-size="11" font-weight="700">L2</text>
+                <text class="dgm-ink2" x="204" y="90" text-anchor="middle" font-size="9.5">Một lệnh</text>
+                <text class="dgm-ink2" x="204" y="104" text-anchor="middle" font-size="8.5">hỏi–đáp</text>
+                <rect class="dgm-accent" x="276" y="34" width="108" height="96" rx="9" stroke-width="2"/>
+                <text class="dgm-ink" x="330" y="66" text-anchor="middle" font-size="11" font-weight="700">L3</text>
+                <text class="dgm-ink2" x="330" y="86" text-anchor="middle" font-size="9.5">Loop có</text>
+                <text class="dgm-ink2" x="330" y="99" text-anchor="middle" font-size="9.5">giám sát</text>
+                <text class="dgm-ink2" x="330" y="114" text-anchor="middle" font-size="8.5">bạn duyệt bước</text>
+                <rect class="dgm-accent" x="402" y="34" width="108" height="96" rx="9" stroke-width="2"/>
+                <text class="dgm-ink" x="456" y="66" text-anchor="middle" font-size="11" font-weight="700">L4</text>
+                <text class="dgm-ink2" x="456" y="86" text-anchor="middle" font-size="9.5">Loop tự hành</text>
+                <text class="dgm-ink2" x="456" y="100" text-anchor="middle" font-size="9.5">có biên</text>
+                <text class="dgm-ink2" x="456" y="114" text-anchor="middle" font-size="8.5">bạn duyệt kết quả</text>
+                <rect class="dgm-warn" x="528" y="40" width="108" height="84" rx="9" stroke-width="1.5"/>
+                <text class="dgm-ink" x="582" y="70" text-anchor="middle" font-size="11" font-weight="700">L5</text>
+                <text class="dgm-ink2" x="582" y="90" text-anchor="middle" font-size="9.5">Đội agent</text>
+                <text class="dgm-ink2" x="582" y="104" text-anchor="middle" font-size="8.5">điều phối</text>
+              </g>
+            </svg>
+            <figcaption><b>Hình 1.1</b> — Năm nấc tự động hóa. Cả khóa này sống ở <b>L3–L5</b>: nơi agent chạy nhiều bước tự thân. Mỗi nấc lên đổi <em>vai của con người</em>: từ gõ, tới hỏi, tới duyệt từng bước, tới duyệt kết quả, tới thiết kế luật cho cả đội.</figcaption>
+          </figure>
+
+          <div class="callout insight"><div class="callout-title">Điều thực sự thay đổi khi lên loop</div><p>Không phải "AI làm nhiều hơn", mà là <strong>vai của bạn dịch chuyển</strong>: từ người <em>làm</em> sang người <em>thiết kế điều kiện</em> để một tác nhân khác làm đúng. Ở L4–L5 bạn không viết code — bạn viết <em>tiêu chí thành công, biên an toàn, và tín hiệu đóng vòng</em>. Toàn bộ khóa này là kỹ năng cho vai mới đó.</p></div>
+
+          <div class="callout warn"><div class="callout-title">Đừng nhảy nấc</div><p>Cám dỗ lớn nhất là nhảy thẳng từ L2 lên L5 ("thả một đội agent tự làm hết"). Mỗi nấc lên <em>nhân đôi</em> yêu cầu về đóng vòng (Chương 4–5), biên (Chương 3) và guardrail (Chương 9). Bỏ qua các nấc là công thức đốt tiền &amp; tạo dọn dẹp. Leo từng nấc, mỗi nấc chứng minh độ tin cậy trước khi lên tiếp.</p></div>
+
+          <div class="exercise">
+            <h5>Bài tập · Định vị &amp; nấc kế tiếp</h5>
+            <p>Liệt kê 3 việc bạn đang dùng AI. Với mỗi việc: (1) nó đang ở nấc nào (L1–L5)? (2) Vai của bạn là gì (gõ / hỏi / duyệt bước / duyệt kết quả / thiết kế luật)? (3) Để lên một nấc <em>an toàn</em>, bạn cần thêm tín hiệu đóng vòng hay biên nào? Giữ danh sách này — ta sẽ quay lại ở chương cuối.</p>
+          </div>
+
+          <div class="takeaway">
+            <span class="eyebrow"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 2v6m0 8v6M4.9 4.9l4.2 4.2m5.8 5.8l4.2 4.2M2 12h6m8 0h6M4.9 19.1l4.2-4.2m5.8-5.8l4.2-4.2"/></svg>Takeaway</span>
+            <p>Tự động hóa là một <span class="hl">phổ 5 nấc</span>, không phải công tắc. Lên loop nghĩa là <span class="hl">vai của bạn dịch từ "làm" sang "thiết kế điều kiện"</span>: tiêu chí thành công, biên, tín hiệu đóng vòng. <span class="hl">Leo từng nấc</span> — đừng nhảy từ L2 lên L5.</p>
+          </div>
+
+          <div class="quiz" data-correct="2">
+            <span class="eyebrow">Kiểm tra nhanh</span>
+            <p class="quiz-q">Đội bạn đang dùng AI kiểu hỏi–đáp (L2) và muốn "để agent tự sửa cả backlog qua đêm" (L5). Lời khuyên đúng nhất?</p>
+            <button class="quiz-opt" onclick="quizPick(this,0)"><span class="quiz-letter">A</span><span>Cứ thả agent chạy qua đêm — model 2026 đủ giỏi để tự lo.</span></button>
+            <button class="quiz-opt" onclick="quizPick(this,1)"><span class="quiz-letter">B</span><span>Không bao giờ tự động hóa quá L2 — quá rủi ro.</span></button>
+            <button class="quiz-opt" onclick="quizPick(this,2)"><span class="quiz-letter">C</span><span>Leo từng nấc: trước hết dựng loop có giám sát (L3) cho một loại việc, chứng minh nó đáng tin nhờ tín hiệu đóng vòng &amp; biên rõ, rồi mới nới sang tự hành có biên (L4) và cuối cùng là đội điều phối (L5).</span></button>
+            <button class="quiz-opt" onclick="quizPick(this,3)"><span class="quiz-letter">D</span><span>Mua model đắt nhất rồi thả chạy — tiền mua được độ tin cậy.</span></button>
+            <div class="quiz-feedback" data-explain="Mỗi nấc tự chủ nhân đôi yêu cầu về đóng vòng, biên và guardrail. Nhảy từ L2 lên L5 là bỏ qua đúng những thứ khiến tự hành an toàn — kết quả điển hình là đốt tiền &amp; tạo một đống PR sai phải dọn. Cách đúng: leo từng nấc, mỗi nấc chứng minh độ tin cậy trên một loại việc hẹp trước khi mở rộng. Model giỏi hơn hay đắt hơn không thay được kỷ luật này."></div>
+          </div>
+        </div>
+        <div class="lesson-nav" data-navfor="m1-l1"></div>
+      </article>
+
+      <!-- ============ CHƯƠNG 2 ============ -->
+      <header class="module-header" data-module="2">
+        <span class="eyebrow">Chương 02 · Phần I · Nền tảng</span>
+        <h2>Giải phẫu một vòng lặp agent</h2>
+        <p>Mọi vòng lặp tự hành, dù đơn giản hay tinh vi, đều quay quanh cùng bốn nhịp: <em>lập kế hoạch → hành động → quan sát → phản tư</em>. Hiểu bốn nhịp này là hiểu mọi agent.</p>
+      </header>
+      <article class="lesson" id="m2-l1" data-lesson>
+        <div class="lesson-head">
+          <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px">
+            <div><span class="eyebrow">Bài 2.1</span><h3>Bốn nhịp: Plan → Act → Observe → Reflect</h3></div>
+            <div style="display:flex;gap:8px;flex-wrap:wrap"><span class="level-badge">L1 · Nền tảng <span class="level-dots"><i class="on"></i><i></i><i></i><i></i><i></i></span></span><span class="level-badge">⏱ ~3 phút</span></div>
+          </div>
+        </div>
+        <div class="lesson-body">
+          <div class="objectives">
+            <span class="eyebrow">Học xong bài này bạn có thể</span>
+            <ul>
+              <li>Nhận diện bốn nhịp trong bất kỳ vòng lặp agent nào.</li>
+              <li>Chỉ ra nhịp nào yếu là nguyên nhân khi loop trôi dạt hay kẹt.</li>
+              <li>Biết vì sao nhịp <em>quan sát</em> và <em>phản tư</em> mới là thứ phân biệt loop tốt/xấu.</li>
+            </ul>
+          </div>
+          <p>Chương 1 cho bạn bản đồ. Giờ nhìn vào cỗ máy. Một agent tự hành không có gì huyền bí — nó lặp lại bốn nhịp, và chất lượng loop nằm ở chỗ mỗi nhịp được thiết kế tốt tới đâu.</p>
+
+          <figure class="figure">
+            <svg viewBox="0 0 640 300" role="img" aria-label="Chu trình bốn nhịp: Plan lập kế hoạch, Act hành động qua tool, Observe quan sát kết quả, Reflect phản tư điều chỉnh, rồi quay lại Plan">
+              <defs><marker id="al2" markerWidth="9" markerHeight="9" refX="7" refY="4.5" orient="auto"><path d="M0 0 L9 4.5 L0 9 z" fill="var(--accent-2)"/></marker></defs>
+              <rect class="dgm-accent" x="248" y="18" width="144" height="56" rx="10" stroke-width="2"/>
+              <text class="dgm-ink" x="320" y="42" text-anchor="middle" font-size="14" font-weight="700">1 · PLAN</text>
+              <text class="dgm-ink2" x="320" y="60" text-anchor="middle" font-size="10.5" font-family="IBM Plex Mono">bước kế tiếp là gì?</text>
+              <rect class="dgm-accent" x="470" y="122" width="150" height="56" rx="10" stroke-width="2"/>
+              <text class="dgm-ink" x="545" y="146" text-anchor="middle" font-size="14" font-weight="700">2 · ACT</text>
+              <text class="dgm-ink2" x="545" y="164" text-anchor="middle" font-size="10.5" font-family="IBM Plex Mono">gọi tool, thay đổi</text>
+              <rect class="dgm-box" x="248" y="226" width="144" height="56" rx="10"/>
+              <text class="dgm-ink" x="320" y="250" text-anchor="middle" font-size="14" font-weight="700">3 · OBSERVE</text>
+              <text class="dgm-ink2" x="320" y="268" text-anchor="middle" font-size="10.5" font-family="IBM Plex Mono">kết quả ra sao?</text>
+              <rect class="dgm-accent" x="20" y="122" width="150" height="56" rx="10" stroke-width="2" style="fill:color-mix(in srgb,var(--brand-gold) 16%,var(--surface))"/>
+              <text class="dgm-ink" x="95" y="146" text-anchor="middle" font-size="14" font-weight="700">4 · REFLECT</text>
+              <text class="dgm-ink2" x="95" y="164" text-anchor="middle" font-size="10.5" font-family="IBM Plex Mono">đúng hướng chưa?</text>
+              <path class="dgm-flow" d="M392 52 C 470 60, 500 95, 528 118" stroke-width="2.5" marker-end="url(#al2)"/>
+              <path class="dgm-flow" d="M528 178 C 500 210, 440 224, 394 240" stroke-width="2.5" marker-end="url(#al2)"/>
+              <path class="dgm-flow" d="M248 254 C 180 240, 140 205, 110 180" stroke-width="2.5" marker-end="url(#al2)"/>
+              <path class="dgm-flow" d="M112 122 C 140 92, 200 60, 246 50" stroke-width="2.5" marker-end="url(#al2)"/>
+              <circle cx="320" cy="150" r="4" fill="var(--ink-3)"/>
+              <text class="dgm-ink2" x="320" y="145" text-anchor="middle" font-size="10" font-family="IBM Plex Mono">lặp tới khi</text>
+              <text class="dgm-ink2" x="320" y="172" text-anchor="middle" font-size="10" font-family="IBM Plex Mono">xong / chạm biên</text>
+            </svg>
+            <figcaption><b>Hình 2.1</b> — Chu trình bốn nhịp. Đa số agent yếu ở nhịp <b>3 (Observe)</b> và <b>4 (Reflect)</b>: chúng hành động ào ạt nhưng không thật sự <em>quan sát</em> hệ quả hay <em>phản tư</em> xem có đang trôi dạt không. Một loop chỉ Plan→Act mà bỏ Observe→Reflect thì không tự sửa được.</figcaption>
+          </figure>
+
+          <div class="table-wrap">
+            <table>
+              <thead><tr><th style="width:120px">Nhịp</th><th>Làm gì</th><th>Khi yếu thì</th></tr></thead>
+              <tbody>
+                <tr><td><span class="badge">PLAN</span></td><td>Quyết định bước kế tiếp dựa trên mục tiêu + state hiện tại</td><td>Loop lan man, làm việc không dẫn tới mục tiêu</td></tr>
+                <tr><td><span class="badge">ACT</span></td><td>Gọi tool, thay đổi thế giới (đọc/ghi file, chạy lệnh)</td><td>Hành động không idempotent → hiệu ứng phụ nhân đôi</td></tr>
+                <tr><td><span class="badge warn">OBSERVE</span></td><td>Đọc kết quả hành động thành tín hiệu dùng được</td><td>Không "thấy" lỗi → cứ tưởng đã xong (ảo tưởng thành công)</td></tr>
+                <tr><td><span class="badge warn">REFLECT</span></td><td>So sánh với mục tiêu, quyết định tiếp/sửa/dừng</td><td>Không phản tư → trôi dạt, kẹt vòng, hoặc bảo vệ lỗi cũ</td></tr>
+              </tbody>
+            </table>
+          </div>
+
+          <div class="callout insight"><div class="callout-title">Observe &amp; Reflect là nơi loop "thông minh"</div><p>Nhịp Plan–Act có ở cả script tự động thường. Cái khiến một <em>agent</em> khác một <em>script</em> là hai nhịp còn lại: nó <strong>quan sát hệ quả thật</strong> và <strong>phản tư để đổi hướng</strong>. Nếu bạn chỉ nhớ một điều từ chương này: đầu tư vào Observe (tín hiệu — Chương 4) và Reflect (tự sửa — Chương 5) hơn là vào việc làm Act nhanh hơn.</p></div>
+
+          <div class="callout warn"><div class="callout-title">Ảo tưởng thành công</div><p>Failure mode nguy hiểm nhất của nhịp Observe: agent <em>tuyên bố</em> đã xong mà không có bằng chứng. "Tôi đã sửa bug" — nhưng không chạy test. Nhịp Observe yếu biến loop thành một cỗ máy tạo ra sự tự tin sai. Cách chữa nằm ở Chương 4: gắn một <em>verifier</em> khách quan vào nhịp quan sát.</p></div>
+
+          <div class="exercise">
+            <h5>Bài tập · Mổ xẻ một loop bạn từng chạy</h5>
+            <p>Nhớ lại một lần agent chạy dài rồi cho kết quả tệ. Truy về bốn nhịp: nó <em>lập kế hoạch</em> có rõ không? <em>Hành động</em> có idempotent không? Nó có thật sự <em>quan sát</em> kết quả (chạy test/kiểm tra) hay chỉ tự nhận? Nó có <em>phản tư</em> để đổi hướng, hay lặp mãi một cách? Nhịp yếu nhất chính là nơi cần đầu tư.</p>
+          </div>
+
+          <div class="takeaway">
+            <span class="eyebrow"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 2v6m0 8v6M4.9 4.9l4.2 4.2m5.8 5.8l4.2 4.2M2 12h6m8 0h6M4.9 19.1l4.2-4.2m5.8-5.8l4.2-4.2"/></svg>Takeaway</span>
+            <p>Mọi loop = <span class="hl">Plan → Act → Observe → Reflect</span>. Điều khiến agent khác script là hai nhịp <span class="hl">Observe &amp; Reflect</span> — quan sát hệ quả thật và tự đổi hướng. Nhịp Observe yếu sinh ra <span class="hl">ảo tưởng thành công</span>: agent tưởng xong mà không có bằng chứng.</p>
+          </div>
+
+          <div class="quiz" data-correct="1">
+            <span class="eyebrow">Kiểm tra nhanh</span>
+            <p class="quiz-q">Một agent chạy 20 bước rồi báo "đã hoàn thành refactor và mọi thứ hoạt động", nhưng thực tế app bị gãy. Nhịp nào của vòng lặp yếu nhất, và sửa ở đâu?</p>
+            <button class="quiz-opt" onclick="quizPick(this,0)"><span class="quiz-letter">A</span><span>Nhịp PLAN — agent lập kế hoạch sai; cần prompt kế hoạch tốt hơn.</span></button>
+            <button class="quiz-opt" onclick="quizPick(this,1)"><span class="quiz-letter">B</span><span>Nhịp OBSERVE — agent không thật sự quan sát hệ quả (không chạy test/kiểm tra), nên "ảo tưởng thành công". Sửa bằng cách gắn một verifier khách quan (test/typecheck/lint) vào vòng lặp để nhịp quan sát dựa trên bằng chứng, không dựa trên tự nhận.</span></button>
+            <button class="quiz-opt" onclick="quizPick(this,2)"><span class="quiz-letter">C</span><span>Nhịp ACT — cần model mạnh hơn để hành động chính xác hơn.</span></button>
+            <button class="quiz-opt" onclick="quizPick(this,3)"><span class="quiz-letter">D</span><span>Không nhịp nào cả — chỉ là xui, chạy lại là được.</span></button>
+            <div class="quiz-feedback" data-explain="'Tuyên bố xong mà không có bằng chứng' là dấu hiệu kinh điển của nhịp Observe yếu — ảo tưởng thành công. Agent hành động (Act) nhưng không quan sát hệ quả thật; nó tự nhận thay vì kiểm chứng. Kế hoạch có thể ổn, model có thể đủ giỏi — vấn đề là vòng lặp thiếu một tín hiệu khách quan để 'thấy' rằng app đã gãy. Cách sửa: gắn verifier (chạy test/typecheck) vào nhịp quan sát — đúng chủ đề Chương 4."></div>
+          </div>
+        </div>
+        <div class="lesson-nav" data-navfor="m2-l1"></div>
+      </article>
+
+      <!-- ============ CHƯƠNG 3 ============ -->
+      <header class="module-header" data-module="3">
+        <span class="eyebrow">Chương 03 · Phần I · Nền tảng</span>
+        <h2>Biên &amp; điều kiện dừng</h2>
+        <p>Một vòng lặp không có biên là một quả bom hẹn giờ tài chính. Trước khi cho loop tự chạy, bạn phải trả lời được: nó dừng khi nào, và nếu không dừng thì cái gì bắt nó dừng?</p>
+      </header>
+      <article class="lesson" id="m3-l1" data-lesson>
+        <div class="lesson-head">
+          <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px">
+            <div><span class="eyebrow">Bài 3.1</span><h3>Bốn biên &amp; điều kiện dừng của một loop an toàn</h3></div>
+            <div style="display:flex;gap:8px;flex-wrap:wrap"><span class="level-badge">L2 · Kiến thức làm việc <span class="level-dots"><i class="on"></i><i class="on"></i><i></i><i></i><i></i></span></span><span class="level-badge">⏱ ~4 phút</span></div>
+          </div>
+        </div>
+        <div class="lesson-body">
+          <div class="objectives">
+            <span class="eyebrow">Học xong bài này bạn có thể</span>
+            <ul>
+              <li>Cài đủ bốn biên cho mọi loop: số vòng, token, chi phí, chống lặp.</li>
+              <li>Phân biệt <em>điều kiện dừng thành công</em> với <em>biên an toàn</em> (kill).</li>
+              <li>Nhận diện ba loại loop giết agent và cách chặn từng loại.</li>
+            </ul>
+          </div>
+          <p>Ở khóa Harness, ta gặp bốn biên như một checklist. Ở đây ta hiểu <em>vì sao</em> mỗi biên tồn tại và điều gì xảy ra khi thiếu nó. Một loop tự hành mà không có bốn biên này thì <strong>không được phép rời tay</strong>.</p>
+
+          <div class="table-wrap">
+            <table>
+              <thead><tr><th style="width:170px">Biên</th><th>Chặn điều gì</th><th>Giá trị khởi đầu</th></tr></thead>
+              <tbody>
+                <tr><td><span class="badge">1 · Max iteration</span></td><td>Loop chạy mãi (suy luận vòng tròn)</td><td>~25 vòng</td></tr>
+                <tr><td><span class="badge">2 · Ngân sách token</span></td><td>Context phình → context rot + chi phí</td><td>compact ở ~50–60% cửa sổ</td></tr>
+                <tr><td><span class="badge">3 · Trần chi phí</span></td><td>Chi phí mất kiểm soát (kill switch)</td><td>trần cứng USD/lần chạy</td></tr>
+                <tr><td><span class="badge">4 · Chống gọi lặp</span></td><td>Retry vô tận cùng một lệnh</td><td>hash (tool+args), chặn trùng</td></tr>
+              </tbody>
+            </table>
+          </div>
+
+          <div class="concept">
+            <span class="eyebrow">Hai loại "dừng" đừng nhầm lẫn</span>
+            <p><strong>Điều kiện dừng thành công</strong>: loop đạt mục tiêu (test xanh, task xong) → dừng vì <em>đã làm được</em>. <strong>Biên an toàn</strong>: loop chạm trần (iteration/cost) → dừng vì <em>không được phép chạy tiếp</em>. Loop tốt có cả hai. Thiếu điều kiện thành công → loop không biết khi nào xong. Thiếu biên an toàn → loop hỏng sẽ đốt tiền tới khi bạn phát hiện.</p>
+          </div>
+
+          <figure class="figure">
+            <svg viewBox="0 0 660 210" role="img" aria-label="Hai loại dừng của một loop: từ hộp LOOP ở giữa, mũi tên xanh sang phải tới hộp dừng thành công khi verifier đạt hoặc task xong, mũi tên đỏ xuống dưới tới hộp biên an toàn khi chạm trần iteration token hoặc chi phí sẽ kill và cảnh báo">
+              <defs>
+                <marker id="al3s" markerWidth="9" markerHeight="9" refX="7" refY="4.5" orient="auto"><path d="M0 0 L9 4.5 L0 9 z" fill="var(--success)"/></marker>
+                <marker id="al3d" markerWidth="9" markerHeight="9" refX="7" refY="4.5" orient="auto"><path d="M0 0 L9 4.5 L0 9 z" fill="var(--danger)"/></marker>
+              </defs>
+              <rect class="dgm-accent" x="252" y="28" width="156" height="60" rx="12" stroke-width="2"/>
+              <text class="dgm-ink" x="330" y="54" text-anchor="middle" font-size="14" font-weight="700">LOOP</text>
+              <text class="dgm-ink2" x="330" y="72" text-anchor="middle" font-size="10" font-family="IBM Plex Mono">mỗi vòng: hỏi 2 câu</text>
+              <path d="M408 58 H500" fill="none" stroke="var(--success)" stroke-width="2.5" marker-end="url(#al3s)"/>
+              <text x="454" y="49" text-anchor="middle" font-size="10" font-family="IBM Plex Mono" fill="var(--success)">xong?</text>
+              <rect x="500" y="30" width="138" height="58" rx="10" style="fill:var(--success-bg);stroke:var(--success);stroke-width:2"/>
+              <text class="dgm-ink" x="569" y="52" text-anchor="middle" font-size="11.5" font-weight="700">DỪNG THÀNH CÔNG</text>
+              <text class="dgm-ink2" x="569" y="70" text-anchor="middle" font-size="9" font-family="IBM Plex Mono">verifier đạt / task xong</text>
+              <path d="M330 88 V150" fill="none" stroke="var(--danger)" stroke-width="2.5" marker-end="url(#al3d)"/>
+              <text x="330" y="112" text-anchor="middle" font-size="10" font-family="IBM Plex Mono" fill="var(--danger)">chạm trần?</text>
+              <rect x="196" y="150" width="268" height="46" rx="10" style="fill:var(--danger-bg);stroke:var(--danger);stroke-width:2"/>
+              <text class="dgm-ink" x="330" y="170" text-anchor="middle" font-size="11.5" font-weight="700">BIÊN AN TOÀN</text>
+              <text class="dgm-ink2" x="330" y="187" text-anchor="middle" font-size="9" font-family="IBM Plex Mono">chạm trần iter/token/cost → kill + cảnh báo</text>
+            </svg>
+            <figcaption><b>Hình 3.1</b> — Hai loại "dừng". Loop tốt có <b>CẢ HAI</b>: thiếu nhánh xanh (dừng-thành-công) thì loop không biết lúc nào xong; thiếu nhánh đỏ (biên-an-toàn) thì một lỗi sẽ đốt tiền âm thầm tới khi bị phát hiện. Đừng nhầm hai nhánh: một cái là "đã làm được", cái kia là "không được phép chạy tiếp".</figcaption>
+          </figure>
+
+          <div class="callout warn"><div class="callout-title">Ba loại loop giết agent ở production</div><p><strong>(1) Retry vô tận</strong> — cùng tool fail y hệt lặp lại → biên 4 (chống gọi lặp). <strong>(2) Suy luận vòng tròn</strong> — agent đảo qua lại hai state ("nghiên cứu → xét lại → nghiên cứu") → biên 1 (max iteration). <strong>(3) Khám phá quá đà</strong> — "kiểm tra lại" mãi không dừng → biên 3 (trần chi phí ép dừng). Mỗi loại có một biên trị nó; thiếu biên nào, loại loop đó sẽ xuất hiện.</p></div>
+
+          <div class="callout danger"><div class="callout-title">Quy tắc vàng của tự hành</div><p>Trước khi để một loop chạy mà không có người ngồi cạnh, hãy trả lời: "Nếu nó sai theo cách tệ nhất có thể, thiệt hại tối đa là bao nhiêu — tiền, dữ liệu, thời gian dọn dẹp?" Nếu bạn không trả lời được, <strong>loop chưa sẵn sàng rời tay</strong>. Biên biến câu trả lời đó thành một con số hữu hạn.</p></div>
+
+          <p>Trần chi phí (biên 3) không phải con số bịa. Nó là ngân sách bạn cố tình đặt để một loop hỏng <em>không thể</em> đốt quá mức đó. Chỉnh các số dưới đây để thấy chi phí một lần chạy leo nhanh thế nào — và vì sao một loop kẹt qua đêm mà không có trần là thảm họa tài chính.</p>
+
+          <div class="prompt-card" style="background:var(--surface-2)">
+            <div class="prompt-head"><span>🧮 Máy tính chi phí loop</span><span>chỉnh số để thấy vì sao cần biên</span></div>
+            <div style="padding:16px">
+              <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px">
+                <label style="display:block"><span class="mono" style="font-size:11px;color:var(--ink-3)">Số vòng lặp</span><input type="number" id="lcIter" value="25" min="0" oninput="loopCost()" style="width:100%;font-family:var(--font-mono);padding:8px;border:1px solid var(--border);border-radius:8px;background:var(--surface);color:var(--ink)"></label>
+                <label style="display:block"><span class="mono" style="font-size:11px;color:var(--ink-3)">Nghìn token/vòng (in+out)</span><input type="number" id="lcTok" value="40" min="0" oninput="loopCost()" style="width:100%;font-family:var(--font-mono);padding:8px;border:1px solid var(--border);border-radius:8px;background:var(--surface);color:var(--ink)"></label>
+                <label style="display:block"><span class="mono" style="font-size:11px;color:var(--ink-3)">Giá $/1M token (trộn)</span><input type="number" id="lcPrice" value="6" min="0" step="0.5" oninput="loopCost()" style="width:100%;font-family:var(--font-mono);padding:8px;border:1px solid var(--border);border-radius:8px;background:var(--surface);color:var(--ink)"></label>
+              </div>
+              <div style="margin-top:14px;display:flex;gap:10px;flex-wrap:wrap;align-items:center">
+                <span class="badge" id="lcPerRun">$0.00 / lần chạy</span>
+                <span class="badge warn" id="lcNightly">$0 nếu kẹt qua đêm (8h, ~5 phút/vòng)</span>
+              </div>
+              <div class="progress-track" style="margin-top:12px;height:10px"><div class="progress-fill" id="lcBar" style="width:0"></div></div>
+              <div class="mono" id="lcNote" style="font-size:11px;color:var(--ink-3);margin-top:6px"></div>
+            </div>
+          </div>
+
+          <div class="exercise">
+            <h5>Bài tập · Audit bốn biên</h5>
+            <p>Lấy một loop agent trong code bạn (hoặc framework đang dùng). Kiểm: có max iteration không (nếu không, đặt 25)? Có ngân sách token + trigger compact không? Có trần chi phí mỗi lần chạy không? Có chống gọi trùng không? Theo dõi một tuần và <strong>cảnh báo mỗi lần chạy chạm bất kỳ biên nào</strong> — đó là bug đội lốt "task chạy lâu".</p>
+          </div>
+
+          <div class="takeaway">
+            <span class="eyebrow"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 2v6m0 8v6M4.9 4.9l4.2 4.2m5.8 5.8l4.2 4.2M2 12h6m8 0h6M4.9 19.1l4.2-4.2m5.8-5.8l4.2-4.2"/></svg>Takeaway</span>
+            <p>Loop không biên = <span class="hl">bom hẹn giờ tài chính</span>. Cần đủ bốn biên (iteration, token, chi phí, chống lặp) và phân biệt <span class="hl">dừng-thành-công</span> với <span class="hl">biên-an-toàn</span>. Quy tắc vàng: nếu chưa trả lời được "thiệt hại tối đa là bao nhiêu", loop <span class="hl">chưa sẵn sàng rời tay</span>.</p>
+          </div>
+
+          <div class="quiz" data-correct="0">
+            <span class="eyebrow">Kiểm tra nhanh</span>
+            <p class="quiz-q">Bạn muốn để một agent tự dọn dẹp code qua đêm. Điều kiện tối thiểu để "rời tay" một cách có trách nhiệm là gì?</p>
+            <button class="quiz-opt" onclick="quizPick(this,0)"><span class="quiz-letter">A</span><span>Đủ bốn biên (max iteration, ngân sách token, trần chi phí cứng, chống gọi lặp) VÀ trả lời được "thiệt hại tối đa nếu sai theo cách tệ nhất là gì" bằng một con số hữu hạn — cộng một điều kiện dừng-thành-công rõ ràng (ví dụ test phải xanh).</span></button>
+            <button class="quiz-opt" onclick="quizPick(this,1)"><span class="quiz-letter">B</span><span>Chỉ cần đặt max iteration là đủ.</span></button>
+            <button class="quiz-opt" onclick="quizPick(this,2)"><span class="quiz-letter">C</span><span>Chỉ cần model đủ giỏi thì không cần biên.</span></button>
+            <button class="quiz-opt" onclick="quizPick(this,3)"><span class="quiz-letter">D</span><span>Cứ chạy và sáng mai xem — có gì sửa sau.</span></button>
+            <div class="quiz-feedback" data-explain="Rời tay có trách nhiệm nghĩa là thiệt hại tối đa phải HỮU HẠN và BIẾT TRƯỚC. Chỉ max iteration không chặn được chi phí mất kiểm soát hay retry vô tận; cần cả bốn biên. Ngoài ra phải có điều kiện dừng-thành-công rõ (test xanh) để loop biết khi nào 'đã làm được', và bạn phải trả lời được câu hỏi thiệt hại tối đa. Model giỏi hơn không thay được biên — nó vẫn có thể sai theo cách tốn kém."></div>
+          </div>
+        </div>
+        <div class="lesson-nav" data-navfor="m3-l1"></div>
+      </article>
+
+      <!-- ============ CHƯƠNG 4 ============ -->
+      <header class="module-header" data-module="4">
+        <span class="eyebrow">Chương 04 · Phần II · Vòng lặp tự sửa</span>
+        <h2>Tín hiệu đóng vòng — verifier là vua</h2>
+        <p>Đây là ý tưởng quan trọng nhất của cả khóa. Một vòng lặp <em>chỉ tốt bằng cái verifier đóng nó lại</em>. Không có tín hiệu ground-truth, nhiều vòng lặp hơn chỉ tạo ra nhiều trôi dạt hơn — không phải cải thiện.</p>
+      </header>
+      <article class="lesson" id="m4-l1" data-lesson>
+        <div class="lesson-head">
+          <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px">
+            <div><span class="eyebrow">Bài 4.1</span><h3>Verifier là vua: cái gì đóng vòng lặp</h3></div>
+            <div style="display:flex;gap:8px;flex-wrap:wrap"><span class="level-badge">L3 · Thực hành <span class="level-dots"><i class="on"></i><i class="on"></i><i class="on"></i><i></i><i></i></span></span><span class="level-badge">⏱ ~3 phút</span></div>
+          </div>
+        </div>
+        <div class="lesson-body">
+          <div class="objectives">
+            <span class="eyebrow">Học xong bài này bạn có thể</span>
+            <ul>
+              <li>Giải thích vì sao "loop tốt bằng verifier của nó" là định luật, không phải khẩu hiệu.</li>
+              <li>Xếp hạng verifier theo độ khách quan &amp; chi phí, chọn cái phù hợp cho từng loại việc.</li>
+              <li>Thiết kế vòng generate → verify → feedback để agent tự sửa dựa trên bằng chứng.</li>
+            </ul>
+          </div>
+          <p>Ở Chương 2 ta thấy nhịp Observe yếu sinh ra ảo tưởng thành công. Verifier chính là <em>lời giải</em> cho nhịp Observe: một nguồn sự thật khách quan để agent biết "đã đúng chưa", thay vì tự nhận.</p>
+
+          <div class="callout danger"><div class="callout-title">Định luật của Loop Engineering</div><p>Một vòng lặp tự sửa chỉ tốt bằng cái verifier đóng nó lại. <strong>Không có verifier khách quan, thêm vòng lặp = thêm trôi dạt, không phải cải thiện.</strong> Agent sẽ "sửa" theo hướng nó <em>nghĩ</em> là đúng, và không có gì kéo nó về thực tế. Đây là lý do #1 khiến các loop tự hành thất bại.</p></div>
+
+          <figure class="figure">
+            <svg viewBox="0 0 660 190" role="img" aria-label="Vòng lặp tự sửa đóng bằng verifier: generate sinh ra, verifier kiểm tra khách quan, nếu đạt thì xong, nếu không thì đưa lỗi cụ thể quay lại generate">
+              <defs><marker id="al4" markerWidth="9" markerHeight="9" refX="7" refY="4.5" orient="auto"><path d="M0 0 L9 4.5 L0 9 z" fill="var(--accent-2)"/></marker>
+              <marker id="al4g" markerWidth="9" markerHeight="9" refX="7" refY="4.5" orient="auto"><path d="M0 0 L9 4.5 L0 9 z" fill="var(--success)"/></marker></defs>
+              <rect class="dgm-accent" x="24" y="66" width="150" height="58" rx="10" stroke-width="2"/>
+              <text class="dgm-ink" x="99" y="90" text-anchor="middle" font-size="13" font-weight="700">GENERATE</text>
+              <text class="dgm-ink2" x="99" y="108" text-anchor="middle" font-size="10" font-family="IBM Plex Mono">agent tạo ra</text>
+              <path class="dgm-flow" d="M174 95 H236" stroke-width="2.5" marker-end="url(#al4)"/>
+              <rect x="236" y="60" width="170" height="70" rx="10" style="fill:color-mix(in srgb,var(--brand-gold) 16%,var(--surface));stroke:var(--warning);stroke-width:2"/>
+              <text class="dgm-ink" x="321" y="86" text-anchor="middle" font-size="13" font-weight="700">VERIFIER</text>
+              <text class="dgm-ink2" x="321" y="104" text-anchor="middle" font-size="9.5" font-family="IBM Plex Mono">test · typecheck · eval</text>
+              <text class="dgm-ink2" x="321" y="118" text-anchor="middle" font-size="9.5" font-family="IBM Plex Mono">khách quan, tự động</text>
+              <path d="M406 82 H520" fill="none" stroke="var(--success)" stroke-width="2.5" marker-end="url(#al4g)"/>
+              <text x="463" y="74" text-anchor="middle" font-size="10" font-family="IBM Plex Mono" fill="var(--success)">đạt</text>
+              <rect x="520" y="60" width="116" height="44" rx="10" style="fill:var(--success-bg);stroke:var(--success)"/>
+              <text class="dgm-ink" x="578" y="87" text-anchor="middle" font-size="12" font-weight="700">XONG ✓</text>
+              <path class="dgm-flow" d="M321 130 V162 H99 V124" stroke-width="2.5" marker-end="url(#al4)"/>
+              <text class="dgm-ink2" x="210" y="178" text-anchor="middle" font-size="10" font-family="IBM Plex Mono">không đạt → đưa LỖI CỤ THỂ quay lại</text>
+            </svg>
+            <figcaption><b>Hình 4.1</b> — Vòng tự sửa đóng bằng verifier. Mấu chốt: khi không đạt, thứ quay lại generate phải là <em>lỗi cụ thể, hành động được</em> (ví dụ: "test X fail ở dòng Y, kỳ vọng A nhận B"), không phải "chưa đúng, thử lại". Chất lượng feedback quyết định tốc độ hội tụ.</figcaption>
+          </figure>
+
+          <div class="table-wrap">
+            <table>
+              <thead><tr><th style="width:170px">Verifier</th><th>Độ khách quan · chi phí</th><th>Hợp cho</th></tr></thead>
+              <tbody>
+                <tr><td><span class="badge ok">Compiler / typecheck</span></td><td>Tuyệt đối · rất rẻ</td><td>Code — tín hiệu vàng, dùng trước tiên</td></tr>
+                <tr><td><span class="badge ok">Test tự động</span></td><td>Cao · rẻ</td><td>Hành vi — spec thực thi được</td></tr>
+                <tr><td><span class="badge ok">Linter / schema validate</span></td><td>Cao · rất rẻ</td><td>Định dạng, quy ước, cấu trúc output</td></tr>
+                <tr><td><span class="badge warn">Eval (bộ ví dụ chấm điểm)</span></td><td>Trung bình · vừa</td><td>Tính năng AI, output ngôn ngữ</td></tr>
+                <tr><td><span class="badge warn">LLM-as-judge</span></td><td>Thấp–trung bình · vừa</td><td>Khi không có verifier cứng (Chương 5)</td></tr>
+                <tr><td><span class="badge bad">Con người</span></td><td>Cao · rất đắt/chậm</td><td>Điểm kiểm cuối, việc rủi ro cao (Chương 7)</td></tr>
+              </tbody>
+            </table>
+          </div>
+
+          <div class="callout insight"><div class="callout-title">Verifier tốt: rẻ, nhanh, khách quan, tất định</div><p>Verifier càng rẻ &amp; nhanh, bạn càng chạy được nó <em>mỗi vòng lặp</em> → agent tự sửa nhanh. Càng khách quan &amp; tất định, tín hiệu càng đáng tin. Đây là lý do <strong>TDD kết đôi hoàn hảo với agent</strong> (Chương 10 khóa trước): test biến "đúng chưa?" từ phán đoán thành một lệnh chạy được. Ưu tiên verifier cứng (compile/test) hơn verifier mềm (LLM-judge) bất cứ khi nào có thể.</p></div>
+
+          <div class="exercise">
+            <h5>Bài tập · Gắn verifier vào một loop</h5>
+            <p>Chọn một việc bạn để agent làm (sửa bug, viết hàm). Trước khi cho nó chạy, hỏi: <em>verifier khách quan nào đóng vòng này?</em> Nếu là code → test + typecheck. Viết verifier đó <em>trước</em>, cho agent chạy nó sau mỗi vòng (dùng hook nếu có), và đảm bảo feedback khi fail là lỗi cụ thể. So sánh với chạy không verifier: loop hội tụ hay trôi dạt?</p>
+          </div>
+
+          <div class="takeaway">
+            <span class="eyebrow"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 2v6m0 8v6M4.9 4.9l4.2 4.2m5.8 5.8l4.2 4.2M2 12h6m8 0h6M4.9 19.1l4.2-4.2m5.8-5.8l4.2-4.2"/></svg>Takeaway</span>
+            <p>Vòng lặp chỉ tốt bằng <span class="hl">verifier đóng nó lại</span>. Không verifier khách quan → thêm vòng = thêm trôi dạt. Ưu tiên verifier <span class="hl">rẻ, nhanh, khách quan, tất định</span> (compile/test/lint) hơn verifier mềm. Và feedback khi fail phải là <span class="hl">lỗi cụ thể, hành động được</span>.</p>
+          </div>
+
+          <div class="quiz" data-correct="2">
+            <span class="eyebrow">Kiểm tra nhanh</span>
+            <p class="quiz-q">Bạn cho agent lặp "viết một hàm parse ngày tháng, tự cải thiện tới khi tốt". Sau 15 vòng nó vẫn sai các ca biên, dù mỗi vòng nó tự khen "giờ đã đúng hơn". Vấn đề gốc?</p>
+            <button class="quiz-opt" onclick="quizPick(this,0)"><span class="quiz-letter">A</span><span>Cần nhiều vòng lặp hơn — 15 chưa đủ.</span></button>
+            <button class="quiz-opt" onclick="quizPick(this,1)"><span class="quiz-letter">B</span><span>Model chưa đủ giỏi parse ngày tháng.</span></button>
+            <button class="quiz-opt" onclick="quizPick(this,2)"><span class="quiz-letter">C</span><span>Vòng lặp không có verifier khách quan — nó tự đánh giá bằng cảm nhận ("đúng hơn") thay vì một bộ test ca biên chạy được. Thêm vòng chỉ thêm trôi dạt. Sửa: viết test cho các ca biên trước, đóng vòng bằng test đó; feedback khi fail là ca test cụ thể.</span></button>
+            <button class="quiz-opt" onclick="quizPick(this,3)"><span class="quiz-letter">D</span><span>Nên bỏ vòng lặp, viết tay.</span></button>
+            <div class="quiz-feedback" data-explain="Đây là định luật của chương này tại hiện trường: loop tự đánh giá bằng cảm nhận ('đúng hơn') không có ground-truth. 15 vòng hay 150 vòng đều vô ích vì không có gì kéo agent về thực tế — nó trôi dạt theo hướng nó NGHĨ là đúng. Cách sửa không phải thêm vòng hay đổi model, mà là gắn một verifier khách quan: viết test cho các ca biên, đóng vòng bằng test đó, và trả lỗi cụ thể mỗi khi fail."></div>
+          </div>
+
+          <div class="quiz" data-correct="1">
+            <span class="eyebrow">Kiểm tra nhanh · chọn verifier</span>
+            <p class="quiz-q">Task: một agent tự động cập nhật các bản dịch UI tiếng Việt mỗi khi string tiếng Anh nguồn thay đổi. Verifier nào đóng vòng tốt nhất?</p>
+            <button class="quiz-opt" onclick="quizPick(this,0)"><span class="quiz-letter">A</span><span>Chỉ dùng một LLM tự chấm "bản dịch đã hay chưa" sau mỗi vòng.</span></button>
+            <button class="quiz-opt" onclick="quizPick(this,1)"><span class="quiz-letter">B</span><span>Verifier lai: chạy schema/lint cứng trước để kiểm cấu trúc và bắt khóa dịch bị thiếu (rẻ, tất định, chạy mỗi vòng); chỉ khi qua tầng cứng mới cho LLM-as-judge chấm chất lượng ngôn ngữ theo rubric ở bước sau.</span></button>
+            <button class="quiz-opt" onclick="quizPick(this,2)"><span class="quiz-letter">C</span><span>Cho người duyệt tay từng string mỗi lần string nguồn đổi.</span></button>
+            <button class="quiz-opt" onclick="quizPick(this,3)"><span class="quiz-letter">D</span><span>Task đơn giản nên không cần verifier — cứ ghi đè bản dịch mới.</span></button>
+            <div class="quiz-feedback" data-explain="Nhớ thang verifier: cứng > mềm. Cấu trúc (đủ khóa dịch, đúng placeholder, hợp schema) là thứ KIỂM ĐƯỢC CỨNG — schema/lint bắt ngay lỗi 'thiếu khóa' hay 'sai {biến}' với chi phí gần bằng 0, chạy mỗi vòng. Chỉ chất lượng ngôn ngữ (tự nhiên, đúng ngữ cảnh) mới cần LLM-as-judge, và chỉ nên chạy SAU khi qua tầng cứng. Đó là verifier lai: cứng lọc rẻ trước, mềm chấm tinh sau. (A) chỉ LLM tự chấm là verifier mềm đơn độc — không bắt nổi khóa thiếu và dễ trôi dạt. (C) con người duyệt từng string thì đắt/chậm và làm mất chính mục đích tự động. (D) 'không cần verifier' đúng công thức trôi dạt thầm lặng của Chương này."></div>
+          </div>
+        </div>
+        <div class="lesson-nav" data-navfor="m4-l1"></div>
+      </article>
+
+      <!-- ============ CHƯƠNG 5 ============ -->
+      <header class="module-header" data-module="5">
+        <span class="eyebrow">Chương 05 · Phần II · Vòng lặp tự sửa</span>
+        <h2>Tự sửa: generate → critique → revise</h2>
+        <p>Khi không có verifier cứng, bạn có thể dùng một mô hình khác (hoặc chính nó) làm <em>người phê bình</em>. Mạnh nhưng đầy cạm bẫy: phê bình phải độc lập, cụ thể, và biết điểm dừng.</p>
+      </header>
+      <article class="lesson" id="m5-l1" data-lesson>
+        <div class="lesson-head">
+          <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px">
+            <div><span class="eyebrow">Bài 5.1</span><h3>Reflection loop &amp; LLM-as-judge</h3></div>
+            <div style="display:flex;gap:8px;flex-wrap:wrap"><span class="level-badge">L3 · Thực hành <span class="level-dots"><i class="on"></i><i class="on"></i><i class="on"></i><i></i><i></i></span></span><span class="level-badge">⏱ ~3 phút</span></div>
+          </div>
+        </div>
+        <div class="lesson-body">
+          <div class="objectives">
+            <span class="eyebrow">Học xong bài này bạn có thể</span>
+            <ul>
+              <li>Dựng vòng generate → critique → revise cho việc không có verifier cứng.</li>
+              <li>Tránh ba cạm bẫy của tự phê bình: chung ngữ cảnh, phê bình mơ hồ, lặp vô hạn.</li>
+              <li>Biết khi nào reflection hết trả cổ tức (thường 1–3 vòng).</li>
+            </ul>
+          </div>
+          <p>Không phải việc nào cũng có compiler hay test (ví dụ: chất lượng một đoạn văn, độ hợp lý của một thiết kế). Khi đó, verifier là một <em>đánh giá</em> — và ta có thể dùng LLM làm người phê bình. Nhưng verifier mềm dễ hỏng hơn verifier cứng nhiều.</p>
+
+          <figure class="figure">
+            <svg viewBox="0 0 660 170" role="img" aria-label="Vòng generate critique revise: sinh bản nháp, người phê bình độc lập chỉ ra lỗi cụ thể, sửa lại, lặp 1 đến 3 vòng rồi dừng">
+              <defs><marker id="al5" markerWidth="9" markerHeight="9" refX="7" refY="4.5" orient="auto"><path d="M0 0 L9 4.5 L0 9 z" fill="var(--accent-2)"/></marker></defs>
+              <rect class="dgm-accent" x="24" y="58" width="140" height="54" rx="10" stroke-width="2"/>
+              <text class="dgm-ink" x="94" y="82" text-anchor="middle" font-size="12.5" font-weight="700">GENERATE</text>
+              <text class="dgm-ink2" x="94" y="99" text-anchor="middle" font-size="9.5" font-family="IBM Plex Mono">bản nháp</text>
+              <path class="dgm-flow" d="M164 85 H228" stroke-width="2.5" marker-end="url(#al5)"/>
+              <rect x="228" y="52" width="170" height="66" rx="10" style="fill:color-mix(in srgb,var(--brand-gold) 16%,var(--surface));stroke:var(--warning);stroke-width:2"/>
+              <text class="dgm-ink" x="313" y="76" text-anchor="middle" font-size="12.5" font-weight="700">CRITIQUE</text>
+              <text class="dgm-ink2" x="313" y="93" text-anchor="middle" font-size="9" font-family="IBM Plex Mono">phê bình ĐỘC LẬP</text>
+              <text class="dgm-ink2" x="313" y="106" text-anchor="middle" font-size="9" font-family="IBM Plex Mono">lỗi cụ thể</text>
+              <path class="dgm-flow" d="M398 85 H462" stroke-width="2.5" marker-end="url(#al5)"/>
+              <rect class="dgm-accent" x="462" y="58" width="140" height="54" rx="10" stroke-width="2"/>
+              <text class="dgm-ink" x="532" y="82" text-anchor="middle" font-size="12.5" font-weight="700">REVISE</text>
+              <text class="dgm-ink2" x="532" y="99" text-anchor="middle" font-size="9.5" font-family="IBM Plex Mono">sửa theo phê bình</text>
+              <path class="dgm-flow" d="M532 112 V140 H94 V112" stroke-width="2.5" marker-end="url(#al5)"/>
+              <text class="dgm-ink2" x="313" y="156" text-anchor="middle" font-size="10" font-family="IBM Plex Mono">lặp 1–3 vòng · rồi DỪNG (cổ tức giảm dần)</text>
+            </svg>
+            <figcaption><b>Hình 5.1</b> — Reflection loop. Ba điều kiện để nó hoạt động: (1) người phê bình <em>độc lập</em> với người tạo (ngữ cảnh/persona khác); (2) phê bình <em>cụ thể</em> chứ không "làm tốt hơn đi"; (3) có <em>điểm dừng</em> — reflection thường hết cải thiện sau 1–3 vòng.</figcaption>
+          </figure>
+
+          <div class="compare">
+            <div class="compare-col bad"><span class="eyebrow">Tự phê bình hỏng</span><ul><li>Cùng ngữ cảnh tạo &amp; phê → bảo vệ chính mình (nhớ khóa trước: model nhất quán tới mức có hại)</li><li>Phê bình mơ hồ: "cải thiện đi" → sửa lung tung</li><li>Lặp vô hạn tìm sự hoàn hảo → đốt token, cổ tức âm</li></ul></div>
+            <div class="compare-col good"><span class="eyebrow">Reflection tốt</span><ul><li>Người phê bình độc lập: persona/agent khác, prompt "chỉ tìm lỗi", không thấy lý lẽ bản gốc</li><li>Phê bình cụ thể, hành động được: "đoạn 2 mâu thuẫn với đoạn 4"</li><li>Dừng sau 1–3 vòng hoặc khi phê bình không còn tìm ra lỗi mới</li></ul></div>
+          </div>
+
+          <div class="callout warn"><div class="callout-title">Verifier cứng &gt; verifier mềm — luôn luôn</div><p>LLM-as-judge là <em>phương án khi bí</em>, không phải mặc định. Nếu việc có thể quy về một tín hiệu cứng (test, schema, quy tắc kiểm được), hãy dùng nó. Chỉ dùng phê bình bằng LLM cho phần thật sự chủ quan (văn phong, độ rõ, tính thuyết phục) — và ngay cả khi đó, một verifier lai (LLM chấm theo rubric cụ thể) đáng tin hơn "cho điểm 1–10".</p></div>
+
+          <div class="exercise">
+            <h5>Bài tập · Reflection có điểm dừng</h5>
+            <p>Lấy một đoạn văn/tài liệu AI viết. Chạy vòng: một agent <em>khác</em> (prompt "chỉ liệt kê lỗi cụ thể, không viết lại") phê bình → agent gốc sửa. Lặp và ghi lại: vòng nào còn tìm ra lỗi mới? Đa số trường hợp bạn sẽ thấy cổ tức tụt mạnh sau vòng 2–3. Đó là điểm dừng của bạn.</p>
+          </div>
+
+          <div class="takeaway">
+            <span class="eyebrow"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 2v6m0 8v6M4.9 4.9l4.2 4.2m5.8 5.8l4.2 4.2M2 12h6m8 0h6M4.9 19.1l4.2-4.2m5.8-5.8l4.2-4.2"/></svg>Takeaway</span>
+            <p>Khi không có verifier cứng, dùng <span class="hl">generate → critique → revise</span> — nhưng người phê bình phải <span class="hl">độc lập &amp; cụ thể</span>, và có <span class="hl">điểm dừng</span> (cổ tức giảm dần sau 1–3 vòng). Verifier cứng luôn thắng verifier mềm; LLM-judge là phương án khi bí, không phải mặc định.</p>
+          </div>
+
+          <div class="quiz" data-correct="1">
+            <span class="eyebrow">Kiểm tra nhanh</span>
+            <p class="quiz-q">Bạn dựng loop "agent viết đoạn giới thiệu, rồi tự chấm điểm 1–10 và tự sửa tới khi đạt 10/10". Nó chạy 12 vòng, mỗi vòng tự cho 9–10 điểm, nhưng chất lượng không cải thiện. Sửa thế nào?</p>
+            <button class="quiz-opt" onclick="quizPick(this,0)"><span class="quiz-letter">A</span><span>Hạ ngưỡng xuống 8/10 để nó dừng sớm hơn.</span></button>
+            <button class="quiz-opt" onclick="quizPick(this,1)"><span class="quiz-letter">B</span><span>Ba lỗi cần sửa: (1) người chấm chung ngữ cảnh với người viết → thay bằng một agent phê bình độc lập, prompt "chỉ liệt kê lỗi cụ thể"; (2) "điểm 1–10" quá mơ hồ → thay bằng rubric cụ thể hoặc verifier lai; (3) không có điểm dừng hợp lý → dừng sau 1–3 vòng hoặc khi hết lỗi mới.</span></button>
+            <button class="quiz-opt" onclick="quizPick(this,2)"><span class="quiz-letter">C</span><span>Tăng số vòng để nó có thêm cơ hội đạt 10.</span></button>
+            <button class="quiz-opt" onclick="quizPick(this,3)"><span class="quiz-letter">D</span><span>Đổi sang model mạnh nhất để chấm điểm chính xác hơn.</span></button>
+            <div class="quiz-feedback" data-explain="Loop này hỏng cả ba điều kiện của reflection tốt. Tự chấm điểm = cùng ngữ cảnh tạo & đánh giá → model bảo vệ chính mình, cho điểm cao. 'Điểm 1–10' là tín hiệu mơ hồ, không hành động được. Và không có điểm dừng thực chất. Sửa: tách người phê bình (độc lập, prompt chỉ-tìm-lỗi-cụ-thể), thay điểm số bằng rubric/verifier lai, và dừng khi cổ tức giảm. Thêm vòng hay đổi model không chạm nguyên nhân."></div>
+          </div>
+        </div>
+        <div class="lesson-nav" data-navfor="m5-l1"></div>
+      </article>
+
+      <!-- ============ CHƯƠNG 6 ============ -->
+      <header class="module-header" data-module="6">
+        <span class="eyebrow">Chương 06 · Phần III · Điều phối</span>
+        <h2>Vòng lặp đa agent &amp; workflow tất định</h2>
+        <p>Một loop là một công nhân. Nhiều loop phối hợp là một đội. Nhưng ai điều phối đội đó — phán đoán của model, hay luồng điều khiển bằng code? Câu trả lời quyết định độ tin cậy.</p>
+      </header>
+      <article class="lesson" id="m6-l1" data-lesson>
+        <div class="lesson-head">
+          <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px">
+            <div><span class="eyebrow">Bài 6.1</span><h3>Fan-out, pipeline &amp; workflow tất định</h3></div>
+            <div style="display:flex;gap:8px;flex-wrap:wrap"><span class="level-badge">L4 · Nâng cao <span class="level-dots"><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i></i></span></span><span class="level-badge">⏱ ~3 phút</span></div>
+          </div>
+        </div>
+        <div class="lesson-body">
+          <div class="objectives">
+            <span class="eyebrow">Học xong bài này bạn có thể</span>
+            <ul>
+              <li>Phân biệt điều phối do model quyết định vs do code quyết định (workflow tất định).</li>
+              <li>Chọn hình dạng đúng: fan-out (song song) vs pipeline (theo tầng).</li>
+              <li>Biết khi nào cần barrier (chờ tất cả) và khi nào không.</li>
+            </ul>
+          </div>
+          <p>Chương 4–5 cho bạn một loop tự sửa đáng tin. Giờ nhân bản nó: nhiều loop chạy song song hoặc nối tiếp. Câu hỏi trung tâm của điều phối: <strong>ai quyết định luồng điều khiển?</strong></p>
+
+          <div class="compare">
+            <div class="compare-col bad"><span class="eyebrow">Điều phối do model quyết</span><ul><li>Agent tự quyết gọi subagent nào, khi nào, theo thứ tự gì</li><li>Linh hoạt nhưng <em>phi tất định</em> — khó tái lập, khó debug, dễ trôi</li><li>Hợp việc khám phá, không rõ trước hình dạng</li></ul></div>
+            <div class="compare-col good"><span class="eyebrow">Workflow tất định (code quyết)</span><ul><li>Luồng điều khiển (loop, điều kiện, fan-out) viết bằng <em>code</em></li><li>Tất định, tái lập được, debug được, kiểm soát chi phí</li><li>Hợp việc đã biết hình dạng: migration, audit, review hàng loạt</li></ul></div>
+          </div>
+          <div class="callout insight"><div class="callout-title">Nguyên tắc chọn</div><p>Khi bạn <em>biết trước</em> các bước (fan-out N file, rồi verify từng cái), hãy đặt luồng vào <strong>code</strong> — đây chính là "Dynamic Workflows" của Claude Code: script tất định điều phối nhiều agent. Khi bạn <em>không biết trước</em> hình dạng (khám phá một bug lạ), để model điều phối. Quy tắc: <em>tất định hóa mọi thứ có thể tất định; chỉ giao cho phán đoán model phần thật sự cần phán đoán.</em></p></div>
+
+          <figure class="figure">
+            <svg viewBox="0 0 660 210" role="img" aria-label="Hai hình dạng điều phối: fan-out một orchestrator chia việc song song cho nhiều worker rồi gộp; pipeline các item chảy qua nhiều tầng độc lập">
+              <defs><marker id="al6" markerWidth="9" markerHeight="9" refX="7" refY="4.5" orient="auto"><path d="M0 0 L9 4.5 L0 9 z" fill="var(--accent-2)"/></marker></defs>
+              <text class="dgm-ink" x="150" y="20" text-anchor="middle" font-size="12" font-weight="700">FAN-OUT (song song)</text>
+              <rect class="dgm-accent" x="112" y="30" width="76" height="34" rx="8" stroke-width="2"/>
+              <text class="dgm-ink" x="150" y="52" text-anchor="middle" font-size="10" font-family="IBM Plex Mono">điều phối</text>
+              <rect class="dgm-box" x="40" y="96" width="60" height="30" rx="7"/><text class="dgm-ink2" x="70" y="116" text-anchor="middle" font-size="9" font-family="IBM Plex Mono">worker</text>
+              <rect class="dgm-box" x="120" y="96" width="60" height="30" rx="7"/><text class="dgm-ink2" x="150" y="116" text-anchor="middle" font-size="9" font-family="IBM Plex Mono">worker</text>
+              <rect class="dgm-box" x="200" y="96" width="60" height="30" rx="7"/><text class="dgm-ink2" x="230" y="116" text-anchor="middle" font-size="9" font-family="IBM Plex Mono">worker</text>
+              <path class="dgm-flow" d="M135 64 L70 94" stroke-width="2" marker-end="url(#al6)"/>
+              <path class="dgm-flow" d="M150 64 V94" stroke-width="2" marker-end="url(#al6)"/>
+              <path class="dgm-flow" d="M165 64 L230 94" stroke-width="2" marker-end="url(#al6)"/>
+              <rect style="fill:color-mix(in srgb,var(--brand-gold) 16%,var(--surface));stroke:var(--warning);stroke-width:1.5" x="112" y="158" width="76" height="32" rx="8"/>
+              <text class="dgm-ink" x="150" y="179" text-anchor="middle" font-size="10" font-family="IBM Plex Mono">gộp (barrier)</text>
+              <path class="dgm-flow" d="M70 126 L140 156" stroke-width="2" marker-end="url(#al6)"/>
+              <path class="dgm-flow" d="M150 126 V156" stroke-width="2" marker-end="url(#al6)"/>
+              <path class="dgm-flow" d="M230 126 L160 156" stroke-width="2" marker-end="url(#al6)"/>
+              <line class="dgm-line" x1="330" y1="20" x2="330" y2="196" stroke-width="1"/>
+              <text class="dgm-ink" x="500" y="20" text-anchor="middle" font-size="12" font-weight="700">PIPELINE (theo tầng)</text>
+              <rect class="dgm-box" x="376" y="90" width="72" height="34" rx="8"/><text class="dgm-ink2" x="412" y="111" text-anchor="middle" font-size="9.5" font-family="IBM Plex Mono">tầng 1</text>
+              <rect class="dgm-accent" x="464" y="90" width="72" height="34" rx="8" stroke-width="2"/><text class="dgm-ink2" x="500" y="111" text-anchor="middle" font-size="9.5" font-family="IBM Plex Mono">tầng 2</text>
+              <rect class="dgm-box" x="552" y="90" width="72" height="34" rx="8"/><text class="dgm-ink2" x="588" y="111" text-anchor="middle" font-size="9.5" font-family="IBM Plex Mono">tầng 3</text>
+              <path class="dgm-flow" d="M448 107 H462" stroke-width="2" marker-end="url(#al6)"/>
+              <path class="dgm-flow" d="M536 107 H550" stroke-width="2" marker-end="url(#al6)"/>
+              <text class="dgm-ink2" x="500" y="150" text-anchor="middle" font-size="9" font-family="IBM Plex Mono">mỗi item chảy độc lập, không chờ nhau</text>
+            </svg>
+            <figcaption><b>Hình 6.1</b> — Hai hình dạng. <b>Fan-out</b>: chia việc song song rồi gộp — cần <em>barrier</em> khi bước sau cần <em>tất cả</em> kết quả (dedup, đếm tổng). <b>Pipeline</b>: mỗi item chảy qua các tầng độc lập, không chờ nhau — nhanh hơn khi các item không phụ thuộc nhau. Mặc định chọn pipeline; chỉ dùng barrier khi thật sự cần gom hết.</figcaption>
+          </figure>
+
+          <div class="callout warn"><div class="callout-title">Chi phí song song là chi phí song song</div><p>Fan-out N agent = đốt rate limit &amp; token gấp N. Song song hóa mua tốc độ bằng tiền &amp; hạn mức, không phải miễn phí. Và mỗi nhánh vẫn cần verifier riêng (Chương 4) — nhiều agent không có nghĩa là bỏ qua đóng vòng, mà là <em>nhân số verifier lên</em>.</p></div>
+
+          <div class="exercise">
+            <h5>Bài tập · Tất định hóa một việc lặp</h5>
+            <p>Tìm một việc bạn đang để agent tự điều phối nhưng thực ra <em>hình dạng đã biết</em> (ví dụ: "review 8 file theo cùng checklist"). Phác lại nó thành workflow tất định: code lặp qua 8 file, mỗi file một agent review + một agent verify, chạy như pipeline. So sánh độ tái lập &amp; khả năng debug với bản để-model-tự-quyết.</p>
+          </div>
+
+          <div class="takeaway">
+            <span class="eyebrow"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 2v6m0 8v6M4.9 4.9l4.2 4.2m5.8 5.8l4.2 4.2M2 12h6m8 0h6M4.9 19.1l4.2-4.2m5.8-5.8l4.2-4.2"/></svg>Takeaway</span>
+            <p><span class="hl">Tất định hóa mọi thứ có thể tất định</span>; chỉ giao cho phán đoán model phần thật sự cần phán đoán. Biết hình dạng trước → workflow bằng code; không biết → để model điều phối. Mặc định <span class="hl">pipeline</span>, chỉ dùng <span class="hl">barrier</span> khi bước sau cần tất cả kết quả. Song song đốt rate limit song song.</p>
+          </div>
+
+          <div class="quiz" data-correct="2">
+            <span class="eyebrow">Kiểm tra nhanh</span>
+            <p class="quiz-q">Bạn cần review bảo mật cho 40 endpoint theo cùng một checklist. Cách điều phối đáng tin cậy &amp; tái lập nhất?</p>
+            <button class="quiz-opt" onclick="quizPick(this,0)"><span class="quiz-letter">A</span><span>Một agent lớn tự quyết review endpoint nào trước, tự đi hết 40 cái trong một phiên.</span></button>
+            <button class="quiz-opt" onclick="quizPick(this,1)"><span class="quiz-letter">B</span><span>Fan-out 40 agent cùng lúc, gộp tất cả rồi mới xử lý — càng song song càng nhanh.</span></button>
+            <button class="quiz-opt" onclick="quizPick(this,2)"><span class="quiz-letter">C</span><span>Hình dạng đã biết → workflow tất định: code lặp qua 40 endpoint như pipeline, mỗi endpoint một agent review + một agent verify, chạy độc lập. Tái lập, debug được, kiểm soát chi phí; chỉ gom (barrier) ở cuối nếu cần dedup phát hiện.</span></button>
+            <button class="quiz-opt" onclick="quizPick(this,3)"><span class="quiz-letter">D</span><span>Làm tay — 40 endpoint quá nhiều cho AI.</span></button>
+            <div class="quiz-feedback" data-explain="Hình dạng đã biết trước (cùng checklist, 40 item) → đừng giao luồng điều khiển cho phán đoán model. Đặt nó vào code: một workflow tất định lặp qua 40 endpoint dạng pipeline, mỗi cái review + verify độc lập. Việc này tái lập được (chạy lại ra kết quả như nhau), debug được (biết endpoint nào ở tầng nào), và kiểm soát được chi phí. Một agent tự đi hết dễ trôi & phình context; fan-out 40 cùng lúc với barrier sớm thì phí — pipeline để mỗi item chảy độc lập tối ưu hơn."></div>
+          </div>
+        </div>
+        <div class="lesson-nav" data-navfor="m6-l1"></div>
+      </article>
+
+      <!-- ============ CHƯƠNG 7 ============ -->
+      <header class="module-header" data-module="7">
+        <span class="eyebrow">Chương 07 · Phần III · Điều phối</span>
+        <h2>Mức tự chủ &amp; cổng người</h2>
+        <p>Câu hỏi không phải "có nên tin agent không" mà là "ở hành động nào con người phải đứng ở đâu". Hai trục quyết định điều đó: <em>tính đảo ngược</em> và <em>bán kính thiệt hại</em>.</p>
+      </header>
+      <article class="lesson" id="m7-l1" data-lesson>
+        <div class="lesson-head">
+          <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px">
+            <div><span class="eyebrow">Bài 7.1</span><h3>Human in / on / out-of-the-loop &amp; cổng phê duyệt</h3></div>
+            <div style="display:flex;gap:8px;flex-wrap:wrap"><span class="level-badge">L4 · Nâng cao <span class="level-dots"><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i></i></span></span><span class="level-badge">⏱ ~3 phút</span></div>
+          </div>
+        </div>
+        <div class="lesson-body">
+          <div class="objectives">
+            <span class="eyebrow">Học xong bài này bạn có thể</span>
+            <ul>
+              <li>Chọn mức tự chủ đúng cho từng hành động: in / on / out-of-the-loop.</li>
+              <li>Dùng hai trục — đảo ngược &amp; bán kính thiệt hại — để đặt cổng phê duyệt.</li>
+              <li>Thiết kế cổng ở đúng chỗ: hành động không đảo ngược, bán kính lớn, độ tin thấp.</li>
+            </ul>
+          </div>
+          <p>Chương 3 nói về biên (khi nào loop dừng). Chương này nói về <em>con người</em>: ở hành động nào loop phải xin phép, ở hành động nào được tự quyết. Đây là bản lề giữa "tăng tốc" và "an toàn".</p>
+
+          <div class="table-wrap">
+            <table>
+              <thead><tr><th style="width:180px">Mức</th><th>Con người làm gì</th><th>Hợp với</th></tr></thead>
+              <tbody>
+                <tr><td><span class="badge">Human IN the loop</span></td><td>Duyệt <em>từng</em> hành động trước khi thực thi</td><td>Hành động rủi ro cao, không đảo ngược</td></tr>
+                <tr><td><span class="badge warn">Human ON the loop</span></td><td>Giám sát, có thể ngắt bất cứ lúc nào; agent tự chạy</td><td>Rủi ro vừa, đảo ngược được, tốc độ quan trọng</td></tr>
+                <tr><td><span class="badge ok">Human OUT of the loop</span></td><td>Chỉ xem kết quả sau; tin tưởng hoàn toàn trong phiên</td><td>Rủi ro thấp, hoàn toàn đảo ngược, có verifier mạnh</td></tr>
+              </tbody>
+            </table>
+          </div>
+
+          <figure class="figure">
+            <svg viewBox="0 0 620 260" role="img" aria-label="Ma trận 2 chiều: trục ngang bán kính thiệt hại nhỏ đến lớn, trục dọc tính đảo ngược cao đến thấp; góc đảo-ngược-cao và thiệt-hại-nhỏ thì để agent tự chủ, góc thiệt-hại-lớn và không-đảo-ngược thì phải có cổng người duyệt">
+              <line class="dgm-line" x1="70" y1="30" x2="70" y2="215" stroke-width="1.5"/>
+              <line class="dgm-line" x1="70" y1="215" x2="590" y2="215" stroke-width="1.5"/>
+              <text class="dgm-ink2" x="60" y="40" text-anchor="end" font-size="10" font-family="IBM Plex Mono">khó đảo</text>
+              <text class="dgm-ink2" x="60" y="210" text-anchor="end" font-size="10" font-family="IBM Plex Mono">dễ đảo</text>
+              <text class="dgm-ink2" x="80" y="235" font-size="10" font-family="IBM Plex Mono">thiệt hại nhỏ</text>
+              <text class="dgm-ink2" x="585" y="235" text-anchor="end" font-size="10" font-family="IBM Plex Mono">thiệt hại lớn</text>
+              <rect x="80" y="120" width="240" height="90" rx="10" style="fill:var(--success-bg);stroke:var(--success);stroke-width:1.5"/>
+              <text style="fill:var(--success)" x="200" y="158" text-anchor="middle" font-size="13" font-weight="700">OUT of loop</text>
+              <text class="dgm-ink2" x="200" y="178" text-anchor="middle" font-size="9.5" font-family="IBM Plex Mono">agent tự chủ + verifier mạnh</text>
+              <rect x="330" y="120" width="250" height="90" rx="10" style="fill:color-mix(in srgb,var(--brand-gold) 16%,var(--surface));stroke:var(--warning);stroke-width:1.5"/>
+              <text style="fill:var(--warning)" x="455" y="158" text-anchor="middle" font-size="13" font-weight="700">ON the loop</text>
+              <text class="dgm-ink2" x="455" y="178" text-anchor="middle" font-size="9.5" font-family="IBM Plex Mono">giám sát, ngắt được</text>
+              <rect x="80" y="35" width="240" height="80" rx="10" style="fill:var(--info-bg);stroke:var(--accent-2);stroke-width:1.5"/>
+              <text style="fill:var(--accent-2)" x="200" y="70" text-anchor="middle" font-size="13" font-weight="700">ON the loop</text>
+              <text class="dgm-ink2" x="200" y="90" text-anchor="middle" font-size="9.5" font-family="IBM Plex Mono">giám sát chặt</text>
+              <rect x="330" y="35" width="250" height="80" rx="10" style="fill:var(--danger-bg);stroke:var(--danger);stroke-width:2"/>
+              <text style="fill:var(--danger)" x="455" y="70" text-anchor="middle" font-size="13" font-weight="700">IN the loop 🛑</text>
+              <text class="dgm-ink2" x="455" y="90" text-anchor="middle" font-size="9.5" font-family="IBM Plex Mono">CỔNG: duyệt từng hành động</text>
+            </svg>
+            <figcaption><b>Hình 7.1</b> — Hai trục quyết định mức tự chủ. Góc nguy hiểm (khó đảo × thiệt hại lớn: xóa DB production, gửi email tới khách, deploy) <b>bắt buộc</b> có cổng người duyệt. Góc an toàn (dễ đảo × thiệt hại nhỏ: sửa file trong nhánh, chạy test) để agent tự chủ. Đặt cổng theo <em>hành động</em>, không theo cả loop.</figcaption>
+          </figure>
+
+          <div class="callout danger"><div class="callout-title">Cổng đặt theo hành động, không theo loop</div><p>Sai lầm thường gặp: hoặc duyệt <em>mọi</em> bước (mất hết lợi ích tốc độ), hoặc <em>không</em> duyệt gì (rủi ro). Đúng: để agent tự chạy các hành động an toàn (đọc, sửa nhánh, chạy test) và <strong>chỉ dựng cổng ở những hành động không đảo ngược, bán kính lớn, hoặc độ tin thấp</strong> (deploy, xóa dữ liệu, giao dịch, gửi ra ngoài). Nhớ khóa trước: <em>authorization thuộc harness/người, không phải phán đoán model</em> — cổng là hiện thân của nguyên tắc đó.</p></div>
+
+          <div class="exercise">
+            <h5>Bài tập · Bản đồ cổng cho một loop</h5>
+            <p>Lấy một loop bạn muốn cho tự hành. Liệt kê mọi hành động nó có thể thực hiện. Chấm mỗi hành động theo hai trục (đảo ngược? bán kính?). Vẽ lên ma trận Hình 7.1. Những hành động rơi vào góc đỏ = cần cổng người duyệt; phần còn lại để agent tự chạy. Bạn vừa thiết kế chính sách tự chủ cho loop đó.</p>
+          </div>
+
+          <div class="takeaway">
+            <span class="eyebrow"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 2v6m0 8v6M4.9 4.9l4.2 4.2m5.8 5.8l4.2 4.2M2 12h6m8 0h6M4.9 19.1l4.2-4.2m5.8-5.8l4.2-4.2"/></svg>Takeaway</span>
+            <p>Mức tự chủ (in/on/out-of-the-loop) chọn theo hai trục: <span class="hl">tính đảo ngược &amp; bán kính thiệt hại</span>. Đặt <span class="hl">cổng theo hành động, không theo loop</span>: chỉ gate cái không đảo ngược / bán kính lớn / độ tin thấp; để agent tự chạy phần an toàn. Authorization thuộc harness &amp; người.</p>
+          </div>
+
+          <div class="quiz" data-correct="1">
+            <span class="eyebrow">Kiểm tra nhanh</span>
+            <p class="quiz-q">Một loop tự hành có thể: đọc file, sửa file trong nhánh riêng, chạy test, VÀ deploy lên production. Bạn thiết kế cổng người thế nào?</p>
+            <button class="quiz-opt" onclick="quizPick(this,0)"><span class="quiz-letter">A</span><span>Duyệt tay mọi hành động để chắc chắn an toàn.</span></button>
+            <button class="quiz-opt" onclick="quizPick(this,1)"><span class="quiz-letter">B</span><span>Để agent tự chạy các hành động dễ đảo, bán kính nhỏ (đọc, sửa nhánh, chạy test) và dựng cổng người duyệt riêng cho hành động không đảo ngược, bán kính lớn (deploy production). Cổng đặt theo hành động, không theo cả loop.</span></button>
+            <button class="quiz-opt" onclick="quizPick(this,2)"><span class="quiz-letter">C</span><span>Cho agent tự deploy luôn nếu test xanh — verifier mạnh là đủ.</span></button>
+            <button class="quiz-opt" onclick="quizPick(this,3)"><span class="quiz-letter">D</span><span>Không cho agent chạm gì cả — quá rủi ro.</span></button>
+            <div class="quiz-feedback" data-explain="Cổng đặt theo HÀNH ĐỘNG chứ không theo loop. Đọc/sửa-nhánh/chạy-test đều dễ đảo & bán kính nhỏ → để agent tự chạy (được lợi tốc độ). Deploy production thì không đảo ngược & bán kính lớn → bắt buộc cổng người, dù test có xanh (test mạnh giảm rủi ro nhưng không xóa được bán kính thiệt hại của một lần deploy sai). Duyệt mọi thứ thì mất hết lợi ích; không cho chạm gì thì bỏ phí tự động hóa. Nguyên tắc: authorization thuộc harness/người, không phải phán đoán model."></div>
+          </div>
+        </div>
+        <div class="lesson-nav" data-navfor="m7-l1"></div>
+      </article>
+
+      <!-- ============ CHƯƠNG 8 ============ -->
+      <header class="module-header" data-module="8">
+        <span class="eyebrow">Chương 08 · Phần IV · Vận hành bền vững</span>
+        <h2>Vòng lặp nền &amp; bất đồng bộ</h2>
+        <p>Đỉnh của tự động hóa: loop chạy khi bạn không nhìn. <code>/loop</code>, <code>/schedule</code>, agent nền, pattern "Ralph" — công cụ 2026 để một vòng lặp sống ngoài phiên tương tác của bạn.</p>
+      </header>
+      <article class="lesson" id="m8-l1" data-lesson>
+        <div class="lesson-head">
+          <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px">
+            <div><span class="eyebrow">Bài 8.1</span><h3>/loop, /schedule, agent nền &amp; pattern Ralph</h3></div>
+            <div style="display:flex;gap:8px;flex-wrap:wrap"><span class="level-badge">L5 · Chuyên gia / dẫn dắt <span class="level-dots"><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i></span></span><span class="level-badge">⏱ ~4 phút</span></div>
+          </div>
+        </div>
+        <div class="lesson-body">
+          <div class="objectives">
+            <span class="eyebrow">Học xong bài này bạn có thể</span>
+            <ul>
+              <li>Chọn đúng nguyên thủy bất đồng bộ: <code>/loop</code>, <code>/schedule</code>, spawn-task, agent nền.</li>
+              <li>Hiểu pattern "Ralph" (while-true tới khi xong) và khi nào nó hợp/không hợp.</li>
+              <li>Thiết kế loop nền quanh <em>state bền vững</em> và <em>điều kiện đánh thức</em>, không quanh một phiên chat.</li>
+            </ul>
+          </div>
+          <p>Tới đây bạn đã có loop tự sửa (Phần II), điều phối được (Phần III). Bậc cuối: cho nó chạy <em>ngoài</em> phiên tương tác — theo lịch, theo chu kỳ, hoặc tới khi hoàn thành. Đây là nơi tự động hóa thật sự "tự".</p>
+
+          <div class="table-wrap">
+            <table>
+              <thead><tr><th style="width:150px">Nguyên thủy</th><th>Cơ chế</th><th>Dùng khi</th></tr></thead>
+              <tbody>
+                <tr><td><code>/loop</code></td><td>Chạy lặp một prompt/lệnh theo chu kỳ, hoặc để model tự nhịp</td><td>Lặp tới khi đạt điều kiện; poll trạng thái ngoài</td></tr>
+                <tr><td><code>/schedule</code></td><td>Agent cloud chạy theo lịch cron</td><td>Việc định kỳ: báo cáo sáng, canary, dọn dẹp đêm</td></tr>
+                <tr><td>spawn-task</td><td>Tách một việc phụ thành phiên riêng, fire-and-forget</td><td>Việc ngoài phạm vi phát hiện ngang đường</td></tr>
+                <tr><td>Agent nền / Cloud</td><td>Chạy nền, trả về PR/kết quả để review sau</td><td>Việc well-scoped, giao khoán (nhớ Codex Cloud)</td></tr>
+              </tbody>
+            </table>
+          </div>
+
+          <figure class="figure">
+            <svg viewBox="0 0 640 180" role="img" aria-label="Vòng đời loop nền: kích hoạt theo lịch hoặc điều kiện, chạy một vòng có verifier, lưu state bền vững, rồi ngủ chờ tín hiệu đánh thức tiếp theo">
+              <defs><marker id="al8" markerWidth="9" markerHeight="9" refX="7" refY="4.5" orient="auto"><path d="M0 0 L9 4.5 L0 9 z" fill="var(--accent-2)"/></marker></defs>
+              <rect class="dgm-accent" x="20" y="66" width="130" height="52" rx="10" stroke-width="2"/>
+              <text class="dgm-ink" x="85" y="88" text-anchor="middle" font-size="11.5" font-weight="700">KÍCH HOẠT</text>
+              <text class="dgm-ink2" x="85" y="105" text-anchor="middle" font-size="9" font-family="IBM Plex Mono">lịch / điều kiện</text>
+              <path class="dgm-flow" d="M150 92 H206" stroke-width="2.5" marker-end="url(#al8)"/>
+              <rect class="dgm-accent" x="206" y="60" width="140" height="64" rx="10" stroke-width="2"/>
+              <text class="dgm-ink" x="276" y="84" text-anchor="middle" font-size="11.5" font-weight="700">CHẠY MỘT VÒNG</text>
+              <text class="dgm-ink2" x="276" y="101" text-anchor="middle" font-size="9" font-family="IBM Plex Mono">có verifier + biên</text>
+              <text class="dgm-ink2" x="276" y="114" text-anchor="middle" font-size="9" font-family="IBM Plex Mono">(Chương 3–4)</text>
+              <path class="dgm-flow" d="M346 92 H402" stroke-width="2.5" marker-end="url(#al8)"/>
+              <rect style="fill:color-mix(in srgb,var(--brand-gold) 16%,var(--surface));stroke:var(--warning);stroke-width:1.5" x="402" y="66" width="130" height="52" rx="10"/>
+              <text class="dgm-ink" x="467" y="88" text-anchor="middle" font-size="11.5" font-weight="700">LƯU STATE</text>
+              <text class="dgm-ink2" x="467" y="105" text-anchor="middle" font-size="9" font-family="IBM Plex Mono">file/DB bền vững</text>
+              <path class="dgm-flow" d="M532 92 H588 V150 H85 V118" stroke-width="2.5" marker-end="url(#al8)"/>
+              <text class="dgm-ink2" x="336" y="167" text-anchor="middle" font-size="9.5" font-family="IBM Plex Mono">ngủ → chờ tín hiệu đánh thức tiếp theo</text>
+            </svg>
+            <figcaption><b>Hình 8.1</b> — Loop nền sống quanh <em>state bền vững</em>, không quanh một phiên chat. Mỗi lần thức: chạy một vòng (có verifier + biên), lưu state ra file/DB, rồi ngủ. Nhờ state ngoài, phiên có thể bị compact/khởi động lại mà loop vẫn tiếp tục đúng chỗ (đúng pattern "ghi chú có cấu trúc" ở khóa trước).</figcaption>
+          </figure>
+
+          <div class="concept">
+            <span class="eyebrow">Pattern "Ralph" — while-true tới khi xong</span>
+            <p>Ý tưởng trần trụi: chạy đi chạy lại <em>cùng một prompt</em> ("tiếp tục nhiệm vụ X") trong một vòng while-true, mỗi lần agent đọc state, làm thêm một bước, ghi state. Đơn giản đến bất ngờ và hiệu quả cho task lớn chia được thành bước nhỏ có verifier. <strong>Điều kiện để Ralph an toàn:</strong> có verifier đóng vòng (nếu không, nó lặp mãi sự trôi dạt), có biên (cost/iteration), và state bền vững để mỗi vòng bắt đầu từ tiến độ thật — không phải từ trí nhớ hội thoại đã rữa.</p>
+          </div>
+          <div class="callout warn"><div class="callout-title">Nền không có nghĩa là quên</div><p>Sai lầm chết người của loop nền: "đặt lịch rồi quên". Loop chạy khi bạn không nhìn <em>càng cần</em> observability &amp; cảnh báo (Chương 9), không phải càng ít. Mỗi vòng nền phải log đủ để sáng mai bạn tái dựng được nó đã làm gì, và phải biết tự báo động khi chạm biên hay verifier fail liên tục.</p></div>
+
+          <div class="exercise">
+            <h5>Bài tập · Một loop nền có state</h5>
+            <p>Chọn một việc lặp bạn làm định kỳ (dọn lint, cập nhật changelog, kiểm link chết). Thiết kế nó thành loop nền: (1) điều kiện kích hoạt (lịch/sự kiện); (2) một vòng có verifier + biên; (3) state ghi ra file để resume; (4) cảnh báo khi verifier fail hoặc chạm biên. Chạy thử với <code>/loop</code> hoặc <code>/schedule</code> và xem log sáng hôm sau có đủ để bạn tin nó không.</p>
+          </div>
+
+          <div class="takeaway">
+            <span class="eyebrow"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 2v6m0 8v6M4.9 4.9l4.2 4.2m5.8 5.8l4.2 4.2M2 12h6m8 0h6M4.9 19.1l4.2-4.2m5.8-5.8l4.2-4.2"/></svg>Takeaway</span>
+            <p>Loop nền (<code>/loop</code>, <code>/schedule</code>, Ralph) sống quanh <span class="hl">state bền vững</span>, không quanh phiên chat. Ralph an toàn <em>chỉ khi</em> có <span class="hl">verifier + biên + state</span>. Và "nền" không có nghĩa "quên" — loop chạy khi bạn không nhìn thì <span class="hl">càng cần observability &amp; cảnh báo</span>.</p>
+          </div>
+
+          <div class="quiz" data-correct="2">
+            <span class="eyebrow">Kiểm tra nhanh</span>
+            <p class="quiz-q">Bạn muốn dùng pattern "Ralph" (while-true chạy lại cùng prompt tới khi xong) để agent hoàn thành một migration lớn qua đêm. Điều kiện tiên quyết nào khiến nó an toàn thay vì thảm họa?</p>
+            <button class="quiz-opt" onclick="quizPick(this,0)"><span class="quiz-letter">A</span><span>Chỉ cần một prompt đủ tốt là while-true sẽ tự lo.</span></button>
+            <button class="quiz-opt" onclick="quizPick(this,1)"><span class="quiz-letter">B</span><span>Chỉ cần model đủ mạnh; state và verifier là tùy chọn.</span></button>
+            <button class="quiz-opt" onclick="quizPick(this,2)"><span class="quiz-letter">C</span><span>Ba thứ đồng thời: (1) verifier khách quan đóng mỗi vòng (nếu không, while-true lặp mãi sự trôi dạt); (2) biên cost/iteration; (3) state bền vững ghi ra file để mỗi vòng bắt đầu từ tiến độ thật — cộng observability + cảnh báo vì nó chạy khi bạn không nhìn.</span></button>
+            <button class="quiz-opt" onclick="quizPick(this,3)"><span class="quiz-letter">D</span><span>Ralph luôn nguy hiểm, đừng bao giờ dùng.</span></button>
+            <div class="quiz-feedback" data-explain="Ralph (while-true) chỉ khuếch đại chất lượng của vòng lặp bên dưới nó. Không có verifier, nó lặp mãi sự trôi dạt tới khi hết tiền (Chương 4). Không có biên, chi phí vô hạn (Chương 3). Không có state bền vững, mỗi vòng phụ thuộc trí nhớ hội thoại đã rữa (Chương 2) thay vì tiến độ thật. Và vì chạy qua đêm khi không ai nhìn, nó cần observability + cảnh báo hơn bất kỳ loop nào. Prompt tốt hay model mạnh không thay được ba trụ này."></div>
+          </div>
+        </div>
+        <div class="lesson-nav" data-navfor="m8-l1"></div>
+      </article>
+
+      <!-- ============ CHƯƠNG 9 ============ -->
+      <header class="module-header" data-module="9">
+        <span class="eyebrow">Chương 09 · Phần IV · Vận hành bền vững</span>
+        <h2>Guardrail, kinh tế &amp; đưa vào đội</h2>
+        <p>Chương kết. Tự động hóa không phải mục tiêu — <em>kết quả</em> mới là. Khi nào một vòng lặp thực sự đáng, làm sao rào nó an toàn, và làm sao cả đội leo thang tự chủ mà không tự bắn vào chân.</p>
+      </header>
+      <article class="lesson" id="m9-l1" data-lesson>
+        <div class="lesson-head">
+          <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px">
+            <div><span class="eyebrow">Bài 9.1</span><h3>Guardrail, kinh tế của tự hành &amp; đưa vào đội</h3></div>
+            <div style="display:flex;gap:8px;flex-wrap:wrap"><span class="level-badge">L5 · Chuyên gia / dẫn dắt <span class="level-dots"><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i></span></span><span class="level-badge">⏱ ~7 phút</span></div>
+          </div>
+        </div>
+        <div class="lesson-body">
+          <div class="objectives">
+            <span class="eyebrow">Học xong bài này bạn có thể</span>
+            <ul>
+              <li>Dựng ngăn xếp guardrail tối thiểu cho một loop tự hành.</li>
+              <li>Đánh giá khi nào tự động hóa một loop thực sự trả cổ tức.</li>
+              <li>Đưa tự hành vào đội theo cách bền vững, tránh các anti-pattern.</li>
+            </ul>
+          </div>
+          <p>Bạn đã có mọi mảnh: phổ (C1), giải phẫu (C2), biên (C3), verifier (C4), tự sửa (C5), điều phối (C6), cổng người (C7), loop nền (C8). Chương này lắp chúng thành một hệ vận hành được &amp; đáng tin — và trả lời câu hỏi kinh tế: <em>loop này có đáng làm không?</em></p>
+
+          <figure class="figure" style="padding:18px 20px 4px">
+            <div class="stack-caption">ngăn xếp guardrail · từ dưới lên</div>
+            <div class="stack">
+              <div class="stack-layer bot"><span class="sl-name">Biên cứng</span><span class="sl-desc">max iteration · ngân sách token · trần chi phí · chống gọi lặp (C3)</span></div>
+              <div class="stack-layer bot"><span class="sl-name">Verifier đóng vòng</span><span class="sl-desc">test/typecheck/eval — không có thì đừng tự hành (C4)</span></div>
+              <div class="stack-layer mid"><span class="sl-name">Cổng theo hành động</span><span class="sl-desc">gate cái không đảo ngược / bán kính lớn (C7)</span></div>
+              <div class="stack-layer mid"><span class="sl-name">Giới hạn bán kính thiệt hại</span><span class="sl-desc">nhánh riêng · sandbox · quyền tối thiểu · dry-run trước</span></div>
+              <div class="stack-layer top"><span class="sl-name">Observability + kill switch + cảnh báo</span><span class="sl-desc">log mọi vòng · nút dừng · báo khi chạm biên/verifier fail</span></div>
+            </div>
+            <figcaption style="border:0;background:transparent;padding:10px 0 12px"><b>Hình 9.1</b> — Năm lớp guardrail. Không có lớp nào là tùy chọn cho một loop <em>tự hành thật sự</em>. Thiếu lớp nào, đó chính là nơi sự cố tiếp theo sẽ chui qua.</figcaption>
+          </figure>
+
+          <h4>Kinh tế: khi nào một loop đáng tự động hóa</h4>
+          <div class="compare">
+            <div class="compare-col good"><span class="eyebrow">Loop trả cổ tức khi</span><ul><li>Tần suất cao / lặp lại nhiều (chi phí thiết kế được khấu hao)</li><li>Có verifier khách quan rẻ (đóng vòng đáng tin)</li><li>Bán kính thiệt hại nhỏ &amp; đảo ngược được</li><li>Bước rõ ràng, ít cần gu/óc phán đoán tinh tế</li></ul></div>
+            <div class="compare-col bad"><span class="eyebrow">Đừng tự động hóa khi</span><ul><li>Việc một lần (chi phí dựng loop &gt; tự làm)</li><li>Không có cách kiểm chứng khách quan</li><li>Sai một lần là thảm họa không đảo ngược</li><li>Cần độc đáo/gu mà model kéo về trung bình</li></ul></div>
+          </div>
+          <div class="callout insight"><div class="callout-title">Phương trình đáng-hay-không</div><p>Tự động hóa đáng khi: <em>(giá trị mỗi lần chạy × tần suất) − chi phí vận hành &amp; rủi ro &gt; chi phí thiết kế &amp; bảo trì loop</em>. Nhiều loop thất bại không phải vì kỹ thuật sai, mà vì <strong>tự động hóa nhầm việc</strong> — một việc một lần, hoặc một việc không kiểm chứng được. Kỹ năng L5 là biết chọn <em>đúng</em> loop để xây, không phải xây được mọi loop.</p></div>
+
+          <h4>Đưa vào đội &amp; anti-pattern</h4>
+          <div class="table-wrap">
+            <table>
+              <thead><tr><th style="width:190px">Anti-pattern</th><th>Vì sao hại &amp; cách thay</th></tr></thead>
+              <tbody>
+                <tr><td><span class="badge bad">Nhảy thẳng lên L5</span></td><td>Bỏ qua verifier/biên/guardrail → dọn dẹp. Thay: leo từng nấc, mỗi nấc chứng minh độ tin (C1).</td></tr>
+                <tr><td><span class="badge bad">"Đặt lịch rồi quên"</span></td><td>Loop nền không observability = sự cố âm thầm. Thay: cảnh báo + log mỗi vòng (C8).</td></tr>
+                <tr><td><span class="badge bad">Tự động hóa để khoe</span></td><td>Tự động một việc một lần tốn hơn tự làm. Thay: chọn loop theo phương trình kinh tế.</td></tr>
+                <tr><td><span class="badge bad">Đo "số loop chạy"</span></td><td>Thưởng cho hoạt động, không phải kết quả. Thay: đo kết quả (việc xong, lỗi thoát prod, chi phí/kết-quả).</td></tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="callout success"><div class="callout-title">Đưa vào đội theo ba pha</div><p><strong>(1) Chuẩn:</strong> mẫu loop có sẵn verifier + biên + guardrail; thư viện workflow tất định dùng chung. <strong>(2) Pilot:</strong> một đội tự hành hóa <em>một</em> loop giá trị cao, chứng minh độ tin. <strong>(3) Mở rộng:</strong> người pilot kèm cặp, mỗi loop mới leo thang tự chủ từ L3 lên. Kiến thức lan qua làm cùng, không qua slide.</p></div>
+
+          <div class="callout insight"><div class="callout-title">Nguyên tắc kết của cả khóa</div><p>Loop Engineering không phải nghệ thuật "để AI làm hết". Nó là kỷ luật <em>thiết kế điều kiện</em> để một tác nhân tự hành làm đúng: <strong>verifier để nó biết đúng, biên để nó không đi quá, cổng để bảo vệ cái không đảo ngược, và observability để bạn luôn tái dựng được.</strong> Người kỹ sư L5 không chạy nhiều loop hơn — họ chọn đúng loop, rào chúng cẩn thận, và biết khi nào một việc <em>không</em> nên là loop. Tự chủ là thứ bạn <em>trao dần theo bằng chứng</em>, không phải bật một lần.</p></div>
+
+          <div class="exercise">
+            <h5>Bài tập cuối · Nâng cấp một việc lên một nấc</h5>
+            <p>Quay lại danh sách 3 việc từ Chương 1. Chọn <em>một</em> việc đáng nhất theo phương trình kinh tế. Thiết kế đầy đủ để đưa nó lên một nấc tự chủ: verifier đóng vòng? bốn biên? cổng cho hành động rủi ro? loop nền có state &amp; cảnh báo? Viết nó ra một trang — đó là bản thiết kế loop production đầu tiên của bạn.</p>
+          </div>
+
+          <div class="takeaway">
+            <span class="eyebrow"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 2v6m0 8v6M4.9 4.9l4.2 4.2m5.8 5.8l4.2 4.2M2 12h6m8 0h6M4.9 19.1l4.2-4.2m5.8-5.8l4.2-4.2"/></svg>Takeaway</span>
+            <p>Loop Engineering = <span class="hl">thiết kế điều kiện</span> để tác nhân tự hành làm đúng: verifier (biết đúng) + biên (không đi quá) + cổng (bảo vệ cái không đảo ngược) + observability (tái dựng được). Chọn <span class="hl">đúng loop theo kinh tế</span>, leo từng nấc. <span class="hl">Tự chủ trao dần theo bằng chứng</span>, không bật một lần.</p>
+          </div>
+
+          <div class="quiz" data-correct="3">
+            <span class="eyebrow">Kiểm tra nhanh</span>
+            <p class="quiz-q">Sếp muốn "tự động hóa càng nhiều càng tốt" và đo thành công bằng "số quy trình đã tự động hóa". Là người dẫn dắt L5, bạn phản hồi thế nào?</p>
+            <button class="quiz-opt" onclick="quizPick(this,0)"><span class="quiz-letter">A</span><span>Đồng ý — tự động hóa mọi thứ có thể, đếm số loop là chỉ số tốt.</span></button>
+            <button class="quiz-opt" onclick="quizPick(this,1)"><span class="quiz-letter">B</span><span>Từ chối tự động hóa — quá rủi ro cho mọi việc.</span></button>
+            <button class="quiz-opt" onclick="quizPick(this,2)"><span class="quiz-letter">C</span><span>Tự động hóa nhanh nhất có thể, lo guardrail sau.</span></button>
+            <button class="quiz-opt" onclick="quizPick(this,3)"><span class="quiz-letter">D</span><span>Định hướng lại: mục tiêu là KẾT QUẢ, không phải số loop. Chọn loop theo phương trình kinh tế (tần suất × giá trị, có verifier, bán kính nhỏ); mỗi loop đủ guardrail (verifier, biên, cổng, observability) và leo thang tự chủ theo bằng chứng; đo bằng kết quả (việc xong, lỗi thoát prod, chi phí/kết-quả), không bằng "số loop chạy".</span></button>
+            <div class="quiz-feedback" data-explain="'Số quy trình tự động hóa' là chỉ số phản tác dụng: nó thưởng cho hoạt động, khuyến khích tự động cả những việc không đáng (một lần, không kiểm chứng được, bán kính lớn) — đúng công thức tạo sự cố & nợ. Người dẫn dắt L5 định hướng về kết quả: chọn ĐÚNG loop theo kinh tế, rào mỗi loop đủ guardrail, leo tự chủ theo bằng chứng, và đo bằng kết quả thật. Tự động hóa nhiều hơn không phải mục tiêu; tự động hóa đúng chỗ, an toàn, mới là."></div>
+          </div>
+        </div>
+        <div class="lesson-nav" data-navfor="m9-l1"></div>
+      </article>
+
+      <!-- ============ CHƯƠNG 10 ============ -->
+      <header class="module-header" data-module="10">
+        <span class="eyebrow">Chương 10 · Tổng kết</span>
+        <h2>Tổng kết · Cheat sheet 1 trang</h2>
+        <p>Chín chương đã dạy xong. Chương này chưng cất tất cả xuống một trang bạn có thể dán cạnh màn hình: một câu đáng nhớ cho mỗi chương, và bộ câu hỏi phải trả lời được trước khi cho bất kỳ loop nào rời tay.</p>
+      </header>
+      <article class="lesson" id="m10-l1" data-lesson>
+        <div class="lesson-head">
+          <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px">
+            <div><span class="eyebrow">Bài 10.1</span><h3>Cheat sheet: chín câu &amp; bộ câu hỏi rời tay</h3></div>
+            <div style="display:flex;gap:8px;flex-wrap:wrap"><span class="level-badge">L1→L5 <span class="level-dots"><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i></span></span><span class="level-badge">⏱ ~4 phút</span></div>
+          </div>
+        </div>
+        <div class="lesson-body">
+          <div class="objectives">
+            <span class="eyebrow">Học xong bài này bạn có thể</span>
+            <ul>
+              <li>Nhắc lại một câu cốt lõi cho từng chương của cả khóa.</li>
+              <li>Chạy checklist sáu câu hỏi trước khi cho một loop chạy không người ngồi cạnh.</li>
+              <li>Ghép các mảnh (verifier + biên + cổng + state + cảnh báo) thành một thiết kế loop nền hoàn chỉnh.</li>
+            </ul>
+          </div>
+          <p>Không có khái niệm mới ở đây — chỉ là bản đồ để tra nhanh. Mỗi dòng dưới là chưng cất của một takeaway; đọc lại chương tương ứng khi cần chiều sâu.</p>
+
+          <div class="table-wrap">
+            <table>
+              <thead><tr><th style="width:210px">Chương</th><th>Một câu đáng nhớ</th></tr></thead>
+              <tbody>
+                <tr><td><span class="badge">C1 · Phổ tự động hóa</span></td><td>Tự động hóa là phổ 5 nấc, không phải công tắc — leo từng nấc; vai bạn dịch từ "làm" sang "thiết kế điều kiện".</td></tr>
+                <tr><td><span class="badge">C2 · Giải phẫu loop</span></td><td>Mọi loop = Plan→Act→Observe→Reflect; Observe &amp; Reflect là thứ tách agent khỏi script — Observe yếu sinh ra ảo tưởng thành công.</td></tr>
+                <tr><td><span class="badge">C3 · Biên &amp; điều kiện dừng</span></td><td>Loop không biên = bom hẹn giờ tài chính; cần đủ bốn biên và phân biệt dừng-thành-công với biên-an-toàn.</td></tr>
+                <tr><td><span class="badge">C4 · Verifier là vua</span></td><td>Loop chỉ tốt bằng verifier đóng nó lại; không verifier khách quan → thêm vòng = thêm trôi dạt.</td></tr>
+                <tr><td><span class="badge">C5 · Tự sửa</span></td><td>Không có verifier cứng thì generate→critique→revise, nhưng critique phải độc lập, cụ thể &amp; biết điểm dừng (cổ tức giảm sau 1–3 vòng).</td></tr>
+                <tr><td><span class="badge">C6 · Điều phối</span></td><td>Tất định hóa mọi thứ có thể tất định; chỉ giao model phần thật sự cần phán đoán. Mặc định pipeline, barrier khi bước sau cần đủ kết quả.</td></tr>
+                <tr><td><span class="badge">C7 · Mức tự chủ &amp; cổng</span></td><td>Chọn in/on/out-of-the-loop theo hai trục đảo-ngược × bán-kính; gate theo hành động, không theo loop.</td></tr>
+                <tr><td><span class="badge">C8 · Loop nền</span></td><td>Loop nền sống quanh state bền vững, không quanh phiên chat; "nền" không phải "quên" — càng cần observability &amp; cảnh báo.</td></tr>
+                <tr><td><span class="badge">C9 · Guardrail &amp; kinh tế</span></td><td>Chọn đúng loop theo kinh tế, rào đủ guardrail, đo bằng kết quả — không bằng "số loop chạy".</td></tr>
+              </tbody>
+            </table>
+          </div>
+
+          <div class="objectives">
+            <span class="eyebrow">Bộ câu hỏi trước khi cho một loop rời tay</span>
+            <ul>
+              <li>Verifier khách quan nào đóng vòng này (test/typecheck/lint/eval)?</li>
+              <li>Đủ bốn biên chưa (max iteration · ngân sách token · trần chi phí · chống gọi lặp)?</li>
+              <li>Thiệt hại tối đa nếu sai theo cách tệ nhất là bao nhiêu — một con số hữu hạn?</li>
+              <li>Hành động nào cần cổng người (không đảo ngược / bán kính lớn)?</li>
+              <li>State bền vững ở đâu để loop tái dựng được khi gián đoạn?</li>
+              <li>Ai nhận cảnh báo khi verifier fail liên tục hoặc loop chạm biên?</li>
+            </ul>
+          </div>
+
+          <div class="callout insight"><div class="callout-title">Dùng cheat sheet này thế nào</div><p>Trả lời được cả sáu câu hỏi bằng câu cụ thể (không phải "chắc ổn") là ngưỡng tối thiểu để một loop rời tay. Còn ô nào trống, đó chính là nơi sự cố tiếp theo sẽ chui qua — và cũng là chương bạn nên đọc lại.</p></div>
+
+          <div class="takeaway">
+            <span class="eyebrow"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 2v6m0 8v6M4.9 4.9l4.2 4.2m5.8 5.8l4.2 4.2M2 12h6m8 0h6M4.9 19.1l4.2-4.2m5.8-5.8l4.2-4.2"/></svg>Takeaway</span>
+            <p>Cả khóa gói trong một câu: <span class="hl">tự chủ trao dần theo bằng chứng, không bật một lần</span>. Verifier để nó biết đúng, biên để nó không đi quá, cổng để bảo vệ cái không đảo ngược, state &amp; cảnh báo để bạn luôn <span class="hl">tái dựng được</span>. Còn ô nào trong <span class="hl">sáu câu hỏi</span> chưa trả lời được thì loop chưa rời tay.</p>
+          </div>
+
+          <div class="quiz" data-correct="2">
+            <span class="eyebrow">Kiểm tra nhanh · tổng hợp</span>
+            <p class="quiz-q">Bạn thiết kế một loop nền tự cập nhật changelog từ các PR đã merge, chạy hằng đêm không người ngồi cạnh. Phương án nào gói đủ verifier + biên + cổng + state + cảnh báo một cách đúng?</p>
+            <button class="quiz-opt" onclick="quizPick(this,0)"><span class="quiz-letter">A</span><span>Đặt lịch chạy mỗi đêm, để model tự quyết viết gì; nếu output trông ổn thì commit thẳng lên main.</span></button>
+            <button class="quiz-opt" onclick="quizPick(this,1)"><span class="quiz-letter">B</span><span>Chỉ cần max iteration cao và một model giỏi; changelog là việc nhẹ nên không cần verifier hay cổng.</span></button>
+            <button class="quiz-opt" onclick="quizPick(this,2)"><span class="quiz-letter">C</span><span>Verifier: lint/schema kiểm định dạng changelog + đối chiếu với danh sách PR đã merge (khách quan, mỗi vòng). Biên: đủ bốn (iteration, token, trần chi phí, chống gọi lặp). Cổng: mở PR để người duyệt thay vì commit thẳng main (thay đổi có bán kính lớn). State: mốc "PR cuối đã xử lý" lưu bền vững để chạy tiếp sau gián đoạn. Cảnh báo: báo khi verifier fail liên tục hoặc chạm biên.</span></button>
+            <button class="quiz-opt" onclick="quizPick(this,3)"><span class="quiz-letter">D</span><span>Chạy tay mỗi lần để an toàn tuyệt đối — đừng bao giờ tự động hóa changelog.</span></button>
+            <div class="quiz-feedback" data-explain="Đáp án C ghép đúng năm mảnh của cả khóa: verifier khách quan chạy mỗi vòng (lint + đối chiếu PR — C4), đủ bốn biên (C3), cổng theo hành động cho thao tác bán kính lớn là ghi vào main → mở PR để người duyệt thay vì commit thẳng (C7), state bền vững để loop nền tái dựng sau gián đoạn (C8), và cảnh báo khi fail/chạm biên (C8–C9). (A) commit thẳng main + 'trông ổn thì làm' là bỏ cả verifier lẫn cổng — công thức trôi dạt thầm lặng. (B) 'model giỏi thay được biên/verifier' là ngộ nhận C3–C4 đã bác. (D) từ chối tự động một việc đáng tự động là bỏ lỡ cổ tức — kỹ năng L5 là rào đúng, không phải né."></div>
+          </div>
+        </div>
+        <div class="lesson-nav" data-navfor="m10-l1"></div>
+      </article>
+    </div>
+
+    <section class="pane" id="complete" data-pane>
+      <div class="complete">
+        <div class="complete-badge">🔁</div>
+        <h2>Hoàn thành khóa học 🎉</h2>
+        <p>Bạn đã đi trọn L1 → L5 của Loop Engineering: từ phổ tự động hóa, qua verifier &amp; tự sửa, tới điều phối, cổng người và loop nền có guardrail. Nguyên tắc mang theo: <strong>tự chủ là thứ trao dần theo bằng chứng, không bật một lần</strong> — verifier để nó biết đúng, biên để nó không đi quá, cổng để bảo vệ cái không đảo ngược, observability để bạn luôn tái dựng được. Việc trong 24 giờ tới: chọn một loop đáng nhất và nâng nó lên một nấc tự chủ (bài tập cuối Chương 9).</p>
+        <div style="margin-top:26px"><a class="btn btn-primary" href="#overview">Về trang đầu</a></div>
+      </div>
+    </section>
+    <footer class="site">Demo Learning Portal · Loop Engineering · biên soạn theo chuẩn interactive-course-builder</footer>
+  </main>
+</div>
+
+<script>
+const COURSE_SLUG='loop-engineering';
+const COURSE_TITLE='Loop Engineering';
+const STORAGE_PREFIX='ai-course:';
+const LESSONS=[
+  {id:'m1-l1', mod:1, part:'Phần I · Nền tảng', title:'Phổ tự động hóa', desc:'5 nấc tự chủ, vì sao cần vòng lặp, vai con người dịch chuyển thế nào.'},
+  {id:'m2-l1', mod:2, part:'Phần I · Nền tảng', title:'Giải phẫu vòng lặp', desc:'Bốn nhịp Plan→Act→Observe→Reflect; vì sao Observe & Reflect là then chốt.'},
+  {id:'m3-l1', mod:3, part:'Phần I · Nền tảng', title:'Biên & điều kiện dừng', desc:'Bốn biên an toàn, dừng-thành-công vs biên-an-toàn, ba loại loop giết agent.'},
+  {id:'m4-l1', mod:4, part:'Phần II · Vòng lặp tự sửa', title:'Verifier là vua', desc:'Loop chỉ tốt bằng verifier của nó; xếp hạng verifier; vòng generate→verify→feedback.'},
+  {id:'m5-l1', mod:5, part:'Phần II · Vòng lặp tự sửa', title:'Tự sửa: generate→critique→revise', desc:'Reflection loop, LLM-as-judge, ba cạm bẫy, điểm dừng của reflection.'},
+  {id:'m6-l1', mod:6, part:'Phần III · Điều phối', title:'Đa agent & workflow tất định', desc:'Điều phối do code vs do model; fan-out vs pipeline; khi nào cần barrier.'},
+  {id:'m7-l1', mod:7, part:'Phần III · Điều phối', title:'Mức tự chủ & cổng người', desc:'Human in/on/out-of-the-loop; ma trận đảo-ngược × bán-kính; cổng theo hành động.'},
+  {id:'m8-l1', mod:8, part:'Phần IV · Vận hành bền vững', title:'Vòng lặp nền & bất đồng bộ', desc:'/loop, /schedule, agent nền, pattern Ralph, state bền vững & điều kiện đánh thức.'},
+  {id:'m9-l1', mod:9, part:'Phần IV · Vận hành bền vững', title:'Guardrail, kinh tế & đưa vào đội', desc:'Ngăn xếp guardrail, khi nào loop đáng tự động, anti-pattern, adoption 3 pha.'},
+  {id:'m10-l1', mod:10, part:'Tổng kết', title:'Cheat sheet 1 trang', desc:'Chín câu đáng nhớ + bộ sáu câu hỏi trước khi cho một loop rời tay.'},
+];
+const PANES=['overview','complete'];
+const LAST_KEY=STORAGE_PREFIX+'last:'+COURSE_SLUG;
+const SCROLL_KEY=STORAGE_PREFIX+'scroll:'+COURSE_SLUG+':';
+const DONE_KEY=id=>STORAGE_PREFIX+COURSE_SLUG+':'+id;
+async function sGet(k){try{if(window.storage?.get){const r=await window.storage.get(k);return r?r.value:null}}catch(e){}try{return localStorage.getItem(k)}catch(e){return null}}
+async function sSet(k,v){try{if(window.storage?.set)return await window.storage.set(k,v)}catch(e){}try{localStorage.setItem(k,v)}catch(e){}}
+async function sDel(k){try{if(window.storage?.delete)return await window.storage.delete(k)}catch(e){}try{localStorage.removeItem(k)}catch(e){}}
+function buildNav(){
+  const nav=document.getElementById('nav-list'),toc=document.getElementById('toc-body');
+  const groups={};LESSONS.forEach(l=>{(groups[l.part]=groups[l.part]||[]).push(l)});
+  nav.innerHTML='';toc.innerHTML='';
+  Object.keys(groups).forEach(part=>{
+    const g=document.createElement('div');g.className='nav-group';
+    g.innerHTML=`<div class="nav-part">${part.replace(/^Phần [IVX]+ · /,'')}</div>`;
+    const tl=document.createElement('div');tl.className='toc-part-label';tl.textContent=part;
+    const tg=document.createElement('div');tg.className='toc-grid';
+    groups[part].forEach(l=>{
+      const n=String(LESSONS.indexOf(l)+1).padStart(2,'0');
+      const a=document.createElement('a');a.href='#'+l.id;a.className='nav-link';a.dataset.lesson=l.id;
+      a.innerHTML=`<span class="nav-dot"></span><span class="nav-num">${n}</span><span class="nav-title">${l.title}</span>`;
+      g.appendChild(a);
+      const c=document.createElement('a');c.href='#'+l.id;c.className='toc-card';
+      c.innerHTML=`<span class="toc-card-num">${n}</span><span><span class="toc-card-title">${l.title}</span><span class="toc-card-desc">${l.desc||''}</span></span>`;
+      tg.appendChild(c);
+    });
+    nav.appendChild(g);toc.appendChild(tl);toc.appendChild(tg);
+  });
+  LESSONS.forEach((l,i)=>{
+    const foot=document.querySelector(`.lesson-nav[data-navfor="${l.id}"]`);if(!foot)return;
+    const prev=i>0?LESSONS[i-1]:null,next=i<LESSONS.length-1?LESSONS[i+1]:{id:'complete',title:'Kết thúc'};
+    foot.innerHTML=(prev?`<a class="nav-prev" href="#${prev.id}"><span class="nl-label">← Trước</span><span class="nl-title">${prev.title}</span></a>`:`<span class="nav-prev nav-empty"><span class="nl-label">Bắt đầu</span><span class="nl-title">Bài đầu tiên</span></span>`)
+     +`<button class="nav-complete" data-lesson="${l.id}" onclick="markComplete('${l.id}')"><span class="cl">Đánh dấu hoàn thành</span></button>`
+     +`<a class="nav-next" href="#${next.id}"><span class="nl-label">Tiếp →</span><span class="nl-title">${next.title}</span></a>`;
+  });
+}
+async function refreshProgress(){
+  let done=0;for(const l of LESSONS){if(await sGet(DONE_KEY(l.id))==='done')done++}
+  const pct=LESSONS.length?Math.round(done/LESSONS.length*100):0;
+  document.getElementById('pg-fill').style.width=pct+'%';document.getElementById('tb-fill').style.width=pct+'%';
+  document.getElementById('pg-done').textContent=done;document.getElementById('pg-total').textContent=LESSONS.length;document.getElementById('pg-pct').textContent=pct;
+  try{window.parent.postMessage({type:'lms:progress',course:COURSE_SLUG,percent:pct,done,total:LESSONS.length},'*')}catch(e){}
+}
+async function hydrate(){for(const l of LESSONS){if(await sGet(DONE_KEY(l.id))==='done')markUI(l.id,true)}await refreshProgress()}
+function markUI(id,done){
+  const link=document.querySelector(`.nav-link[data-lesson="${id}"]`);if(link)link.classList.toggle('done',done);
+  const btn=document.querySelector(`.nav-complete[data-lesson="${id}"]`);
+  if(btn){btn.classList.toggle('done',done);const l=btn.querySelector('.cl');if(l)l.textContent=done?'✓ Đã hoàn thành':'Đánh dấu hoàn thành'}
+}
+function show(id){
+  const valid=PANES.includes(id)||LESSONS.some(l=>l.id===id);if(!valid)id='overview';
+  document.querySelectorAll('[data-pane],[data-lesson],.module-header').forEach(el=>el.classList.remove('active'));
+  const t=document.getElementById(id);if(t)t.classList.add('active');
+  let crumb=COURSE_TITLE;
+  if(!PANES.includes(id)){const mod=id.split('-')[0].slice(1);const mh=document.querySelector(`.module-header[data-module="${mod}"]`);if(mh)mh.classList.add('active');const l=LESSONS.find(x=>x.id===id);if(l)crumb=l.title}
+  else if(id==='overview')crumb='Tổng quan';else if(id==='complete')crumb='Hoàn thành';
+  document.getElementById('tb-crumb').textContent=crumb;
+  document.querySelectorAll('.nav-link').forEach(a=>a.classList.toggle('active',a.dataset.lesson===id));
+  const an=document.querySelector('.nav-link.active'),ns=document.querySelector('.nav-scroll');
+  if(an&&ns){ns.scrollTo({top:Math.max(0,an.offsetTop-ns.clientHeight/2),behavior:'auto'})}
+  sSet(LAST_KEY,id);
+  if(window.innerWidth<1024){document.getElementById('sidebar').classList.remove('open');document.getElementById('backdrop').classList.remove('show')}
+  window.scrollTo({top:0,behavior:'instant'});
+  try{window.parent.postMessage({type:'lms:lesson-change',course:COURSE_SLUG,lessonId:id},'*')}catch(e){}
+}
+window.show=show;
+async function markComplete(id){
+  const k=DONE_KEY(id),was=(await sGet(k))==='done';
+  if(was){await sDel(k);markUI(id,false)}else{await sSet(k,'done');markUI(id,true)}
+  await refreshProgress();
+  if(!was){const i=LESSONS.findIndex(l=>l.id===id);location.hash=i<LESSONS.length-1?LESSONS[i+1].id:'complete'}
+}
+window.markComplete=markComplete;
+function copyCode(btn){const pre=btn.closest('.prompt-card,.code-card').querySelector('pre');const done=()=>{btn.textContent='✓ Đã chép';btn.classList.add('copied');setTimeout(()=>{btn.textContent='Chép';btn.classList.remove('copied')},1600)};const txt=pre.innerText;if(navigator.clipboard?.writeText){navigator.clipboard.writeText(txt).then(done).catch(()=>fb(txt,done))}else fb(txt,done)}
+function fb(t,cb){const ta=document.createElement('textarea');ta.value=t;document.body.appendChild(ta);ta.select();try{document.execCommand('copy')}catch(e){}document.body.removeChild(ta);cb()}
+window.copyCode=copyCode;
+function quizPick(el,idx){
+  const q=el.closest('.quiz');if(q.dataset.done)return;const correct=parseInt(q.dataset.correct,10);
+  q.querySelectorAll('.quiz-opt').forEach((o,i)=>{o.disabled=true;if(i===correct)o.classList.add('correct');if(i===idx&&i!==correct)o.classList.add('wrong')});
+  q.dataset.done='1';const fbk=q.querySelector('.quiz-feedback'),ok=idx===correct;
+  if(fbk){fbk.classList.add('show',ok?'ok':'no');fbk.textContent=(ok?'✓ Chính xác. ':'✗ Chưa đúng. ')+(fbk.dataset.explain||'')}
+}
+window.quizPick=quizPick;
+function loopCost(){
+  const el=document.getElementById('lcIter');if(!el)return;
+  const iter=Math.max(0,parseFloat(el.value)||0);
+  const tokK=Math.max(0,parseFloat(document.getElementById('lcTok').value)||0);
+  const price=Math.max(0,parseFloat(document.getElementById('lcPrice').value)||0);
+  const perVround=tokK*1000*price/1e6;
+  const perRun=iter*perVround;
+  const nightly=96*perVround; // 8h × 60 / 5 phút ≈ 96 vòng nếu kẹt qua đêm không trần
+  const usd=n=>'$'+n.toLocaleString('vi',{minimumFractionDigits:2,maximumFractionDigits:2});
+  document.getElementById('lcPerRun').textContent=usd(perRun)+' / lần chạy';
+  document.getElementById('lcNightly').textContent=usd(nightly)+' nếu kẹt qua đêm (8h, ~5 phút/vòng)';
+  const CEIL=2.0;
+  document.getElementById('lcBar').style.width=Math.min(100,perRun/CEIL*100)+'%';
+  document.getElementById('lcNote').textContent=perRun>CEIL
+    ? '⚠ vượt trần tham chiếu $2/lần chạy (Chương 3) — biên chi phí sẽ kill ở đây'
+    : 'trong trần tham chiếu $2/lần chạy (Chương 3)';
+}
+window.loopCost=loopCost;
+function toggleSidebar(){document.getElementById('sidebar').classList.toggle('open');document.getElementById('backdrop').classList.toggle('show')}
+window.toggleSidebar=toggleSidebar;
+window.addEventListener('hashchange',()=>show(location.hash.slice(1)||'overview'));
+document.addEventListener('DOMContentLoaded',async()=>{
+  const sb=document.getElementById('start-btn');if(sb&&LESSONS[0])sb.href='#'+LESSONS[0].id;
+  buildNav();await hydrate();
+  let start=location.hash.slice(1);if(!start){const last=await sGet(LAST_KEY);if(last&&last!=='complete')start=last}
+  show(start||'overview');
+  loopCost();
+  const y=parseInt(await sGet(SCROLL_KEY+(start||'overview'))||'0',10);
+  if(y>0)requestAnimationFrame(()=>requestAnimationFrame(()=>window.scrollTo({top:y,behavior:'instant'})));
+});
+document.addEventListener('keydown',e=>{
+  if(e.target.closest?.('input,textarea,select')||e.metaKey||e.ctrlKey||e.altKey)return;
+  if(e.key!=='ArrowLeft'&&e.key!=='ArrowRight')return;
+  const cur=document.querySelector('.nav-link.active')?.dataset.lesson;
+  const i=LESSONS.findIndex(l=>l.id===cur);
+  if(e.key==='ArrowRight'){if(!cur){location.hash=LESSONS[0].id}else if(i>-1&&i<LESSONS.length-1){location.hash=LESSONS[i+1].id}else if(i===LESSONS.length-1){location.hash='complete'}}
+  else{if(i>0){location.hash=LESSONS[i-1].id}else if(i===0){location.hash='overview'}}
+});
+let _st;window.addEventListener('scroll',()=>{clearTimeout(_st);_st=setTimeout(()=>{const id=document.querySelector('.nav-link.active')?.dataset.lesson||'overview',y=Math.round(window.scrollY);if(y<64)sDel(SCROLL_KEY+id);else sSet(SCROLL_KEY+id,String(y))},400)},{passive:true});
+</script>
+</body>
+</html>
