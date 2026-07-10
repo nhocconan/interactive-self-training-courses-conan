@@ -52,10 +52,11 @@ A LOCAL user is created by the seed; you can also enable LDAP/AD via
 │   ├── src/components/   Design-system primitives
 │   └── prisma/           Schema + seed
 ├── courses/              Interactive HTML courses (served via signed-in iframe)
+│   ├── index.html                        (chỉ mục khóa học — GitHub Pages hub)
 │   ├── ai-practical-playbook.html        (VI · Demo AI Practical Playbook)
 │   ├── ai-practical-playbook.en.html     (EN mirror)
+│   ├── context-harness-engineering.html  (VI · standard-conformant)
 │   ├── rag-information-retrieval-course.html
-│   ├── ai-context-engineering-harness-engineering-course-v2.html
 │   └── rag-course-diagrams/
 ├── docs/                 ARCHITECTURE.md, AUTH-LDAP.md, ADMIN-GUIDE.md, …
 ├── scripts/              start-dev.sh / stop-dev.sh / start-prod.sh / stop-prod.sh

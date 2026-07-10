@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Khóa học tương tác · Tiến Lê (@nhocconan)</title>
+<meta name="description" content="Chỉ mục các khóa học tương tác tự học — một file HTML, chạy offline, giàu diagram, có quiz và takeaway từng bài. Tiếng Việt là chính, cập nhật công cụ 2026.">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>📚</text></svg>">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+/* Design tokens — theo chuẩn nhà (interactive-course-builder). Light mặc định, dark qua toggle (persisted). */
+:root{
+  --brand-navy:#0a2540; --brand-sky:#2563eb; --brand-coral:#ea403f; --brand-gold:#ffe14e;
+  --accent:#0a2540; --accent-2:#2563eb; --accent-3:#ea403f;
+  --bg:#ffffff; --surface:#ffffff; --surface-2:#f1f5f9; --surface-3:#eef2f7;
+  --border:#e2e8f0; --border-strong:#cbd5e1;
+  --ink:#0a2540; --ink-2:#475569; --ink-3:#64748b; --on-accent:#ffffff;
+  --success:#15a37a; --success-bg:#ecfdf5;
+  --radius:14px; --font:'Inter',system-ui,-apple-system,'Segoe UI',sans-serif;
+  --mono:'IBM Plex Mono',ui-monospace,SFMono-Regular,Menlo,monospace;
+}
+[data-mode="dark"]{
+  --bg:#0b1526; --surface:#101d33; --surface-2:#16253f; --surface-3:#1b2c4a;
+  --border:#243a5e; --border-strong:#2f4a75;
+  --ink:#e8eefb; --ink-2:#aebdd6; --ink-3:#8296b4;
+  --accent:#e8eefb; --accent-2:#6ea8ff; --accent-3:#ff7a6e;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+@media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}*{transition:none!important;animation:none!important}}
+body{font-family:var(--font);background:var(--bg);color:var(--ink);line-height:1.6;min-height:100vh;display:flex;flex-direction:column}
+a{color:var(--accent-2)}
+a:focus-visible,button:focus-visible{outline:3px solid var(--accent-2);outline-offset:2px;border-radius:6px}
+.topbar{position:sticky;top:0;z-index:10;display:flex;align-items:center;justify-content:space-between;gap:12px;padding:10px 20px;background:var(--surface);border-bottom:1px solid var(--border)}
+.brand{display:flex;align-items:center;gap:10px;font-weight:800;font-size:15px;color:var(--ink);text-decoration:none}
+.brand .dot{width:10px;height:10px;border-radius:50%;background:linear-gradient(135deg,var(--brand-sky),var(--brand-coral));flex:none}
+.mode-toggle{min-width:44px;min-height:44px;border:1px solid var(--border-strong);background:var(--surface-2);color:var(--ink);border-radius:10px;font-size:17px;cursor:pointer}
+.wrap{width:min(1060px,100% - 40px);margin-inline:auto}
+.hero{padding:44px 0 8px}
+.hero .kicker{font-family:var(--mono);font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--accent-3);font-weight:600}
+.hero h1{font-size:clamp(26px,4.4vw,40px);line-height:1.15;letter-spacing:-.02em;margin:8px 0 10px}
+.hero p{max-width:62ch;color:var(--ink-2)}
+.hero .links{display:flex;flex-wrap:wrap;gap:10px;margin-top:18px}
+.pill{display:inline-flex;align-items:center;gap:8px;min-height:44px;padding:8px 16px;border-radius:999px;border:1px solid var(--border-strong);background:var(--surface);color:var(--ink);text-decoration:none;font-weight:600;font-size:14px}
+.pill.primary{background:var(--brand-navy);border-color:var(--brand-navy);color:#fff}
+[data-mode="dark"] .pill.primary{background:var(--accent-2);border-color:var(--accent-2);color:#0b1526}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:18px;padding:28px 0 10px}
+.card{display:flex;flex-direction:column;gap:10px;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:20px;transition:border-color .15s, transform .15s}
+.card:hover{border-color:var(--accent-2);transform:translateY(-2px)}
+.badges{display:flex;flex-wrap:wrap;gap:6px}
+.badge{font-family:var(--mono);font-size:11px;font-weight:600;letter-spacing:.05em;padding:3px 9px;border-radius:999px;border:1px solid var(--border-strong);color:var(--ink-2);background:var(--surface-2)}
+.badge.lang{background:var(--success-bg);border-color:var(--success);color:var(--success)}
+[data-mode="dark"] .badge.lang{background:transparent}
+.card h2{font-size:18px;line-height:1.3;letter-spacing:-.01em}
+.card p{font-size:14px;color:var(--ink-2);flex:1}
+.card .go{display:inline-flex;align-items:center;gap:6px;min-height:44px;align-self:flex-start;padding:8px 14px;border-radius:10px;background:var(--surface-2);border:1px solid var(--border-strong);color:var(--ink);font-weight:700;font-size:14px;text-decoration:none}
+.card .go:hover{background:var(--surface-3)}
+.card .alt{font-size:13px;color:var(--ink-3)}
+.note{margin:18px 0 8px;padding:14px 16px;border:1px solid var(--border);border-left:4px solid var(--brand-gold);border-radius:10px;background:var(--surface-2);font-size:14px;color:var(--ink-2)}
+footer{margin-top:auto;border-top:1px solid var(--border);padding:22px 0;font-size:13px;color:var(--ink-3)}
+footer .wrap{display:flex;flex-wrap:wrap;gap:8px 18px;justify-content:space-between}
+footer a{color:var(--ink-2)}
+</style>
+</head>
+<body>
+<header class="topbar">
+  <a class="brand" href="./"><span class="dot" aria-hidden="true"></span>Khóa học tương tác · @nhocconan</a>
+  <button class="mode-toggle" id="modeToggle" aria-label="Đổi giao diện sáng/tối" title="Sáng / tối">🌙</button>
+</header>
+
+<main class="wrap">
+  <section class="hero">
+    <div class="kicker">Tự học · một file HTML · chạy offline</div>
+    <h1>Khóa học tương tác, giàu hình — không phải slide chữ</h1>
+    <p>Mỗi khóa là một trang HTML tự chứa: diagram SVG cho từng khái niệm, quiz theo tình huống, takeaway cuối bài, theo dõi tiến độ, tối ưu cho điện thoại. Tiếng Việt là ngôn ngữ chính; công cụ cập nhật 2026.</p>
+    <div class="links">
+      <a class="pill primary" href="https://x.com/nhocconan" rel="me">Theo dõi trên X → @nhocconan</a>
+      <a class="pill" href="https://dep.app">dep.app — apps tôi xây</a>
+      <a class="pill" href="https://github.com/nhocconan/nhocconan-interactive-self-training-courses">Mã nguồn (GitHub)</a>
+    </div>
+    <!-- Khi landing dịch vụ đào tạo live: đổi link dep.app ở trên thành https://dep.app/dao-tao/ -->
+  </section>
+
+  <section class="grid" aria-label="Danh sách khóa học">
+    <article class="card">
+      <div class="badges"><span class="badge lang">Tiếng Việt</span><span class="badge">Nhập môn</span><span class="badge">≈120 phút</span><span class="badge">31 hình</span></div>
+      <h2>AI Practical Playbook</h2>
+      <p>Playbook AI thực chiến cho công việc production: chọn model, pattern prompting, agent và vòng đánh giá. Bài nào cũng có ví dụ chạy được.</p>
+      <a class="go" href="ai-practical-playbook.html">Vào học →</a>
+      <span class="alt">Có bản tiếng Anh: <a href="ai-practical-playbook.en.html">English version</a></span>
+    </article>
+
+    <article class="card">
+      <div class="badges"><span class="badge lang">Tiếng Việt</span><span class="badge">L1→L5</span><span class="badge">15 bài</span><span class="badge">23 hình</span></div>
+      <h2>Context &amp; Harness Engineering</h2>
+      <p>Kỹ nghệ ngữ cảnh và runtime cho AI — xây harness (context, tools, evaluation) biến LLM thành đồng đội kỹ thuật tin cậy. Cập nhật công cụ 2026: Claude Code, Codex.</p>
+      <a class="go" href="context-harness-engineering.html">Vào học →</a>
+    </article>
+
+    <article class="card">
+      <div class="badges"><span class="badge lang">Tiếng Việt</span><span class="badge">L1→L5</span><span class="badge">10 bài</span><span class="badge">19 hình</span></div>
+      <h2>Loop Engineering</h2>
+      <p>Thiết kế, đặt biên, đóng vòng và điều phối các vòng lặp agent tự hành để tự động hóa phát triển phần mềm — kèm widget tính chi phí vòng lặp.</p>
+      <a class="go" href="loop-engineering.html">Vào học →</a>
+    </article>
+
+    <article class="card">
+      <div class="badges"><span class="badge lang">Tiếng Việt</span><span class="badge">Người mới</span><span class="badge">46 hình</span></div>
+      <h2>DSS &amp; Data Warehouse → IDSS</h2>
+      <p>Lý thuyết quyết định, Data Warehouse, kiến trúc DSS/IDSS, quản lý bất định, recommender — mỗi khái niệm đối chiếu với một hệ ra quyết định production thật.</p>
+      <a class="go" href="dss-datawarehouse-idss-course.html">Vào học →</a>
+    </article>
+
+    <article class="card">
+      <div class="badges"><span class="badge lang">English</span><span class="badge">Intermediate</span><span class="badge">≈135 phút</span><span class="badge">20 hình</span></div>
+      <h2>RAG, Layer by Layer</h2>
+      <p>Đi từ RAG đơn giản nhất (embed một chunk, tìm hàng xóm gần nhất) lên pipeline production: chunking, vector search, re-ranking, multi-layer caching, evaluation.</p>
+      <a class="go" href="rag-information-retrieval-course.html">Vào học →</a>
+    </article>
+  </section>
+
+  <p class="note">Các khóa này là <strong>demo công khai</strong> của quy trình tôi dùng để xây khóa học nội bộ theo tài liệu riêng của từng đội. Cần một khóa như vậy cho đội của bạn? Nhắn tôi trên <a href="https://x.com/nhocconan">X @nhocconan</a>.</p>
+</main>
+
+<footer>
+  <div class="wrap">
+    <span>© 2026 Tiến Lê — CIO by day, indie builder by night.</span>
+    <span><a href="https://x.com/nhocconan">X</a> · <a href="https://github.com/nhocconan">GitHub</a> · <a href="https://dep.app">dep.app</a></span>
+  </div>
+</footer>
+
+<script>
+(function(){
+  var KEY='courses-hub-mode', root=document.documentElement, btn=document.getElementById('modeToggle');
+  function apply(m){ if(m==='dark'){root.setAttribute('data-mode','dark');btn.textContent='☀️';} else {root.removeAttribute('data-mode');btn.textContent='🌙';} }
+  var saved=null; try{saved=localStorage.getItem(KEY);}catch(e){}
+  apply(saved==='dark'?'dark':'light');
+  btn.addEventListener('click',function(){
+    var next=root.getAttribute('data-mode')==='dark'?'light':'dark';
+    apply(next); try{localStorage.setItem(KEY,next);}catch(e){}
+  });
+})();
+</script>
+</body>
+</html>

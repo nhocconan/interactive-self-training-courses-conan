@@ -31,16 +31,15 @@
   --sidebar-w:288px; --maxw:820px;
   --focus:0 0 0 2px var(--bg),0 0 0 4px var(--accent-2);
 }
-@media (prefers-color-scheme: dark){
-  :root{
-    --bg:#0a0d18; --surface:#11141f; --surface-2:#161a27; --surface-3:#1b2130;
-    --border:#232938; --border-strong:#333b50;
-    --ink:#e7e9f1; --ink-2:#9aa3b8; --ink-3:#7d879c;
-    --accent:#93b4ff; --accent-2:#60a5fa;
-    --success:#2dd4a8; --success-bg:#0c2a22; --warning:#fbbf24; --warning-bg:#2a2109;
-    --danger:#f87171; --danger-bg:#2a1213; --info:#60a5fa; --info-bg:#0e223f;
-    --shadow-lg:0 18px 48px -12px rgba(0,0,0,.6);
-  }
+/* Dark mode: chỉ qua toggle (persisted) — light là mặc định, theo chuẩn nhà */
+html[data-mode="dark"]{
+  --bg:#0a0d18; --surface:#11141f; --surface-2:#161a27; --surface-3:#1b2130;
+  --border:#232938; --border-strong:#333b50;
+  --ink:#e7e9f1; --ink-2:#9aa3b8; --ink-3:#7d879c;
+  --accent:#93b4ff; --accent-2:#60a5fa;
+  --success:#2dd4a8; --success-bg:#0c2a22; --warning:#fbbf24; --warning-bg:#2a2109;
+  --danger:#f87171; --danger-bg:#2a1213; --info:#60a5fa; --info-bg:#0e223f;
+  --shadow-lg:0 18px 48px -12px rgba(0,0,0,.6);
 }
 /* ==== 2 · RESET + BASE ==== */
 *{margin:0;padding:0;box-sizing:border-box}
@@ -87,6 +86,8 @@ code{font-family:var(--font-mono);font-size:.85em;background:var(--surface-2);pa
 @media (max-width:1024px){.sidebar{transform:translateX(-100%);transition:transform .25s ease;box-shadow:var(--shadow-lg)}.sidebar.open{transform:translateX(0)}.main{margin-left:0}.mobile-toggle{display:block}.backdrop.show{display:block}.container{padding:0 18px}.main .topbar{padding-left:66px}.main .topbar-mini{display:none}}
 /* ==== 4 · TOPBAR ==== */
 .topbar{position:sticky;top:0;z-index:30;background:color-mix(in srgb,var(--bg) 85%,transparent);backdrop-filter:blur(10px);border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;padding:10px 24px;font-family:var(--font-mono);font-size:11px;color:var(--ink-2)}
+.mode-toggle{min-width:44px;min-height:44px;border:1px solid var(--border-strong);background:var(--surface-2);color:var(--ink);border-radius:10px;cursor:pointer;font-size:15px;line-height:1}
+.mode-toggle:focus-visible{outline:none;box-shadow:var(--focus)}
 #tb-crumb{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;min-width:0}
 .topbar-mini{height:3px;background:var(--surface-2);border-radius:99px;flex:1;max-width:180px;margin:0 16px;overflow:hidden}
 .topbar-mini-fill{height:100%;width:0;background:var(--grad-bar);transition:width .3s}
@@ -256,6 +257,7 @@ footer.site{border-top:1px solid var(--border);padding:26px 24px;text-align:cent
       <div class="topbar-mini"><div class="topbar-mini-fill" id="tb-fill"></div></div>
       <span class="mono" style="color:var(--ink-3)">← → chuyển bài</span>
       <a href="#overview" class="mono">↺ Về đầu</a>
+      <button class="mode-toggle" id="modeToggle" aria-label="Đổi giao diện sáng/tối" title="Sáng / tối">🌙</button>
     </div>
 
     <!-- ===== OVERVIEW ===== -->
@@ -1958,6 +1960,14 @@ const { object } = await generateObject({
 const COURSE_SLUG='context-harness-engineering';
 const COURSE_TITLE='Context & Harness Engineering';
 const STORAGE_PREFIX='ai-course:';
+/* Color mode — light mặc định, dark qua toggle, persisted (chuẩn nhà) */
+(function(){
+  const KEY=STORAGE_PREFIX+COURSE_SLUG+':mode', root=document.documentElement, btn=document.getElementById('modeToggle');
+  function apply(m){ if(m==='dark'){root.setAttribute('data-mode','dark'); if(btn) btn.textContent='☀️';} else {root.removeAttribute('data-mode'); if(btn) btn.textContent='🌙';} }
+  let saved=null; try{saved=localStorage.getItem(KEY);}catch(e){}
+  apply(saved==='dark'?'dark':'light');
+  if(btn) btn.addEventListener('click',()=>{ const next=root.getAttribute('data-mode')==='dark'?'light':'dark'; apply(next); try{localStorage.setItem(KEY,next);}catch(e){} });
+})();
 /* LESSONS grows as chapters are authored to the new standard. */
 const LESSONS=[
   {id:'m1-l1', mod:1, part:'Phần I · Nền tảng', title:'Ba bộ môn, một ngăn xếp', desc:'Prompt vs context vs harness — và thứ tự chẩn đoán khi AI hỏng ở prod.'},

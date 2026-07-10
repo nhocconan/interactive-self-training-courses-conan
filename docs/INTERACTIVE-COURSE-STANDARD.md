@@ -50,10 +50,11 @@ the engine but not yet consumed (forward-compatible).
 | `ai-practical-playbook.html` (+ `.en`) | navy | Reference implementation the standard was extracted from. |
 | `context-harness-engineering.html` | midnight | **Standard-conformant** (VI, L1→L5, 14 chương / 15 bài, recap + glossary + keyboard nav — round-2 2026-07). Supersedes the v2 file below. |
 | `loop-engineering.html` | loop (slate/cyan) | **Standard-conformant** (VI, L1→L5, 10 bài, cost-calculator widget + recap + glossary — round-2 2026-07). Sequel: autonomous/agentic loops. |
-| `ai-context-engineering-harness-engineering-course-v2.html` | — | Pre-standard English/editorial original. Superseded by `context-harness-engineering.html`; kept for reference until the LMS catalog is repointed. |
-| `rag-information-retrieval-course.html` | (editorial) | Pre-standard; candidate for future alignment. |
-| `decision-intelligence-mastery-course.html` | — | Pre-standard. |
-| `mso-decision-memory-systems-course.html` | — | Pre-standard. |
+| ~~`ai-context-engineering-harness-engineering-course-v2.html`~~ | — | **Removed 2026-07-10** — superseded by `context-harness-engineering.html`; LMS catalog repointed (`app/prisma/seed.ts`). Recoverable from git history. |
+| `rag-information-retrieval-course.html` | (editorial) | Pre-standard; candidate for future alignment. De-branded 2026-07-10 (generic production platform, no product names). |
+| `dss-datawarehouse-idss-course.html` | — | Pre-standard-ish. De-branded 2026-07-10 (case-study genericized). |
+| ~~`decision-intelligence-mastery-course.html`~~ | — | **Removed from public repo 2026-07-10** — anchored end-to-end to an internal production codebase (constants, table/function names); not publishable without a clean-room rewrite. In git history. |
+| ~~`mso-decision-memory-systems-course.html`~~ | — | **Removed from public repo 2026-07-10** — internal implementation roadmap for an internal platform; not publishable. In git history. |
 
 When you bring a pre-standard course into line, update its row here.
 

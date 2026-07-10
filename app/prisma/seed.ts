@@ -40,9 +40,9 @@ const COURSES = [
   },
   {
     slug: "harness-engineering",
-    title: "AI Context & Harness Engineering",
-    description: "Build the surrounding harness — context, tools, evaluation — that turns an LLM into a reliable engineering teammate.",
-    htmlPath: "ai-context-engineering-harness-engineering-course-v2.html",
+    title: "Context & Harness Engineering",
+    description: "Kỹ nghệ ngữ cảnh và runtime cho AI — xây harness (context, tools, evaluation) biến LLM thành đồng đội kỹ thuật tin cậy. Claude Code + Codex.",
+    htmlPath: "context-harness-engineering.html",
     categorySlug: "tooling",
     level: "Advanced", durationMin: 150, tags: ["Agents", "Tooling", "Evaluation"],
   },

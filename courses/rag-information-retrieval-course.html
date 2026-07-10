@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Retrieval-Augmented Generation, Layer by Layer · Chatbot Center Edition</title>
+<title>Retrieval-Augmented Generation, Layer by Layer · Production Edition</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;700&family=Fraunces:opsz,wght@9..144,300;9..144,500;9..144,700;9..144,900&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -261,7 +261,7 @@ code{font-family:var(--mono);font-size:13px;background:rgba(10,14,10,0.06);paddi
   <div class="topbar-left">
     <div class="topbar-logo">RAG · <span>layer by layer</span></div>
     <div class="topbar-meta">
-      <span>Chatbot Center edition</span>
+      <span>Production edition</span>
       <span>13 chapters</span>
       <span>~90 min</span>
     </div>
@@ -302,11 +302,11 @@ code{font-family:var(--mono);font-size:13px;background:rgba(10,14,10,0.06);paddi
 <main class="main">
 
 <section class="hero">
-  <div class="hero-eyebrow">Self-paced course · Chatbot Center engineering</div>
+  <div class="hero-eyebrow">Self-paced course · production engineering</div>
   <h1>Retrieval-Augmented Generation, <em>layer by layer</em></h1>
-  <p class="hero-lede">A practitioner's walk from the simplest possible RAG (embed a chunk, find the nearest neighbor) up to the production pipeline running inside the Chatbot Center API today — and one layer further, into a proposal for what comes next. Each chapter adds one idea, shows the failure mode it fixes, and points at the exact file in this repo where it lives.</p>
+  <p class="hero-lede">A practitioner's walk from the simplest possible RAG (embed a chunk, find the nearest neighbor) up to the pipeline of a real production multi-tenant chatbot platform — and one layer further, into a proposal for what comes next. Each chapter adds one idea, shows the failure mode it fixes, and points at where it lives in a real codebase.</p>
   <div class="hero-meta">
-    <span><strong>Codebase</strong> redacted-internal-project · apps/api</span>
+    <span><strong>Codebase</strong> a production multi-tenant chatbot API</span>
     <span><strong>Stack</strong> NestJS · Postgres 18 + pgvector · Drizzle</span>
     <span><strong>You'll touch</strong> /modules/rag</span>
   </div>
@@ -467,14 +467,14 @@ code{font-family:var(--mono);font-size:13px;background:rgba(10,14,10,0.06);paddi
     </tbody>
   </table>
 
-  <p class="code-ref">In this codebase, naive cosine search lives in <code>apps/api/src/modules/rag/chunks.repository.ts → searchSimilar()</code>. Everything else in <code>/modules/rag</code> is a layer added on top.</p>
+  <p class="code-ref">In this codebase, naive cosine search lives in <code>modules/rag/chunks.repository.ts → searchSimilar()</code>. Everything else in <code>/modules/rag</code> is a layer added on top.</p>
 
   <div class="quiz">
     <div class="quiz-label">Test yourself</div>
     <div class="quiz-q">
       <h4>Why must the query be embedded with the <em>same</em> model that embedded the chunks?</h4>
       <button class="quiz-toggle">Show answer</button>
-      <div class="quiz-answer">Two embedding models produce vectors in <em>different</em> coordinate systems. Cosine similarity between vectors from different models is meaningless — geometrically nonsense. The Chatbot Center repo enforces this with a <code>vector_dims(embedding) = ?</code> filter on every retrieval query, and migration <code>0017</code> made <code>document_chunks.embedding</code> dimension-agnostic precisely so the system can hold multiple providers' vectors side by side without ever mixing them.</div>
+      <div class="quiz-answer">Two embedding models produce vectors in <em>different</em> coordinate systems. Cosine similarity between vectors from different models is meaningless — geometrically nonsense. The production codebase enforces this with a <code>vector_dims(embedding) = ?</code> filter on every retrieval query, and migration <code>0017</code> made <code>document_chunks.embedding</code> dimension-agnostic precisely so the system can hold multiple providers' vectors side by side without ever mixing them.</div>
     </div>
     <div class="quiz-q">
       <h4>What does cosine similarity actually measure?</h4>
@@ -499,7 +499,7 @@ code{font-family:var(--mono);font-size:13px;background:rgba(10,14,10,0.06);paddi
 
   <p>Naive chunking splits every N characters. That's how you get a chunk that ends mid-sentence, mid-table, mid-list — and an embedding that represents nothing coherent.</p>
 
-  <p>The fix is <strong>natural-separator chunking</strong>: walk a hierarchy of separators and only fall back to character slicing as a last resort. The Chatbot Center chunker walks paragraph → line → sentence → word.</p>
+  <p>The fix is <strong>natural-separator chunking</strong>: walk a hierarchy of separators and only fall back to character slicing as a last resort. The platform's chunker walks paragraph → line → sentence → word.</p>
 
   <div class="diagram-wrap">
     <svg viewBox="0 0 760 280" xmlns="http://www.w3.org/2000/svg" font-family="Inter,sans-serif" font-size="13">
@@ -530,7 +530,7 @@ code{font-family:var(--mono);font-size:13px;background:rgba(10,14,10,0.06);paddi
 
   <h3>Two more knobs: size and overlap</h3>
 
-  <p><strong>Chunk size</strong> trades context-per-chunk against retrieval precision. Bigger chunks carry more context but dilute the embedding signal across multiple ideas. Chatbot Center uses <code>1500/300</code> for files, <code>1000/200</code> for website pages — smaller for web because pages are shorter and more topical.</p>
+  <p><strong>Chunk size</strong> trades context-per-chunk against retrieval precision. Bigger chunks carry more context but dilute the embedding signal across multiple ideas. The platform uses <code>1500/300</code> for files, <code>1000/200</code> for website pages — smaller for web because pages are shorter and more topical.</p>
 
   <p><strong>Overlap</strong> guards against splits that happen to land mid-thought. With 300-char overlap, a sentence near the boundary appears in both adjacent chunks; whichever chunk you retrieve, the sentence is still there.</p>
 
@@ -541,7 +541,7 @@ code{font-family:var(--mono);font-size:13px;background:rgba(10,14,10,0.06);paddi
     <div class="step"><span class="step-n">B</span><span>300-char overlap: chunk 2 begins with "...lasts 14 days. After that..." → the antecedent is preserved.</span></div>
   </div>
 
-  <p class="code-ref">Chunker code: <code>apps/api/src/modules/rag/processors/chunker.ts</code>. Called from <code>RagService.processSource()</code> with <code>chunkSize: 1500, chunkOverlap: 300</code> for files, <code>1000/200</code> for website pages.</p>
+  <p class="code-ref">Chunker code: <code>modules/rag/processors/chunker.ts</code>. Called from <code>RagService.processSource()</code> with <code>chunkSize: 1500, chunkOverlap: 300</code> for files, <code>1000/200</code> for website pages.</p>
 
   <div class="callout warn">
     <div class="callout-label">Anti-pattern</div>
@@ -553,7 +553,7 @@ code{font-family:var(--mono);font-size:13px;background:rgba(10,14,10,0.06);paddi
     <div class="quiz-q">
       <h4>If overlap is so helpful, why not set it to 50% of chunk size?</h4>
       <button class="quiz-toggle">Show answer</button>
-      <div class="quiz-answer">Two costs. <strong>Storage</strong>: every doubled chunk doubles your vector count and embedding cost. <strong>Retrieval noise</strong>: top-K now returns near-duplicate neighbors that say almost the same thing, and your final context window fills with redundancy. The Chatbot Center default of 20% overlap is the empirical sweet spot — enough to bridge boundaries, not enough to clog top-K with twins.</div>
+      <div class="quiz-answer">Two costs. <strong>Storage</strong>: every doubled chunk doubles your vector count and embedding cost. <strong>Retrieval noise</strong>: top-K now returns near-duplicate neighbors that say almost the same thing, and your final context window fills with redundancy. The platform's default of 20% overlap is the empirical sweet spot — enough to bridge boundaries, not enough to clog top-K with twins.</div>
     </div>
   </div>
 
@@ -573,7 +573,7 @@ code{font-family:var(--mono);font-size:13px;background:rgba(10,14,10,0.06);paddi
 
   <p>The naive index stores <code>(text, vector)</code>. That's structurally agnostic — a chunk has no idea who it came from, when, or whether it's supposed to outrank a sibling. Every modern RAG pipeline carries a typed metadata contract alongside the vector.</p>
 
-  <p>In Chatbot Center, every chunk carries a JSONB <code>metadata</code> object built by <code>KnowledgeMetadataService</code>:</p>
+  <p>In the production platform, every chunk carries a JSONB <code>metadata</code> object built by <code>KnowledgeMetadataService</code>:</p>
 
 <pre><span class="c">// Per-chunk metadata stored in document_chunks.metadata</span>
 {
@@ -645,7 +645,7 @@ code{font-family:var(--mono);font-size:13px;background:rgba(10,14,10,0.06);paddi
     <p>Source-level metadata lives in <code>training_sources.config</code> and is the canonical catalog. Chunk-level metadata lives in <code>document_chunks.metadata</code> and stores only what's <em>local</em> to that chunk. Copying the full source entity catalog into every chunk turns routing pages and index sections into false positives — they'd carry the same entity boost as a real descriptive section. Keep chunk metadata narrow.</p>
   </div>
 
-  <p class="code-ref">Builder: <code>apps/api/src/modules/rag/knowledge-metadata.service.ts</code>. Types: <code>rag.types.ts</code>.</p>
+  <p class="code-ref">Builder: <code>modules/rag/knowledge-metadata.service.ts</code>. Types: <code>rag.types.ts</code>.</p>
 
   <div class="quiz">
     <div class="quiz-label">Test yourself</div>
@@ -674,7 +674,7 @@ code{font-family:var(--mono);font-size:13px;background:rgba(10,14,10,0.06);paddi
 
   <p>The classic fix is <strong>BM25</strong> — Best Matching 25 — a 30-year-old lexical ranking function that scores chunks by how often the query <em>terms</em> (literal words) appear, weighted by how rare those terms are in the corpus (IDF) and damped against chunk length. BM25 doesn't know meaning; it knows literal token overlap. That's exactly the property we want for proper-noun and identifier queries.</p>
 
-  <p>Postgres ships a near-cousin: <code>tsvector</code> + <code>ts_rank_cd</code>, with a GIN index for fast prefix and term lookups. That's what Chatbot Center uses — no separate Elasticsearch cluster needed.</p>
+  <p>Postgres ships a near-cousin: <code>tsvector</code> + <code>ts_rank_cd</code>, with a GIN index for fast prefix and term lookups. That's what The platform uses — no separate Elasticsearch cluster needed.</p>
 
   <div class="diagram-wrap">
     <svg viewBox="0 0 760 280" xmlns="http://www.w3.org/2000/svg" font-family="Inter,sans-serif" font-size="13">
@@ -733,7 +733,7 @@ code{font-family:var(--mono);font-size:13px;background:rgba(10,14,10,0.06);paddi
 <span class="k">WHERE</span> search_vector @@ query
 <span class="k">ORDER BY</span> score <span class="k">DESC</span> <span class="k">LIMIT</span> 20;</pre>
 
-  <p class="code-ref">Migration: <code>apps/api/drizzle/0021_add_search_vector_to_document_chunks.sql</code>. Lexical ranker: <code>retrieval.service.ts → searchLexical()</code>.</p>
+  <p class="code-ref">Migration: <code>migrations/add_search_vector_to_document_chunks.sql</code>. Lexical ranker: <code>retrieval.service.ts → searchLexical()</code>.</p>
 
   <div class="callout">
     <div class="callout-label">Why <code>'simple'</code> not <code>'english'</code>?</div>
@@ -769,7 +769,7 @@ code{font-family:var(--mono);font-size:13px;background:rgba(10,14,10,0.06);paddi
 
   <pre>RRF(d) = Σ over each ranker r:  1 / (k + rank_r(d))</pre>
 
-  <p>The constant <code>k</code> dampens the influence of high-ranked items so a document that's #2 in both lists isn't dominated by a document that's #1 in one and missing from the other. The standard value, used in the Chatbot Center repo, is <code>k = 60</code>.</p>
+  <p>The constant <code>k</code> dampens the influence of high-ranked items so a document that's #2 in both lists isn't dominated by a document that's #1 in one and missing from the other. The standard value, used in the production codebase, is <code>k = 60</code>.</p>
 
   <div class="diagram-wrap">
     <svg viewBox="0 0 760 320" xmlns="http://www.w3.org/2000/svg" font-family="Inter,sans-serif" font-size="13">
@@ -809,7 +809,7 @@ code{font-family:var(--mono);font-size:13px;background:rgba(10,14,10,0.06);paddi
     <div class="diagram-cap"><span>Fig 5 · RRF combines rankings without score normalization</span><a href="rag-course-diagrams/05-rrf.excalidraw">Open in Excalidraw →</a></div>
   </div>
 
-  <p class="code-ref">Implementation: <code>apps/api/src/modules/rag/rrf.ts</code> (53 lines, k=60). Called from <code>RetrievalService.retrieve()</code> after vector and lexical paths complete.</p>
+  <p class="code-ref">Implementation: <code>modules/rag/rrf.ts</code> (53 lines, k=60). Called from <code>RetrievalService.retrieve()</code> after vector and lexical paths complete.</p>
 
   <div class="quiz">
     <div class="quiz-label">Test yourself</div>
@@ -836,7 +836,7 @@ code{font-family:var(--mono);font-size:13px;background:rgba(10,14,10,0.06);paddi
 
   <p>Users type imprecisely. <em>"trial?"</em> by itself is not enough signal — the index has 10,000 chunks and many of them mention "trial" tangentially. The fix is to expand one query into several variants and run all of them, then fuse the results.</p>
 
-  <p>Chatbot Center expands deterministically (no LLM round-trip required) into up to four variants:</p>
+  <p>The platform expands deterministically (no LLM round-trip required) into up to four variants:</p>
 
   <ol>
     <li><strong>Original</strong> — the user's literal text.</li>
@@ -888,10 +888,10 @@ code{font-family:var(--mono);font-size:13px;background:rgba(10,14,10,0.06);paddi
 
   <div class="callout warn">
     <div class="callout-label">Cost watch</div>
-    <p>4 variants × 2 paths = 8 retrievals per user query. Each is cheap individually, but at scale you want both (a) <em>vector embeddings cached</em> per variant — variants that compute to the same string don't re-embed, and (b) a hard cap on variant count. Chatbot Center caps at <code>MULTI_QUERY_MAX_VARIANTS=4</code> by default.</p>
+    <p>4 variants × 2 paths = 8 retrievals per user query. Each is cheap individually, but at scale you want both (a) <em>vector embeddings cached</em> per variant — variants that compute to the same string don't re-embed, and (b) a hard cap on variant count. The platform caps at <code>MULTI_QUERY_MAX_VARIANTS=4</code> by default.</p>
   </div>
 
-  <p class="code-ref">Expander: <code>apps/api/src/modules/rag/multi-query.service.ts</code>.</p>
+  <p class="code-ref">Expander: <code>modules/rag/multi-query.service.ts</code>.</p>
 
   <div class="quiz">
     <div class="quiz-label">Test yourself</div>
@@ -970,7 +970,7 @@ code{font-family:var(--mono);font-size:13px;background:rgba(10,14,10,0.06);paddi
     <p>Section titles are static and structural. A context prefix is generated knowing the <em>entire document</em> and the chunk's role in it: "This excerpt is from the 'pricing' section of the Demo AM 2026 product brief, comparing the Pro and Enterprise tiers." That's information the chunker can't recover from the chunk alone.</p>
   </div>
 
-  <p class="code-ref">Code: <code>apps/api/src/modules/rag/contextual-chunker.service.ts</code>. Failure isolation: per-chunk; if the LLM call fails, falls back to embedding the raw chunk. Concurrency capped at <code>CONTEXTUAL_CHUNKING_MAX=6</code>.</p>
+  <p class="code-ref">Code: <code>modules/rag/contextual-chunker.service.ts</code>. Failure isolation: per-chunk; if the LLM call fails, falls back to embedding the raw chunk. Concurrency capped at <code>CONTEXTUAL_CHUNKING_MAX=6</code>.</p>
 
   <div class="quiz">
     <div class="quiz-label">Test yourself</div>
@@ -1048,7 +1048,7 @@ code{font-family:var(--mono);font-size:13px;background:rgba(10,14,10,0.06);paddi
     <div class="step"><span class="step-n">C</span><span>Final top-1 is the actual Demo AM trial section.</span></div>
   </div>
 
-  <p class="code-ref">Reranker dispatcher: <code>apps/api/src/modules/rag/reranker.service.ts</code> with 5 adapters under <code>reranker/</code> (<code>jina</code>, <code>cohere</code>, <code>openrouter</code>, <code>voyage</code>, <code>llm</code>). Configured by the super-admin in the dashboard (<code>Admin → Settings → Reranking</code>) — see <strong>Chapter 11 § Reranking dispatcher</strong> for why and how. Ships DISABLED in code, but the July 2026 review recommends turning it <strong>on</strong> (Voyage <code>rerank-2.5-lite</code>) as the default posture — it is the single highest-ROI retrieval upgrade. If disabled or unreachable, the pipeline falls back to the domain-aware ranker.</p>
+  <p class="code-ref">Reranker dispatcher: <code>modules/rag/reranker.service.ts</code> with 5 adapters under <code>reranker/</code> (<code>jina</code>, <code>cohere</code>, <code>openrouter</code>, <code>voyage</code>, <code>llm</code>). Configured by the super-admin in the dashboard (<code>Admin → Settings → Reranking</code>) — see <strong>Chapter 11 § Reranking dispatcher</strong> for why and how. Ships DISABLED in code, but the July 2026 review recommends turning it <strong>on</strong> (Voyage <code>rerank-2.5-lite</code>) as the default posture — it is the single highest-ROI retrieval upgrade. If disabled or unreachable, the pipeline falls back to the domain-aware ranker.</p>
 
   <div class="quiz">
     <div class="quiz-label">Test yourself</div>
@@ -1124,7 +1124,7 @@ code{font-family:var(--mono);font-size:13px;background:rgba(10,14,10,0.06);paddi
     <div class="diagram-cap"><span>Fig 9 · CRAG branches the answering layer based on retrieval confidence</span><a href="rag-course-diagrams/09-crag.excalidraw">Open in Excalidraw →</a></div>
   </div>
 
-  <p class="code-ref">Validator: <code>apps/api/src/modules/rag/quality-validator.service.ts</code>. The classification surfaces on <code>RetrievalResult.quality</code> so the chat engine can pick its prompt strategy.</p>
+  <p class="code-ref">Validator: <code>modules/rag/quality-validator.service.ts</code>. The classification surfaces on <code>RetrievalResult.quality</code> so the chat engine can pick its prompt strategy.</p>
 
   <h3>Self-corrective retrieval <em>— acting on the low/empty signal (2026-07)</em></h3>
 
@@ -1210,7 +1210,7 @@ code{font-family:var(--mono);font-size:13px;background:rgba(10,14,10,0.06);paddi
 <section class="chapter" id="ch10">
   <header class="chapter-head">
     <div class="chapter-num">Chapter 10</div>
-    <h2>Entity-aware planning <em>— the Chatbot Center secret sauce</em></h2>
+    <h2>Entity-aware planning <em>— the production secret sauce</em></h2>
     <p class="chapter-lede">Demo has dozens of products with overlapping names: Demo AM, Demo Media, Demo Social, Demo Group. Generic RAG retrieves whichever sibling vector-matches first. That's a quality bug, not a tuning issue.</p>
   </header>
 
@@ -1285,7 +1285,7 @@ code{font-family:var(--mono);font-size:13px;background:rgba(10,14,10,0.06);paddi
     <li>The reranker sees the resolved entity in the query, helping cross-encoder judgment.</li>
   </ul>
 
-  <p class="code-ref">Planner: <code>apps/api/src/modules/rag/retrieval-planner.service.ts</code> (384 lines). Catalog source: <code>training_sources.config.entities</code>, propagated to each chunk's <code>metadata.entities[]</code> at ingestion <em>but only for entities actually mentioned in that chunk</em> — see Ch 3 callout.</p>
+  <p class="code-ref">Planner: <code>modules/rag/retrieval-planner.service.ts</code> (384 lines). Catalog source: <code>training_sources.config.entities</code>, propagated to each chunk's <code>metadata.entities[]</code> at ingestion <em>but only for entities actually mentioned in that chunk</em> — see Ch 3 callout.</p>
 
   <div class="quiz">
     <div class="quiz-label">Test yourself</div>
@@ -1414,7 +1414,7 @@ code{font-family:var(--mono);font-size:13px;background:rgba(10,14,10,0.06);paddi
     <div class="diagram-cap"><span>Fig 11b · The four version states and what retrieval does with each</span><a href="rag-course-diagrams/11b-version-state.excalidraw">Open in Excalidraw →</a></div>
   </div>
 
-  <p class="code-ref">Migrations: <code>apps/api/drizzle/0030_rag_distillation_metadata.sql</code> (partial indexes for <code>dedupOf</code> / <code>kind</code> / <code>versionState</code>), <code>0031_website_pages_metadata.sql</code> (per-page override column). Full proposal still at <code>docs/proposal/proposal-rag-distillation-2026.md</code>.</p>
+  <p class="code-ref">Migrations: <code>the API service/drizzle/0030_rag_distillation_metadata.sql</code> (partial indexes for <code>dedupOf</code> / <code>kind</code> / <code>versionState</code>), <code>0031_website_pages_metadata.sql</code> (per-page override column). Full proposal still at <code>docs/proposal/proposal-rag-distillation-2026.md</code>.</p>
 
   <h3>D. Reranking dispatcher <em>— 5 providers, opt-in</em></h3>
 
@@ -1422,7 +1422,7 @@ code{font-family:var(--mono);font-size:13px;background:rgba(10,14,10,0.06);paddi
 
   <p>Why 5 providers, not 1: each one is a different cost / quality / vendor-lock-in tradeoff. Most platforms only need one at a time, but which one depends on the team.</p>
 
-  <p>The 2026-05-23 catalog refresh (no code-path change, only ordering + pricing) made <strong><code>voyage</code> the recommended default</strong>: it has by far the most generous free tier in May 2026 and no minimum top-up. Dropdown order in <code>Admin → Settings → Reranking</code> and <code>Chatbot → AI Provider → Reranking</code> is recommended-first, served by <code>apps/api/src/modules/rag/reranker/provider-catalog.ts</code>. Persisted enum values and adapter wire formats are unchanged — existing configs keep working.</p>
+  <p>The 2026-05-23 catalog refresh (no code-path change, only ordering + pricing) made <strong><code>voyage</code> the recommended default</strong>: it has by far the most generous free tier in May 2026 and no minimum top-up. Dropdown order in <code>Admin → Settings → Reranking</code> and <code>Chatbot → AI Provider → Reranking</code> is recommended-first, served by <code>modules/rag/reranker/provider-catalog.ts</code>. Persisted enum values and adapter wire formats are unchanged — existing configs keep working.</p>
 
   <table class="compare-table">
     <thead><tr><th>Adapter</th><th>Wire format</th><th>Cost (May 2026)</th><th>Free tier</th><th>When to pick</th></tr></thead>
@@ -1654,7 +1654,7 @@ const config = { ...sourceConfig, ...pageOverride };  // sparse merge — page w
     <p class="chapter-lede">Source-of-truth: <code>docs/CACHING-ARCHITECTURE.md</code>. Everything here is live in production — the educational walk-through of the cache stack that landed and the measured numbers it produced.</p>
   </header>
 
-  <p>Chapters 0–11 made retrieval <em>good</em>. This chapter makes it <em>cheap and fast at scale</em>. Chatbot Center is multi-tenant: many organizations, each with many bots, each serving many users at once. Every one of those users sends a <em>different</em> question — but to the <em>same</em> bot, whose system prompt, business context and instructions are identical for everyone. Without caching the platform re-bills those shared input tokens and re-runs the entire retrieve → generate pipeline on every single turn, of every user, of every bot.</p>
+  <p>Chapters 0–11 made retrieval <em>good</em>. This chapter makes it <em>cheap and fast at scale</em>. The platform is multi-tenant: many organizations, each with many bots, each serving many users at once. Every one of those users sends a <em>different</em> question — but to the <em>same</em> bot, whose system prompt, business context and instructions are identical for everyone. Without caching the platform re-bills those shared input tokens and re-runs the entire retrieve → generate pipeline on every single turn, of every user, of every bot.</p>
 
   <p>The fix is the converged 2025–2026 industry pattern: a <strong>four-layer cache stack</strong>, checked cheapest-and-most-specific first, with <em>every</em> key namespaced by tenant (<code>organization_id</code> + <code>chatbot_id</code>). The layers are complementary, not competing — each catches a cost the others miss.</p>
 
@@ -1765,7 +1765,7 @@ const config = { ...sourceConfig, ...pageOverride };  // sparse merge — page w
 
   <p>For Anthropic the adapter emits the system field as a block array and marks the stable block:</p>
 
-  <pre><span class="c">// apps/api/src/modules/ai-providers/adapters/anthropic.adapter.ts</span>
+  <pre><span class="c">// modules/ai-providers/adapters/anthropic.adapter.ts</span>
 system: [
   { type: <span class="s">'text'</span>, text: stablePrefix, cache_control: { type: <span class="s">'ephemeral'</span> } }, <span class="c">// 📌 cached</span>
   { type: <span class="s">'text'</span>, text: dynamicSuffix }, <span class="c">// 🔁 RAG / visitor / date — not cached</span>
@@ -1773,7 +1773,7 @@ system: [
 <span class="c">// response.usage.cache_read_input_tokens  →  billed at 0.1x input</span>
 <span class="c">// response.usage.cache_creation_input_tokens →  billed at 1.25x (5m) once</span></pre>
 
-  <p class="code-ref">L0 split lives in <code>chat-engine.service.ts</code> (<code>STATIC_RESPONSE_INSTRUCTIONS</code> + <code>stableSystemPrefix</code>/<code>dynamicSystemSuffix</code>). The cache services are in <code>apps/api/src/common/cache/</code>; the L2 table is migration <code>0032_response_cache.sql</code>.</p>
+  <p class="code-ref">L0 split lives in <code>chat-engine.service.ts</code> (<code>STATIC_RESPONSE_INSTRUCTIONS</code> + <code>stableSystemPrefix</code>/<code>dynamicSystemSuffix</code>). The cache services are in <code>the API service/src/common/cache/</code>; the L2 table is migration <code>0032_response_cache.sql</code>.</p>
 
   <h3>Proven numbers <em>— measured, not promised</em></h3>
 
@@ -1836,7 +1836,7 @@ system: [
 
   <div class="diagram-wrap">
     <svg viewBox="0 0 920 580" xmlns="http://www.w3.org/2000/svg" font-family="Inter,sans-serif" font-size="11.5">
-      <text x="460" y="26" text-anchor="middle" font-family="Fraunces,serif" font-size="20" font-weight="500">RAG production pipeline · Chatbot Center</text>
+      <text x="460" y="26" text-anchor="middle" font-family="Fraunces,serif" font-size="20" font-weight="500">RAG production pipeline · the production platform</text>
 
       <text x="20" y="58" font-family="JetBrains Mono,monospace" font-size="11" fill="#1971c2" font-weight="600">INGESTION</text>
       <rect x="20" y="68" width="100" height="48" fill="#ebe5d4" stroke="#0a0e0a" rx="3"/>
@@ -1969,21 +1969,21 @@ system: [
   <table class="compare-table">
     <thead><tr><th>Layer</th><th>Where</th></tr></thead>
     <tbody>
-      <tr><td>Chunking (Ch 2)</td><td><code>apps/api/src/modules/rag/processors/chunker.ts</code></td></tr>
-      <tr><td>Metadata (Ch 3)</td><td><code>apps/api/src/modules/rag/knowledge-metadata.service.ts</code></td></tr>
-      <tr><td>Lexical hybrid (Ch 4)</td><td><code>apps/api/drizzle/0021_add_search_vector_to_document_chunks.sql</code></td></tr>
-      <tr><td>RRF (Ch 5)</td><td><code>apps/api/src/modules/rag/rrf.ts</code></td></tr>
-      <tr><td>Multi-query (Ch 6)</td><td><code>apps/api/src/modules/rag/multi-query.service.ts</code></td></tr>
-      <tr><td>Contextual chunking (Ch 7)</td><td><code>apps/api/src/modules/rag/contextual-chunker.service.ts</code></td></tr>
-      <tr><td>Reranker dispatcher (Ch 8 + Ch 11 § D)</td><td><code>apps/api/src/modules/rag/reranker.service.ts</code> + 5 adapters under <code>reranker/</code></td></tr>
-      <tr><td>CRAG (Ch 9)</td><td><code>apps/api/src/modules/rag/quality-validator.service.ts</code></td></tr>
+      <tr><td>Chunking (Ch 2)</td><td><code>modules/rag/processors/chunker.ts</code></td></tr>
+      <tr><td>Metadata (Ch 3)</td><td><code>modules/rag/knowledge-metadata.service.ts</code></td></tr>
+      <tr><td>Lexical hybrid (Ch 4)</td><td><code>migrations/add_search_vector_to_document_chunks.sql</code></td></tr>
+      <tr><td>RRF (Ch 5)</td><td><code>modules/rag/rrf.ts</code></td></tr>
+      <tr><td>Multi-query (Ch 6)</td><td><code>modules/rag/multi-query.service.ts</code></td></tr>
+      <tr><td>Contextual chunking (Ch 7)</td><td><code>modules/rag/contextual-chunker.service.ts</code></td></tr>
+      <tr><td>Reranker dispatcher (Ch 8 + Ch 11 § D)</td><td><code>modules/rag/reranker.service.ts</code> + 5 adapters under <code>reranker/</code></td></tr>
+      <tr><td>CRAG (Ch 9)</td><td><code>modules/rag/quality-validator.service.ts</code></td></tr>
       <tr><td>Self-corrective retrieval (Ch 9)</td><td><code>RetrievalService.recallAndRank(..., { relaxFilters })</code> · gate <code>RAG_SELF_CORRECT_ENABLED</code></td></tr>
-      <tr><td>Answer-layer injection hardening</td><td><code>apps/api/src/modules/chat-engine/chat-engine.service.ts</code> (STATIC_RESPONSE_INSTRUCTIONS + <code>sanitizePromptInterpolation</code>) · red-team corpus in <code>tests/chat-engine.redteam.spec.ts</code></td></tr>
-      <tr><td>Planner (Ch 10) + scopeMode + synonym merge (Ch 11 § F, G)</td><td><code>apps/api/src/modules/rag/retrieval-planner.service.ts</code></td></tr>
-      <tr><td>Orchestrator</td><td><code>apps/api/src/modules/rag/retrieval.service.ts</code> (the conductor)</td></tr>
-      <tr><td>Dedup / Q→A / versionState (Ch 11 § A, B, C)</td><td><code>apps/api/src/modules/rag/dedup.service.ts</code>, <code>qa-expander.service.ts</code>, migration <code>0030</code></td></tr>
-      <tr><td>Per-page metadata override (Ch 11 § E)</td><td><code>apps/api/src/modules/website-pages/website-pages.service.ts</code> + migration <code>0031</code></td></tr>
-      <tr><td>Deploy + curation scripts</td><td><code>scripts/deploy-rag-update.sh</code>, <code>scripts/curation-configs/*.json</code>, <code>apps/api/src/scripts/curate-bot-metadata.ts</code></td></tr>
+      <tr><td>Answer-layer injection hardening</td><td><code>modules/chat-engine/chat-engine.service.ts</code> (STATIC_RESPONSE_INSTRUCTIONS + <code>sanitizePromptInterpolation</code>) · red-team corpus in <code>tests/chat-engine.redteam.spec.ts</code></td></tr>
+      <tr><td>Planner (Ch 10) + scopeMode + synonym merge (Ch 11 § F, G)</td><td><code>modules/rag/retrieval-planner.service.ts</code></td></tr>
+      <tr><td>Orchestrator</td><td><code>modules/rag/retrieval.service.ts</code> (the conductor)</td></tr>
+      <tr><td>Dedup / Q→A / versionState (Ch 11 § A, B, C)</td><td><code>modules/rag/dedup.service.ts</code>, <code>qa-expander.service.ts</code>, migration <code>0030</code></td></tr>
+      <tr><td>Per-page metadata override (Ch 11 § E)</td><td><code>modules/website-pages/website-pages.service.ts</code> + migration <code>0031</code></td></tr>
+      <tr><td>Deploy + curation scripts</td><td><code>scripts/deploy-rag-update.sh</code>, <code>scripts/curation-configs/*.json</code>, <code>scripts/curate-bot-metadata.ts</code></td></tr>
     </tbody>
   </table>
 
