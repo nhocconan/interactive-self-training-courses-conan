@@ -1,13 +1,25 @@
 /* Seed: admin, hr, sample staff users with grants and progress. */
+import { randomBytes } from "node:crypto";
 import { PrismaClient } from "@prisma/client";
 import bcrypt from "bcryptjs";
 
+// Constructing PrismaClient loads app/.env into process.env — read seed config after it.
 const prisma = new PrismaClient();
 
-const DEFAULT_PWD = "REDACTED_PASSWORD";
+/** Random but policy-safe: upper + lower + digit + symbol. */
+function generatePassword(): string {
+  return `${randomBytes(12).toString("base64url")}Aa1!`;
+}
+
+// Empty-string env vars must fall back too, so treat blank as unset.
+const envPassword = process.env.SEED_PASSWORD?.trim();
+
+const ADMIN_EMAIL = process.env.SEED_ADMIN_EMAIL?.trim() || "admin@demo.local";
+const SEED_PASSWORD = envPassword || generatePassword();
+const PASSWORD_WAS_GENERATED = !envPassword;
 
 const USERS = [
-  { email: "REDACTED_EMAIL", name: "Demo Admin", role: "ADMIN" as const, department: "IT", jobTitle: "Platform Owner" },
+  { email: ADMIN_EMAIL, name: "Demo Admin", role: "ADMIN" as const, department: "IT", jobTitle: "Platform Owner" },
   { email: "hr@demo.com", name: "Demo HR", role: "HR" as const, department: "People Ops", jobTitle: "HR Business Partner" },
   { email: "demo.marketing@demo.com", name: "Demo Marketing", role: "USER" as const, department: "Marketing", jobTitle: "Marketing Executive" },
   { email: "demo.engineering@demo.com", name: "Demo Engineering", role: "USER" as const, department: "Engineering", jobTitle: "Engineering Lead" },
@@ -52,7 +64,7 @@ async function main() {
   console.log("Seeding…");
 
   // 1. Users
-  const hash = await bcrypt.hash(DEFAULT_PWD, 10);
+  const hash = await bcrypt.hash(SEED_PASSWORD, 10);
   for (const u of USERS) {
     await prisma.user.upsert({
       where: { email: u.email },
@@ -247,7 +259,7 @@ async function main() {
   }
 
   // 8. Welcome announcement
-  const admin = await prisma.user.findUnique({ where: { email: "REDACTED_EMAIL" } });
+  const admin = await prisma.user.findUnique({ where: { email: ADMIN_EMAIL } });
   if (admin && (await prisma.announcement.count()) === 0) {
     await prisma.announcement.create({
       data: {
@@ -260,7 +272,12 @@ async function main() {
   }
 
   console.log("Seed complete.");
-  console.log("Users (password for all is", DEFAULT_PWD + "):");
+  if (PASSWORD_WAS_GENERATED) {
+    console.log(`\n  ⚠ SEED_PASSWORD was not set — generated one for this run:\n\n      ${SEED_PASSWORD}\n`);
+    console.log("  Put it in app/.env (see app/.env.example) to keep it across re-seeds.\n");
+  } else {
+    console.log("Users (password for all: $SEED_PASSWORD from app/.env):");
+  }
   for (const u of USERS) console.log(`  - ${u.email}  · ${u.role}  · ${u.department}`);
 }
 

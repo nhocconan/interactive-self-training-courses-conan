@@ -5,7 +5,8 @@ Everything an Admin can do from the UI.
 ## 1 · Sign in
 
 - URL: `http://<host>:3940/login`
-- Seeded admin: **REDACTED_EMAIL / REDACTED_PASSWORD** (change immediately).
+- Seeded admin: `SEED_ADMIN_EMAIL` / `SEED_PASSWORD` from `app/.env`
+  (see `app/.env.example`). Change the password immediately after first login.
 
 ## 2 · Console overview (`/admin`)
 

@@ -4,10 +4,7 @@
  * rate-limit test deliberately exhausts the AUTH bucket and must run last.
  */
 import { test, expect } from "@playwright/test";
-
-const ADMIN = { email: "REDACTED_EMAIL", password: "REDACTED_PASSWORD" };
-const DEMO_MARKETING = { email: "demo.marketing@demo.com", password: "REDACTED_PASSWORD" };
-const DEMO_IT = { email: "demo.it@demo.com", password: "REDACTED_PASSWORD" };
+import { ADMIN, DEMO_IT } from "./creds";
 
 async function login(page: import("@playwright/test").Page, email: string, password: string) {
   await page.goto("/login");

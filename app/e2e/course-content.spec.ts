@@ -3,8 +3,7 @@
  * inside the viewer iframe, and that auto-complete on scroll is GONE.
  */
 import { test, expect } from "@playwright/test";
-
-const ADMIN = { email: "REDACTED_EMAIL", password: "REDACTED_PASSWORD" };
+import { ADMIN } from "./creds";
 
 async function login(page: import("@playwright/test").Page) {
   await page.goto("/login");

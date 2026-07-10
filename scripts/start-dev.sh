@@ -43,13 +43,20 @@ done
 
 cd "$ROOT/app"
 
-# 5. Dependencies
+# 5. Env file — credentials live here, never in git.
+if [ ! -f .env ]; then
+  echo "✗ app/.env not found."
+  echo "  Run: cp app/.env.example app/.env   then set AUTH_SECRET and SEED_PASSWORD."
+  exit 1
+fi
+
+# 6. Dependencies
 if [ ! -d node_modules ]; then
   echo "▸ Installing app dependencies (first run only)…"
   npm ci
 fi
 
-# 6. Schema + seed (idempotent)
+# 7. Schema + seed (idempotent)
 echo "▸ Syncing Prisma schema…"
 npx prisma db push --skip-generate >/dev/null 2>&1
 
@@ -63,14 +70,14 @@ npx tsx prisma/seed.ts >/dev/null 2>&1 || {
   exit 1
 }
 
-# 7. Start Next.js dev in the background (detached from this shell)
+# 8. Start Next.js dev in the background (detached from this shell)
 echo "▸ Starting Next.js dev on :$PORT (logs → logs/dev.log)…"
 : > "$DEV_LOG"
 nohup npm run dev >"$DEV_LOG" 2>&1 &
 echo $! > "$DEV_PID_FILE"
 disown || true
 
-# 8. Wait until HTTP is healthy
+# 9. Wait until HTTP is healthy
 echo "▸ Waiting for the portal to come up…"
 ready=0
 for _ in $(seq 1 60); do
@@ -96,7 +103,7 @@ cat <<EOF
 
    App      : http://localhost:$PORT
    Postgres : 127.0.0.1:3942          (lms / lms) — loopback only
-   Admin    : REDACTED_EMAIL  /  REDACTED_PASSWORD
+   Admin    : \$SEED_ADMIN_EMAIL / \$SEED_PASSWORD  (see app/.env)
 
    Logs     : logs/dev.log  (tail -f logs/dev.log)
    PID      : $PID

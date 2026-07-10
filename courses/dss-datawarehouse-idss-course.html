@@ -1311,7 +1311,7 @@ footer.site{border-top:1px solid var(--border);padding:26px 24px;text-align:cent
       </table>
     </div>
 
-    <p>Nhưng “sau ETL data đã sạch” là một lời hứa, không phải bằng chứng. Hệ ví dụ biến nó thành bằng chứng bằng <strong>đối soát tự động</strong>: cổng <span class="mono">verify:data</span> khẳng định <em>headline == SUM(các dòng bảng hiển thị)</em>, <em>rolling == period</em>, và <em>không cộng trùng khi merge</em>. Điểm mấu chốt: giá trị KỲ VỌNG neo vào một <strong>mốc-thật bên ngoài</strong> (con số khách xác nhận, ví dụ NMV Mar–May của REDACTED_CLIENT = <span class="mono">REDACTED_NUMBER ₫</span>) — không bao giờ neo vào một lần tính lại bằng chính đoạn code đó. Và một nguyên tắc vàng: <em>“một chênh lệch KHÔNG mặc định là bug”</em> — phải xác nhận ngữ nghĩa với ground truth trước khi “sửa” bất kỳ con số nào.</p>
+    <p>Nhưng “sau ETL data đã sạch” là một lời hứa, không phải bằng chứng. Hệ ví dụ biến nó thành bằng chứng bằng <strong>đối soát tự động</strong>: cổng <span class="mono">verify:data</span> khẳng định <em>headline == SUM(các dòng bảng hiển thị)</em>, <em>rolling == period</em>, và <em>không cộng trùng khi merge</em>. Điểm mấu chốt: giá trị KỲ VỌNG neo vào một <strong>mốc-thật bên ngoài</strong> (một con số NMV theo kỳ đã được khách xác nhận bằng văn bản, rồi đóng băng lại làm mốc) — không bao giờ neo vào một lần tính lại bằng chính đoạn code đó. Và một nguyên tắc vàng: <em>“một chênh lệch KHÔNG mặc định là bug”</em> — phải xác nhận ngữ nghĩa với ground truth trước khi “sửa” bất kỳ con số nào.</p>
 
     <div class="callout danger"><div class="callout-title">Bẫy kinh điển: rò mép tháng (boundary leak)</div><p>Nếu bước Transform trộn mốc thời gian UTC vào đường ngày, nửa đêm giờ Việt Nam (00:00 ICT = 17:00 UTC hôm trước) sẽ kéo một ngày của tháng sau lọt vào tháng này — báo cáo lệch đúng 1 ngày ở mép tháng. Cách chặn: mọi mốc ngày dùng chung một helper giờ Việt Nam (ICT, UTC+7).</p></div>
 
@@ -1321,7 +1321,7 @@ footer.site{border-top:1px solid var(--border);padding:26px 24px;text-align:cent
         <div class="accordion-body">Khi số trên hệ khác với export của khách, đừng vội sửa. Xác nhận cách khách định nghĩa (tính theo ngày đặt hay ngày giao?) — chênh lệch có thể do ngữ nghĩa, không phải lỗi hệ.</div>
       </details>
       <details class="accordion"><summary><span class="chev">▶</span><span class="accordion-tag">Kỹ sư dữ liệu (hệ ví dụ)</span><span>Mapping là DATA, đối soát là code</span></summary>
-        <div class="accordion-body">Thay vì viết <span class="mono">if (source === 'shopee')</span> rải khắp nơi, biến đổi được khai báo thành template có version (bất biến khi đang active). Mỗi bề mặt có số đều có một assertion trong <span class="mono">REDACTED_SYMBOL</span>.</div>
+        <div class="accordion-body">Thay vì viết <span class="mono">if (source === 'shopee')</span> rải khắp nơi, biến đổi được khai báo thành template có version (bất biến khi đang active). Mỗi bề mặt có số đều có một assertion trong tầng đối soát dữ liệu.</div>
       </details>
     </div>
 
@@ -1586,7 +1586,7 @@ footer.site{border-top:1px solid var(--border);padding:26px 24px;text-align:cent
 
     <div class="callout insight"><div class="callout-title">Glossary — một con số, một công thức</div><p>Bước cuối gắn mỗi fact attribute với một biểu thức: <span class="mono">quantity sold = SUM(SALE.qty)</span>; <span class="mono">total returns = SUM(SALE.qty × SALE.unitPrice)</span>; <span class="mono">number of customers = COUNT(SALE)</span>. Glossary chính là hợp đồng: một định nghĩa duy nhất cho mỗi số.</p></div>
 
-    <p><strong>Ánh xạ hệ ví dụ.</strong> Cái glossary “một con số = một công thức” chính là luật của hệ ví dụ: <em>ONE definition per metric behind ONE helper</em> — ví dụ phép merge dữ liệu creator chỉ tồn tại đúng một lần trong <span class="mono">REDACTED_SYMBOL</span>, mọi bề mặt đều gọi lại nó, không ai chép công thức đi nơi khác. Grain của các rollup <span class="mono">agg_*</span> là ICT-day. Còn luật “headline == SUM(các dòng)” chính là một bài kiểm additivity chạy tự động.</p>
+    <p><strong>Ánh xạ hệ ví dụ.</strong> Cái glossary “một con số = một công thức” chính là luật của hệ ví dụ: <em>ONE definition per metric behind ONE helper</em> — ví dụ phép merge dữ liệu creator chỉ tồn tại đúng một lần trong một helper SQL duy nhất, mọi bề mặt đều gọi lại nó, không ai chép công thức đi nơi khác. Grain của các rollup <span class="mono">agg_*</span> là ICT-day. Còn luật “headline == SUM(các dòng)” chính là một bài kiểm additivity chạy tự động.</p>
 
     <div>
       <span class="eyebrow" style="display:block;margin-bottom:10px">Áp dụng</span>
@@ -2276,7 +2276,7 @@ footer.site{border-top:1px solid var(--border);padding:26px 24px;text-align:cent
       </ul>
     </div>
 
-    <p>Một sáng, báo cáo <strong>NMV</strong> (net merchandise value — doanh thu thuần sau giảm giá) tháng của shop REDACTED_CLIENT nhảy vọt gần gấp đôi. Không phải bán chạy: một file Shopee bị giải mã nhầm — công cụ đọc trúng <em>sheet pivot</em> ở đầu file thay vì sheet dữ liệu, nhân đôi vài trăm dòng. Nếu con số đó chạy thẳng lên KPI headline, cả quyết định tuần dựa trên nó đều sai. Đây là bài học kinh điển của mọi hệ quyết định dựa-trên-dữ-liệu: <strong>rác vào, rác ra</strong> ("garbage in, garbage out") — hay như sách nói, "dữ liệu chất lượng kém → mô hình học ra tồi".</p>
+    <p>Một sáng, báo cáo <strong>NMV</strong> (net merchandise value — doanh thu thuần sau giảm giá) tháng của một shop mỹ phẩm nhảy vọt gần gấp đôi. Không phải bán chạy: một file Shopee bị giải mã nhầm — công cụ đọc trúng <em>sheet pivot</em> ở đầu file thay vì sheet dữ liệu, nhân đôi vài trăm dòng. Nếu con số đó chạy thẳng lên KPI headline, cả quyết định tuần dựa trên nó đều sai. Đây là bài học kinh điển của mọi hệ quyết định dựa-trên-dữ-liệu: <strong>rác vào, rác ra</strong> ("garbage in, garbage out") — hay như sách nói, "dữ liệu chất lượng kém → mô hình học ra tồi".</p>
 
     <div class="concept">
       <span class="eyebrow">Khái niệm lõi</span>
@@ -2370,7 +2370,7 @@ footer.site{border-top:1px solid var(--border);padding:26px 24px;text-align:cent
         <div class="accordion-body"><strong>Filter</strong> chấm điểm biến chỉ bằng dữ liệu huấn luyện (MI, Information Gain, RELIEF-F) — rẻ, không nhìn mô hình. <strong>Wrapper</strong> lặp có phản hồi từ một mô hình ML (tiến: thêm dần; lùi: bỏ dần) — chính xác hơn nhưng đắt. <strong>Embedded</strong> chọn đặc trưng ngay bên trong quá trình huấn luyện (cây quyết định tự bỏ biến không dùng). Mẹo thực chiến: khi tín hiệu trải rộng hoặc lớp mất cân bằng, <em>trọng số hoá</em> đặc trưng (w∈[0,1]) thường tốt hơn chọn cứng.</div>
       </details>
       <details class="accordion"><summary><span class="chev">▶</span><span class="accordion-tag">hệ ví dụ</span><span>Meta-data + đối soát oracle</span></summary>
-        <div class="accordion-body">Trong hệ ví dụ, <span class="mono">mapping transforms</span> là DATA có version: mặc định <em>strip currency</em>, parse ngày <span class="mono">YYYY-MM-DD</span>. Meta-data "đơn vị đo" và "khoảng hợp lệ" chính là guard bắt lỗi VND-integer, cột % ngoài [0,100]. Cuối cùng <span class="mono">verify:data</span> là "sample error được tự động hoá": headline == SUM(dòng), rolling == period — và giá trị kỳ vọng neo vào một <em>oracle ngoài</em> đã được khách xác nhận (REDACTED_CLIENT Mar–May NMV = REDACTED_NUMBER VND), không phải một lần suy diễn lại chính code.</div>
+        <div class="accordion-body">Trong hệ ví dụ, <span class="mono">mapping transforms</span> là DATA có version: mặc định <em>strip currency</em>, parse ngày <span class="mono">YYYY-MM-DD</span>. Meta-data "đơn vị đo" và "khoảng hợp lệ" chính là guard bắt lỗi VND-integer, cột % ngoài [0,100]. Cuối cùng <span class="mono">verify:data</span> là "sample error được tự động hoá": headline == SUM(dòng), rolling == period — và giá trị kỳ vọng neo vào một <em>oracle ngoài</em> đã được khách xác nhận (một con số NMV theo kỳ, đóng băng lại), không phải một lần suy diễn lại chính code.</div>
       </details>
     </div>
 
@@ -2702,7 +2702,7 @@ footer.site{border-top:1px solid var(--border);padding:26px 24px;text-align:cent
       </ul>
     </div>
 
-    <p>Shop REDACTED_CLIENT muốn gợi ý "combo nên bán tuần này". Nhưng shop mới, ít lịch sử mua-cùng-nhau — ma trận thưa (<strong>sparse</strong>) và thiếu điểm khởi đầu (<strong>cold-start</strong>). Nếu chỉ gợi ý theo "cái đang hot" thì luôn ra vài SKU phổ biến (<strong>popularity bias</strong>) và chôn vùi sản phẩm mới đáng lên. Làm sao gợi ý tử tế khi dữ liệu 1p mỏng?</p>
+    <p>Một shop mỹ phẩm mới mở muốn gợi ý "combo nên bán tuần này". Nhưng shop mới, ít lịch sử mua-cùng-nhau — ma trận thưa (<strong>sparse</strong>) và thiếu điểm khởi đầu (<strong>cold-start</strong>). Nếu chỉ gợi ý theo "cái đang hot" thì luôn ra vài SKU phổ biến (<strong>popularity bias</strong>) và chôn vùi sản phẩm mới đáng lên. Làm sao gợi ý tử tế khi dữ liệu 1p mỏng?</p>
 
     <div class="concept">
       <span class="eyebrow">Khái niệm lõi</span>
@@ -3018,8 +3018,8 @@ footer.site{border-top:1px solid var(--border);padding:26px 24px;text-align:cent
         <thead><tr><th>Tiêu chí (sách)</th><th>Câu hỏi nó hỏi</th><th>Cơ chế thật</th></tr></thead>
         <tbody>
           <tr><td><strong>Verification</strong> — số tái lập?</td><td>Đầu ra dựng đúng chưa</td><td><code>verify:data</code> đối soát: headline == SUM(dòng bảng); rolling == period; merge không đếm trùng</td></tr>
-          <tr><td>Neo ground-truth</td><td>Số kỳ vọng lấy từ đâu</td><td>Oracle đông cứng = số client xác nhận (REDACTED_CLIENT Mar–May NMV = <strong>REDACTED_NUMBER VND</strong>) — KHÔNG tự suy lại từ chính code</td></tr>
-          <tr><td>"Lệch ≠ bug"</td><td>Gặp số lệch thì làm gì</td><td>§55: xác nhận ngữ nghĩa với ground-truth ngoài TRƯỚC khi "sửa"</td></tr>
+          <tr><td>Neo ground-truth</td><td>Số kỳ vọng lấy từ đâu</td><td>Oracle đông cứng = một con số NMV theo kỳ do khách xác nhận, đóng băng lại — KHÔNG tự suy lại từ chính code</td></tr>
+          <tr><td>"Lệch ≠ bug"</td><td>Gặp số lệch thì làm gì</td><td>Xác nhận ngữ nghĩa với ground-truth ngoài TRƯỚC khi "sửa"</td></tr>
           <tr><td>Task performance — chất lượng quyết định</td><td>Đề xuất có đúng không</td><td>Track record: <strong>~70% trúng trên 12 quyết định</strong> đo thật (org demo, tuần T1→T6)</td></tr>
           <tr><td>Xếp thứ tự + độ tin</td><td>Có trung thực về độ chắc</td><td>Hiệu chuẩn (calibration) + biên nhận; confidence = |r|·k/(k+3), tín hiệu yếu → "—"</td></tr>
           <tr><td>Bền theo thời gian</td><td>Mô hình có trôi không</td><td>Toán trôi PSI/KS + champion/challenger (L5)</td></tr>

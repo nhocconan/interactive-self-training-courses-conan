@@ -11,6 +11,9 @@ up LDAP / Active Directory single sign-on.
 ## Quick start
 
 ```bash
+# One-time: create your local env file, then set AUTH_SECRET + SEED_PASSWORD
+cp app/.env.example app/.env
+
 # Bring up Postgres + run migrations + seed + start Next dev
 bash scripts/start-dev.sh
 
@@ -30,14 +33,16 @@ bash scripts/stop-dev.sh    # or stop-prod.sh
 
 ## Seeded admin credentials
 
-> ⚠️ **Change this password the first time you log in.** Stored only because
-> you asked for it in writing.
+The seed reads `SEED_ADMIN_EMAIL` and `SEED_PASSWORD` from `app/.env` — see
+[`app/.env.example`](./app/.env.example). Credentials are **never** committed.
 
-```
-Email    : REDACTED_EMAIL
-Password : REDACTED_PASSWORD
-Role     : ADMIN
-```
+- If `SEED_PASSWORD` is set, the seeded ADMIN uses it.
+- If it is unset, the seed generates a random password and prints it **once**
+  in the seed output. Copy it into `app/.env` to keep it across re-seeds.
+
+> ⚠️ Change the admin password after first login. The same values are used by
+> the Playwright e2e suite, so `app/.env` must match what the database was
+> seeded with.
 
 A LOCAL user is created by the seed; you can also enable LDAP/AD via
 **Admin → Settings**.

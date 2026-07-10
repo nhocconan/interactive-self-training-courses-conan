@@ -82,7 +82,8 @@ feature in a browser before reporting the task as complete."*
   - [ ] The golden path of the changed feature.
   - [ ] One edge case (empty state, error state, slow network).
   - [ ] Each user role that sees the change (`USER`, `HR`, `ADMIN`). Test
-    accounts: `REDACTED_EMAIL` / `REDACTED_PASSWORD` (admin); seed has user/HR samples.
+    accounts come from the seed; credentials live in `app/.env`
+    (`SEED_ADMIN_EMAIL` / `SEED_PASSWORD`, see `app/.env.example`).
   - [ ] Mobile width (Chrome DevTools at 375px).
   - [ ] Dark mode (theme toggle).
 - [ ] **If I can't test the UI** (no browser available, etc.), say so

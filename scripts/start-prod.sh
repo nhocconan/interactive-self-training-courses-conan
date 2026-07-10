@@ -7,4 +7,4 @@ docker compose up -d --build
 echo
 echo "App      : http://localhost:3940"
 echo "Postgres : localhost:3942"
-echo "Admin    : REDACTED_EMAIL  /  REDACTED_PASSWORD"
+echo "Admin    : \$SEED_ADMIN_EMAIL / \$SEED_PASSWORD  (see app/.env)"

@@ -19,7 +19,7 @@ slice that real users can adopt; nothing here is shelfware.
 | HR dashboard: per-employee completion stats | ✅ |
 | Docker compose (db + web) — host ports 3940 (app), 3942 (db, loopback only) | ✅ |
 | start-dev / stop-dev / start-prod / stop-prod scripts | ✅ |
-| Seeded admin `REDACTED_EMAIL / REDACTED_PASSWORD` | ✅ |
+| Seeded admin (credentials from `app/.env`) | ✅ |
 | DESIGN.md (Stitch format) + architecture docs | ✅ |
 
 ## P1.5 — Production-grade core *(✅ shipped)*

@@ -1,6 +1,6 @@
 import { test, expect, type Page } from "@playwright/test";
+import { ADMIN } from "./creds";
 
-const ADMIN = { email: "REDACTED_EMAIL", password: "REDACTED_PASSWORD" };
 const TEST_PREFIX = "[E2E] Ollama ";
 
 async function login(page: Page) {

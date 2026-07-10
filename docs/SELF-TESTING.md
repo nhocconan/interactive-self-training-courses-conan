@@ -3,15 +3,16 @@
 You **must** run the relevant section below **before** opening a PR.
 Paste the section into the PR description and tick what you exercised.
 
-The seeded test users (see `seed.ts`) cover every role:
+The seeded test users (see `seed.ts`) cover every role. **All of them share the
+password in `SEED_PASSWORD` (`app/.env`)** — never hardcode it in docs or tests.
 
-| Email                          | Password       | Role  | Notes                           |
-|--------------------------------|----------------|-------|---------------------------------|
-| `REDACTED_EMAIL`                    | `REDACTED_PASSWORD`  | ADMIN | Platform owner                  |
-| `hr@demo.com`           | `REDACTED_PASSWORD`  | HR    | Sees all reports, no mutations  |
-| `demo.marketing@demo.com` | `REDACTED_PASSWORD` | USER  | AI course grant                 |
-| `demo.engineering@demo.com` | `REDACTED_PASSWORD` | USER | Tooling category grant          |
-| `demo.it@demo.com`       | `REDACTED_PASSWORD`  | USER  | No grants — for empty-state QA  |
+| Email                       | Password              | Role  | Notes                          |
+|-----------------------------|-----------------------|-------|--------------------------------|
+| `$SEED_ADMIN_EMAIL`         | `$SEED_PASSWORD`      | ADMIN | Platform owner                 |
+| `hr@demo.com`               | `$SEED_PASSWORD`      | HR    | Sees all reports, no mutations |
+| `demo.marketing@demo.com`   | `$SEED_PASSWORD`      | USER  | AI course grant                |
+| `demo.engineering@demo.com` | `$SEED_PASSWORD`      | USER  | Tooling category grant         |
+| `demo.it@demo.com`          | `$SEED_PASSWORD`      | USER  | No grants — for empty-state QA |
 
 ---
 
@@ -19,7 +20,7 @@ The seeded test users (see `seed.ts`) cover every role:
 
 - [ ] `bash scripts/start-dev.sh` boots without errors.
 - [ ] http://localhost:3940/login renders without console errors.
-- [ ] Log in as `REDACTED_EMAIL` → land on `/dashboard`.
+- [ ] Log in as the seeded admin (`$SEED_ADMIN_EMAIL`) → land on `/dashboard`.
 - [ ] All nav links navigate (Dashboard, Courses, HR, Users, Catalog, Settings).
 - [ ] Light → Dark → System toggle works; no flash of unstyled content.
 - [ ] Log out → cookie cleared → `/login`.
