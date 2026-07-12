@@ -37,7 +37,7 @@ const COURSES = [
   {
     slug: "demo-ai-prompting",
     title: "Demo AI Practical Playbook",
-    description: "Hands-on AI playbook for production work at Demo — model selection (incl. Opus 4.8 + Dynamic Workflows), prompting patterns, agents, and evaluation loops. Bilingual VI/EN.",
+    description: "Playbook thực hành về giao việc có kiểm chứng, chọn model theo eval, context, prompting, multimedia và vận hành AI an toàn. Bản Việt chốt 12/07/2026; bản Anh đang đồng bộ lại.",
     htmlPath: "ai-practical-playbook.html",
     categorySlug: "ai-engineering",
     level: "Beginner", durationMin: 120, tags: ["AI", "Prompting", "Models", "Playbook"],
