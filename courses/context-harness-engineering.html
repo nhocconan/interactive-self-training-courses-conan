@@ -301,12 +301,12 @@ footer.site{border-top:1px solid var(--border);padding:26px 24px;text-align:cent
               <tr><td><strong>Tool registry</strong></td><td>Tập tool đã đăng ký; tên + mô tả + schema của chúng nhét vào context trên mọi lệnh gọi (chi phí cố định thường trực).</td></tr>
               <tr><td><strong>JIT retrieval</strong></td><td>Lấy thông tin <em>khi cần</em> qua tool search thay vì nạp sẵn tất cả — giảm token, tăng độ chính xác.</td></tr>
               <tr><td><strong>Compaction</strong></td><td>Tóm tắt-và-reset lịch sử hội thoại đã phình để lấy lại ngân sách token và chống context rot.</td></tr>
-              <tr><td><strong>Working memory / scratchpad</strong></td><td>State agent ngoại hóa ra file/ghi chú thay vì giữ hết trong cửa sổ context.</td></tr>
+              <tr><td><strong>Working memory / scratchpad</strong></td><td>State agent được ghi ra file/ghi chú bên ngoài thay vì giữ hết trong cửa sổ context.</td></tr>
               <tr><td><strong>Subagent</strong></td><td>Agent con chạy việc nặng trong ngữ cảnh cô lập, chỉ trả tóm tắt gọn về agent cha.</td></tr>
               <tr><td><strong>Structured output</strong></td><td>Ép mô hình trả về theo schema (JSON) để hạ tầng tiêu thụ được &amp; kiểm định được.</td></tr>
               <tr><td><strong>Harness</strong></td><td>Toàn bộ runtime quanh mô hình: tool, loop, memory, recovery, observability, authorization — nơi tính năng AI thành sản phẩm.</td></tr>
               <tr><td><strong>Hook</strong></td><td>Điểm móc trong harness tự động chạy hành động (ví dụ chạy test sau mỗi edit) mà không cần model chủ động gọi.</td></tr>
-              <tr><td><strong>MCP / ToolSearch</strong></td><td>MCP là chuẩn kết nối tool bên ngoài vào agent; ToolSearch/registry trì hoãn chỉ nạp schema tool thực sự cần, hạ thuế token registry.</td></tr>
+              <tr><td><strong>MCP / ToolSearch</strong></td><td>MCP là chuẩn kết nối tool bên ngoài vào agent; ToolSearch/registry nạp-khi-cần chỉ nạp schema tool thực sự cần, hạ thuế token registry.</td></tr>
             </tbody>
           </table>
         </div>
@@ -377,7 +377,7 @@ footer.site{border-top:1px solid var(--border);padding:26px 24px;text-align:cent
           </div>
 
           <h4>Cùng một mục tiêu, ba lăng kính</h4>
-          <p>Mục tiêu: xây tính năng tóm tắt email hỗ trợ khách hàng gửi đến. Hãy xem bề mặt vấn đề phình ra thế nào khi ta đi xuống ngăn xếp:</p>
+          <p>Mục tiêu: xây tính năng tóm tắt email hỗ trợ khách hàng gửi đến. Hãy xem phạm vi vấn đề phình ra thế nào khi ta đi xuống ngăn xếp:</p>
           <div class="compare">
             <div class="compare-col bad">
               <span class="eyebrow">Tư duy chỉ-có-prompt</span>
@@ -419,7 +419,7 @@ PROMPT:
             <table>
               <thead><tr><th style="width:44px">#</th><th>Lớp</th><th>Triệu chứng</th><th>Cần soi cái gì</th></tr></thead>
               <tbody>
-                <tr><td><strong>1</strong></td><td><span class="badge">harness</span></td><td>Lỗi ngẫu nhiên, chi phí tăng vọt, loop vô tận, rò rỉ state giữa các user, cắt cụt âm thầm, thiếu retry.</td><td>Log toàn bộ message history. Số vòng lặp. Tỷ lệ lỗi tool. Chỉ số ngân sách token. Cô lập state theo user.</td></tr>
+                <tr><td><strong>1</strong></td><td><span class="badge">harness</span></td><td>Lỗi ngẫu nhiên, chi phí tăng vọt, loop vô tận, rò rỉ state giữa các user, bị cắt bớt âm thầm, thiếu retry.</td><td>Log toàn bộ message history. Số vòng lặp. Tỷ lệ lỗi tool. Chỉ số ngân sách token. Cô lập state theo user.</td></tr>
                 <tr><td><strong>2</strong></td><td><span class="badge warn">context</span></td><td>Bịa fact, "phớt lờ" chỉ dẫn, trích nhầm tài liệu, output trôi dạt qua phiên dài.</td><td>Thực tế đã retrieve gì? Message history tại thời điểm lỗi? Tool nào được định nghĩa? Ví dụ có đại diện cho phân phối thật không?</td></tr>
                 <tr><td><strong>3</strong></td><td><span class="badge bad">prompt</span></td><td>Lỗi prompt thật sự: chỉ dẫn mơ hồ, luật mâu thuẫn, chưa nêu định dạng output, lệch giọng.</td><td>Đọc to prompt lên. Một kỹ sư junior đọc một lần, với cùng ngữ cảnh, có làm đúng ý bạn không? Nếu không, sửa câu chữ.</td></tr>
               </tbody>
@@ -471,7 +471,7 @@ PROMPT:
       <!-- ============ CHƯƠNG 2 ============ -->
       <header class="module-header" data-module="2">
         <span class="eyebrow">Chương 02 · Phần I · Nền tảng</span>
-        <h2>Lý thuyết Context · Chú ý, Thối rữa, Giải phẫu</h2>
+        <h2>Lý thuyết Context · Attention, Context rot, Giải phẫu</h2>
         <p>Cửa sổ context lớn hơn cho thêm chỗ, không tự bảo đảm model dùng mọi phần tốt như nhau. Cách chắc nhất là đo trên task thật và giữ tỷ lệ tín hiệu/nhiễu cao.</p>
       </header>
 
@@ -537,9 +537,9 @@ PROMPT:
               <div class="stack-layer bot"><span class="sl-name">System Prompt</span><span class="sl-desc">~500–4.000 tk · vai trò, luật, schema output · ổn định, cache được</span></div>
               <div class="stack-layer bot"><span class="sl-name">Tool Definitions</span><span class="sl-desc">~200–10.000 tk · tên, mô tả, JSON schema · cache được</span></div>
               <div class="stack-layer bot"><span class="sl-name">Ví dụ in-context (few-shot)</span><span class="sl-desc">~500–10.000 tk · minh họa · ổn định, cache được</span></div>
-              <div class="stack-layer mid"><span class="sl-name">Working memory · scratchpad / plan / notes</span><span class="sl-desc">~0–20.000 tk · suy nghĩ được ngoại hóa của agent</span></div>
+              <div class="stack-layer mid"><span class="sl-name">Working memory · scratchpad / plan / notes</span><span class="sl-desc">~0–20.000 tk · suy nghĩ của agent được ghi ra ngoài</span></div>
               <div class="stack-layer top"><span class="sl-name">Tài liệu retrieve (RAG, file đính kèm)</span><span class="sl-desc">~0–50.000 tk · dao động dữ dội · vùng nguy hiểm</span></div>
-              <div class="stack-layer top"><span class="sl-name">Lịch sử hội thoại</span><span class="sl-desc">~0–100.000 tk · lượt trước + kết quả tool · phình đơn điệu nếu không compact</span></div>
+              <div class="stack-layer top"><span class="sl-name">Lịch sử hội thoại</span><span class="sl-desc">~0–100.000 tk · lượt trước + kết quả tool · phình liên tục nếu không compact</span></div>
               <div class="stack-layer mid"><span class="sl-name">Message người dùng hiện tại</span><span class="sl-desc">~10–5.000 tk · truy vấn thật · trọng số chú ý cao nhất</span></div>
             </div>
             <figcaption style="border:0;background:transparent;padding:10px 0 14px"><b>Hình 2.2</b> — Hai lớp cam (RAG + lịch sử) là nơi token phình mất kiểm soát. Ba lớp xanh đậm ổn định &amp; cache được — hãy đặt chúng ở <em>đầu</em>.</figcaption>
@@ -589,7 +589,7 @@ PROMPT:
           <p>Input, cached input và output có đơn giá khác nhau theo model. Vì bảng giá đổi nhanh, đừng học thuộc một tỷ lệ; hãy đọc usage của request thật và tính theo model đang chạy. Phần thường bị bỏ sót là chi phí lặp lại qua từng vòng agent:</p>
           <ul>
             <li><strong>Thuế độ trễ</strong> — input dài thường làm tăng time-to-first-token; trong loop agent, phần tăng này lặp lại ở mỗi vòng.</li>
-            <li><strong>Thuế chất lượng</strong> — mỗi token vô quan làm loãng chú ý trên token liên quan (chính là context rot).</li>
+            <li><strong>Thuế chất lượng</strong> — mỗi token không liên quan làm loãng chú ý trên token liên quan (chính là context rot).</li>
             <li><strong>Thuế mất cache</strong> — xem ngay dưới đây.</li>
           </ul>
 
@@ -661,12 +661,12 @@ console.log(result.providerMetadata?.anthropic);</pre>
     required: ["field","value"]
   }
 }</pre>
-              <ul><li>Mục đích sắc. Mô tả gọn. Schema chặt. Ít gọi sai, ít thuế context.</li></ul>
+              <ul><li>Mục đích rõ. Mô tả gọn. Schema chặt. Ít gọi sai, ít thuế context.</li></ul>
             </div>
           </div>
           <div class="callout insight">
             <div class="callout-title">Không có một ngưỡng MCP đúng cho mọi hệ</div>
-            <p>Đo tổng token của tool definitions và tỷ lệ tool bị gọi nhầm trên eval của bạn. Khi registry bắt đầu lấn át context nhiệm vụ hoặc làm model chọn sai, tắt tool ngoài phạm vi và dùng <strong>Tool Search / registry trì hoãn</strong> để chỉ nạp schema khi cần. Mục tiêu là giảm lựa chọn thừa, không phải chạy theo một con số 20k.</p>
+            <p>Đo tổng token của tool definitions và tỷ lệ tool bị gọi nhầm trên eval của bạn. Khi registry bắt đầu lấn át context nhiệm vụ hoặc làm model chọn sai, tắt tool ngoài phạm vi và dùng <strong>Tool Search / registry nạp-khi-cần</strong> để chỉ nạp schema khi cần. Mục tiêu là giảm lựa chọn thừa, không phải chạy theo một con số 20k.</p>
           </div>
 
           <div class="callout" style="border-left:4px solid var(--accent-2)">
@@ -679,7 +679,7 @@ console.log(result.providerMetadata?.anthropic);</pre>
             <span class="eyebrow">Phương trình đầy đủ</span>
             <p style="font-size:1.1rem;font-style:italic;font-weight:500;line-height:1.5">"Cấu hình context nào có khả năng cao nhất tạo ra hành vi mong muốn, biết rằng mỗi token cạnh tranh một lượng chú ý hữu hạn, vị trí có ảnh hưởng, và lịch sử thì tích lũy?"</p>
           </div>
-          <p>Một câu hỏi này định khung lại phần lớn quyết định hằng ngày: đăng ký tool nào, cái gì vào CLAUDE.md và cái gì vào skill, khi nào compact, khi nào sinh subagent, khi nào ngoại hóa state. Phần còn lại của khóa là kỹ thuật để trả lời nó.</p>
+          <p>Một câu hỏi này định khung lại phần lớn quyết định hằng ngày: đăng ký tool nào, cái gì vào CLAUDE.md và cái gì vào skill, khi nào compact, khi nào sinh subagent, khi nào ghi state ra ngoài. Phần còn lại của khóa là kỹ thuật để trả lời nó.</p>
 
           <!-- Interactive widget -->
           <div class="prompt-card" style="background:var(--surface-2)">
@@ -762,7 +762,7 @@ console.log(result.providerMetadata?.anthropic);</pre>
 
 // Tốn 80k token TRƯỚC khi
 // mô hình đọc câu hỏi.
-// Phần lớn vô quan.</pre>
+// Phần lớn không liên quan.</pre>
               <ul><li>Lãng phí, chậm, bào chất lượng. Mô hình tiêu ngân sách chú ý cho dữ liệu người dùng không hỏi.</li></ul>
             </div>
             <div class="compare-col good"><span class="eyebrow">Just-in-time</span>
@@ -819,9 +819,9 @@ console.log(result.providerMetadata?.anthropic);</pre>
           <ul>
             <li><strong>Pattern <code>plan.md</code>/<code>tasks.md</code> của Claude Code</strong> — agent ghi kế hoạch nhiều bước ra markdown, làm từng bước, tick hoàn thành, để lại ghi chú cho bước sau.</li>
             <li><strong>File làm việc của Codex CLI</strong> — pattern tương tự, thường trong thư mục workspace riêng.</li>
-            <li><strong>Tự làm: "context tool" riêng</strong> — với agent production, phơi ra <code>read_notes(key)</code>/<code>write_notes(key,value)</code> tựa lên Redis hoặc DB.</li>
+            <li><strong>Tự làm: "context tool" riêng</strong> — với agent production, cung cấp tool <code>read_notes(key)</code>/<code>write_notes(key,value)</code> dựa trên Redis hoặc DB.</li>
           </ul>
-          <div class="callout insight"><div class="callout-title">File <em>là</em> bộ nhớ ngoại hóa của agent</div><p>Một khi thấm điều này, bạn thôi cố nhồi mọi thứ vào context và bắt đầu coi hội thoại như một mặt bàn làm việc có thể reset.</p></div>
+          <div class="callout insight"><div class="callout-title">File <em>chính là</em> bộ nhớ ngoài của agent</div><p>Một khi thấm điều này, bạn thôi cố nhồi mọi thứ vào context và bắt đầu coi hội thoại như một mặt bàn làm việc có thể reset.</p></div>
 
           <h4>Pattern 4 · Cô lập subagent</h4>
           <p>Sinh một context agent mới cho một task tập trung. Cha chỉ nhận artifact/tóm tắt cuối, nên phần khám phá chi tiết của con không tràn vào context chính. Anthropic khuyến nghị pattern này cho task dài hơi; nó gần với cách một lead nhận báo cáo thay vì đọc mọi thao tác của từng IC.</p>
@@ -884,14 +884,14 @@ const { object } = await generateObject({
             <h5>Bài tập · Thay pre-load bằng just-in-time</h5>
             <ol>
               <li>Tìm một tính năng pre-load dữ liệu vào prompt (thường: info khách, catalog sản phẩm, đơn gần đây).</li>
-              <li>Định nghĩa 2–3 tool sắc (<code>get_customer</code>, <code>search_products</code>…) thay cho nạp khối. Bỏ pre-load, cập nhật system prompt để nhắc các tool.</li>
+              <li>Định nghĩa 2–3 tool chuyên biệt (<code>get_customer</code>, <code>search_products</code>…) thay cho nạp khối. Bỏ pre-load, cập nhật system prompt để nhắc các tool.</li>
               <li>So sánh trên một tập truy vấn đại diện: token, độ trễ, độ chính xác và số lần gọi tool. Chỉ chuyển khi bản mới đạt ngưỡng chất lượng đã định trước.</li>
             </ol>
           </div>
 
           <div class="takeaway">
             <span class="eyebrow"><svg aria-hidden="true" focusable="false" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 2v6m0 8v6M4.9 4.9l4.2 4.2m5.8 5.8l4.2 4.2M2 12h6m8 0h6M4.9 19.1l4.2-4.2m5.8-5.8l4.2-4.2"/></svg>Takeaway</span>
-            <p>Đừng nhồi — hãy <span class="hl">cho tool để lấy khi cần</span> (JIT), <span class="hl">compact phần giữa</span>, ngoại hóa state ra file, cô lập việc nặng vào <span class="hl">subagent</span>, và <span class="hl">ép cấu trúc output</span>. Sáu pattern này là bộ đồ nghề context cho mọi tính năng AI.</p>
+            <p>Đừng nhồi — hãy <span class="hl">cho tool để lấy khi cần</span> (JIT), <span class="hl">compact phần giữa</span>, ghi state ra file, cô lập việc nặng vào <span class="hl">subagent</span>, và <span class="hl">ép cấu trúc output</span>. Sáu pattern này là bộ đồ nghề context cho mọi tính năng AI.</p>
           </div>
 
           <div class="quiz" data-correct="2">
@@ -928,7 +928,7 @@ const { object } = await generateObject({
           <div class="objectives">
             <span class="eyebrow">Học xong bài này bạn có thể</span>
             <ul>
-              <li>Thiết kế tool như thiết kế API: mục đích sắc, output có biên, lỗi giàu thông tin.</li>
+              <li>Thiết kế tool như thiết kế API: mục đích rõ, output có biên, lỗi giàu thông tin.</li>
               <li>Viết một loop agent với đủ 4 biên: max iteration, ngân sách token, trần chi phí, chống gọi lặp.</li>
               <li>Đặt authorization vào <em>harness</em>, không phải vào phán đoán của model.</li>
             </ul>
@@ -949,8 +949,8 @@ const { object } = await generateObject({
           <h4>Trụ 1 · Tool là thiết kế API</h4>
           <p>Người tiêu thụ tool của bạn là một agent <em>phi tất định</em>, đọc mô tả <em>một lần</em> rồi quyết định gọi gì. Áp nguyên tắc thiết kế API, nhưng nâng mức đặt cược:</p>
           <ul>
-            <li><strong>Bề mặt nhỏ, mục đích sắc.</strong> <code>search_customers_by_email</code> thắng <code>universal_search</code>. Mô hình chọn tool theo tên + mô tả; mơ hồ ở lớp này là không cứu được ở hạ nguồn.</li>
-            <li><strong>Ít tool mạnh hơn nhiều tool hẹp.</strong> Đừng mirror REST API thành 30 tool; phơi 3–5 "cổng" mạnh với tham số giàu. Ghép qua tham số thắng sự sinh sôi.</li>
+            <li><strong>Ít tool, mỗi tool một mục đích rõ ràng.</strong> <code>search_customers_by_email</code> thắng <code>universal_search</code>. Mô hình chọn tool theo tên + mô tả; mơ hồ ở lớp này là không cứu được ở hạ nguồn.</li>
+            <li><strong>Ít tool mạnh hơn nhiều tool hẹp.</strong> Đừng mirror REST API thành 30 tool; cung cấp 3–5 tool "cổng" mạnh với tham số giàu. Ghép qua tham số thắng sự sinh sôi.</li>
             <li><strong>Idempotent khi có thể.</strong> Model có retry. Nếu <code>send_email</code> không idempotent, khách nhận ba email.</li>
             <li><strong>Output có biên.</strong> <code>list_files</code> trả 10.000 mục vừa làm nổ context. Luôn phân trang/cắt/tóm tắt. Một tool trả blob 30k token là tool được thiết kế để hại người gọi nó.</li>
             <li><strong>Lỗi giàu, hành động được.</strong> <code>Error: 500</code> vô dụng. <code>Error: không thấy customer_id 'cus_abc'. Bạn có định tìm theo email không?</code> dạy model cách phục hồi. Coi thông báo lỗi là một phần hợp đồng API của tool.</li>
@@ -958,7 +958,7 @@ const { object } = await generateObject({
           <div class="code-card">
             <div class="prompt-head"><span>typescript · tool cấp production</span><button class="copy-btn" onclick="copyCode(this)">Chép</button></div>
 <pre>const searchPosts = tool({
-  // Mô tả SẮC: nói rõ khi nào dùng, khi nào KHÔNG.
+  // Mô tả RÕ RÀNG: nói rõ khi nào dùng, khi nào KHÔNG.
   description: 'Tìm post theo keyword. Trả tối đa 20 kết quả mới nhất kèm ' +
     'metric tương tác. Dùng cho câu hỏi nội dung/sentiment, KHÔNG dùng để ' +
     'đếm tổng (dùng count_posts).',
@@ -1046,7 +1046,7 @@ const { object } = await generateObject({
                 <tr><td>3</td><td>Tool lỗi (vĩnh viễn)</td><td>Trả rõ "cách này không được" để model chọn đường khác</td></tr>
                 <tr><td>4</td><td>Structured output sai định dạng</td><td>Validate schema, retry với đúng lỗi Zod trong prompt</td></tr>
                 <tr><td>5</td><td>Bịa tên tool</td><td>Không fail âm thầm; trả danh sách tool có sẵn để model tự sửa</td></tr>
-                <tr><td>6</td><td>Bịa giá trị tham số</td><td>Schema chặt loại ở tầng API; lỗi giàu nói cái gì hợp lệ</td></tr>
+                <tr><td>6</td><td>Bịa giá trị tham số</td><td>Schema chặt loại ở tầng API; lỗi giàu thông tin nói cái gì hợp lệ</td></tr>
                 <tr><td>7</td><td>Model từ chối / bộ lọc an toàn</td><td>Log, có thể retry với system prompt viết lại, escalate cho người</td></tr>
                 <tr><td>8</td><td>Cạn context</td><td>Kích hoạt compaction; nếu cũng fail, tóm tắt-và-khởi động phiên mới</td></tr>
                 <tr><td>9</td><td>Chi phí mất kiểm soát</td><td>Trần cứng mỗi phiên, kill switch, cảnh báo, post-mortem</td></tr>
@@ -1054,7 +1054,7 @@ const { object } = await generateObject({
               </tbody>
             </table>
           </div>
-          <div class="callout danger"><div class="callout-title">Anti-pattern: "tin model với quyền hạn"</div><p>Một tool phơi <code>delete_user(user_id)</code> và model tự quyết xóa ai dựa trên hội thoại — không hề có lớp authorization thật, phán đoán ý định của model <em>chính là</em> việc kiểm quyền. <strong>Harness, không phải model, sở hữu authorization.</strong> Tool nhận danh tính actor từ session/JWT, không từ tham số của model. Model được <em>yêu cầu</em> hành động; harness kiểm quyền trước khi thực thi.</p></div>
+          <div class="callout danger"><div class="callout-title">Anti-pattern: "tin model với quyền hạn"</div><p>Một tool cho model gọi thẳng <code>delete_user(user_id)</code> và model tự quyết xóa ai dựa trên hội thoại — không hề có lớp authorization thật, phán đoán ý định của model <em>chính là</em> việc kiểm quyền. <strong>Harness, không phải model, sở hữu authorization.</strong> Tool nhận danh tính actor từ session/JWT, không từ tham số của model. Model được <em>yêu cầu</em> hành động; harness kiểm quyền trước khi thực thi.</p></div>
 
           <h4>Trụ 5 · Observability — log đường đi cần để tái hiện</h4>
           <p>AI production không có logging là bất khả debug. Tối thiểu khả dụng: <strong>mỗi lệnh gọi model</strong> (input đầy đủ có che PII, output, tên model, độ trễ, cache hit, token in/out, chi phí); <strong>mỗi tool call</strong> (tên, args che PII, kích thước kết quả, độ trễ, lỗi); <strong>mỗi loop</strong> (số vòng, chi phí, thời gian, state kết thúc); <strong>metric theo user</strong> (chi phí/user/ngày, độ trễ p50/p95/p99, tỷ lệ thành công). Công cụ: Langfuse, Helicone, Braintrust, LangSmith. <strong>Nếu bạn không tái dựng được chính xác điều đã xảy ra trong một lần chạy fail chỉ từ log, observability của bạn đang hỏng.</strong></p>
@@ -1068,14 +1068,14 @@ const { object } = await generateObject({
 
           <div class="takeaway">
             <span class="eyebrow"><svg aria-hidden="true" focusable="false" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 2v6m0 8v6M4.9 4.9l4.2 4.2m5.8 5.8l4.2 4.2M2 12h6m8 0h6M4.9 19.1l4.2-4.2m5.8-5.8l4.2-4.2"/></svg>Takeaway</span>
-            <p>Harness là phần kỹ thuật bạn kiểm soát khi model thay đổi. Tool thiết kế như API (sắc, có biên, lỗi giàu); loop cần biên dừng và ngân sách; authorization thuộc <span class="hl">harness chứ không phải model</span>; observability giúp tái hiện lỗi; và ablation cho biết scaffold nào còn đáng giữ.</p>
+            <p>Harness là phần kỹ thuật bạn kiểm soát khi model thay đổi. Tool thiết kế như API (mục đích rõ, output có giới hạn, lỗi giàu thông tin); loop cần biên dừng và ngân sách; authorization thuộc <span class="hl">harness chứ không phải model</span>; observability giúp tái hiện lỗi; và ablation cho biết scaffold nào còn đáng giữ.</p>
           </div>
 
           <div class="quiz" data-correct="1">
             <span class="eyebrow">Kiểm tra nhanh</span>
             <p class="quiz-q">Một pipeline agent phân tích video social gọi một tool trả về transcript đầy đủ — đôi khi 30k+ token. Sau 5 lệnh gọi như thế, độ trễ nổ tung và chất lượng tụt. Bản năng của nhóm là đổi sang model context lớn hơn. Cách sửa tốt hơn?</p>
             <button class="quiz-opt" onclick="quizPick(this,0)"><span class="quiz-letter">A</span><span>Đổi sang model cửa sổ 1M token — xong.</span></button>
-            <button class="quiz-opt" onclick="quizPick(this,1)"><span class="quiz-letter">B</span><span>Đặt biên cho tool: trả về <code>transcript_id</code> + tóm tắt gọn; phơi riêng <code>get_full_transcript(id)</code> để model chỉ gọi khi thật sự cần bản nguyên văn. Đây là output-có-biên + JIT retrieval kết hợp.</span></button>
+            <button class="quiz-opt" onclick="quizPick(this,1)"><span class="quiz-letter">B</span><span>Đặt biên cho tool: trả về <code>transcript_id</code> + tóm tắt gọn; cung cấp riêng tool <code>get_full_transcript(id)</code> để model chỉ gọi khi thật sự cần bản nguyên văn. Đây là output-có-biên + JIT retrieval kết hợp.</span></button>
             <button class="quiz-opt" onclick="quizPick(this,2)"><span class="quiz-letter">C</span><span>Giảm max iteration để loop dừng sớm hơn.</span></button>
             <button class="quiz-opt" onclick="quizPick(this,3)"><span class="quiz-letter">D</span><span>Tăng max_tokens output để model có thêm chỗ suy luận.</span></button>
             <div class="quiz-feedback" data-explain="Đây là 'tool output bloat' kinh điển. Cách sửa ở tầng thiết kế tool, không phải tầng model — mọi tool cần ngân sách output. Kể cả cửa sổ 1M, bạn vẫn phí phần lớn ngân sách cho transcript cũ mà model không còn chú ý tới (context rot co giãn theo cửa sổ). Trả handle + tóm tắt; để model lấy nguyên văn theo yêu cầu. Cửa sổ lớn không sửa được thiết kế harness tệ."></div>
@@ -1148,19 +1148,19 @@ const { object } = await generateObject({
 
           <h4>EXTENSION · Hooks &amp; MCP</h4>
           <p><strong>Hooks</strong> là hành vi harness lập trình được: chạy lệnh của <em>bạn</em> tại các sự kiện (PreToolUse, PostToolUse, Stop…) để chặn lệnh nguy hiểm, tự chạy test/lint, hay ép quy ước. Output của hook được coi như phản hồi cho agent. <strong>MCP</strong> mở rộng registry tool bằng server ngoài (DB, API, dịch vụ). Nhớ thuế registry ở Chương 2: <em>mỗi</em> MCP bật đều tốn token mọi lệnh gọi — bật theo phạm vi dự án, audit bằng <code>/mcp</code>.</p>
-          <div class="callout warn"><div class="callout-title">Nghịch lý MCP</div><p>MCP càng nhiều, agent càng "mạnh" trên giấy nhưng càng yếu thực tế: schema của mọi tool nhồi context, làm loãng chú ý và ăn ngân sách. Đây là lúc <strong>ToolSearch / tool trì hoãn</strong> tỏa sáng.</p></div>
+          <div class="callout warn"><div class="callout-title">Nghịch lý MCP</div><p>MCP càng nhiều, agent càng "mạnh" trên giấy nhưng càng yếu thực tế: schema của mọi tool nhồi context, làm loãng chú ý và ăn ngân sách. Đây là lúc <strong>ToolSearch / tool nạp-khi-cần</strong> tỏa sáng.</p></div>
 
           <h4>EXTENSION · ToolSearch — registry tool ở quy mô lớn (2026)</h4>
           <p>Lối thoát cho registry lớn: giữ một chỉ mục tool gọn, rồi chỉ nạp <em>JSON schema</em> của tool phù hợp với task. Đây là JIT retrieval áp cho <em>chính định nghĩa tool</em>. Mức token tiết kiệm phụ thuộc số tool và độ dài schema; hãy đo trên request thật.</p>
 
-          <h4>EXTENSION · Nguyên thủy bất đồng bộ (2026)</h4>
+          <h4>EXTENSION · Các cơ chế bất đồng bộ (2026)</h4>
           <div class="table-wrap">
             <table>
-              <thead><tr><th style="width:150px">Nguyên thủy</th><th>Là gì</th><th>Dùng khi</th></tr></thead>
+              <thead><tr><th style="width:150px">Cơ chế</th><th>Là gì</th><th>Dùng khi</th></tr></thead>
               <tbody>
                 <tr><td><code>/loop</code></td><td>Chạy một prompt/lệnh lặp theo chu kỳ hoặc để model tự nhịp</td><td>Poll trạng thái, lặp tới khi đạt điều kiện (Chương cuối: Loop Engineering)</td></tr>
                 <tr><td><code>/schedule</code></td><td>Agent cloud chạy theo lịch cron</td><td>Việc định kỳ: báo cáo, dọn dẹp, canary</td></tr>
-                <tr><td>spawn-task</td><td>"Chip" việc phụ fire-and-forget, tách phiên riêng</td><td>Việc ngoài phạm vi phát hiện ngang đường, không muốn làm loãng phiên chính</td></tr>
+                <tr><td>spawn-task</td><td>Tách việc phụ kiểu fire-and-forget sang phiên riêng</td><td>Việc ngoài phạm vi phát hiện ngang đường, không muốn làm loãng phiên chính</td></tr>
                 <tr><td>Agent Teams</td><td>Nhiều agent phối hợp, đã ổn định nhưng vẫn hữu hạn</td><td>Việc chia được thành vai trò song song</td></tr>
                 <tr><td>Dynamic Workflows</td><td>Kịch bản điều phối đa agent <em>tất định</em> (loop, điều kiện, fan-out)</td><td>Khi cần kiểm soát luồng bằng code, không phải bằng phán đoán model</td></tr>
               </tbody>
@@ -1182,10 +1182,10 @@ const { object } = await generateObject({
             <span class="eyebrow">Kiểm tra nhanh</span>
             <p class="quiz-q">Agent của bạn thi thoảng gọi tool MCP không liên quan tới dự án hiện tại, và phiên nào cũng chậm. Bạn đã thử thêm dòng "đừng dùng tool không liên quan" vào CLAUDE.md nhưng không ăn thua. Cách sửa gốc?</p>
             <button class="quiz-opt" onclick="quizPick(this,0)"><span class="quiz-letter">A</span><span>Viết chỉ dẫn mạnh hơn nữa trong CLAUDE.md, in hoa và lặp lại ba lần.</span></button>
-            <button class="quiz-opt" onclick="quizPick(this,1)"><span class="quiz-letter">B</span><span>Tắt các MCP không liên quan tới dự án hiện tại — mỗi tool đăng ký đều tốn token mọi lệnh gọi và làm loãng chú ý. Bật theo phạm vi dự án; audit chi phí bằng <code>/mcp</code>. Ở quy mô lớn, dùng ToolSearch/tool trì hoãn.</span></button>
+            <button class="quiz-opt" onclick="quizPick(this,1)"><span class="quiz-letter">B</span><span>Tắt các MCP không liên quan tới dự án hiện tại — mỗi tool đăng ký đều tốn token mọi lệnh gọi và làm loãng chú ý. Bật theo phạm vi dự án; audit chi phí bằng <code>/mcp</code>. Ở quy mô lớn, dùng ToolSearch/tool nạp-khi-cần.</span></button>
             <button class="quiz-opt" onclick="quizPick(this,2)"><span class="quiz-letter">C</span><span>Đổi sang Opus — nó chọn tool tốt hơn.</span></button>
             <button class="quiz-opt" onclick="quizPick(this,3)"><span class="quiz-letter">D</span><span>Gộp tất cả MCP thành một "super-MCP" chứa mọi tool.</span></button>
-            <div class="quiz-feedback" data-explain="Đây là thuế registry (Chương 2) đội lốt bài toán prompt. Mỗi MCP bật nhồi tên+mô tả+schema vào MỌI lệnh gọi, dù không dùng — vừa tốn token vừa cho model nhiều lựa chọn sai để với tới. Chỉ dẫn 'đừng dùng' không xóa được chi phí đó và model vẫn bị cám dỗ. Sửa gốc là giảm bề mặt: tắt MCP không liên quan (phạm vi dự án), audit bằng /mcp, và ở quy mô lớn dùng ToolSearch để chỉ nạp schema khi cần. Gộp thành super-MCP làm tệ hơn."></div>
+            <div class="quiz-feedback" data-explain="Đây là thuế registry (Chương 2) đội lốt bài toán prompt. Mỗi MCP bật nhồi tên+mô tả+schema vào MỌI lệnh gọi, dù không dùng — vừa tốn token vừa cho model nhiều lựa chọn sai để với tới. Chỉ dẫn 'đừng dùng' không xóa được chi phí đó và model vẫn bị cám dỗ. Sửa gốc là thu hẹp phạm vi: tắt MCP không liên quan (phạm vi dự án), audit bằng /mcp, và ở quy mô lớn dùng ToolSearch để chỉ nạp schema khi cần. Gộp thành super-MCP làm tệ hơn."></div>
           </div>
         </div>
         <div class="lesson-nav" data-navfor="m5-l1"></div>
@@ -1194,14 +1194,14 @@ const { object } = await generateObject({
       <!-- ============ CHƯƠNG 6 ============ -->
       <header class="module-header" data-module="6">
         <span class="eyebrow">Chương 06 · Phần II · Làm chủ công cụ</span>
-        <h2>Codex · Chọn bề mặt và biên an toàn</h2>
-        <p>Codex hiện diện trong App, CLI, IDE, cloud/remote và chế độ headless. Tên bề mặt sẽ còn đổi; quyết định bền vững là chọn nơi cần lái trực tiếp hay giao khoán, rồi đặt sandbox, quyền và cổng review tương ứng.</p>
+        <h2>Codex · Chọn môi trường làm việc và biên an toàn</h2>
+        <p>Codex hiện diện trong App, CLI, IDE, cloud/remote và chế độ headless. Tên gọi các môi trường sẽ còn đổi; quyết định bền vững là chọn nơi cần lái trực tiếp hay giao khoán, rồi đặt sandbox, quyền và cổng review tương ứng.</p>
       </header>
 
       <article class="lesson" id="m6-l1" data-lesson>
         <div class="lesson-head">
           <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px">
-            <div><span class="eyebrow">Bài 6.1</span><h3>Codex · Bề mặt làm việc &amp; sandbox an toàn</h3></div>
+            <div><span class="eyebrow">Bài 6.1</span><h3>Codex · Môi trường làm việc &amp; sandbox an toàn</h3></div>
             <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap">
               <span class="level-badge">⏱ tự chọn</span>
               <span class="level-badge">L3 · Thực hành <span class="level-dots"><i class="on"></i><i class="on"></i><i class="on"></i><i></i><i></i></span></span>
@@ -1212,18 +1212,18 @@ const { object } = await generateObject({
           <div class="objectives">
             <span class="eyebrow">Học xong bài này bạn có thể</span>
             <ul>
-              <li>Chọn đúng bề mặt Codex (App / CLI / IDE / Cloud-Remote / headless) cho từng loại việc.</li>
+              <li>Chọn đúng môi trường Codex (App / CLI / IDE / Cloud-Remote / headless) cho từng loại việc.</li>
               <li>Cấu hình <code>AGENTS.md</code> với pattern override phân cấp.</li>
               <li>Chọn chế độ sandbox phù hợp rủi ro, và dùng auto-reviewer làm cổng chất lượng.</li>
             </ul>
           </div>
-          <p>Bạn có một bug cần trao đổi liên tục và một đợt cập nhật tài liệu có acceptance criteria rõ. Dùng cùng một bề mặt cho cả hai sẽ hoặc khiến bạn phải ngồi canh việc cơ học, hoặc giao khoán một việc còn mơ hồ. Chọn bề mặt là chọn nhịp cộng tác và biên thực thi.</p>
+          <p>Bạn có một bug cần trao đổi liên tục và một đợt cập nhật tài liệu có acceptance criteria rõ. Dùng cùng một môi trường cho cả hai sẽ hoặc khiến bạn phải ngồi canh việc cơ học, hoặc giao khoán một việc còn mơ hồ. Chọn môi trường là chọn nhịp cộng tác và biên thực thi.</p>
 
           <figure class="figure" style="padding:18px 20px 8px">
-            <div class="stack-caption">năm bề mặt · chọn theo nhịp cộng tác</div>
+            <div class="stack-caption">năm môi trường · chọn theo nhịp cộng tác</div>
             <div class="table-wrap" style="border:0">
               <table>
-                <thead><tr><th>Bề mặt</th><th>Đặc tính</th><th>Dùng khi</th></tr></thead>
+                <thead><tr><th>Môi trường</th><th>Đặc tính</th><th>Dùng khi</th></tr></thead>
                 <tbody>
                   <tr><td><span class="badge">App</span></td><td>Nhiều task/thread, review diff, worktree và Automation</td><td>Điều phối việc dài hoặc nhiều nhánh trong một command center</td></tr>
                   <tr><td><span class="badge">CLI</span></td><td>Đồng bộ, trong-vòng-lặp, local, bạn lái</td><td>Việc mới cần steer, khám phá, pair</td></tr>
@@ -1233,7 +1233,7 @@ const { object } = await generateObject({
                 </tbody>
               </table>
             </div>
-            <figcaption style="border:0;background:transparent;padding:10px 0 12px"><b>Hình 6.1</b> — Bề mặt thay đổi nhịp cộng tác, không thay trách nhiệm kiểm chứng. Trục chính: <em>cần lái trực tiếp, điều phối nhiều task, hay giao khoán qua một cổng review?</em></figcaption>
+            <figcaption style="border:0;background:transparent;padding:10px 0 12px"><b>Hình 6.1</b> — Môi trường làm việc thay đổi nhịp cộng tác, không thay trách nhiệm kiểm chứng. Trục chính: <em>cần lái trực tiếp, điều phối nhiều task, hay giao khoán qua một cổng review?</em></figcaption>
           </figure>
 
           <h4><code>AGENTS.md</code> · ngữ cảnh thường trực, có override</h4>
@@ -1242,7 +1242,7 @@ const { object } = await generateObject({
           <h4>Sandbox · thực thi an toàn mặc định</h4>
           <p>Đặc sản của Codex: mỗi lệnh chạy trong sandbox với quyền hạn khai báo. Chọn chế độ theo rủi ro — chỉ-đọc, ghi-trong-workspace, hay full-access — thay vì tin agent "sẽ ngoan". Đây là nguyên tắc <em>authorization thuộc harness</em> (Chương 4) được đóng gói sẵn: harness quyết định agent chạm được gì, không phải phán đoán của model.</p>
 
-          <h4>Review workflow · cổng chất lượng, không phải con dấu</h4>
+          <h4>Review workflow · cổng chất lượng, không phải đóng dấu cho có</h4>
           <p>Codex hỗ trợ review code và diff, nhưng một review do agent sinh ra vẫn chỉ là bằng chứng bổ sung. Với thay đổi quan trọng, tách vai builder/reviewer, cho reviewer đọc acceptance criteria và chạy verifier riêng; đừng coi nhãn “reviewed” là đồng nghĩa “đúng”.</p>
 
           <h4>Codex Cloud &amp; <code>codex exec</code> · đòn bẩy bất đồng bộ</h4>
@@ -1256,7 +1256,7 @@ const { object } = await generateObject({
 
           <div class="takeaway">
             <span class="eyebrow"><svg aria-hidden="true" focusable="false" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 2v6m0 8v6M4.9 4.9l4.2 4.2m5.8 5.8l4.2 4.2M2 12h6m8 0h6M4.9 19.1l4.2-4.2m5.8-5.8l4.2-4.2"/></svg>Takeaway</span>
-            <p>Đừng học thuộc số bề mặt. Hãy chọn theo <span class="hl">nhịp cộng tác và mức rủi ro</span>: lái trực tiếp, điều phối nhiều task hay giao khoán. Dù ở đâu, sandbox giới hạn hành động và verifier quyết định “xong”.</p>
+            <p>Đừng học thuộc danh sách môi trường. Hãy chọn theo <span class="hl">nhịp cộng tác và mức rủi ro</span>: lái trực tiếp, điều phối nhiều task hay giao khoán. Dù ở đâu, sandbox giới hạn hành động và verifier quyết định “xong”.</p>
           </div>
 
           <div class="quiz" data-correct="2">
@@ -1266,7 +1266,7 @@ const { object } = await generateObject({
             <button class="quiz-opt" onclick="quizPick(this,1)"><span class="quiz-letter">B</span><span>Dùng Codex Cloud cho cả hai — cloud nhanh hơn.</span></button>
             <button class="quiz-opt" onclick="quizPick(this,2)"><span class="quiz-letter">C</span><span>Codex CLI (hoặc App) cho tính năng mới — sync, trong-vòng-lặp, bạn muốn lái. Codex Cloud cho đám typo/doc — việc nhỏ well-scoped, fire-and-forget, gom thành PR để review sau.</span></button>
             <button class="quiz-opt" onclick="quizPick(this,3)"><span class="quiz-letter">D</span><span>Dùng IDE extension cho mọi thứ để ở trong flow.</span></button>
-            <div class="quiz-feedback" data-explain="Trục quyết định là sync-vs-async. Thiết kế tính năng cần bạn steer từng bước, phản hồi liên tục → bề mặt đồng bộ (CLI/App). 12 typo là việc nhỏ, well-scoped, rủi ro thấp — phù hợp để giao Cloud chạy nền rồi review kết quả. Ép cả hai vào một bề mặt là bỏ phí thế mạnh của Codex."></div>
+            <div class="quiz-feedback" data-explain="Trục quyết định là sync-vs-async. Thiết kế tính năng cần bạn steer từng bước, phản hồi liên tục → môi trường đồng bộ (CLI/App). 12 typo là việc nhỏ, well-scoped, rủi ro thấp — phù hợp để giao Cloud chạy nền rồi review kết quả. Ép cả hai vào một môi trường là bỏ phí thế mạnh của Codex."></div>
           </div>
         </div>
         <div class="lesson-nav" data-navfor="m6-l1"></div>
@@ -1323,7 +1323,7 @@ const { object } = await generateObject({
               <text class="dgm-ink" x="330" y="234" text-anchor="middle" font-size="12" font-weight="700">Review bằng công cụ THỨ HAI</text>
               <defs><marker id="a7" markerWidth="9" markerHeight="9" refX="7" refY="4.5" orient="auto"><path d="M0 0 L9 4.5 L0 9 z" fill="var(--accent-2)"/></marker></defs>
             </svg>
-            <figcaption><b>Hình 7.1</b> — Trục sync/async chọn công cụ <em>xây</em>; nhưng dù nhánh nào, hãy <em>review bằng agent thứ hai</em>. Đó là nơi phối hợp trả cổ tức lớn nhất.</figcaption>
+            <figcaption><b>Hình 7.1</b> — Trục sync/async chọn công cụ <em>xây</em>; nhưng dù nhánh nào, hãy <em>review bằng agent thứ hai</em>. Đó là nơi phối hợp mang lại lợi ích lớn nhất.</figcaption>
           </figure>
 
           <h4>Các pattern phối hợp</h4>
@@ -1335,7 +1335,7 @@ const { object } = await generateObject({
             <li><h4>Chia sẻ cấu hình chéo công cụ</h4><p>Giữ một nguồn quy ước chính (canonical), rồi symlink hoặc adapter mỏng để cả <code>CLAUDE.md</code> lẫn <code>AGENTS.md</code> cùng trỏ về — tránh trôi lệch hai bản.</p></li>
           </ol>
 
-          <div class="callout warn"><div class="callout-title">Thực tế chi phí &amp; rủi ro</div><p><strong>Chi phí:</strong> agent song song đốt rate limit <em>song song</em> — nhân đôi agent là nhân đôi tốc độ tiêu hạn mức. <strong>Rủi ro:</strong> nhiều nhánh song song = nhiều merge = nhiều xung đột &amp; bề mặt tích hợp. Song song hóa là đòn bẩy, không phải bữa trưa miễn phí; dùng khi việc <em>thật sự</em> độc lập.</p></div>
+          <div class="callout warn"><div class="callout-title">Thực tế chi phí &amp; rủi ro</div><p><strong>Chi phí:</strong> agent song song đốt rate limit <em>song song</em> — nhân đôi agent là nhân đôi tốc độ tiêu hạn mức. <strong>Rủi ro:</strong> nhiều nhánh song song = nhiều merge = nhiều xung đột &amp; điểm tích hợp. Song song hóa là đòn bẩy, không phải bữa trưa miễn phí; dùng khi việc <em>thật sự</em> độc lập.</p></div>
 
           <div class="exercise">
             <h5>Bài tập · Builder–validator chéo công cụ</h5>
@@ -1363,7 +1363,7 @@ const { object } = await generateObject({
       <!-- ============ CHƯƠNG 8 ============ -->
       <header class="module-header" data-module="8">
         <span class="eyebrow">Chương 08 · Phần III · Áp dụng vào SDLC</span>
-        <h2>Khám phá &amp; Đặc tả · Nơi AI kiếm cơm đầu tiên</h2>
+        <h2>Khám phá &amp; Đặc tả · Nơi AI tạo giá trị sớm nhất</h2>
         <p>Nghịch lý: AI hữu ích nhất <em>trước</em> khi viết dòng code đầu tiên. Nhưng đây cũng là nơi lỗi đắt nhất — một spec mơ hồ được nhân bản bởi một agent nhanh sẽ ra rất nhiều code sai.</p>
       </header>
 
@@ -1386,11 +1386,11 @@ const { object } = await generateObject({
               <li>Dùng scout + góc nhìn đa agent để làm PRD chắc trước khi code.</li>
             </ul>
           </div>
-          <p>Ở Phần I–II bạn đã có nền tảng và công cụ. Phần III áp chúng vào từng pha SDLC. Bắt đầu từ pha bị coi nhẹ nhất — và là nơi AI trả cổ tức cao nhất.</p>
+          <p>Ở Phần I–II bạn đã có nền tảng và công cụ. Phần III áp chúng vào từng pha SDLC. Bắt đầu từ pha bị coi nhẹ nhất — và là nơi AI mang lại giá trị cao nhất.</p>
 
           <div class="compare">
-            <div class="compare-col bad"><span class="eyebrow">Failure mode 1 · dưới-đặc-tả</span><ul><li>"Viết cho tôi cái dashboard" → agent đoán mò, ra thứ trông đúng nhưng sai yêu cầu ngầm.</li><li>Càng nhanh càng nhiều code sai để dọn.</li></ul></div>
-            <div class="compare-col bad"><span class="eyebrow">Failure mode 2 · quá-đặc-tả tê liệt</span><ul><li>Viết spec 40 trang trước khi kiểm chứng giả định nào.</li><li>Khóa cứng quyết định sai từ sớm; lãng phí trước khi học được gì.</li></ul></div>
+            <div class="compare-col bad"><span class="eyebrow">Failure mode 1 · spec quá sơ sài</span><ul><li>"Viết cho tôi cái dashboard" → agent đoán mò, ra thứ trông đúng nhưng sai yêu cầu ngầm.</li><li>Càng nhanh càng nhiều code sai để dọn.</li></ul></div>
+            <div class="compare-col bad"><span class="eyebrow">Failure mode 2 · spec quá chi tiết đến tê liệt</span><ul><li>Viết spec 40 trang trước khi kiểm chứng giả định nào.</li><li>Khóa cứng quyết định sai từ sớm; lãng phí trước khi học được gì.</li></ul></div>
           </div>
           <div class="callout danger"><div class="callout-title">Lỗi gốc: gộp pha spec và pha code vào một phiên</div><p>Khi spec và code ở chung một ngữ cảnh, agent bắt đầu code trước khi spec chín, và spec bị uốn theo code đã lỡ viết. <strong>Tách pha:</strong> brainstorm phương án → soạn PRD có review đa góc nhìn → <em>rồi mới</em> implement theo spec đã chốt. Mỗi pha ngữ cảnh riêng, tiêu chuẩn riêng.</p></div>
 
@@ -1436,7 +1436,7 @@ const { object } = await generateObject({
 
           <div class="takeaway">
             <span class="eyebrow"><svg aria-hidden="true" focusable="false" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 2v6m0 8v6M4.9 4.9l4.2 4.2m5.8 5.8l4.2 4.2M2 12h6m8 0h6M4.9 19.1l4.2-4.2m5.8-5.8l4.2-4.2"/></svg>Takeaway</span>
-            <p>AI kiếm cơm nhiều nhất <span class="hl">trước dòng code đầu tiên</span>. Đừng gộp spec và code vào một phiên — <span class="hl">tách pha</span>: brainstorm → PRD có review đa góc nhìn → rồi mới implement. Spec là nguồn sự thật; scout trước để spec dựa trên thực tế.</p>
+            <p>AI tạo giá trị nhiều nhất <span class="hl">trước dòng code đầu tiên</span>. Đừng gộp spec và code vào một phiên — <span class="hl">tách pha</span>: brainstorm → PRD có review đa góc nhìn → rồi mới implement. Spec là nguồn sự thật; scout trước để spec dựa trên thực tế.</p>
           </div>
 
           <div class="quiz" data-correct="2">
@@ -1653,7 +1653,7 @@ const { object } = await generateObject({
               <path class="dgm-flow" d="M494 206 H540 V142 H568" stroke-width="1.8" fill="none" marker-end="url(#a11)"/>
               <rect class="dgm-accent" x="568" y="104" width="60" height="52" rx="9" stroke-width="2"/>
               <text class="dgm-ink" x="598" y="124" text-anchor="middle" font-size="10.5" font-weight="700">GỘP</text>
-              <text class="dgm-ink" x="598" y="140" text-anchor="middle" font-size="10.5" font-weight="700">P.HIỆN</text>
+              <text class="dgm-ink" x="598" y="140" text-anchor="middle" font-size="9" font-weight="700">PHÁT HIỆN</text>
               <text class="dgm-ink2" x="419" y="250" text-anchor="middle" font-size="10.5" font-family="IBM Plex Mono">3 lens là agent khác builder · không thấy lý lẽ thiết kế</text>
             </svg>
             <figcaption><b>Hình 11.1</b> — Builder giao artifact cho các validator <em>độc lập</em>. Ba lens chạy song song, mỗi lens một trọng tâm, rồi gộp phát hiện. Điểm cốt lõi: validator không thấy lý lẽ thiết kế của builder — nên nó không thừa hưởng điểm mù đã sinh ra lỗi.</figcaption>
@@ -1905,12 +1905,12 @@ const { object } = await generateObject({
               <tbody>
                 <tr><td><strong>1 · Ba bộ môn</strong></td><td>Prompt, context, harness là ba lớp tách biệt — khi AI hỏng ở prod, chẩn đoán từ dưới lên: harness → context → prompt.</td></tr>
                 <tr><td><strong>2 · Lý thuyết Context</strong></td><td>Token cạnh tranh một lượng chú ý hữu hạn (U-shape); lịch sử tích lũy mãi. Đặt phần ổn định ở đầu để cache, đẩy phần động xuống cuối, compact sớm; 1M là biên an toàn chứ không phải giấy phép để nhồi.</td></tr>
-                <tr><td><strong>3 · Pattern Context</strong></td><td>Đừng nhồi — cho tool để lấy khi cần (JIT), compact phần giữa, ngoại hóa state ra file, cô lập việc nặng vào subagent, ép cấu trúc output.</td></tr>
+                <tr><td><strong>3 · Pattern Context</strong></td><td>Đừng nhồi — cho tool để lấy khi cần (JIT), compact phần giữa, ghi state ra file, cô lập việc nặng vào subagent, ép cấu trúc output.</td></tr>
                 <tr><td><strong>4 · Năm trụ cột Harness</strong></td><td>Harness là IP của bạn, model thì thay thế được. Tool như API có biên; loop có 4 biên; authorization thuộc harness chứ không phải model; không observability thì không debug được.</td></tr>
                 <tr><td><strong>5 · Claude Code</strong></td><td>Một harness lập trình được: CORE nạp context, DELEGATION cô lập context (Skill/subagent/worktree), EXTENSION mở rộng runtime (hooks/MCP/ToolSearch/async).</td></tr>
-                <tr><td><strong>6 · Codex</strong></td><td>Một agent, bốn bề mặt. Trục quyết định: lái (sync) hay giao khoán (async). Đặc sản: sandbox an toàn mặc định và auto-reviewer.</td></tr>
+                <tr><td><strong>6 · Codex</strong></td><td>Một agent, nhiều môi trường làm việc. Trục quyết định: lái (sync) hay giao khoán (async). Đặc sản: sandbox an toàn mặc định và auto-reviewer.</td></tr>
                 <tr><td><strong>7 · Kết hợp hai agent</strong></td><td>Tách context builder/reviewer; reviewer nhận criteria, diff và bằng chứng rồi chạy verifier riêng. Scout trước việc lớn; chọn sync/async theo nhu cầu lái.</td></tr>
-                <tr><td><strong>8 · Khám phá &amp; Đặc tả</strong></td><td>AI kiếm cơm nhiều nhất trước dòng code đầu tiên. Tách pha: brainstorm → PRD có review đa góc nhìn → rồi mới implement.</td></tr>
+                <tr><td><strong>8 · Khám phá &amp; Đặc tả</strong></td><td>AI tạo giá trị nhiều nhất trước dòng code đầu tiên. Tách pha: brainstorm → PRD có review đa góc nhìn → rồi mới implement.</td></tr>
                 <tr><td><strong>9 · Kiến trúc</strong></td><td>Kiến trúc là tìm kiếm có ràng buộc. Để AI mở rộng phương án và đóng nhiều persona chuyên gia; bạn giữ quyết định &amp; đánh đổi, ghi lại bằng ADR.</td></tr>
                 <tr><td><strong>10 · Triển khai</strong></td><td>Với agent bạn không viết code — bạn lái một vòng lặp. Test là spec thực thi được; plan mode khóa chiến lược; worktree cho refactor song song.</td></tr>
                 <tr><td><strong>11 · Review &amp; Test</strong></td><td>AI reviewer có lợi thế cấu trúc chỉ khi độc lập với builder. Review đa góc nhìn, mỗi lens một agent; tính năng AI cần eval như test hồi quy.</td></tr>
@@ -1986,7 +1986,7 @@ const LESSONS=[
   {id:'m3-l1', mod:3, part:'Phần I · Nền tảng', title:'Các pattern Context Engineering', desc:'JIT retrieval, compaction, working memory, subagent, structured output, few-shot.'},
   {id:'m4-l1', mod:4, part:'Phần I · Nền tảng', title:'Năm trụ cột của Harness', desc:'Tools, loop (4 biên), memory 3 tầng, recovery, observability — biến model thành sản phẩm.'},
   {id:'m5-l1', mod:5, part:'Phần II · Làm chủ công cụ', title:'Claude Code · Kiến trúc phân lớp', desc:'CORE / DELEGATION / EXTENSION — CLAUDE.md, Skills, subagent, worktree, MCP, ToolSearch, async.'},
-  {id:'m6-l1', mod:6, part:'Phần II · Làm chủ công cụ', title:'Codex · Bề mặt & biên an toàn', desc:'App/CLI/IDE/Cloud-Remote/headless, AGENTS.md, sandbox, review workflow và nhịp sync/async.'},
+  {id:'m6-l1', mod:6, part:'Phần II · Làm chủ công cụ', title:'Codex · Môi trường làm việc & biên an toàn', desc:'App/CLI/IDE/Cloud-Remote/headless, AGENTS.md, sandbox, review workflow và nhịp sync/async.'},
   {id:'m7-l1', mod:7, part:'Phần II · Làm chủ công cụ', title:'Kết hợp Claude Code + Codex', desc:'Builder+reviewer chéo công cụ, scout, worktree song song, sync+async, thực tế chi phí.'},
   {id:'m8-l1', mod:8, part:'Phần III · Áp dụng vào SDLC', title:'Khám phá & Đặc tả', desc:'Tách pha spec/code, brainstorm, scout, PRD sống, review đa góc nhìn.'},
   {id:'m9-l1', mod:9, part:'Phần III · Áp dụng vào SDLC', title:'Kiến trúc & Thiết kế', desc:'Tìm kiếm có ràng buộc, ADR, persona chuyên gia, threat modeling, sơ đồ dạng code.'},
