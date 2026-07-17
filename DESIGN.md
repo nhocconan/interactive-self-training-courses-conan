@@ -1,4 +1,4 @@
-# Demo Learning Portal — Design System
+# Conan Learning Portal — Design System
 
 > Format: **Google Stitch v1**. This document is the canonical source of truth
 > for the visual system; tokens here map 1:1 to CSS variables in
@@ -8,7 +8,7 @@
 
 ## 1 · Brand essence
 
-- **Product**       Demo Learning Portal — internal LMS for 500-person enterprise
+- **Product**       Conan Learning Portal — internal LMS for 500-person enterprise
 - **Brand parent**  Demo Group (demo.com)
 - **Voice**         Confident, modern, pragmatic. Speaks Vietnamese & English.
 - **Mood words**    Crisp · Energetic · Trusted · Tech-forward

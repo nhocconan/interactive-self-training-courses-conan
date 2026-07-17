@@ -1,6 +1,6 @@
 # Authoring courses
 
-A course in Demo Learning Portal is one of seven content kinds. Admins
+A course in Conan Learning Portal is one of seven content kinds. Admins
 pick the kind in `/admin/courses` and the learner viewer renders the right
 player for it.
 

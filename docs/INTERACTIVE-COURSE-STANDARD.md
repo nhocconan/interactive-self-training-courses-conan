@@ -1,4 +1,4 @@
-# Interactive Course Standard (Demo Learning Portal)
+# Interactive Course Standard (Conan Learning Portal)
 
 Every interactive HTML course under [`courses/`](../courses/) follows one shared
 design system. **The canonical, versioned spec lives in the

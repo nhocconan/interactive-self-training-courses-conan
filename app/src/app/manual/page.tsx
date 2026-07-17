@@ -3,7 +3,7 @@ import type { Metadata } from "next";
 
 export const metadata: Metadata = {
   title: "Hướng dẫn sử dụng · Demo Learning",
-  description: "Sổ tay hướng dẫn sử dụng Demo Learning Portal — dành cho học viên, HR, và quản trị viên.",
+  description: "Sổ tay hướng dẫn sử dụng Conan Learning Portal — dành cho học viên, HR, và quản trị viên.",
 };
 
 // Public Vietnamese user manual. Server component, no auth required.

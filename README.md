@@ -1,4 +1,4 @@
-# Demo Learning Portal
+# Conan Learning Portal
 
 Internal interactive-training portal for **Demo Group** (~500 employees).
 Users self-train through interactive HTML courses, mark progress, and HR can

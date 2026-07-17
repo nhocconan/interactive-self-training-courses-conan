@@ -2,7 +2,7 @@ import Link from "next/link";
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "PRD · Demo Learning Portal",
+  title: "PRD · Conan Learning Portal",
   description: "Product Requirements Document — Demo internal LMS",
 };
 
@@ -19,7 +19,7 @@ export default function PRDPage() {
 
         <Section id="overview" title="1 · Tổng quan sản phẩm" kicker="Overview">
           <p>
-            <strong>Demo Learning Portal</strong> là LMS nội bộ của Demo Group,
+            <strong>Conan Learning Portal</strong> là LMS nội bộ của Demo Group,
             thay thế các đường link rời rạc trên Slack/Drive/Wiki bằng một cổng
             học tập duy nhất: tìm khóa học, học, làm quiz, nhận chứng chỉ, và
             cho HR/Manager nhìn thấy quá trình phát triển của mỗi nhân sự.
@@ -368,7 +368,7 @@ function Hero() {
       <div className="mx-auto max-w-5xl px-4 py-14 sm:px-6 sm:py-20">
         <div className="text-xs uppercase tracking-widest text-[var(--muted-foreground)]">Product Requirements Document · v1.0 · 2026-05-19</div>
         <h1 className="mt-3 text-4xl font-bold tracking-tight sm:text-5xl">
-          <span className="text-gradient-brand">Demo Learning Portal</span>
+          <span className="text-gradient-brand">Conan Learning Portal</span>
         </h1>
         <p className="mt-4 max-w-2xl text-lg text-[var(--muted-foreground)]">
           LMS nội bộ cho ~500 nhân viên Demo — discover, learn, prove. Hỗ trợ
@@ -599,7 +599,7 @@ function SystemOverviewSVG() {
   return (
     <SVGCard title="Hình 1 — Tổng quan hệ thống Demo Learning" height={380}>
       <rect x="20" y="20" width="860" height="340" rx="20" fill="#fff8f5" stroke="#ea403f" strokeDasharray="6 5" opacity="0.6" />
-      <text x="40" y="46" fontSize="12" fill="#ea403f" fontWeight={700} fontFamily="Inter, system-ui">Demo Learning Portal</text>
+      <text x="40" y="46" fontSize="12" fill="#ea403f" fontWeight={700} fontFamily="Inter, system-ui">Conan Learning Portal</text>
 
       <SketchyBox x={50} y={90} w={170} h={70} label="Learner" sub="USER · ~500" fill="#fff" stroke="#0b1020" rotate={-1} />
       <SketchyBox x={50} y={180} w={170} h={70} label="HR" sub="reports + view" fill="#fff" stroke="#0b1020" />

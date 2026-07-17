@@ -1,8 +1,8 @@
-# Product Requirements Document — Demo Learning Portal
+# Product Requirements Document — Conan Learning Portal
 
 | Field        | Value                                                                |
 |--------------|----------------------------------------------------------------------|
-| Product      | **Demo Learning Portal** (internal LMS)                            |
+| Product      | **Conan Learning Portal** (internal LMS)                            |
 | Owner        | Demo Group — People Ops + IT Platform                              |
 | Audience     | ~500 employees across Vietnam offices, expanding to APAC             |
 | First release| 2026-Q2                                                              |
