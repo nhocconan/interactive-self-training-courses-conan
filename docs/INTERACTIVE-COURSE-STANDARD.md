@@ -53,7 +53,7 @@ the engine but not yet consumed (forward-compatible).
 | ~~`ai-context-engineering-harness-engineering-course-v2.html`~~ | — | **Removed 2026-07-10** — superseded by `context-harness-engineering.html`; LMS catalog repointed (`app/prisma/seed.ts`). Recoverable from git history. |
 | `rag-information-retrieval-course.html` | (editorial) | Pre-standard; candidate for future alignment. De-branded 2026-07-10 (generic production platform, no product names). |
 | `dss-datawarehouse-idss-course.html` | — | Pre-standard-ish. De-branded 2026-07-10 (case-study genericized). |
-| `decision-intelligence-agentic-systems.html` | agentic (ink/coral) | **Clean-room, standard-conformant** (VI, L1→L5, 13 bài, 8 interactive labs, 13 quizzes, replay/OPE/promotion/action/evaluation capstone — 2026-07). Self-improving means governed policy promotion, never unconstrained self-editing. |
+| `decision-intelligence-agentic-systems.html` | agentic (ink/coral) | **Clean-room, standard-conformant** (VI, L1→L5, 13 bài, 10 interactive labs, 15 figures, 13 quizzes; four-plane reference architecture + nested learning loops — refreshed 2026-07-17). Self-improving means governed policy promotion, never unconstrained self-editing. |
 | ~~`decision-intelligence-mastery-course.html`~~ | — | **Removed from public repo 2026-07-10** — anchored end-to-end to an internal production codebase (constants, table/function names); not publishable without a clean-room rewrite. In git history. |
 | ~~`mso-decision-memory-systems-course.html`~~ | — | **Removed from public repo 2026-07-10** — internal implementation roadmap for an internal platform; not publishable. In git history. |
 
