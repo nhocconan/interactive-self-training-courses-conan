@@ -3,8 +3,8 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Khóa học tương tác · Lộ trình AI 6 nấc · @nhocconan</title>
-<meta name="description" content="Lộ trình 6 khóa học tương tác: Playbook → Context & Harness → Loop Engineering → RAG → IDSS → Agentic Decision Systems. Một file HTML mỗi khóa, chạy offline, giàu diagram, lab và quiz.">
+<title>Khóa học AI chuyên sâu · học theo topic · @nhocconan</title>
+<meta name="description" content="Sáu khóa học AI chuyên sâu, mỗi khóa đào sâu một chủ đề — AI Practical Playbook, Context & Harness, Loop Engineering, RAG, DSS/IDSS, Agentic Decision Systems. Học cái nào cần cái đó, độc lập. Một file HTML mỗi khóa, chạy offline, giàu diagram, lab và quiz.">
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>📚</text></svg>">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -46,13 +46,9 @@ a:focus-visible,button:focus-visible{outline:3px solid var(--accent-2);outline-o
 .pill{display:inline-flex;align-items:center;gap:8px;min-height:44px;padding:8px 16px;border-radius:999px;border:1px solid var(--border-strong);background:var(--surface);color:var(--ink);text-decoration:none;font-weight:600;font-size:14px}
 .pill.primary{background:var(--brand-navy);border-color:var(--brand-navy);color:#fff}
 [data-mode="dark"] .pill.primary{background:var(--accent-2);border-color:var(--accent-2);color:#0b1526}
-/* Lộ trình — timeline dọc 6 nấc */
-.path{list-style:none;position:relative;margin:34px 0 8px;padding:0}
-.path::before{content:"";position:absolute;left:27px;top:10px;bottom:10px;width:2px;background:linear-gradient(180deg,var(--brand-sky),var(--brand-coral));opacity:.35}
-.step{position:relative;display:flex;gap:20px;padding:0 0 26px}
-.step-marker{flex:none;width:56px;height:56px;border-radius:50%;display:grid;place-items:center;font-family:var(--mono);font-weight:600;font-size:15px;background:var(--surface);border:2px solid var(--accent-2);color:var(--accent-2);z-index:1}
-.step:last-child{padding-bottom:0}
-.card{flex:1;display:flex;flex-direction:column;gap:10px;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:20px 22px;transition:border-color .15s}
+/* Catalog — lưới các khóa topic độc lập */
+.grid{display:grid;grid-template-columns:repeat(2,1fr);gap:16px;margin:34px 0 8px}
+.card{display:flex;flex-direction:column;gap:10px;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:20px 22px;transition:border-color .15s}
 .card:hover{border-color:var(--accent-2)}
 .level-tag{font-family:var(--mono);font-size:11px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:var(--accent-3)}
 .badges{display:flex;flex-wrap:wrap;gap:6px}
@@ -68,10 +64,8 @@ a:focus-visible,button:focus-visible{outline:3px solid var(--accent-2);outline-o
 footer{margin-top:auto;border-top:1px solid var(--border);padding:22px 0;font-size:13px;color:var(--ink-3)}
 footer .wrap{display:flex;flex-wrap:wrap;gap:8px 18px;justify-content:space-between}
 footer a{color:var(--ink-2)}
-@media (max-width:560px){
-  .path::before{left:21px}
-  .step{gap:14px}
-  .step-marker{width:44px;height:44px;font-size:13px}
+@media (max-width:680px){
+  .grid{grid-template-columns:1fr}
 }
 </style>
 </head>
@@ -83,9 +77,9 @@ footer a{color:var(--ink-2)}
 
 <main class="wrap">
   <section class="hero">
-    <div class="kicker">Lộ trình 6 nấc · tự học · một file HTML mỗi khóa · chạy offline</div>
-    <h1>Từ <em>người dùng AI</em> thành <em>người xây hệ AI</em></h1>
-    <p>Sáu khóa học tương tác xếp theo nấc thang đi lên: dùng AI cho ra việc → hiểu context &amp; harness → thiết kế agent loop → nối tri thức riêng → xây IDSS → đóng vòng quyết định tự cải thiện có kiểm soát. Mỗi khóa giàu SVG, lab tương tác, quiz tình huống và tối ưu điện thoại.</p>
+    <div class="kicker">6 khóa học tương tác · chuyên sâu từng topic · chạy offline</div>
+    <h1>Khóa học AI <em>chuyên sâu</em>, học theo topic</h1>
+    <p>Mỗi khóa đào sâu một chủ đề — RAG, Loop Engineering, DSS/IDSS, Agentic Decision Systems… Học cái nào cần cái đó, độc lập, không ép thứ tự. AI Practical Playbook là điểm bắt đầu nếu bạn mới dùng AI nghiêm túc. Mỗi khóa giàu SVG, lab tương tác, quiz tình huống và tối ưu điện thoại.</p>
     <div class="links">
       <a class="pill primary" href="https://x.com/nhocconan" rel="me">Theo dõi trên X → @nhocconan</a>
       <a class="pill" href="https://dep.app">dep.app — apps tôi xây</a>
@@ -94,78 +88,61 @@ footer a{color:var(--ink-2)}
     <!-- Khi landing dịch vụ đào tạo live: đổi link dep.app ở trên thành https://dep.app/dao-tao/ -->
   </section>
 
-  <ol class="path" aria-label="Lộ trình học 6 nấc">
-    <li class="step">
-      <div class="step-marker" aria-hidden="true">01</div>
-      <article class="card">
-        <span class="level-tag">Nấc 1 · Nền tảng — dùng AI cho ra việc</span>
-        <div class="badges"><span class="badge lang">Tiếng Việt</span><span class="badge">Nhập môn</span><span class="badge">25 bài</span><span class="badge">3 sơ đồ chính</span></div>
-        <h2>AI Practical Playbook</h2>
-        <p>Playbook AI thực chiến cho công việc production: chọn model đúng việc, pattern prompting, agent và vòng đánh giá. Bài nào cũng có ví dụ chạy được. Bắt đầu ở đây nếu bạn mới dùng AI nghiêm túc.</p>
-        <a class="go" href="ai-practical-playbook.html">Vào học →</a>
-        <div class="rel">Bản Việt cập nhật 12/07/2026; bản Anh đang đồng bộ lại · Học xong lên nấc 2: <a href="context-harness-engineering.html">Context &amp; Harness</a></div>
-      </article>
-    </li>
+  <div class="grid">
+    <article class="card">
+      <span class="level-tag">Nhập môn · dùng AI cho ra việc</span>
+      <div class="badges"><span class="badge lang">Tiếng Việt</span><span class="badge">Nhập môn</span><span class="badge">25 bài</span><span class="badge">3 sơ đồ chính</span></div>
+      <h2>AI Practical Playbook</h2>
+      <p>Playbook AI thực chiến cho công việc production: chọn model đúng việc, pattern prompting, agent và vòng đánh giá. Bài nào cũng có ví dụ chạy được.</p>
+      <a class="go" href="ai-practical-playbook.html">Vào học →</a>
+      <div class="rel">Bắt đầu ở đây nếu bạn mới dùng AI nghiêm túc · bản Việt cập nhật 12/07/2026, bản Anh đang đồng bộ lại.</div>
+    </article>
 
-    <li class="step">
-      <div class="step-marker" aria-hidden="true">02</div>
-      <article class="card">
-        <span class="level-tag">Nấc 2 · Kỹ sư hóa — hiểu ruột gan hệ AI</span>
-        <div class="badges"><span class="badge lang">Tiếng Việt</span><span class="badge">L1→L5</span><span class="badge">15 bài</span><span class="badge">13 sơ đồ</span></div>
-        <h2>Context &amp; Harness Engineering</h2>
-        <p>Kỹ nghệ ngữ cảnh và runtime cho AI — vì sao AI "hỏng ở prod" và thứ tự chẩn đoán; xây harness (tools, loop, memory, recovery, observability) biến LLM thành đồng đội tin cậy. Cập nhật công cụ 2026: Claude Code, Codex.</p>
-        <a class="go" href="context-harness-engineering.html">Vào học →</a>
-        <div class="rel">Cần trước: <a href="ai-practical-playbook.html">Playbook (nấc 1)</a> · Vòng lặp agent ở đây là 1 trong 5 trụ — đào sâu ở nấc 3: <a href="loop-engineering.html">Loop Engineering</a></div>
-      </article>
-    </li>
+    <article class="card">
+      <span class="level-tag">Chuyên sâu · kỹ nghệ ngữ cảnh &amp; runtime</span>
+      <div class="badges"><span class="badge lang">Tiếng Việt</span><span class="badge">L1→L5</span><span class="badge">15 bài</span><span class="badge">13 sơ đồ</span></div>
+      <h2>Context &amp; Harness Engineering</h2>
+      <p>Kỹ nghệ ngữ cảnh và runtime cho AI — vì sao AI "hỏng ở prod" và thứ tự chẩn đoán; xây harness (tools, loop, memory, recovery, observability) biến LLM thành đồng đội tin cậy. Cập nhật công cụ 2026: Claude Code, Codex.</p>
+      <a class="go" href="context-harness-engineering.html">Vào học →</a>
+      <div class="rel">Liên quan: <a href="loop-engineering.html">Loop Engineering</a> đào sâu một trong 5 trụ của harness.</div>
+    </article>
 
-    <li class="step">
-      <div class="step-marker" aria-hidden="true">03</div>
-      <article class="card">
-        <span class="level-tag">Nấc 3 · Tự hành — thả agent chạy vòng lặp</span>
-        <div class="badges"><span class="badge lang">Tiếng Việt</span><span class="badge">L1→L5</span><span class="badge">10 bài</span><span class="badge">9 sơ đồ</span></div>
-        <h2>Loop Engineering</h2>
-        <p>Thiết kế, đặt biên, đóng vòng và điều phối vòng lặp agent tự hành: verifier là vua, generate→critique→revise, đa agent, guardrail và kinh tế vòng lặp — kèm widget tính chi phí.</p>
-        <a class="go" href="loop-engineering.html">Vào học →</a>
-        <div class="rel">Cần trước: <a href="context-harness-engineering.html">Context &amp; Harness (nấc 2)</a> · Agent cần tri thức riêng? Nấc 4: <a href="rag-information-retrieval-course.html">RAG</a></div>
-      </article>
-    </li>
+    <article class="card">
+      <span class="level-tag">Chuyên sâu · vòng lặp agent tự hành</span>
+      <div class="badges"><span class="badge lang">Tiếng Việt</span><span class="badge">L1→L5</span><span class="badge">10 bài</span><span class="badge">9 sơ đồ</span></div>
+      <h2>Loop Engineering</h2>
+      <p>Thiết kế, đặt biên, đóng vòng và điều phối vòng lặp agent tự hành: verifier là vua, generate→critique→revise, đa agent, guardrail và kinh tế vòng lặp — kèm widget tính chi phí.</p>
+      <a class="go" href="loop-engineering.html">Vào học →</a>
+      <div class="rel">Liên quan: <a href="context-harness-engineering.html">Context &amp; Harness</a> · <a href="rag-information-retrieval-course.html">RAG</a> khi agent cần tri thức riêng.</div>
+    </article>
 
-    <li class="step">
-      <div class="step-marker" aria-hidden="true">04</div>
-      <article class="card">
-        <span class="level-tag">Nấc 4 · Tri thức — nối AI vào dữ liệu riêng</span>
-        <div class="badges"><span class="badge lang">English</span><span class="badge">Intermediate</span><span class="badge">13 chương · ≈90 phút</span><span class="badge">20 hình</span></div>
-        <h2>RAG, Layer by Layer</h2>
-        <p>Đi từ RAG đơn giản nhất (embed một chunk, tìm hàng xóm gần nhất) lên pipeline production: chunking, vector search, re-ranking, multi-layer caching, evaluation — mỗi chương thêm đúng một ý và chỉ ra failure mode nó sửa.</p>
-        <a class="go" href="rag-information-retrieval-course.html">Vào học →</a>
-        <div class="rel">Cần trước: <a href="context-harness-engineering.html">Context &amp; Harness (nấc 2)</a> · Bản Việt hóa đang làm — theo dõi trên <a href="https://x.com/nhocconan">X</a></div>
-      </article>
-    </li>
+    <article class="card">
+      <span class="level-tag">Chuyên sâu · retrieval-augmented generation</span>
+      <div class="badges"><span class="badge lang">English</span><span class="badge">Intermediate</span><span class="badge">13 chương · ≈90 phút</span><span class="badge">20 hình</span></div>
+      <h2>RAG, Layer by Layer</h2>
+      <p>Đi từ RAG đơn giản nhất (embed một chunk, tìm hàng xóm gần nhất) lên pipeline production: chunking, vector search, re-ranking, multi-layer caching, evaluation — mỗi chương thêm đúng một ý và chỉ ra failure mode nó sửa.</p>
+      <a class="go" href="rag-information-retrieval-course.html">Vào học →</a>
+      <div class="rel">Bản Việt đang làm — theo dõi trên <a href="https://x.com/nhocconan">X</a>.</div>
+    </article>
 
-    <li class="step">
-      <div class="step-marker" aria-hidden="true">05</div>
-      <article class="card">
-        <span class="level-tag">Nấc 5 · Hệ ra quyết định — từ dashboard tới IDSS biết học</span>
-        <div class="badges"><span class="badge lang">Tiếng Việt</span><span class="badge">L1→L5</span><span class="badge">21 bài · ≈2.5 giờ</span><span class="badge">46 hình</span></div>
-        <h2>DSS &amp; Data Warehouse → IDSS</h2>
-        <p>Lý thuyết quyết định, kho dữ liệu (bronze→silver→gold), kiến trúc DSS/IDSS, quản lý bất định, recommender — mỗi khái niệm đối chiếu với một hệ ra quyết định ví dụ cho ngành bán lẻ.</p>
-        <a class="go" href="dss-datawarehouse-idss-course.html">Vào học →</a>
-        <div class="rel">Cần trước: <a href="rag-information-retrieval-course.html">RAG (nấc 4)</a> giúp hiểu phần tri thức · Học tiếp nấc 6 để thiết kế provenance, memory, OPE, safe action và learning loop.</div>
-      </article>
-    </li>
-    <li class="step">
-      <div class="step-marker" aria-hidden="true">06</div>
-      <article class="card">
-        <span class="level-tag">Nấc 6 · Agentic Decision — tự cải thiện có kiểm soát</span>
-        <div class="badges"><span class="badge lang">Tiếng Việt</span><span class="badge">Chuyên sâu</span><span class="badge">13 bài · ≈3 giờ</span><span class="badge">8 lab tương tác</span></div>
-        <h2>Agentic Decision Systems</h2>
-        <p>Từ deterministic decision kernel tới decision episode, provenance, memory có vòng đời, causal/OPE evidence, action recovery, evals, observability và champion–challenger promotion.</p>
-        <a class="go" href="decision-intelligence-agentic-systems.html">Vào học →</a>
-        <div class="rel">Cần trước: <a href="dss-datawarehouse-idss-course.html">DSS &amp; IDSS (nấc 5)</a> · Luận điểm: self-improving ≠ self-editing.</div>
-      </article>
-    </li>
-  </ol>
+    <article class="card">
+      <span class="level-tag">Chuyên sâu · hệ ra quyết định &amp; kho dữ liệu</span>
+      <div class="badges"><span class="badge lang">Tiếng Việt</span><span class="badge">L1→L5</span><span class="badge">21 bài · ≈2.5 giờ</span><span class="badge">46 hình</span></div>
+      <h2>DSS &amp; Data Warehouse → IDSS</h2>
+      <p>Lý thuyết quyết định, kho dữ liệu (bronze→silver→gold), kiến trúc DSS/IDSS, quản lý bất định, recommender — mỗi khái niệm đối chiếu với một hệ ra quyết định ví dụ cho ngành bán lẻ.</p>
+      <a class="go" href="dss-datawarehouse-idss-course.html">Vào học →</a>
+      <div class="rel">Liên quan: <a href="rag-information-retrieval-course.html">RAG</a> cho phần tri thức · <a href="decision-intelligence-agentic-systems.html">Agentic Decision Systems</a> đào sâu tiếp.</div>
+    </article>
+
+    <article class="card">
+      <span class="level-tag">Chuyên sâu · hệ quyết định tự cải thiện</span>
+      <div class="badges"><span class="badge lang">Tiếng Việt</span><span class="badge">Chuyên sâu</span><span class="badge">13 bài · ≈3 giờ</span><span class="badge">8 lab tương tác</span></div>
+      <h2>Agentic Decision Systems</h2>
+      <p>Từ deterministic decision kernel tới decision episode, provenance, memory có vòng đời, causal/OPE evidence, action recovery, evals, observability và champion–challenger promotion.</p>
+      <a class="go" href="decision-intelligence-agentic-systems.html">Vào học →</a>
+      <div class="rel">Liên quan: <a href="dss-datawarehouse-idss-course.html">DSS &amp; IDSS</a> · Luận điểm: self-improving ≠ self-editing.</div>
+    </article>
+  </div>
 
   <p class="note">Các khóa này là <strong>demo công khai</strong> của quy trình tôi dùng để xây khóa học nội bộ theo tài liệu riêng của từng đội. Cần một khóa như vậy cho đội của bạn? Nhắn tôi trên <a href="https://x.com/nhocconan">X @nhocconan</a>.</p>
 </main>
