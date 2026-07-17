@@ -2886,7 +2886,7 @@ footer.site{border-top:1px solid var(--border);padding:26px 24px;text-align:cent
     </div>
     <p>C4.5 nhỉnh hơn trên tập test (0,746 &gt; 0,728) — nhưng bài học lớn hơn con số là: <strong>clustering (data-driven) khớp với luật chuyên gia (model-driven)</strong>. Đây chính là tinh thần "đối chiếu với sự thật bên ngoài, đừng tự suy lại".</p>
 
-    <p>Hệ ví dụ — một hệ ra quyết định marketing production — đi qua đúng vòng đó, nhưng thứ tự <strong>build theo ROI, không theo số bậc</strong>. Thang <strong>L0→L5</strong> là thang <em>năng lực</em> (đo mức hệ tự đo nhân quả + tự học), không phải phiên bản hay lỗi. Sau khi L1 (rule) chạy, các bậc tiếp theo được ưu tiên theo <strong>ROI — giá trị mang lại sớm nhất</strong> — chứ không theo thứ tự số bậc.</p>
+    <p>Case study minh hoạ đi qua vòng đó, nhưng cần tách <strong>evidence maturity</strong> khỏi quyền hành động. L1–L2 là nền rule/signal đã chứng minh; L3 pre/post và L4 policy/OPE chỉ là prototype; L5 mới là monitoring foundation. “Có feedback” không tự đồng nghĩa self-improving.</p>
 
     <figure class="figure">
       <svg viewBox="0 0 760 250" role="img" aria-label="Dòng thời gian trưởng thành L0 đến L5 của hệ ví dụ: L0 code cứng đã qua; L1 Rule DSL và biên nhận đã ship; L2 kho tín hiệu đã ship; L3 thí nghiệm pre-post đã ship lõi; L4 chính sách Thompson Sampling đã ship lõi; L5 vòng kín đang là nền móng; sau L5 là ranh giới track Python chưa dựng">
@@ -2910,27 +2910,27 @@ footer.site{border-top:1px solid var(--border);padding:26px 24px;text-align:cent
         <circle class="dgm-accent" cx="436" cy="60" r="17" stroke-width="2"/>
         <text class="dgm-ink" x="436" y="64" text-anchor="middle" font-size="11" font-weight="700" font-family="IBM Plex Mono">L3</text>
         <text class="dgm-ink2" x="436" y="98" text-anchor="middle" font-size="9">thí nghiệm</text>
-        <text class="dgm-ink2" x="436" y="110" text-anchor="middle" font-size="9">pre_post (14) ✅</text>
+        <text class="dgm-ink2" x="436" y="110" text-anchor="middle" font-size="9">pre/post mô tả 🧪</text>
         <!-- L4 -->
         <circle class="dgm-accent" cx="558" cy="60" r="17" stroke-width="2"/>
         <text class="dgm-ink" x="558" y="64" text-anchor="middle" font-size="11" font-weight="700" font-family="IBM Plex Mono">L4</text>
         <text class="dgm-ink2" x="558" y="98" text-anchor="middle" font-size="9">Thompson +</text>
-        <text class="dgm-ink2" x="558" y="110" text-anchor="middle" font-size="9">OPE ✅ lõi</text>
+        <text class="dgm-ink2" x="558" y="110" text-anchor="middle" font-size="9">OPE prototype 🧪</text>
         <!-- L5 -->
         <circle class="dgm-warn" cx="680" cy="60" r="17"/>
         <text class="dgm-ink" x="680" y="64" text-anchor="middle" font-size="11" font-weight="700" font-family="IBM Plex Mono">L5</text>
         <text class="dgm-ink2" x="680" y="98" text-anchor="middle" font-size="9">trôi PSI/KS +</text>
-        <text class="dgm-ink2" x="680" y="110" text-anchor="middle" font-size="9">sổ ~85,7% 🟡</text>
+        <text class="dgm-ink2" x="680" y="110" text-anchor="middle" font-size="9">monitoring foundation</text>
         <!-- honesty boundary -->
         <line x1="726" y1="24" x2="726" y2="150" stroke="var(--warning)" stroke-width="2" stroke-dasharray="5 4"/>
         <text x="726" y="176" text-anchor="middle" font-size="9.5" font-family="IBM Plex Mono" fill="var(--warning)">ranh giới</text>
         <text x="726" y="190" text-anchor="middle" font-size="9.5" font-family="IBM Plex Mono" fill="var(--warning)">trung thực</text>
         <text class="dgm-ink2" x="380" y="150" text-anchor="middle" font-size="10" font-style="italic">track Python (MMM · CausalImpact · Double ML · conformal) — chưa dựng, KHÔNG giả lập</text>
       </svg>
-      <figcaption><b>Hình 6.2</b> — Mỗi bậc thêm một năng lực; L1–L4 đã ship (L3/L4 phần lõi), L5 là nền móng. Bên phải đường đứt là phần cố tình <b>chưa</b> làm.</figcaption>
+      <figcaption><b>Hình 6.2</b> — Mỗi bậc thêm một loại bằng chứng. L1–L2 đã chứng minh; L3/L4 là prototype; L5 là monitoring foundation. Enum, công thức hoặc UI không tự chứng minh maturity.</figcaption>
     </figure>
 
-    <div class="callout warn"><div class="callout-title">Ranh giới trung thực</div><p>Track Python (Bayesian MMM với adstock + bão hoà, CausalImpact/BSTS, Double ML/uplift, conformal prediction) KHÔNG dựng đúng đắn được bằng TypeScript trong một phiên — nên đội <strong>không giả vờ đã xong</strong> (§55). Nền TS hiện tại là "xấp xỉ trung thực, tái lập được, an toàn oracle"; phần cao cấp để một dịch vụ Python riêng. Dừng ở đây là kỷ luật, không phải lười.</p></div>
+    <div class="callout warn"><div class="callout-title">Ranh giới trung thực</div><p>Pre/post là mô tả, không phải randomized causal evidence. Policy có tên OPE nhưng thiếu exact logging propensity/action-level reward/overlap diagnostics thì chưa được promote. Python là compute boundary sau khi design/eval contract được duyệt — ngôn ngữ không tự tạo causal validity.</p></div>
 
     <div class="takeaway">
       <span class="eyebrow">
@@ -3015,7 +3015,7 @@ footer.site{border-top:1px solid var(--border);padding:26px 24px;text-align:cent
 
     <p>Cách sách kiểm Validation là <strong>chấm theo kịch bản</strong> (acceptance testing): định nghĩa các kịch bản đại diện — cả tình huống <em>thường</em> lẫn <em>cực đoan</em> — chạy hệ, rồi chấm kết quả trên 6 tiêu chí: <strong>đúng</strong> (correctness), <strong>đủ phương án</strong> (completeness), <strong>xếp đúng thứ tự</strong> theo độ tin (ordering), <strong>bền với dữ liệu nhiễu/thiếu</strong> (robustness), <strong>kịp giờ</strong> (time efficiency), và <strong>giải thích được</strong> (explanations). Một đề xuất "đúng" nhưng không giải thích được thì owner vẫn không dùng.</p>
 
-    <p>Hệ production không chờ có "protocol chuẩn" — nó dựng từng tầng đánh giá cụ thể. Bảng dưới nối tiêu chí của sách với cơ chế thật:</p>
+    <p>Một hệ production cần dựng từng tầng đánh giá cụ thể. Bảng dưới dùng case study để minh hoạ cơ chế; số demo không phải bằng chứng production learning:</p>
 
     <div class="table-wrap">
       <table>
@@ -3024,10 +3024,10 @@ footer.site{border-top:1px solid var(--border);padding:26px 24px;text-align:cent
           <tr><td><strong>Verification</strong> — số tái lập?</td><td>Đầu ra dựng đúng chưa</td><td><code>verify:data</code> đối soát: headline == SUM(dòng bảng); rolling == period; merge không đếm trùng</td></tr>
           <tr><td>Neo ground-truth</td><td>Số kỳ vọng lấy từ đâu</td><td>Oracle đông cứng = một con số NMV theo kỳ do khách xác nhận, đóng băng lại — KHÔNG tự suy lại từ chính code</td></tr>
           <tr><td>"Lệch ≠ bug"</td><td>Gặp số lệch thì làm gì</td><td>Xác nhận ngữ nghĩa với ground-truth ngoài TRƯỚC khi "sửa"</td></tr>
-          <tr><td>Task performance — chất lượng quyết định</td><td>Đề xuất có đúng không</td><td>Track record: <strong>~70% trúng trên 12 quyết định</strong> đo thật (org demo, tuần T1→T6)</td></tr>
+          <tr><td>Task performance — chất lượng quyết định</td><td>Đề xuất có đúng không</td><td>Đánh giá outcome theo dataset/version/slice; fixture demo chỉ minh hoạ UI</td></tr>
           <tr><td>Xếp thứ tự + độ tin</td><td>Có trung thực về độ chắc</td><td>Hiệu chuẩn (calibration) + biên nhận; confidence = |r|·k/(k+3), tín hiệu yếu → "—"</td></tr>
-          <tr><td>Bền theo thời gian</td><td>Mô hình có trôi không</td><td>Toán trôi PSI/KS + champion/challenger (L5)</td></tr>
-          <tr><td>Giải thích + tái lập</td><td>Có kể lại được không</td><td>Sổ quyết định tái lập <strong>~85,7%</strong>: biên nhận replay từ <code>signal_values</code> đã lưu</td></tr>
+          <tr><td>Bền theo thời gian</td><td>Mô hình có trôi không</td><td>PSI/KS là monitoring foundation; champion/challenger cần artifact, traffic split, promotion/rollback thật</td></tr>
+          <tr><td>Giải thích + tái lập</td><td>Có kể lại được không</td><td>Linkage/completeness chưa phải replay; replay cần frozen input + exact version → same output hash</td></tr>
         </tbody>
       </table>
     </div>
@@ -3107,7 +3107,7 @@ footer.site{border-top:1px solid var(--border);padding:26px 24px;text-align:cent
         <path class="dgm-flow" d="M460 65 H500" stroke-width="2" marker-end="url(#m6l3-ah)"/>
         <rect class="dgm-box" x="500" y="40" width="120" height="50" rx="10"/>
         <text class="dgm-ink" x="560" y="63" text-anchor="middle" font-size="12" font-weight="700">Kích hoạt</text>
-        <text class="dgm-ink2" x="560" y="79" text-anchor="middle" font-size="9" font-family="IBM Plex Mono">executed</text>
+        <text class="dgm-ink2" x="560" y="79" text-anchor="middle" font-size="9" font-family="IBM Plex Mono">activated</text>
         <!-- down to measured -->
         <path class="dgm-flow" d="M560 90 V150" stroke-width="2" marker-end="url(#m6l3-ah)"/>
         <!-- bottom row -->
@@ -3116,8 +3116,8 @@ footer.site{border-top:1px solid var(--border);padding:26px 24px;text-align:cent
         <text class="dgm-ink2" x="560" y="189" text-anchor="middle" font-size="9" font-family="IBM Plex Mono">measured</text>
         <path class="dgm-flow" d="M500 175 H470" stroke-width="2" marker-end="url(#m6l3-ah)"/>
         <rect class="dgm-box" x="320" y="150" width="150" height="50" rx="10"/>
-        <text class="dgm-ink" x="395" y="173" text-anchor="middle" font-size="12" font-weight="700">Xác nhận</text>
-        <text class="dgm-ink2" x="395" y="189" text-anchor="middle" font-size="9" font-family="IBM Plex Mono">confirmed</text>
+        <text class="dgm-ink" x="395" y="173" text-anchor="middle" font-size="12" font-weight="700">Outcome metadata</text>
+        <text class="dgm-ink2" x="395" y="189" text-anchor="middle" font-size="9" font-family="IBM Plex Mono">confirmed_* riêng</text>
         <!-- feedback loop back to proposed -->
         <path d="M320 175 H80 V90" fill="none" stroke="var(--accent-2)" stroke-width="2" stroke-dasharray="5 4" marker-end="url(#m6l3-ah)"/>
         <text x="200" y="168" text-anchor="middle" font-size="9.5" font-family="IBM Plex Mono" fill="var(--accent-2)">học từ kết quả (feedback)</text>
@@ -3282,7 +3282,7 @@ footer.site{border-top:1px solid var(--border);padding:26px 24px;text-align:cent
       </ol>
     </div>
 
-    <p>Muốn đi sâu tiếp vào vòng học rule → causal → bandit (bậc L1→L5 của hệ ra quyết định), khoá <a href="decision-intelligence-mastery-course.html">«Decision Intelligence &amp; Agentic Learning Systems»</a> là phần nối dài tự nhiên của khoá này.</p>
+    <p>Muốn đi sâu tiếp vào vòng học rule → causal → bandit (bậc L1→L5 của hệ ra quyết định), khoá <a href="decision-intelligence-agentic-systems.html">«Agentic Decision Systems · Self-improving có kiểm soát»</a> là phần nối dài tự nhiên của khoá này.</p>
 
     <div class="takeaway">
       <span class="eyebrow">
