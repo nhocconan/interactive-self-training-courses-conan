@@ -299,6 +299,9 @@ footer.site{border-top:1px solid var(--border);padding:26px 24px;text-align:cent
               <tr><td><span class="badge">bán kính thiệt hại (blast radius)</span></td><td>Phạm vi hư hại tối đa khi loop sai; càng lớn càng cần cổng người &amp; sandbox.</td></tr>
               <tr><td><span class="badge">pattern Ralph</span></td><td>Tên cộng đồng cho cách lặp qua các phiên ngắn, mỗi phiên đọc và cập nhật state bền vững; cần verifier, biên, quyền hạn hẹp và observability.</td></tr>
               <tr><td><span class="badge">kill switch</span></td><td>Cơ chế dừng tức thì một loop đang chạy; đi kèm trần chi phí &amp; cảnh báo là lớp guardrail cuối.</td></tr>
+              <tr><td><span class="badge">closed-loop / open-loop</span></td><td>Vòng kín: mỗi vòng nhận phản hồi khách quan từ verifier để điều chỉnh vòng sau. Vòng hở: lặp mà không có phản hồi từ thực tế — công thức của trôi dạt.</td></tr>
+              <tr><td><span class="badge">maker–checker</span></td><td>Tách hai vai thành hai agent: maker tạo ra, checker (context riêng, thường là model mạnh hơn) chỉ tìm lỗi theo rubric — dạng kỷ luật hóa của reflection.</td></tr>
+              <tr><td><span class="badge">loop contract</span></td><td>Một trang ghi rõ mục tiêu, definition of done, verifier, biên, cổng người, state và cảnh báo — điền đủ trước khi cho loop rời tay.</td></tr>
             </tbody>
           </table>
         </div>
@@ -619,6 +622,11 @@ footer.site{border-top:1px solid var(--border);padding:26px 24px;text-align:cent
 
           <div class="callout danger"><div class="callout-title">Định luật của Loop Engineering</div><p>Một vòng lặp tự sửa chỉ tốt bằng cái verifier đóng nó lại. <strong>Không có verifier khách quan, thêm vòng lặp = thêm trôi dạt, không phải cải thiện.</strong> Agent sẽ "sửa" theo hướng nó <em>nghĩ</em> là đúng, và không có gì kéo nó về thực tế. Đây là lý do #1 khiến các loop tự hành thất bại.</p></div>
 
+          <div class="concept">
+            <span class="eyebrow">Gọi tên bằng ngôn ngữ điều khiển: closed-loop vs open-loop</span>
+            <p>Kỹ thuật điều khiển có sẵn tên cho định luật trên. <strong>Closed-loop (vòng kín)</strong>: mỗi vòng nhận <em>tín hiệu phản hồi khách quan</em> — verifier chạy, kết quả thật quay lại điều chỉnh vòng sau. <strong>Open-loop (vòng hở)</strong>: agent cứ lặp mà không có phản hồi nào từ thực tế — chỉ có cảm nhận của chính nó. Mọi kỹ thuật trong khóa này quy về một việc: <em>đóng vòng lại</em>. Hệ quả thực dụng: việc kiểm được bằng máy (code có test, output có schema) đóng vòng rẻ → cho tự hành sớm; việc khó kiểm (khám phá, gu thẩm mỹ, quyết định mở) đóng vòng đắt → giữ người gần hơn (Chương 5 và 7).</p>
+          </div>
+
           <figure class="figure">
             <svg viewBox="0 0 660 190" role="img" aria-label="Vòng lặp tự sửa đóng bằng verifier: generate sinh ra, verifier kiểm tra khách quan, nếu đạt thì xong, nếu không thì đưa lỗi cụ thể quay lại generate">
               <defs><marker id="al4" markerWidth="9" markerHeight="9" refX="7" refY="4.5" orient="auto"><path d="M0 0 L9 4.5 L0 9 z" fill="var(--accent-2)"/></marker>
@@ -740,7 +748,35 @@ footer.site{border-top:1px solid var(--border);padding:26px 24px;text-align:cent
             <div class="compare-col good"><span class="eyebrow">Reflection tốt</span><ul><li>Người phê bình tách khỏi quá trình tạo: context riêng, rubric định trước, không thấy phần tự-biện hộ</li><li>Phê bình cụ thể, hành động được: "đoạn 2 mâu thuẫn với đoạn 4"</li><li>Dừng khi điểm eval không tăng đủ, không còn lỗi mới, hoặc chạm ngân sách</li></ul></div>
           </div>
 
+          <div class="concept">
+            <span class="eyebrow">Đặt tên cho reflection tốt: pattern maker–checker</span>
+            <p>Cách kỷ luật hóa cột phải phía trên là tách hẳn hai vai thành hai agent. <strong>Maker</strong> tạo ra — nhanh, được phép thử nhiều. <strong>Checker</strong> phê bình — chạy ở context riêng, chỉ thấy output + rubric (không thấy lý lẽ tự biện hộ của maker), và chỉ có một nhiệm vụ: tìm lỗi cụ thể — không khen, không viết lại hộ. Vì checker chạy ít lượt hơn nhưng quyết định chất lượng, một cách chia chi phí hợp lý là <em>maker dùng model rẻ, checker dùng model mạnh</em>. Ví dụ prompt checker: <em>"Bạn là reviewer độc lập. Dưới đây là output và rubric 5 tiêu chí. Với mỗi tiêu chí, chỉ ra lỗi cụ thể kèm vị trí, hoặc ghi 'đạt'. Không đề xuất bản viết lại."</em></p>
+          </div>
+
           <div class="callout warn"><div class="callout-title">Dùng verifier cứng cho phần kiểm được</div><p>Nếu tiêu chí quy về test, schema, phép đối soát hay policy tất định, hãy kiểm bằng code. Với phần chủ quan như độ rõ hoặc giọng văn, LLM-as-judge theo rubric có thể bổ sung tín hiệu. Thiết kế lai thường hợp lý: cổng cứng bắt lỗi chắc chắn trước, evaluator mềm chấm phần còn lại, người duyệt quyết định khi rủi ro cao.</p></div>
+
+          <p>Chưa cần framework nào để bắt đầu: một loop tự sửa tối giản dựng được bằng <em>một prompt</em>, miễn là nó chứa đủ các mảnh Phần I–II — mục tiêu kiểm được, verifier chạy mỗi vòng, biên, và cấm tuyên bố xong không bằng chứng. Template dưới dùng được ngay với bất kỳ coding agent nào:</p>
+
+          <div class="prompt-card">
+            <div class="prompt-head"><span>📋 Prompt template · loop tự sửa tối giản</span><button class="copy-btn" onclick="copyCode(this)">Chép</button></div>
+            <pre>MỤC TIÊU: [một câu — vd: hàm parseDate xử lý đúng 8 ca biên trong tests/parse-date.test.ts]
+
+XONG NGHĨA LÀ (kiểm được, không cảm nhận):
+- [vd: toàn bộ test trong tests/parse-date.test.ts xanh]
+- [vd: typecheck + lint sạch]
+
+MỖI VÒNG, THEO ĐÚNG THỨ TỰ:
+1. Làm MỘT bước nhỏ hướng tới mục tiêu.
+2. Chạy verifier: [lệnh — vd: npm test -- parse-date].
+3. ĐẠT hết → dừng, dán output verifier làm bằng chứng.
+4. FAIL → đọc lỗi cụ thể, sửa đúng lỗi đó, quay lại bước 1.
+
+BIÊN:
+- Tối đa [N] vòng. Chạm biên → DỪNG, tóm tắt tiến độ + lỗi còn lại, không cố thêm.
+- Chỉ sửa file trong [phạm vi]; chỉ chạy lệnh trong [danh sách cho phép].
+
+CẤM: tuyên bố "đã xong" khi chưa dán output verifier đạt.</pre>
+          </div>
 
           <div class="exercise">
             <h5>Bài tập · Reflection có điểm dừng</h5>
@@ -1062,6 +1098,11 @@ footer.site{border-top:1px solid var(--border);padding:26px 24px;text-align:cent
           </div>
           <div class="callout insight"><div class="callout-title">Phương trình đáng-hay-không</div><p>Tự động hóa đáng khi: <em>(giá trị mỗi lần chạy × tần suất) − chi phí vận hành &amp; rủi ro &gt; chi phí thiết kế &amp; bảo trì loop</em>. Nhiều loop thất bại không phải vì kỹ thuật sai, mà vì <strong>tự động hóa nhầm việc</strong> — một việc một lần, hoặc một việc không kiểm chứng được. Kỹ năng L5 là biết chọn <em>đúng</em> loop để xây, không phải xây được mọi loop.</p></div>
 
+          <div class="concept">
+            <span class="eyebrow">Đo phương trình bằng ba con số, không bằng cảm nhận</span>
+            <p>Đừng tranh luận "đáng hay không" bằng ấn tượng — chạy pilot rồi đo: <strong>(1) tỷ lệ chấp nhận</strong>: bao nhiêu phần kết quả loop tạo ra được duyệt dùng mà không phải sửa lại; <strong>(2) chi phí cho mỗi kết quả được chấp nhận</strong>: tổng chi phí chạy (kể cả những lần bị loại) chia cho số kết quả được nhận; <strong>(3) thời gian người bỏ ra</strong> cho mỗi kết quả (duyệt + sửa + dọn). So ba số này với chi phí tự làm việc đó. Tỷ lệ chấp nhận thấp nghĩa là phần lớn tiền chạy loop đang trả cho thứ bị vứt đi — khi đó, sửa verifier và tiêu chí (Chương 4–5) trước khi nghĩ tới scale.</p>
+          </div>
+
           <h4>Đưa vào đội &amp; anti-pattern</h4>
           <div class="table-wrap">
             <table>
@@ -1071,10 +1112,26 @@ footer.site{border-top:1px solid var(--border);padding:26px 24px;text-align:cent
                 <tr><td><span class="badge bad">"Đặt lịch rồi quên"</span></td><td>Loop nền không observability = sự cố âm thầm. Thay: cảnh báo + log mỗi vòng (C8).</td></tr>
                 <tr><td><span class="badge bad">Tự động hóa để khoe</span></td><td>Tự động một việc một lần tốn hơn tự làm. Thay: chọn loop theo phương trình kinh tế.</td></tr>
                 <tr><td><span class="badge bad">Đo "số loop chạy"</span></td><td>Thưởng cho hoạt động, không phải kết quả. Thay: đo kết quả (việc xong, lỗi thoát prod, chi phí/kết-quả).</td></tr>
+                <tr><td><span class="badge bad">Verifier hình thức</span></td><td>Có verifier nhưng không kiểm đúng tiêu chí (typecheck xanh ≠ màn hình dùng được) → ảo tưởng thành công có con dấu. Thay: xếp tầng verifier sát điều cần chứng minh (C4).</td></tr>
+                <tr><td><span class="badge bad">Context phình theo vòng</span></td><td>Mỗi vòng nối thêm log/diff vào context → chậm, đắt, tín hiệu loãng dần. Thay: ngân sách token + compact, đẩy tiến độ ra state ngoài (C3, C8).</td></tr>
+                <tr><td><span class="badge bad">Hành động không idempotent</span></td><td>Retry sau lỗi/crash gửi email hay ghi dữ liệu lần thứ hai. Thay: idempotency key + thiết kế mỗi vòng chạy-lại-được an toàn (C3, C8).</td></tr>
               </tbody>
             </table>
           </div>
           <div class="callout success"><div class="callout-title">Đưa vào đội theo ba pha</div><p><strong>(1) Chuẩn:</strong> mẫu loop có sẵn verifier + biên + guardrail; thư viện workflow tất định dùng chung. <strong>(2) Pilot:</strong> một đội tự hành hóa <em>một</em> loop giá trị cao, chứng minh độ tin. <strong>(3) Mở rộng:</strong> người pilot kèm cặp, mỗi loop mới leo thang tự chủ từ L3 lên. Kiến thức lan qua làm cùng, không qua slide.</p></div>
+
+          <p>Bản cá nhân của ba pha trên, nén thành 30 ngày cho người bắt đầu:</p>
+          <div class="table-wrap">
+            <table>
+              <thead><tr><th style="width:110px">Tuần</th><th>Lộ trình 30 ngày · từ prompt sang loop</th></tr></thead>
+              <tbody>
+                <tr><td><span class="badge">Tuần 1</span></td><td>Dựng <em>một</em> loop L3 cho một việc lặp lại, ngồi cạnh xem từng vòng; ghi lại nó kẹt/trôi ở đâu.</td></tr>
+                <tr><td><span class="badge">Tuần 2</span></td><td>Siết verifier + bốn biên từ trace tuần 1; đảm bảo feedback khi fail là lỗi cụ thể, hành động được.</td></tr>
+                <tr><td><span class="badge">Tuần 3</span></td><td>Nâng lên L4: thêm state bền vững, cảnh báo, cổng cho hành động rủi ro; cho chạy nền có giám sát.</td></tr>
+                <tr><td><span class="badge">Tuần 4</span></td><td>Đo tỷ lệ chấp nhận &amp; chi phí/kết-quả-được-nhận; quyết định scale, giữ nguyên, hay tắt. Viết loop contract cho loop kế tiếp.</td></tr>
+              </tbody>
+            </table>
+          </div>
 
           <div class="callout insight"><div class="callout-title">Nguyên tắc kết của cả khóa</div><p>Loop Engineering không phải nghệ thuật "để AI làm hết". Nó là kỷ luật <em>thiết kế điều kiện</em> để một tác nhân tự hành làm đúng: <strong>verifier để nó biết đúng, biên để nó không đi quá, cổng để bảo vệ cái không đảo ngược, và observability để bạn luôn tái dựng được.</strong> Người kỹ sư L5 không chạy nhiều loop hơn — họ chọn đúng loop, rào chúng cẩn thận, và biết khi nào một việc <em>không</em> nên là loop. Tự chủ là thứ bạn <em>trao dần theo bằng chứng</em>, không phải bật một lần.</p></div>
 
@@ -1156,6 +1213,41 @@ footer.site{border-top:1px solid var(--border);padding:26px 24px;text-align:cent
 
           <div class="callout insight"><div class="callout-title">Dùng cheat sheet này thế nào</div><p>Trả lời được cả sáu câu hỏi bằng câu cụ thể (không phải "chắc ổn") là ngưỡng tối thiểu để một loop rời tay. Còn ô nào trống, đó chính là nơi sự cố tiếp theo sẽ chui qua — và cũng là chương bạn nên đọc lại.</p></div>
 
+          <p>Dạng artifact của sáu câu hỏi đó là một <strong>Loop Contract</strong>: một trang markdown lưu cạnh code của loop, điền đủ trước khi rời tay, và là thứ người trực đọc đầu tiên khi loop báo động. Chép template dưới và điền cho loop kế tiếp của bạn:</p>
+
+          <div class="prompt-card">
+            <div class="prompt-head"><span>📄 Loop Contract · template</span><button class="copy-btn" onclick="copyCode(this)">Chép</button></div>
+            <pre># Loop Contract — [tên loop]
+Chủ loop: [ai] · Ngày: [YYYY-MM-DD] · Mức tự chủ: [L3 / L4 / L5]
+
+## 1. Mục tiêu &amp; Definition of Done
+- Mục tiêu một câu: [...]
+- Xong nghĩa là (kiểm được): [test X xanh / toàn bộ danh sách Y xử lý hết]
+
+## 2. Verifier — cái gì đóng vòng?
+- Tầng cứng (chạy mỗi vòng): [test / typecheck / schema / đối soát]
+- Tầng mềm (nếu có): [LLM-as-judge theo rubric nào]
+
+## 3. Biên
+- Max vòng / thời gian: [...] · Ngân sách token: [...]
+- Trần chi phí: [...] · Chống gọi lặp: [idempotency key nào]
+
+## 4. Cổng người — hành động nào phải xin phép?
+- Agent tự chạy: [đọc, sửa trong nhánh, chạy test, ...]
+- Phải qua cổng duyệt: [deploy / xóa dữ liệu / gửi ra ngoài, ...]
+
+## 5. State &amp; khôi phục
+- State bền vững ở: [file / DB nào]
+- Sau crash/gián đoạn, chạy tiếp bằng cách: [...]
+
+## 6. Observability &amp; dừng khẩn cấp
+- Log mỗi vòng ở: [...] · Kill switch: [cách dừng ngay]
+- Cảnh báo tới [ai / kênh] khi: [verifier fail N lần liên tiếp / chạm biên]
+
+Thiệt hại tối đa nếu sai theo cách tệ nhất: [một con số hữu hạn]
+Còn ô nào trống → loop CHƯA rời tay.</pre>
+          </div>
+
           <div class="takeaway">
             <span class="eyebrow"><svg aria-hidden="true" focusable="false" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 2v6m0 8v6M4.9 4.9l4.2 4.2m5.8 5.8l4.2 4.2M2 12h6m8 0h6M4.9 19.1l4.2-4.2m5.8-5.8l4.2-4.2"/></svg>Takeaway</span>
             <p>Cả khóa gói trong một câu: <span class="hl">tự chủ trao dần theo bằng chứng, không bật một lần</span>. Verifier để nó biết đúng, biên để nó không đi quá, cổng để bảo vệ cái không đảo ngược, state &amp; cảnh báo để bạn luôn <span class="hl">tái dựng được</span>. Còn ô nào trong <span class="hl">sáu câu hỏi</span> chưa trả lời được thì loop chưa rời tay.</p>
@@ -1204,12 +1296,12 @@ const LESSONS=[
   {id:'m2-l1', mod:2, part:'Phần I · Nền tảng', title:'Giải phẫu vòng lặp', desc:'Bốn nhịp Plan→Act→Observe→Reflect; vì sao Observe & Reflect là then chốt.'},
   {id:'m3-l1', mod:3, part:'Phần I · Nền tảng', title:'Biên & điều kiện dừng', desc:'Bốn biên runtime phổ biến, dừng-thành-công vs biên-an-toàn, đặt ngưỡng từ trace.'},
   {id:'m4-l1', mod:4, part:'Phần II · Vòng lặp tự sửa', title:'Verifier đóng vòng', desc:'Chọn bằng chứng sát tiêu chí; xếp tầng verifier; vòng generate→verify→feedback.'},
-  {id:'m5-l1', mod:5, part:'Phần II · Vòng lặp tự sửa', title:'Tự sửa: generate→critique→revise', desc:'Reflection loop, LLM-as-judge, ba cạm bẫy, điểm dừng của reflection.'},
+  {id:'m5-l1', mod:5, part:'Phần II · Vòng lặp tự sửa', title:'Tự sửa: generate→critique→revise', desc:'Reflection loop, LLM-as-judge, pattern maker–checker, ba cạm bẫy, prompt template loop tối giản.'},
   {id:'m6-l1', mod:6, part:'Phần III · Điều phối', title:'Đa agent & workflow tất định', desc:'Điều phối do code vs do model; fan-out vs pipeline; khi nào cần barrier.'},
   {id:'m7-l1', mod:7, part:'Phần III · Điều phối', title:'Mức tự chủ & cổng người', desc:'Human in/on/out-of-the-loop; ma trận đảo-ngược × bán-kính; cổng theo hành động.'},
   {id:'m8-l1', mod:8, part:'Phần IV · Vận hành bền vững', title:'Vòng lặp nền & bất đồng bộ', desc:'Trigger, worker nền, pattern Ralph, state bền vững, idempotency và artifact bàn giao.'},
   {id:'m9-l1', mod:9, part:'Phần IV · Vận hành bền vững', title:'Guardrail, kinh tế & đưa vào đội', desc:'Ngăn xếp guardrail, khi nào loop đáng tự động, anti-pattern, adoption 3 pha.'},
-  {id:'m10-l1', mod:10, part:'Tổng kết', title:'Cheat sheet 1 trang', desc:'Chín câu đáng nhớ + bộ sáu câu hỏi trước khi cho một loop rời tay.'},
+  {id:'m10-l1', mod:10, part:'Tổng kết', title:'Cheat sheet 1 trang', desc:'Chín câu đáng nhớ, bộ sáu câu hỏi rời tay + Loop Contract template.'},
 ];
 const PANES=['overview','complete'];
 const LAST_KEY=STORAGE_PREFIX+'last:'+COURSE_SLUG;
