@@ -48,6 +48,7 @@ the engine but not yet consumed (forward-compatible).
 | Course file | Theme | Status vs standard |
 |---|---|---|
 | `ai-practical-playbook.html` (+ `.en`) | navy | Reference implementation the standard was extracted from. |
+| `ai-agent-operational-training.html` | midnight | **Standard-conformant** (VI, L1→L5, 8 module / 26 bài + 2 lab, recap + glossary — mới 2026-07-21: khoá vận hành agent cho non-engineer, đứng sau Playbook trước Context & Harness trong lộ trình; round-2 2026-07-21: +3 bài SOTA (verify deliverable nghiên cứu, agent memory, credential governance cho connector)). |
 | `context-harness-engineering.html` | midnight | **Standard-conformant** (VI, L1→L5, 14 chương / 16 bài, recap + glossary + keyboard nav — round-3 2026-07-21: terminology de-slop, Bài 3.2 lifecycle/governance, threat model, post-run learning, Harness→Loop→Graph bridge). EN sibling: `context-harness-engineering.en.html`. Supersedes the v2 file below. |
 | `loop-engineering.html` | loop (slate/cyan) | **Standard-conformant** (VI, L1→L5, 10 bài, cost-calculator widget + recap + glossary — round-2 2026-07). Sequel: autonomous/agentic loops. |
 | ~~`ai-context-engineering-harness-engineering-course-v2.html`~~ | — | **Removed 2026-07-10** — superseded by `context-harness-engineering.html`; LMS catalog repointed (`app/prisma/seed.ts`). Recoverable from git history. |
