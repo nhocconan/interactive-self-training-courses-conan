@@ -30,8 +30,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Vận hành AI Agent — Nhìn · Chốt · Làm · Soi</title>
-  <meta name="description"
-    content="Khoá học cách vận hành AI agent cho công việc thật: bắt AI nhìn hiện trạng bằng bằng chứng, chốt nguồn sự thật trước khi làm, làm theo từng bước hoàn tác được, và soi bằng chứng ra lỗi — thay vì tin lời tự khai. Dành cho mọi bộ phận.">
+  <meta name="description" content="Khoá học cách vận hành AI agent cho công việc thật: bắt AI nhìn hiện trạng bằng bằng chứng, chốt nguồn sự thật trước khi làm, làm theo từng bước hoàn tác được, và soi bằng chứng ra lỗi — thay vì tin lời tự khai. Dành cho mọi bộ phận.">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link
@@ -161,6 +160,10 @@
       --ink-3: #7d879c;
       --accent: #93b4ff;
       --accent-2: #60a5fa;
+      /* Accent PANEL stays dark in dark mode: .lesson-head/.takeaway/.complete-badge
+         paint --grad behind #fff text, so it must not follow --accent's light tint
+         (that produced 1.8:1 white-on-light-blue). --accent stays light for ink. */
+      --grad: #1e3a68;
       --success: #2dd4a8;
       --success-bg: #0c2a22;
       --warning: #fbbf24;
@@ -933,6 +936,39 @@
         padding-left: 20px;
         padding-right: 20px
       }
+    }
+
+    /* COMPONENT: Level badge (L1–L5 progression) */
+    .level-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-family: var(--font-mono);
+      font-size: 10px;
+      letter-spacing: .12em;
+      text-transform: uppercase;
+      font-weight: 600;
+      padding: 4px 10px;
+      border-radius: 99px;
+      background: rgba(255, 255, 255, .16);
+      color: #fff;
+      border: 1px solid rgba(255, 255, 255, .3)
+    }
+
+    .level-dots {
+      display: inline-flex;
+      gap: 3px
+    }
+
+    .level-dots i {
+      width: 5px;
+      height: 5px;
+      border-radius: 99px;
+      background: rgba(255, 255, 255, .35)
+    }
+
+    .level-dots i.on {
+      background: var(--brand-gold)
     }
 
     /* COMPONENT: Learning objectives */
@@ -1959,6 +1995,11 @@
                 <span class="eyebrow">Bài 1.1</span>
                 <h3>Bốn môi trường làm việc với AI</h3>
               </div>
+              <div style="display:flex;gap:8px;flex-wrap:wrap">
+                <span class="level-badge">L1 · Nền tảng
+                  <span class="level-dots"><i class="on"></i><i></i><i></i><i></i><i></i></span>
+                </span>
+              </div>
             </div>
           </div>
           <div class="lesson-body">
@@ -2120,6 +2161,11 @@
                 <span class="eyebrow">Bài 1.2</span>
                 <h3>Dựng vùng làm việc an toàn</h3>
               </div>
+              <div style="display:flex;gap:8px;flex-wrap:wrap">
+                <span class="level-badge">L2 · Làm được
+                  <span class="level-dots"><i class="on"></i><i class="on"></i><i></i><i></i><i></i></span>
+                </span>
+              </div>
             </div>
           </div>
           <div class="lesson-body">
@@ -2265,6 +2311,11 @@
                 <span class="eyebrow">Bài 1.3</span>
                 <h3>Prompt injection &amp; bốn dấu hiệu dừng khẩn cấp</h3>
               </div>
+              <div style="display:flex;gap:8px;flex-wrap:wrap">
+                <span class="level-badge">L2 · Làm được
+                  <span class="level-dots"><i class="on"></i><i class="on"></i><i></i><i></i><i></i></span>
+                </span>
+              </div>
             </div>
           </div>
           <div class="lesson-body">
@@ -2408,6 +2459,11 @@
               <div>
                 <span class="eyebrow">Bài 2.1</span>
                 <h3>Vòng lặp bốn bước</h3>
+              </div>
+              <div style="display:flex;gap:8px;flex-wrap:wrap">
+                <span class="level-badge">L2 · Làm được
+                  <span class="level-dots"><i class="on"></i><i class="on"></i><i></i><i></i><i></i></span>
+                </span>
               </div>
             </div>
           </div>
@@ -2556,6 +2612,11 @@
                 <span class="eyebrow">Bài 2.2</span>
                 <h3>NHÌN: bằng chứng quan sát hợp lệ</h3>
               </div>
+              <div style="display:flex;gap:8px;flex-wrap:wrap">
+                <span class="level-badge">L2 · Làm được
+                  <span class="level-dots"><i class="on"></i><i class="on"></i><i></i><i></i><i></i></span>
+                </span>
+              </div>
             </div>
           </div>
           <div class="lesson-body">
@@ -2654,6 +2715,11 @@
               <div>
                 <span class="eyebrow">Bài 2.3</span>
                 <h3>CHỐT: nguồn sự thật + field map + acceptance</h3>
+              </div>
+              <div style="display:flex;gap:8px;flex-wrap:wrap">
+                <span class="level-badge">L3 · Thực hành
+                  <span class="level-dots"><i class="on"></i><i class="on"></i><i class="on"></i><i></i><i></i></span>
+                </span>
               </div>
             </div>
           </div>
@@ -2770,6 +2836,11 @@ Nếu thiếu dữ liệu để đánh giá: HỎI TÔI, đừng đoán.</pre>
                 <span class="eyebrow">Bài 2.4</span>
                 <h3>LÀM: chia phase theo khả năng hoàn tác</h3>
               </div>
+              <div style="display:flex;gap:8px;flex-wrap:wrap">
+                <span class="level-badge">L3 · Thực hành
+                  <span class="level-dots"><i class="on"></i><i class="on"></i><i class="on"></i><i></i><i></i></span>
+                </span>
+              </div>
             </div>
           </div>
           <div class="lesson-body">
@@ -2867,6 +2938,11 @@ Nếu thiếu dữ liệu để đánh giá: HỎI TÔI, đừng đoán.</pre>
               <div>
                 <span class="eyebrow">Bài 2.5</span>
                 <h3>SOI: ghi bằng chứng và bốn phép kiểm nhanh</h3>
+              </div>
+              <div style="display:flex;gap:8px;flex-wrap:wrap">
+                <span class="level-badge">L3 · Thực hành
+                  <span class="level-dots"><i class="on"></i><i class="on"></i><i class="on"></i><i></i><i></i></span>
+                </span>
               </div>
             </div>
           </div>
@@ -3017,6 +3093,11 @@ Nếu thiếu dữ liệu để đánh giá: HỎI TÔI, đừng đoán.</pre>
                 <span class="eyebrow">Bài 3.1</span>
                 <h3>Chọn chế độ và model theo loại việc</h3>
               </div>
+              <div style="display:flex;gap:8px;flex-wrap:wrap">
+                <span class="level-badge">L3 · Thực hành
+                  <span class="level-dots"><i class="on"></i><i class="on"></i><i class="on"></i><i></i><i></i></span>
+                </span>
+              </div>
             </div>
           </div>
           <div class="lesson-body">
@@ -3137,6 +3218,11 @@ Nếu thiếu dữ liệu để đánh giá: HỎI TÔI, đừng đoán.</pre>
               <div>
                 <span class="eyebrow">Bài 3.2</span>
                 <h3>Chọn mức suy luận: Auto, Thinking hay effort</h3>
+              </div>
+              <div style="display:flex;gap:8px;flex-wrap:wrap">
+                <span class="level-badge">L3 · Thực hành
+                  <span class="level-dots"><i class="on"></i><i class="on"></i><i class="on"></i><i></i><i></i></span>
+                </span>
               </div>
             </div>
           </div>
@@ -3287,6 +3373,11 @@ Nếu thiếu dữ liệu để đánh giá: HỎI TÔI, đừng đoán.</pre>
               <div>
                 <span class="eyebrow">Bài 3.3</span>
                 <h3>Điều phối ba vai: lập kế hoạch · thực thi · kiểm chứng</h3>
+              </div>
+              <div style="display:flex;gap:8px;flex-wrap:wrap">
+                <span class="level-badge">L3 · Thực hành
+                  <span class="level-dots"><i class="on"></i><i class="on"></i><i class="on"></i><i></i><i></i></span>
+                </span>
               </div>
             </div>
           </div>
@@ -3442,6 +3533,11 @@ hoặc mọi dòng lệch đều có lý do trong rejected.csv.</pre>
                 <span class="eyebrow">Bài 3.4</span>
                 <h3>Kỷ luật chi phí: ba cách dùng sai môi trường</h3>
               </div>
+              <div style="display:flex;gap:8px;flex-wrap:wrap">
+                <span class="level-badge">L3 · Thực hành
+                  <span class="level-dots"><i class="on"></i><i class="on"></i><i class="on"></i><i></i><i></i></span>
+                </span>
+              </div>
             </div>
           </div>
           <div class="lesson-body">
@@ -3534,6 +3630,11 @@ hoặc mọi dòng lệch đều có lý do trong rejected.csv.</pre>
               <div>
                 <span class="eyebrow">Bài 4.1</span>
                 <h3>Chuẩn bị &amp; vòng lặp thao tác 6 bước</h3>
+              </div>
+              <div style="display:flex;gap:8px;flex-wrap:wrap">
+                <span class="level-badge">L3 · Thực hành
+                  <span class="level-dots"><i class="on"></i><i class="on"></i><i class="on"></i><i></i><i></i></span>
+                </span>
               </div>
             </div>
           </div>
@@ -3640,6 +3741,12 @@ hoặc mọi dòng lệch đều có lý do trong rejected.csv.</pre>
               <div>
                 <span class="eyebrow">Bài 4.2</span>
                 <h3>Tám kiểu lỗi điển hình</h3>
+              </div>
+              <div style="display:flex;gap:8px;flex-wrap:wrap">
+                <span class="level-badge">L4 · Nâng cao
+                  <span class="level-dots"><i class="on"></i><i class="on"></i><i class="on"></i><i
+                      class="on"></i><i></i></span>
+                </span>
               </div>
             </div>
           </div>
@@ -3779,6 +3886,11 @@ hoặc mọi dòng lệch đều có lý do trong rejected.csv.</pre>
                 <span class="eyebrow">Bài 4.3</span>
                 <h3>Chọn công cụ: ChatGPT Work hay Claude Cowork?</h3>
               </div>
+              <div style="display:flex;gap:8px;flex-wrap:wrap">
+                <span class="level-badge">L3 · Thực hành
+                  <span class="level-dots"><i class="on"></i><i class="on"></i><i class="on"></i><i></i><i></i></span>
+                </span>
+              </div>
             </div>
           </div>
           <div class="lesson-body">
@@ -3910,6 +4022,11 @@ hoặc mọi dòng lệch đều có lý do trong rejected.csv.</pre>
               <div>
                 <span class="eyebrow">Bài 4.4</span>
                 <h3>Kiểm chứng báo cáo nghiên cứu</h3>
+              </div>
+              <div style="display:flex;gap:8px;flex-wrap:wrap">
+                <span class="level-badge">L3 · Thực hành
+                  <span class="level-dots"><i class="on"></i><i class="on"></i><i class="on"></i><i></i><i></i></span>
+                </span>
               </div>
             </div>
           </div>
@@ -4100,6 +4217,12 @@ Chưa viết kết luận cho tới khi bảng đầy đủ.</pre>
                 <span class="eyebrow">Bài 5.1</span>
                 <h3>Bốn tầng ngữ cảnh</h3>
               </div>
+              <div style="display:flex;gap:8px;flex-wrap:wrap">
+                <span class="level-badge">L4 · Nâng cao
+                  <span class="level-dots"><i class="on"></i><i class="on"></i><i class="on"></i><i
+                      class="on"></i><i></i></span>
+                </span>
+              </div>
             </div>
           </div>
           <div class="lesson-body">
@@ -4208,6 +4331,12 @@ Chưa viết kết luận cho tới khi bảng đầy đủ.</pre>
               <div>
                 <span class="eyebrow">Bài 5.2</span>
                 <h3>Biến SOP thành Skill để AI tự chạy</h3>
+              </div>
+              <div style="display:flex;gap:8px;flex-wrap:wrap">
+                <span class="level-badge">L4 · Nâng cao
+                  <span class="level-dots"><i class="on"></i><i class="on"></i><i class="on"></i><i
+                      class="on"></i><i></i></span>
+                </span>
               </div>
             </div>
           </div>
@@ -4328,6 +4457,12 @@ description: Đồng bộ khách hàng từ Sheet nguồn sang CRM staging.
               <div>
                 <span class="eyebrow">Bài 5.3</span>
                 <h3>Việc chạy theo lịch và thứ tự ưu tiên công cụ</h3>
+              </div>
+              <div style="display:flex;gap:8px;flex-wrap:wrap">
+                <span class="level-badge">L4 · Nâng cao
+                  <span class="level-dots"><i class="on"></i><i class="on"></i><i class="on"></i><i
+                      class="on"></i><i></i></span>
+                </span>
               </div>
             </div>
           </div>
@@ -4450,6 +4585,11 @@ description: Đồng bộ khách hàng từ Sheet nguồn sang CRM staging.
               <div>
                 <span class="eyebrow">Bài 5.4</span>
                 <h3>Bộ nhớ giữa các phiên (memory)</h3>
+              </div>
+              <div style="display:flex;gap:8px;flex-wrap:wrap">
+                <span class="level-badge">L3 · Thực hành
+                  <span class="level-dots"><i class="on"></i><i class="on"></i><i class="on"></i><i></i><i></i></span>
+                </span>
               </div>
             </div>
           </div>
@@ -4617,6 +4757,12 @@ description: Đồng bộ khách hàng từ Sheet nguồn sang CRM staging.
                 <span class="eyebrow">Bài 6.1</span>
                 <h3>Đường cong suy giảm giám sát + 4 gate cấu trúc</h3>
               </div>
+              <div style="display:flex;gap:8px;flex-wrap:wrap">
+                <span class="level-badge">L5 · Chuyên gia / lead
+                  <span class="level-dots"><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i
+                      class="on"></i></span>
+                </span>
+              </div>
             </div>
           </div>
           <div class="lesson-body">
@@ -4771,6 +4917,12 @@ description: Đồng bộ khách hàng từ Sheet nguồn sang CRM staging.
               <div>
                 <span class="eyebrow">Bài 6.2</span>
                 <h3>RACI, drill sự cố, 4 chỉ số</h3>
+              </div>
+              <div style="display:flex;gap:8px;flex-wrap:wrap">
+                <span class="level-badge">L5 · Chuyên gia / lead
+                  <span class="level-dots"><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i
+                      class="on"></i></span>
+                </span>
               </div>
             </div>
           </div>
@@ -4960,6 +5112,11 @@ description: Đồng bộ khách hàng từ Sheet nguồn sang CRM staging.
                 <span class="eyebrow">Bài 6.3</span>
                 <h3>Quyền truy cập connector: ai quản lý tài khoản?</h3>
               </div>
+              <div style="display:flex;gap:8px;flex-wrap:wrap">
+                <span class="level-badge">L4 · Nâng cao
+                  <span class="level-dots"><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i></i></span>
+                </span>
+              </div>
             </div>
           </div>
           <div class="lesson-body">
@@ -5116,6 +5273,11 @@ description: Đồng bộ khách hàng từ Sheet nguồn sang CRM staging.
                 <span class="eyebrow">Bài 7.1 · Lab A · 45 phút · Theo cặp</span>
                 <h3>Lab A — Mở, lọc, xuất, đặt tên</h3>
               </div>
+              <div style="display:flex;gap:8px;flex-wrap:wrap">
+                <span class="level-badge">L3 · Thực hành
+                  <span class="level-dots"><i class="on"></i><i class="on"></i><i class="on"></i><i></i><i></i></span>
+                </span>
+              </div>
             </div>
           </div>
           <div class="lesson-body">
@@ -5259,6 +5421,12 @@ Hỏi tôi nếu thiếu fact. Đừng đoán bộ lọc.</pre>
               <div>
                 <span class="eyebrow">Bài 7.2 · Lab B · 90 phút · Theo squad 3–4 người</span>
                 <h3>Lab B — Migrate hệ thống A → B (staging)</h3>
+              </div>
+              <div style="display:flex;gap:8px;flex-wrap:wrap">
+                <span class="level-badge">L4 · Nâng cao
+                  <span class="level-dots"><i class="on"></i><i class="on"></i><i class="on"></i><i
+                      class="on"></i><i></i></span>
+                </span>
               </div>
             </div>
           </div>
@@ -5588,6 +5756,12 @@ Hỏi tôi nếu thiếu fact. Đừng đoán bộ lọc.</pre>
               <div>
                 <span class="eyebrow">Bài 8.1 · Tổng kết</span>
                 <h3>Bảng tóm tắt + 6 prompt mẫu + chính sách một trang</h3>
+              </div>
+              <div style="display:flex;gap:8px;flex-wrap:wrap">
+                <span class="level-badge">L5 · Chuyên gia / lead
+                  <span class="level-dots"><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i
+                      class="on"></i></span>
+                </span>
               </div>
             </div>
           </div>
@@ -6032,7 +6206,7 @@ thì mới được báo cáo "hoàn thành".</pre>
       { id: 'm7-l1', mod: 7, part: 'Phần VII · Thực hành', title: 'Lab A — Mở, lọc, xuất, đặt tên', desc: 'Theo cặp 45\': vòng lặp NHÌN→LÀM→SOI; bẫy số UI ≠ số export.' },
       { id: 'm7-l2', mod: 7, part: 'Phần VII · Thực hành', title: 'Lab B — Migrate hệ thống A → B (staging)', desc: 'Theo squad 90\': 10 dòng giả có 6 lỗi + 1 tranh cãi; dòng 1005 phải dừng hỏi.' },
       { id: 'm8-l1', mod: 8, part: 'Phần VIII · Tổng kết', title: 'Bảng tóm tắt + 6 prompt mẫu + chính sách một trang', desc: '25 ý chính; 6 khung prompt có thể dùng lại; mẫu chính sách một trang.' },
-    ];
+];
 
     const PANES = ['overview', 'complete'];
     const LAST_KEY = STORAGE_PREFIX + 'last:' + COURSE_SLUG;
