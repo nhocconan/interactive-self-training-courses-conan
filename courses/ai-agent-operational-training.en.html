@@ -196,6 +196,18 @@
       --accent: #7dd3fc
     }
 
+    /* Diagram TEXT tokens. Declared on body, NOT :root — dark mode overrides
+       --ink/--success on body[data-mode="dark"], so a :root declaration would
+       freeze these against the light palette and fail in dark. */
+    body {
+      --success-ink: color-mix(in srgb, var(--success) 62%, var(--ink));
+      --danger-ink: color-mix(in srgb, var(--danger) 62%, var(--ink));
+      --warning-ink: color-mix(in srgb, var(--warning) 52%, var(--ink));
+      --danger-on-ink: color-mix(in srgb, var(--danger) 62%, var(--bg));
+      --accent3-on-ink: color-mix(in srgb, var(--accent-3) 62%, var(--bg));
+      --mute-on-ink: color-mix(in srgb, var(--bg) 62%, var(--ink));
+    }
+
     /* ============================================================================
    2 · RESET + BASE
    ============================================================================ */
@@ -427,7 +439,7 @@
 
     .nav-link {
       display: flex;
-      align-items: center;
+      align-items: flex-start;
       gap: 10px;
       padding: 8px 10px;
       border-radius: 8px;
@@ -451,6 +463,7 @@
     }
 
     .nav-dot {
+      margin-top: 6px;
       width: 7px;
       height: 7px;
       border-radius: 99px;
@@ -465,6 +478,7 @@
     }
 
     .nav-num {
+      margin-top: 3px;
       font-family: var(--font-mono);
       font-size: 10px;
       color: var(--ink-3);
@@ -474,9 +488,11 @@
 
     .nav-title {
       flex: 1;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      white-space: nowrap
+      /* Wrap instead of ellipsis: 17/26 titles were truncated mid-word at
+         desktop width, hiding what the lesson is actually about. */
+      white-space: normal;
+      overflow-wrap: break-word;
+      line-height: 1.35
     }
 
     .main {
@@ -1240,7 +1256,14 @@
     }
 
     .dgm-on-dark {
-      fill: #fff
+      /* These sit on boxes filled with var(--ink). --ink flips light in dark
+         mode, so a hardcoded #fff went invisible (1.21:1). --bg is --ink's
+         contrast pair and stays correct in both modes. */
+      fill: var(--bg)
+    }
+
+    .dgm-on-dark-mute {
+      fill: color-mix(in srgb, var(--bg) 62%, var(--ink))
     }
 
     /* text/icon on intentionally-dark diagram boxes — does NOT flip in dark mode (the box it sits on is dark in both modes) */
@@ -2055,33 +2078,33 @@
                 <rect class="dgm-accent" x="80" y="218" width="280" height="172" rx="12" stroke-width="1.4" />
                 <text class="dgm-ink" x="100" y="248" font-size="18" font-weight="700">Chat</text>
                 <text class="dgm-ink2" x="100" y="270" font-size="12.5">Quick Q · brainstorm · draft</text>
-                <text x="100" y="294" font-size="11.5" font-family="IBM Plex Mono" fill="var(--success)">USE: need one good answer</text>
-                <text x="100" y="312" font-size="11.5" font-family="IBM Plex Mono" fill="var(--danger)">AVOID: multi-step, touches files</text>
+                <text x="100" y="294" font-size="11.5" font-family="IBM Plex Mono" fill="var(--success-ink)">USE: need one good answer</text>
+                <text x="100" y="312" font-size="11.5" font-family="IBM Plex Mono" fill="var(--danger-ink)">AVOID: multi-step, touches files</text>
                 <text class="dgm-ink2" x="100" y="340" font-size="12">Usually lighter for short questions.</text>
                 <text class="dgm-ink2" x="100" y="358" font-size="12">Still check access and data.</text>
 
                 <rect class="dgm-accent" x="380" y="218" width="280" height="172" rx="12" stroke-width="2" />
                 <text class="dgm-ink" x="400" y="248" font-size="18" font-weight="700">Work / Cowork</text>
                 <text class="dgm-ink2" x="400" y="270" font-size="12.5">Real files · folders · connectors</text>
-                <text x="400" y="294" font-size="11.5" font-family="IBM Plex Mono" fill="var(--success)">USE: need a deliverable, multi-step</text>
-                <text x="400" y="312" font-size="11.5" font-family="IBM Plex Mono" fill="var(--danger)">AVOID: just one answer</text>
+                <text x="400" y="294" font-size="11.5" font-family="IBM Plex Mono" fill="var(--success-ink)">USE: need a deliverable, multi-step</text>
+                <text x="400" y="312" font-size="11.5" font-family="IBM Plex Mono" fill="var(--danger-ink)">AVOID: just one answer</text>
                 <text class="dgm-ink2" x="400" y="340" font-size="12">Use when you need a finished artifact.</text>
                 <text class="dgm-ink2" x="400" y="358" font-size="12">Only worth it for long-enough jobs.</text>
 
                 <rect class="dgm-warn" x="80" y="58" width="280" height="142" rx="12" stroke-width="1.4" />
                 <text class="dgm-ink" x="100" y="88" font-size="18" font-weight="700">Code</text>
                 <text class="dgm-ink2" x="100" y="110" font-size="12.5">Scripts · tools · repeat automation</text>
-                <text x="100" y="134" font-size="11.5" font-family="IBM Plex Mono" fill="var(--success)">USE: repeat work, stable output</text>
-                <text x="100" y="152" font-size="11.5" font-family="IBM Plex Mono" fill="var(--danger)">AVOID: one-off UI clicks</text>
+                <text x="100" y="134" font-size="11.5" font-family="IBM Plex Mono" fill="var(--success-ink)">USE: repeat work, stable output</text>
+                <text x="100" y="152" font-size="11.5" font-family="IBM Plex Mono" fill="var(--danger-ink)">AVOID: one-off UI clicks</text>
                 <text class="dgm-ink2" x="100" y="178" font-size="12">Good when the rules are stable.</text>
 
                 <rect class="dgm-box" x="380" y="58" width="280" height="142" rx="12" stroke-width="1.4"
                   style="fill:var(--ink)" />
                 <text class="dgm-on-dark" x="400" y="88" font-size="18" font-weight="700">Browser / Computer Use</text>
-                <text x="400" y="110" font-size="12.5" fill="var(--ink-3)">Click · type · forms · UI export</text>
-                <text x="400" y="134" font-size="11.5" font-family="IBM Plex Mono" fill="var(--accent-3)">USE: last resort — no API</text>
-                <text x="400" y="152" font-size="11.5" font-family="IBM Plex Mono" fill="var(--danger)">AVOID: banking, HR, prod</text>
-                <text x="400" y="178" font-size="12" fill="var(--ink-3)">Fragile when the UI changes.</text>
+                <text x="400" y="110" font-size="12.5" fill="var(--mute-on-ink)">Click · type · forms · UI export</text>
+                <text x="400" y="134" font-size="11.5" font-family="IBM Plex Mono" fill="var(--accent3-on-ink)">USE: last resort — no API</text>
+                <text x="400" y="152" font-size="11.5" font-family="IBM Plex Mono" fill="var(--danger-on-ink)">AVOID: banking, HR, prod</text>
+                <text x="400" y="178" font-size="12" fill="var(--mute-on-ink)">Fragile when the UI changes.</text>
               </svg>
               <figcaption><b>Figure 1.1</b> — The four surfaces. Pick the lightest surface that still delivers the right output; use Browser/Computer Use only when an app, connector, or file can't reach the data.</figcaption>
             </figure>
@@ -2383,7 +2406,7 @@
                 <rect class="dgm-box" x="550" y="78" width="150" height="66" rx="10" stroke-width="1.4"
                   style="fill:var(--ink)" />
                 <text x="625" y="100" text-anchor="middle" font-size="9.5" font-family="IBM Plex Mono"
-                  fill="var(--accent-3)" letter-spacing="1">UNINTENDED ACTION</text>
+                  fill="var(--accent3-on-ink)" letter-spacing="1">UNINTENDED ACTION</text>
                 <text class="dgm-on-dark" x="625" y="120" text-anchor="middle" font-size="12" font-weight="600">Exfiltrates data</text>
                 <text class="dgm-on-dark" x="625" y="136" text-anchor="middle" font-size="12" font-weight="600">deletes · transfers money</text>
 
@@ -2511,7 +2534,7 @@
                     <path d="M0 0L10 5L0 10z" fill="var(--accent-3)" />
                   </marker>
                 </defs>
-                <rect class="dgm-box" x="20" y="120" width="124" height="80" rx="11" style="fill:var(--ink)" />
+                <rect class="dgm-box" x="6" y="120" width="154" height="80" rx="11" style="fill:var(--ink)" />
                 <text class="dgm-on-dark" x="82" y="150" text-anchor="middle" font-size="10" font-family="IBM Plex Mono"
                   letter-spacing="2">GOAL</text>
                 <text class="dgm-on-dark" x="82" y="172" text-anchor="middle" font-size="13" font-weight="700">Define</text>
@@ -2548,12 +2571,12 @@
                 <path d="M498 240H360" stroke="var(--accent-3)" stroke-width="2" stroke-dasharray="5 4" fill="none"
                   marker-end="url(#m2l1-back)" />
                 <text x="430" y="232" text-anchor="middle" font-size="11" font-family="IBM Plex Mono"
-                  fill="var(--accent-3)">FAIL → back to OBSERVE</text>
+                  fill="var(--accent3-on-ink)">FAIL → back to OBSERVE</text>
 
                 <rect class="dgm-box" x="180" y="200" width="130" height="80" rx="11"
                   style="fill:var(--warning-bg);stroke:var(--warning)" />
                 <text x="245" y="224" text-anchor="middle" font-size="10" font-family="IBM Plex Mono"
-                  fill="var(--warning)" letter-spacing="2">GATE</text>
+                  fill="var(--warning-ink)" letter-spacing="2">GATE</text>
                 <text class="dgm-ink" x="245" y="246" text-anchor="middle" font-size="13" font-weight="700">A reviewer</text>
                 <text class="dgm-ink2" x="245" y="266" text-anchor="middle" font-size="11">1 pilot row before bulk</text>
                 <path d="M245 198V128" stroke="var(--warning)" stroke-width="2" fill="none"
@@ -2795,8 +2818,7 @@
 - count(B) grows by exactly the number of valid rows in A
 - 5 IDs chosen by ME (not by the AI) match 100% across 6 fields
 - Every dropped row appears in rejected.csv with a reason
-- diff between source.csv and the export from B: empty, or every
-  differing row appears in rejected.csv
+- diff between source.csv and the export from B: empty, or every differing row appears in rejected.csv
 
 DO NOT conclude "done" if any one of the four above is missing.
 If data is missing to evaluate: ASK ME, don't guess.</pre>
@@ -3279,14 +3301,14 @@ If data is missing to evaluate: ASK ME, don't guess.</pre>
                 <path d="M110 222C200 214 280 196 370 168S560 88 660 50" fill="none" stroke="var(--accent-3)"
                   stroke-width="2.2" stroke-dasharray="6 4" />
                 <text x="668" y="66" font-size="11" font-family="IBM Plex Mono" fill="var(--accent-2)">quality</text>
-                <text x="668" y="46" font-size="11" font-family="IBM Plex Mono" fill="var(--accent-3)">cost + latency</text>
+                <text x="668" y="46" font-size="11" font-family="IBM Plex Mono" fill="var(--accent3-on-ink)">cost + latency</text>
                 <g font-size="11.5" font-family="IBM Plex Mono" fill="var(--ink-2)" text-anchor="middle">
                   <text x="110" y="250">low</text><text x="240" y="250">medium</text><text x="370"
                     y="250">high</text><text x="510" y="250">xhigh</text><text x="660" y="250">max</text>
                 </g>
                 <line x1="370" y1="60" x2="370" y2="238" stroke="var(--success)" stroke-width="1.4"
                   stroke-dasharray="4 4" />
-                <rect x="318" y="36" width="104" height="22" rx="5" style="fill:var(--success)" />
+                <rect x="318" y="36" width="104" height="22" rx="5" style="fill:color-mix(in srgb,var(--success) 76%,var(--ink))" />
                 <text class="dgm-on-dark" x="370" y="51" text-anchor="middle" font-size="10.5"
                   font-family="IBM Plex Mono" letter-spacing="1">MEASURE HERE</text>
                 <g font-size="12" fill="var(--ink-2)" text-anchor="middle">
@@ -3429,14 +3451,14 @@ If data is missing to evaluate: ASK ME, don't guess.</pre>
                   </marker>
                 </defs>
                 <rect class="dgm-box" x="220" y="20" width="280" height="64" rx="12" style="fill:var(--ink)" />
-                <text class="dgm-on-dark" x="360" y="44" text-anchor="middle" font-size="10" font-family="IBM Plex Mono"
+                <text class="dgm-on-dark" x="360" y="41" text-anchor="middle" font-size="10" font-family="IBM Plex Mono"
                   letter-spacing="2.4">PLANNER · 1 pass</text>
-                <text class="dgm-on-dark" x="360" y="66" text-anchor="middle" font-size="14" font-weight="700">Deep-reasoning model · runs once</text>
-                <text class="dgm-on-dark" x="360" y="80" text-anchor="middle" font-size="11" fill="var(--ink-3)">Read field map → plan by phase → list risks</text>
+                <text class="dgm-on-dark" x="360" y="61" text-anchor="middle" font-size="14" font-weight="700">Deep-reasoning model · runs once</text>
+                <text class="dgm-on-dark-mute" x="360" y="76" text-anchor="middle" font-size="11">Read field map → plan by phase → list risks</text>
 
-                <rect class="dgm-box" x="210" y="100" width="300" height="30" rx="8"
+                <rect class="dgm-box" x="180" y="100" width="360" height="30" rx="8"
                   style="fill:var(--warning-bg);stroke:var(--warning)" />
-                <text x="360" y="120" text-anchor="middle" font-size="12.5" font-weight="600" fill="var(--warning)">◆ GATE — a reviewer approves the plan before it runs</text>
+                <text x="360" y="120" text-anchor="middle" font-size="12.5" font-weight="600" fill="var(--warning-ink)">◆ GATE — a reviewer approves the plan before it runs</text>
                 <path class="dgm-flow" d="M360 86v12M360 132v20" stroke-width="1.8" marker-end="url(#m3l3-ar)" />
                 <path class="dgm-flow" d="M360 152H120v22M360 152h240v22M360 152v22" stroke-width="1.6" fill="none"
                   marker-end="url(#m3l3-ar)" />
@@ -3459,14 +3481,14 @@ If data is missing to evaluate: ASK ME, don't guess.</pre>
                 <text class="dgm-ink" x="600" y="218" text-anchor="middle" font-size="13" font-weight="700">records evidence</text>
                 <text class="dgm-ink2" x="600" y="236" text-anchor="middle" font-size="11">Collect logs + screenshots</text>
 
-                <path class="dgm-flow" d="M120 254v30h480v-30M360 254v38" stroke-width="1.6" fill="none"
+                <path class="dgm-flow" d="M120 254v30h480v-30M360 254v36" stroke-width="1.6" fill="none"
                   marker-end="url(#m3l3-ar)" />
-                <rect class="dgm-box" x="190" y="292" width="340" height="60" rx="12"
+                <rect class="dgm-box" x="120" y="290" width="480" height="66" rx="12"
                   style="fill:color-mix(in srgb,var(--success) 16%,var(--surface));stroke:var(--success);stroke-width:1.4" />
-                <text x="360" y="314" text-anchor="middle" font-size="10" font-family="IBM Plex Mono"
-                  fill="var(--success)" letter-spacing="2.4">VERIFIER · independent thread · does not read the plan</text>
-                <text class="dgm-ink" x="360" y="334" text-anchor="middle" font-size="13" font-weight="700">source + export + field map + criteria</text>
-                <text class="dgm-ink2" x="360" y="348" text-anchor="middle" font-size="11">Count, compare fields, output the diff — never reads plan/log</text>
+                <text x="360" y="312" text-anchor="middle" font-size="10" font-family="IBM Plex Mono"
+                  fill="var(--success-ink)" letter-spacing="1.8">VERIFIER · independent thread · does not read the plan</text>
+                <text class="dgm-ink" x="360" y="332" text-anchor="middle" font-size="13" font-weight="700">source + export + field map + criteria</text>
+                <text class="dgm-ink2" x="360" y="347" text-anchor="middle" font-size="11">Count, compare fields, output the diff — never reads plan/log</text>
               </svg>
               <figcaption><b>Figure 3.2</b> — The verifier receives source data, data exported from the target, the field map, and the acceptance criteria. It is not given the plan or the execution log, since those can seed confirmation bias.</figcaption>
             </figure>
@@ -3489,17 +3511,14 @@ If data is missing to evaluate: ASK ME, don't guess.</pre>
 
 2. Execution phase — run one phase at a time, don't merge them.
    After each phase: report rows processed + the log file path.
-   For a row that doesn't match the field map: skip it, write it to
-   rejected.csv, don't infer a value.
+   For a row that doesn't match the field map: skip it, write it to rejected.csv, don't infer a value.
 
 3. Verification phase — open an INDEPENDENT checking thread.
    This thread does NOT read the plan or log from phase 2.
-   It receives: the source file + data exported from the target +
-   the field map + acceptance criteria.
+   It receives: the source file + data exported from the target + the field map + acceptance criteria.
    Count, compare fields, output the diff. No summary, no interpretation.
 
-Don't conclude "done" unless phase 3 outputs an empty diff,
-or every differing row has a reason in rejected.csv.</pre>
+Don't conclude "done" unless phase 3 outputs an empty diff, or every differing row has a reason in rejected.csv.</pre>
             </div>
 
             <div class="callout insight">
@@ -3699,15 +3718,11 @@ or every differing row has a reason in rejected.csv.</pre>
             <div class="prompt-card">
               <div class="prompt-head"><span>6-step action loop · copy</span><button class="copy-btn"
                   onclick="copyCode(this)">Copy</button></div>
-              <pre>1. navigate  → open the right URL, confirm you reached the right page
-                (check the title or one landmark element)
-2. wait      → wait for load to finish. NOT a fixed time —
-                wait for an element to appear
-3. read      → read the state: how many rows, which filter is on,
-                is there a popup
+              <pre>1. navigate  → open the right URL, confirm you reached the right page (check the title or one landmark element)
+2. wait      → wait for load to finish. NOT a fixed time — wait for an element to appear
+3. read      → read the state: how many rows, which filter is on, is there a popup
 4. type      → enter the right field (locate by label, NOT by coordinates)
-5. validate  → re-read the field you just entered, compare to the
-                intended value. Different → STOP, report
+5. validate  → re-read the field you just entered, compare to the intended value. Different → STOP, report
 6. next      → only continue when validate passes</pre>
             </div>
 
@@ -4129,13 +4144,13 @@ or every differing row has a reason in rejected.csv.</pre>
                 <path d="M470 124C420 170 360 184 300 210" stroke="var(--success)" stroke-width="2" fill="none"
                   marker-end="url(#m4l4-ok)" />
                 <text x="360" y="176" text-anchor="middle" font-size="11" font-family="IBM Plex Mono"
-                  fill="var(--success)">matches</text>
+                  fill="var(--success-ink)">matches</text>
                 <path d="M520 124C556 168 566 182 566 208" stroke="var(--danger)" stroke-width="2" fill="none"
                   marker-end="url(#m4l4-red)" />
                 <text x="592" y="176" text-anchor="middle" font-size="11" font-family="IBM Plex Mono"
-                  fill="var(--danger)">no match</text>
+                  fill="var(--danger-ink)">no match</text>
 
-                <rect class="dgm-accent" x="150" y="214" width="240" height="66" rx="11" stroke-width="1.6"
+                <rect class="dgm-accent" x="120" y="214" width="300" height="66" rx="11" stroke-width="1.6"
                   style="fill:color-mix(in srgb,var(--success) 16%,var(--surface))" />
                 <text class="dgm-ink" x="270" y="240" text-anchor="middle" font-size="13" font-weight="700">Provisionally trust</text>
                 <text class="dgm-ink2" x="270" y="260" text-anchor="middle" font-size="11">(add an independent verifier for anything important)</text>
@@ -4193,8 +4208,7 @@ or every differing row has a reason in rejected.csv.</pre>
               <pre>Before writing the conclusion, output a table — one row each:
   claim | number | source (link) | access date | location in source
 Location = the paragraph/sentence that holds that exact number.
-Can't fill the "location" column = that claim is NOT checked yet,
-mark it [unchecked].
+Can't fill the "location" column = that claim is NOT checked yet, mark it [unchecked].
 Every inference of yours (not from a source) → mark it [inference].
 Don't write the conclusion until the table is complete.</pre>
             </div>
@@ -4686,18 +4700,18 @@ description: Sync customers from a source Sheet into the CRM staging.
                 <rect class="dgm-box" x="36" y="168" width="648" height="58" rx="11"
                   style="fill:var(--warning-bg);stroke:var(--warning)" />
                 <text x="60" y="192" text-anchor="start" font-size="10" font-family="IBM Plex Mono"
-                  fill="var(--warning)" letter-spacing="1.5">MEMORY · written by the agent</text>
+                  fill="var(--warning-ink)" letter-spacing="1.5">MEMORY · written by the agent</text>
                 <text class="dgm-ink" x="60" y="212" text-anchor="start" font-size="12.5" font-weight="700">🔑 API key (leaked in session 1, stays indefinitely)</text>
 
                 <path d="M126 92v72" stroke="var(--danger)" stroke-width="2" fill="none" marker-end="url(#m5l4-red)" />
                 <text x="150" y="132" text-anchor="start" font-size="10.5" font-family="IBM Plex Mono"
-                  fill="var(--danger)">writes to</text>
+                  fill="var(--danger-ink)">writes to</text>
                 <path d="M360 166V96" stroke="var(--danger)" stroke-width="2" stroke-dasharray="6 4" fill="none"
                   marker-end="url(#m5l4-red)" />
                 <path d="M594 166V96" stroke="var(--danger)" stroke-width="2" stroke-dasharray="6 4" fill="none"
                   marker-end="url(#m5l4-red)" />
                 <text x="440" y="150" text-anchor="middle" font-size="10.5" font-family="IBM Plex Mono"
-                  fill="var(--danger)">replays in every later session</text>
+                  fill="var(--danger-ink)">replays in every later session</text>
               </svg>
               <figcaption><b>Figure 5.4</b> — A secret that leaks into memory once replays in every later session, with no one prompting it. Memory does not forget what it should never have remembered.</figcaption>
             </figure>
@@ -4840,9 +4854,9 @@ description: Sync customers from a source Sheet into the CRM staging.
                 <path d="M80 44C170 50 250 62 350 70S560 82 680 86" fill="none" stroke="var(--success)"
                   stroke-width="2.6" stroke-dasharray="7 4" />
                 <text x="688" y="194" text-anchor="end" font-size="10.5" font-family="IBM Plex Mono"
-                  fill="var(--accent-3)">relying on diligence alone</text>
+                  fill="var(--accent3-on-ink)">relying on diligence alone</text>
                 <text x="688" y="80" text-anchor="end" font-size="10.5" font-family="IBM Plex Mono"
-                  fill="var(--success)">with structural gates</text>
+                  fill="var(--success-ink)">with structural gates</text>
                 <g font-size="11" font-family="IBM Plex Mono" fill="var(--ink-2)" text-anchor="middle">
                   <text x="110" y="230">week 1</text><text x="270" y="230">week 4</text><text x="450" y="230">week 8</text><text x="640" y="230">week 12</text>
                 </g>
@@ -4850,7 +4864,7 @@ description: Sync customers from a source Sheet into the CRM staging.
                   stroke-dasharray="3 4" />
                 <rect class="dgm-box" x="358" y="98" width="184" height="40" rx="8" style="fill:var(--ink)" />
                 <text class="dgm-on-dark" x="450" y="116" text-anchor="middle" font-size="11.5" font-weight="600">This gap = risk</text>
-                <text class="dgm-on-dark" x="450" y="131" text-anchor="middle" font-size="11" fill="var(--ink-3)">reminders won't close it</text>
+                <text class="dgm-on-dark-mute" x="450" y="131" text-anchor="middle" font-size="11">reminders won't close it</text>
               </svg>
               <figcaption><b>Figure 6.1 (illustrative)</b> — Reminders don't hold the curve; only design does. By week 12 a diligence-only reviewer has nearly let go, while structural gates keep most of the checking discipline.</figcaption>
             </figure>
@@ -5352,9 +5366,7 @@ description: Sync customers from a source Sheet into the CRM staging.
               <div class="prompt-head"><span>Lab A prompt · copy verbatim</span><button class="copy-btn"
                   onclick="copyCode(this)">Copy</button></div>
               <pre>GOAL
-There's a CSV in 03-OUTPUTS/&lt;date&gt;/ holding exactly the filtered list,
-the filename follows the convention, and I know for certain the row count
-in the file matches the number shown in the interface.
+There's a CSV in 03-OUTPUTS/&lt;date&gt;/ holding exactly the filtered list, the filename follows the convention, and I know for certain the row count in the file matches the number shown in the interface.
 
 CONTEXT
 URL: &lt;instructor fills in&gt;
@@ -5989,9 +6001,7 @@ STOP after writing the plan. Wait for my approval. Don't run on your own.</pre>
                 <div class="prompt-card" style="margin-top:8px">
                   <div class="prompt-head"><span>copy</span><button class="copy-btn"
                       onclick="copyCode(this)">Copy</button></div>
-                  <pre>Before starting, ask me up to 5 questions about what you need to know
-that I haven't said. Prioritize: the source of truth when things conflict,
-the output format, the boundaries you must not cross, how I'll verify.
+                  <pre>Before starting, ask me up to 5 questions about what you need to know that I haven't said. Prioritize: the source of truth when things conflict, the output format, the boundaries you must not cross, how I'll verify.
 
 Don't ask what you can work out from the files I've given you.
 If I don't answer a question, treat it as NOT permitted to assume — ask again.</pre>
@@ -6027,8 +6037,7 @@ PHASE
 4. Independent verification → diff.csv
 
 VERIFY
-The report must include 5 numbers: count(A) · valid count · count(B) before ·
-count(B) after · rejected count. With each file's path.
+The report must include 5 numbers: count(A) · valid count · count(B) before · count(B) after · rejected count. With each file's path.
 Without these 5 numbers, DON'T conclude "done".</pre>
                 </div>
               </div>
@@ -6040,8 +6049,7 @@ Without these 5 numbers, DON'T conclude "done".</pre>
                 <div class="prompt-card" style="margin-top:8px">
                   <div class="prompt-head"><span>copy</span><button class="copy-btn"
                       onclick="copyCode(this)">Copy</button></div>
-                  <pre>You are an independent verifier. You do NOT know how the previous work
-was done, and you may NOT read its log or plan.
+                  <pre>You are an independent verifier. You do NOT know how the previous work was done, and you may NOT read its log or plan.
 
 Your input is only 2 files:
 - &lt;the normalized source file&gt;
@@ -6099,8 +6107,7 @@ ROLE 3 — Verify (independent thread)
 Do NOT read role 2's plan or log. Receive only the source file + target export.
 Count, compare, output the diff table. No interpretation.
 
-Only when role 3 outputs an empty diff table (or every differing row is in rejected)
-may you report "done".</pre>
+Only when role 3 outputs an empty diff table (or every differing row is in rejected) may you report "done".</pre>
                 </div>
               </div>
             </details>

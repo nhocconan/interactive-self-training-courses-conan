@@ -196,6 +196,18 @@
       --accent: #7dd3fc
     }
 
+    /* Diagram TEXT tokens. Declared on body, NOT :root — dark mode overrides
+       --ink/--success on body[data-mode="dark"], so a :root declaration would
+       freeze these against the light palette and fail in dark. */
+    body {
+      --success-ink: color-mix(in srgb, var(--success) 62%, var(--ink));
+      --danger-ink: color-mix(in srgb, var(--danger) 62%, var(--ink));
+      --warning-ink: color-mix(in srgb, var(--warning) 52%, var(--ink));
+      --danger-on-ink: color-mix(in srgb, var(--danger) 62%, var(--bg));
+      --accent3-on-ink: color-mix(in srgb, var(--accent-3) 62%, var(--bg));
+      --mute-on-ink: color-mix(in srgb, var(--bg) 62%, var(--ink));
+    }
+
     /* ============================================================================
    2 · RESET + BASE
    ============================================================================ */
@@ -427,7 +439,7 @@
 
     .nav-link {
       display: flex;
-      align-items: center;
+      align-items: flex-start;
       gap: 10px;
       padding: 8px 10px;
       border-radius: 8px;
@@ -451,6 +463,7 @@
     }
 
     .nav-dot {
+      margin-top: 6px;
       width: 7px;
       height: 7px;
       border-radius: 99px;
@@ -465,6 +478,7 @@
     }
 
     .nav-num {
+      margin-top: 3px;
       font-family: var(--font-mono);
       font-size: 10px;
       color: var(--ink-3);
@@ -474,9 +488,11 @@
 
     .nav-title {
       flex: 1;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      white-space: nowrap
+      /* Wrap instead of ellipsis: 17/26 titles were truncated mid-word at
+         desktop width, hiding what the lesson is actually about. */
+      white-space: normal;
+      overflow-wrap: break-word;
+      line-height: 1.35
     }
 
     .main {
@@ -1240,7 +1256,14 @@
     }
 
     .dgm-on-dark {
-      fill: #fff
+      /* These sit on boxes filled with var(--ink). --ink flips light in dark
+         mode, so a hardcoded #fff went invisible (1.21:1). --bg is --ink's
+         contrast pair and stays correct in both modes. */
+      fill: var(--bg)
+    }
+
+    .dgm-on-dark-mute {
+      fill: color-mix(in srgb, var(--bg) 62%, var(--ink))
     }
 
     /* text/icon on intentionally-dark diagram boxes — does NOT flip in dark mode (the box it sits on is dark in both modes) */
@@ -2045,9 +2068,9 @@
                 <rect class="dgm-accent" x="80" y="218" width="280" height="172" rx="12" stroke-width="1.4" />
                 <text class="dgm-ink" x="100" y="248" font-size="18" font-weight="700">Chat</text>
                 <text class="dgm-ink2" x="100" y="270" font-size="12.5">Hỏi nhanh · brainstorm · draft</text>
-                <text x="100" y="294" font-size="11.5" font-family="IBM Plex Mono" fill="var(--success)">DÙNG: cần 1 câu
+                <text x="100" y="294" font-size="11.5" font-family="IBM Plex Mono" fill="var(--success-ink)">DÙNG: cần 1 câu
                   trả lời tốt</text>
-                <text x="100" y="312" font-size="11.5" font-family="IBM Plex Mono" fill="var(--danger)">TRÁNH: job nhiều
+                <text x="100" y="312" font-size="11.5" font-family="IBM Plex Mono" fill="var(--danger-ink)">TRÁNH: job nhiều
                   bước, đụng file</text>
                 <text class="dgm-ink2" x="100" y="340" font-size="12">Thường nhẹ hơn cho câu hỏi ngắn.</text>
                 <text class="dgm-ink2" x="100" y="358" font-size="12">Vẫn phải kiểm quyền và dữ liệu.</text>
@@ -2055,9 +2078,9 @@
                 <rect class="dgm-accent" x="380" y="218" width="280" height="172" rx="12" stroke-width="2" />
                 <text class="dgm-ink" x="400" y="248" font-size="18" font-weight="700">Work / Cowork</text>
                 <text class="dgm-ink2" x="400" y="270" font-size="12.5">File thật · folder · connector</text>
-                <text x="400" y="294" font-size="11.5" font-family="IBM Plex Mono" fill="var(--success)">DÙNG: cần
+                <text x="400" y="294" font-size="11.5" font-family="IBM Plex Mono" fill="var(--success-ink)">DÙNG: cần
                   deliverable, nhiều bước</text>
-                <text x="400" y="312" font-size="11.5" font-family="IBM Plex Mono" fill="var(--danger)">TRÁNH: chỉ cần 1
+                <text x="400" y="312" font-size="11.5" font-family="IBM Plex Mono" fill="var(--danger-ink)">TRÁNH: chỉ cần 1
                   câu trả lời</text>
                 <text class="dgm-ink2" x="400" y="340" font-size="12">Dùng khi cần sản phẩm hoàn chỉnh.</text>
                 <text class="dgm-ink2" x="400" y="358" font-size="12">Chỉ đáng dùng cho việc đủ dài.</text>
@@ -2065,21 +2088,21 @@
                 <rect class="dgm-warn" x="80" y="58" width="280" height="142" rx="12" stroke-width="1.4" />
                 <text class="dgm-ink" x="100" y="88" font-size="18" font-weight="700">Code</text>
                 <text class="dgm-ink2" x="100" y="110" font-size="12.5">Script · tool · automation lặp</text>
-                <text x="100" y="134" font-size="11.5" font-family="IBM Plex Mono" fill="var(--success)">DÙNG: việc lặp, cần
+                <text x="100" y="134" font-size="11.5" font-family="IBM Plex Mono" fill="var(--success-ink)">DÙNG: việc lặp, cần
                   kết quả ổn định</text>
-                <text x="100" y="152" font-size="11.5" font-family="IBM Plex Mono" fill="var(--danger)">TRÁNH: click UI
+                <text x="100" y="152" font-size="11.5" font-family="IBM Plex Mono" fill="var(--danger-ink)">TRÁNH: click UI
                   1 lần</text>
                 <text class="dgm-ink2" x="100" y="178" font-size="12">Phù hợp khi quy tắc ổn định.</text>
 
                 <rect class="dgm-box" x="380" y="58" width="280" height="142" rx="12" stroke-width="1.4"
                   style="fill:var(--ink)" />
                 <text class="dgm-on-dark" x="400" y="88" font-size="18" font-weight="700">Browser / Computer Use</text>
-                <text x="400" y="110" font-size="12.5" fill="var(--ink-3)">Click · type · form · export UI</text>
-                <text x="400" y="134" font-size="11.5" font-family="IBM Plex Mono" fill="var(--accent-3)">DÙNG: hết cách
+                <text x="400" y="110" font-size="12.5" fill="var(--mute-on-ink)">Click · type · form · export UI</text>
+                <text x="400" y="134" font-size="11.5" font-family="IBM Plex Mono" fill="var(--accent3-on-ink)">DÙNG: hết cách
                   — không có API</text>
-                <text x="400" y="152" font-size="11.5" font-family="IBM Plex Mono" fill="var(--danger)">TRÁNH: banking,
+                <text x="400" y="152" font-size="11.5" font-family="IBM Plex Mono" fill="var(--danger-on-ink)">TRÁNH: banking,
                   HR, prod</text>
-                <text x="400" y="178" font-size="12" fill="var(--ink-3)">Dễ bị ảnh hưởng khi giao diện đổi.</text>
+                <text x="400" y="178" font-size="12" fill="var(--mute-on-ink)">Dễ bị ảnh hưởng khi giao diện đổi.</text>
               </svg>
               <figcaption><b>Hình 1.1</b> — Bốn môi trường làm việc. Chọn môi trường nhẹ nhất vẫn đáp ứng đúng đầu ra;
                 chỉ dùng Browser/Computer Use khi app, connector hoặc file không đủ.</figcaption>
@@ -2366,7 +2389,7 @@
                 <rect class="dgm-box" x="550" y="78" width="150" height="66" rx="10" stroke-width="1.4"
                   style="fill:var(--ink)" />
                 <text x="625" y="100" text-anchor="middle" font-size="9.5" font-family="IBM Plex Mono"
-                  fill="var(--accent-3)" letter-spacing="1">HÀNH ĐỘNG NGOÀI Ý MUỐN</text>
+                  fill="var(--accent3-on-ink)" letter-spacing="1">HÀNH ĐỘNG NGOÀI Ý MUỐN</text>
                 <text class="dgm-on-dark" x="625" y="120" text-anchor="middle" font-size="12" font-weight="600">Gửi dữ
                   liệu ra ngoài</text>
                 <text class="dgm-on-dark" x="625" y="136" text-anchor="middle" font-size="12" font-weight="600">xoá ·
@@ -2493,7 +2516,7 @@
                     <path d="M0 0L10 5L0 10z" fill="var(--accent-3)" />
                   </marker>
                 </defs>
-                <rect class="dgm-box" x="20" y="120" width="124" height="80" rx="11" style="fill:var(--ink)" />
+                <rect class="dgm-box" x="6" y="120" width="154" height="80" rx="11" style="fill:var(--ink)" />
                 <text class="dgm-on-dark" x="82" y="150" text-anchor="middle" font-size="10" font-family="IBM Plex Mono"
                   letter-spacing="2">GOAL</text>
                 <text class="dgm-on-dark" x="82" y="172" text-anchor="middle" font-size="13" font-weight="700">Định
@@ -2534,12 +2557,12 @@
                 <path d="M498 240H360" stroke="var(--accent-3)" stroke-width="2" stroke-dasharray="5 4" fill="none"
                   marker-end="url(#m2l1-back)" />
                 <text x="430" y="232" text-anchor="middle" font-size="11" font-family="IBM Plex Mono"
-                  fill="var(--accent-3)">SAI → quay lại NHÌN</text>
+                  fill="var(--accent3-on-ink)">SAI → quay lại NHÌN</text>
 
                 <rect class="dgm-box" x="180" y="200" width="130" height="80" rx="11"
                   style="fill:var(--warning-bg);stroke:var(--warning)" />
                 <text x="245" y="224" text-anchor="middle" font-size="10" font-family="IBM Plex Mono"
-                  fill="var(--warning)" letter-spacing="2">GATE</text>
+                  fill="var(--warning-ink)" letter-spacing="2">GATE</text>
                 <text class="dgm-ink" x="245" y="246" text-anchor="middle" font-size="13" font-weight="700">Người
                   duyệt</text>
                 <text class="dgm-ink2" x="245" y="266" text-anchor="middle" font-size="11">1 dòng pilot trước
@@ -2782,8 +2805,7 @@
 - count(B) tăng đúng bằng số dòng hợp lệ của A
 - 5 ID do TÔI chọn (không phải AI chọn) khớp 100% trên 6 field
 - Mọi dòng bị loại có mặt trong rejected.csv kèm lý do
-- diff giữa source.csv và export từ B: rỗng, hoặc mọi dòng
-  lệch đều có mặt trong rejected.csv
+- diff giữa source.csv và export từ B: rỗng, hoặc mọi dòng lệch đều có mặt trong rejected.csv
 
 KHÔNG được kết luận "xong" nếu thiếu một trong bốn điều trên.
 Nếu thiếu dữ liệu để đánh giá: HỎI TÔI, đừng đoán.</pre>
@@ -3256,7 +3278,7 @@ Nếu thiếu dữ liệu để đánh giá: HỎI TÔI, đừng đoán.</pre>
                 <path d="M110 222C200 214 280 196 370 168S560 88 660 50" fill="none" stroke="var(--accent-3)"
                   stroke-width="2.2" stroke-dasharray="6 4" />
                 <text x="668" y="66" font-size="11" font-family="IBM Plex Mono" fill="var(--accent-2)">chất lượng</text>
-                <text x="668" y="46" font-size="11" font-family="IBM Plex Mono" fill="var(--accent-3)">chi phí + độ
+                <text x="668" y="46" font-size="11" font-family="IBM Plex Mono" fill="var(--accent3-on-ink)">chi phí + độ
                   trễ</text>
                 <g font-size="11.5" font-family="IBM Plex Mono" fill="var(--ink-2)" text-anchor="middle">
                   <text x="110" y="250">low</text><text x="240" y="250">medium</text><text x="370"
@@ -3264,7 +3286,7 @@ Nếu thiếu dữ liệu để đánh giá: HỎI TÔI, đừng đoán.</pre>
                 </g>
                 <line x1="370" y1="60" x2="370" y2="238" stroke="var(--success)" stroke-width="1.4"
                   stroke-dasharray="4 4" />
-                <rect x="318" y="36" width="104" height="22" rx="5" style="fill:var(--success)" />
+                <rect x="318" y="36" width="104" height="22" rx="5" style="fill:color-mix(in srgb,var(--success) 76%,var(--ink))" />
                 <text class="dgm-on-dark" x="370" y="51" text-anchor="middle" font-size="10.5"
                   font-family="IBM Plex Mono" letter-spacing="1">ĐIỂM ĐO</text>
                 <g font-size="12" fill="var(--ink-2)" text-anchor="middle">
@@ -3405,16 +3427,16 @@ Nếu thiếu dữ liệu để đánh giá: HỎI TÔI, đừng đoán.</pre>
                   </marker>
                 </defs>
                 <rect class="dgm-box" x="220" y="20" width="280" height="64" rx="12" style="fill:var(--ink)" />
-                <text class="dgm-on-dark" x="360" y="44" text-anchor="middle" font-size="10" font-family="IBM Plex Mono"
+                <text class="dgm-on-dark" x="360" y="41" text-anchor="middle" font-size="10" font-family="IBM Plex Mono"
                   letter-spacing="2.4">PLANNER · 1 lượt</text>
-                <text class="dgm-on-dark" x="360" y="66" text-anchor="middle" font-size="14" font-weight="700">Model
+                <text class="dgm-on-dark" x="360" y="61" text-anchor="middle" font-size="14" font-weight="700">Model
                   suy luận sâu · chạy một lần</text>
-                <text class="dgm-on-dark" x="360" y="80" text-anchor="middle" font-size="11" fill="var(--ink-3)">Đọc
+                <text class="dgm-on-dark-mute" x="360" y="76" text-anchor="middle" font-size="11">Đọc
                   field map → plan theo phase → liệt kê rủi ro</text>
 
-                <rect class="dgm-box" x="210" y="100" width="300" height="30" rx="8"
+                <rect class="dgm-box" x="180" y="100" width="360" height="30" rx="8"
                   style="fill:var(--warning-bg);stroke:var(--warning)" />
-                <text x="360" y="120" text-anchor="middle" font-size="12.5" font-weight="600" fill="var(--warning)">◆
+                <text x="360" y="120" text-anchor="middle" font-size="12.5" font-weight="600" fill="var(--warning-ink)">◆
                   GATE — người duyệt plan trước khi chạy</text>
                 <path class="dgm-flow" d="M360 86v12M360 132v20" stroke-width="1.8" marker-end="url(#m3l3-ar)" />
                 <path class="dgm-flow" d="M360 152H120v22M360 152h240v22M360 152v22" stroke-width="1.6" fill="none"
@@ -3441,15 +3463,15 @@ Nếu thiếu dữ liệu để đánh giá: HỎI TÔI, đừng đoán.</pre>
                   chứng</text>
                 <text class="dgm-ink2" x="600" y="236" text-anchor="middle" font-size="11">Gom log + screenshot</text>
 
-                <path class="dgm-flow" d="M120 254v30h480v-30M360 254v38" stroke-width="1.6" fill="none"
+                <path class="dgm-flow" d="M120 254v30h480v-30M360 254v36" stroke-width="1.6" fill="none"
                   marker-end="url(#m3l3-ar)" />
-                <rect class="dgm-box" x="190" y="292" width="340" height="60" rx="12"
+                <rect class="dgm-box" x="120" y="290" width="480" height="66" rx="12"
                   style="fill:color-mix(in srgb,var(--success) 16%,var(--surface));stroke:var(--success);stroke-width:1.4" />
-                <text x="360" y="314" text-anchor="middle" font-size="10" font-family="IBM Plex Mono"
-                  fill="var(--success)" letter-spacing="2.4">KIỂM CHỨNG · luồng độc lập · không đọc plan</text>
-                <text class="dgm-ink" x="360" y="334" text-anchor="middle" font-size="13" font-weight="700">nguồn +
+                <text x="360" y="312" text-anchor="middle" font-size="10" font-family="IBM Plex Mono"
+                  fill="var(--success-ink)" letter-spacing="1.8">KIỂM CHỨNG · luồng độc lập · không đọc plan</text>
+                <text class="dgm-ink" x="360" y="332" text-anchor="middle" font-size="13" font-weight="700">nguồn +
                   export + field map + tiêu chí</text>
-                <text class="dgm-ink2" x="360" y="348" text-anchor="middle" font-size="11">Đếm, so field, xuất bảng
+                <text class="dgm-ink2" x="360" y="347" text-anchor="middle" font-size="11">Đếm, so field, xuất bảng
                   lệch — không đọc plan/log</text>
               </svg>
               <figcaption><b>Hình 3.2</b> — Luồng kiểm chứng nhận dữ liệu nguồn, dữ liệu xuất từ đích, field map và tiêu
@@ -3474,17 +3496,14 @@ Nếu thiếu dữ liệu để đánh giá: HỎI TÔI, đừng đoán.</pre>
 
 2. Pha thực thi — chạy từng phase một, không gộp.
    Sau mỗi phase: báo số dòng đã xử lý + đường dẫn file log.
-   Gặp dòng không khớp field map: bỏ qua, ghi vào rejected.csv,
-   không tự suy diễn giá trị.
+   Gặp dòng không khớp field map: bỏ qua, ghi vào rejected.csv, không tự suy diễn giá trị.
 
 3. Pha kiểm chứng — mở luồng kiểm tra ĐỘC LẬP.
    Luồng này KHÔNG đọc plan hay log của pha 2.
-   Nó nhận: file nguồn + dữ liệu export từ đích + field map
-   + acceptance criteria.
+   Nó nhận: file nguồn + dữ liệu export từ đích + field map + acceptance criteria.
    Đếm, so field, xuất bảng lệch. Không tóm tắt, không diễn giải.
 
-Không kết luận "đã hoàn thành" trừ khi pha 3 xuất bảng lệch rỗng
-hoặc mọi dòng lệch đều có lý do trong rejected.csv.</pre>
+Không kết luận "đã hoàn thành" trừ khi pha 3 xuất bảng lệch rỗng hoặc mọi dòng lệch đều có lý do trong rejected.csv.</pre>
             </div>
 
             <div class="callout insight">
@@ -3676,12 +3695,9 @@ hoặc mọi dòng lệch đều có lý do trong rejected.csv.</pre>
             <div class="prompt-card">
               <div class="prompt-head"><span>Vòng lặp thao tác 6 bước · copy</span><button class="copy-btn"
                   onclick="copyCode(this)">Copy</button></div>
-              <pre>1. navigate  → mở đúng URL, xác nhận đã tới đúng trang
-                (kiểm tiêu đề hoặc 1 phần tử mốc)
-2. wait      → đợi load xong. KHÔNG đợi theo thời gian cố định,
-                đợi theo phần tử xuất hiện
-3. read      → đọc trạng thái: bao nhiêu dòng, filter nào bật,
-                có popup không
+              <pre>1. navigate  → mở đúng URL, xác nhận đã tới đúng trang (kiểm tiêu đề hoặc 1 phần tử mốc)
+2. wait      → đợi load xong. KHÔNG đợi theo thời gian cố định, đợi theo phần tử xuất hiện
+3. read      → đọc trạng thái: bao nhiêu dòng, filter nào bật, có popup không
 4. type      → nhập đúng field (định vị bằng label, KHÔNG bằng toạ độ)
 5. validate  → đọc LẠI field vừa nhập, so với giá trị định nhập.
                 Khác → DỪNG, báo
@@ -4097,13 +4113,13 @@ hoặc mọi dòng lệch đều có lý do trong rejected.csv.</pre>
                 <path d="M470 124C420 170 360 184 300 210" stroke="var(--success)" stroke-width="2" fill="none"
                   marker-end="url(#m4l4-ok)" />
                 <text x="360" y="176" text-anchor="middle" font-size="11" font-family="IBM Plex Mono"
-                  fill="var(--success)">khớp</text>
+                  fill="var(--success-ink)">khớp</text>
                 <path d="M520 124C556 168 566 182 566 208" stroke="var(--danger)" stroke-width="2" fill="none"
                   marker-end="url(#m4l4-red)" />
                 <text x="592" y="176" text-anchor="middle" font-size="11" font-family="IBM Plex Mono"
-                  fill="var(--danger)">không khớp</text>
+                  fill="var(--danger-ink)">không khớp</text>
 
-                <rect class="dgm-accent" x="150" y="214" width="240" height="66" rx="11" stroke-width="1.6"
+                <rect class="dgm-accent" x="120" y="214" width="300" height="66" rx="11" stroke-width="1.6"
                   style="fill:color-mix(in srgb,var(--success) 16%,var(--surface))" />
                 <text class="dgm-ink" x="270" y="240" text-anchor="middle" font-size="13" font-weight="700">Tạm tin</text>
                 <text class="dgm-ink2" x="270" y="260" text-anchor="middle" font-size="11">(thêm luồng kiểm chứng độc lập cho việc
@@ -4160,8 +4176,7 @@ hoặc mọi dòng lệch đều có lý do trong rejected.csv.</pre>
                   onclick="copyCode(this)">Copy</button></div>
               <pre>Trước khi viết kết luận, xuất một bảng — mỗi dòng:
   claim | con số | nguồn (link) | ngày truy cập | vị trí trong nguồn
-Vị trí = đoạn/câu chứa đúng con số đó. Không điền được cột
-"vị trí" = claim đó CHƯA được kiểm, đánh dấu [chưa kiểm].
+Vị trí = đoạn/câu chứa đúng con số đó. Không điền được cột "vị trí" = claim đó CHƯA được kiểm, đánh dấu [chưa kiểm].
 Mọi câu suy luận của bạn (không từ nguồn) ghi rõ [suy luận].
 Chưa viết kết luận cho tới khi bảng đầy đủ.</pre>
             </div>
@@ -4647,19 +4662,19 @@ description: Đồng bộ khách hàng từ Sheet nguồn sang CRM staging.
                 <rect class="dgm-box" x="36" y="168" width="648" height="58" rx="11"
                   style="fill:var(--warning-bg);stroke:var(--warning)" />
                 <text x="60" y="192" text-anchor="start" font-size="10" font-family="IBM Plex Mono"
-                  fill="var(--warning)" letter-spacing="1.5">MEMORY · agent tự ghi</text>
+                  fill="var(--warning-ink)" letter-spacing="1.5">MEMORY · agent tự ghi</text>
                 <text class="dgm-ink" x="60" y="212" text-anchor="start" font-size="12.5" font-weight="700">🔑 API key
                   (lọt vào từ phiên 1, ở lại vô thời hạn)</text>
 
                 <path d="M126 92v72" stroke="var(--danger)" stroke-width="2" fill="none" marker-end="url(#m5l4-red)" />
                 <text x="150" y="132" text-anchor="start" font-size="10.5" font-family="IBM Plex Mono"
-                  fill="var(--danger)">ghi vào</text>
+                  fill="var(--danger-ink)">ghi vào</text>
                 <path d="M360 166V96" stroke="var(--danger)" stroke-width="2" stroke-dasharray="6 4" fill="none"
                   marker-end="url(#m5l4-red)" />
                 <path d="M594 166V96" stroke="var(--danger)" stroke-width="2" stroke-dasharray="6 4" fill="none"
                   marker-end="url(#m5l4-red)" />
                 <text x="440" y="150" text-anchor="middle" font-size="10.5" font-family="IBM Plex Mono"
-                  fill="var(--danger)">replay ở mọi phiên sau</text>
+                  fill="var(--danger-ink)">replay ở mọi phiên sau</text>
               </svg>
               <figcaption><b>Hình 5.4</b> — Một secret lọt vào memory một lần thì replay ở mọi phiên sau, không cần ai
                 nhắc lại. Memory không tự quên thứ đáng lẽ không nên nhớ.</figcaption>
@@ -4799,9 +4814,9 @@ description: Đồng bộ khách hàng từ Sheet nguồn sang CRM staging.
                 <path d="M80 44C170 50 250 62 350 70S560 82 680 86" fill="none" stroke="var(--success)"
                   stroke-width="2.6" stroke-dasharray="7 4" />
                 <text x="688" y="194" text-anchor="end" font-size="10.5" font-family="IBM Plex Mono"
-                  fill="var(--accent-3)">chỉ dựa vào người tự giác</text>
+                  fill="var(--accent3-on-ink)">chỉ dựa vào người tự giác</text>
                 <text x="688" y="80" text-anchor="end" font-size="10.5" font-family="IBM Plex Mono"
-                  fill="var(--success)">có gate cấu trúc</text>
+                  fill="var(--success-ink)">có gate cấu trúc</text>
                 <g font-size="11" font-family="IBM Plex Mono" fill="var(--ink-2)" text-anchor="middle">
                   <text x="110" y="230">tuần 1</text><text x="270" y="230">tuần 4</text><text x="450" y="230">tuần
                     8</text><text x="640" y="230">tuần 12</text>
@@ -4811,7 +4826,7 @@ description: Đồng bộ khách hàng từ Sheet nguồn sang CRM staging.
                 <rect class="dgm-box" x="358" y="98" width="184" height="40" rx="8" style="fill:var(--ink)" />
                 <text class="dgm-on-dark" x="450" y="116" text-anchor="middle" font-size="11.5" font-weight="600">Khoảng
                   cách này = rủi ro</text>
-                <text class="dgm-on-dark" x="450" y="131" text-anchor="middle" font-size="11" fill="var(--ink-3)">không
+                <text class="dgm-on-dark-mute" x="450" y="131" text-anchor="middle" font-size="11">không
                   lấp bằng nhắc nhở</text>
               </svg>
               <figcaption><b>Hình 6.1 (minh hoạ)</b> — Nhắc nhở không giữ được đường cong; chỉ thiết kế mới giữ được.
@@ -5314,9 +5329,7 @@ description: Đồng bộ khách hàng từ Sheet nguồn sang CRM staging.
               <div class="prompt-head"><span>Prompt Lab A · copy nguyên văn</span><button class="copy-btn"
                   onclick="copyCode(this)">Copy</button></div>
               <pre>GOAL
-Có một file CSV trong 03-OUTPUTS/&lt;ngày&gt;/ chứa đúng danh sách đã lọc,
-tên file đúng quy ước, và tôi biết chắc số dòng trong file khớp với số
-hiển thị trên giao diện.
+Có một file CSV trong 03-OUTPUTS/&lt;ngày&gt;/ chứa đúng danh sách đã lọc, tên file đúng quy ước, và tôi biết chắc số dòng trong file khớp với số hiển thị trên giao diện.
 
 CONTEXT
 URL: &lt;giảng viên điền&gt;
@@ -5944,9 +5957,7 @@ DỪNG sau khi viết plan. Chờ tôi duyệt. Không tự chạy.</pre>
                 <div class="prompt-card" style="margin-top:8px">
                   <div class="prompt-head"><span>copy</span><button class="copy-btn"
                       onclick="copyCode(this)">Copy</button></div>
-                  <pre>Trước khi bắt đầu, hỏi tôi tối đa 5 câu về những thứ bạn cần biết
-mà tôi chưa nói. Ưu tiên: nguồn sự thật khi mâu thuẫn, định dạng đầu ra,
-ranh giới không được vượt, cách tôi sẽ kiểm chứng.
+                  <pre>Trước khi bắt đầu, hỏi tôi tối đa 5 câu về những thứ bạn cần biết mà tôi chưa nói. Ưu tiên: nguồn sự thật khi mâu thuẫn, định dạng đầu ra, ranh giới không được vượt, cách tôi sẽ kiểm chứng.
 
 Đừng hỏi những câu bạn có thể tự tìm ra từ file tôi đã đưa.
 Nếu tôi không trả lời câu nào, coi như CHƯA được phép giả định — hỏi lại.</pre>
@@ -5982,8 +5993,7 @@ PHASE
 4. Kiểm chứng độc lập → diff.csv
 
 VERIFY
-Báo cáo bắt buộc 5 con số: count(A) · count hợp lệ · count(B) trước ·
-count(B) sau · count rejected. Kèm đường dẫn từng file.
+Báo cáo bắt buộc 5 con số: count(A) · count hợp lệ · count(B) trước · count(B) sau · count rejected. Kèm đường dẫn từng file.
 KHÔNG có 5 con số này thì KHÔNG được kết luận "hoàn thành".</pre>
                 </div>
               </div>
@@ -5995,8 +6005,7 @@ KHÔNG có 5 con số này thì KHÔNG được kết luận "hoàn thành".</pr
                 <div class="prompt-card" style="margin-top:8px">
                   <div class="prompt-head"><span>copy</span><button class="copy-btn"
                       onclick="copyCode(this)">Copy</button></div>
-                  <pre>Bạn là người kiểm chứng độc lập. Bạn KHÔNG biết công việc trước đó
-được thực hiện thế nào, và KHÔNG được đọc log hay plan của nó.
+                  <pre>Bạn là người kiểm chứng độc lập. Bạn KHÔNG biết công việc trước đó được thực hiện thế nào, và KHÔNG được đọc log hay plan của nó.
 
 Đầu vào của bạn chỉ gồm 2 file:
 - &lt;file nguồn đã chuẩn hoá&gt;
@@ -6054,8 +6063,7 @@ VAI 3 — Kiểm chứng (luồng độc lập)
 KHÔNG đọc plan hay log của vai 2. Chỉ nhận file nguồn + file export đích.
 Đếm, so, xuất bảng lệch. Không diễn giải.
 
-Chỉ khi vai 3 xuất bảng lệch rỗng (hoặc mọi dòng lệch đều có trong rejected)
-thì mới được báo cáo "hoàn thành".</pre>
+Chỉ khi vai 3 xuất bảng lệch rỗng (hoặc mọi dòng lệch đều có trong rejected) thì mới được báo cáo "hoàn thành".</pre>
                 </div>
               </div>
             </details>
