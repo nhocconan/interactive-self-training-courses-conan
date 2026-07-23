@@ -3417,31 +3417,51 @@ Don't conclude "done" unless phase 3 outputs an empty diff, or every differing r
               </ul>
             </div>
 
-            <p>An agent may observe through a screenshot, the DOM, the accessibility tree, or a mix, depending on the
-              product. The observed state can be missing or stale: a popup covering the Save button, a tab whose session
-              expired, or a table that only partly loaded. Every write action needs a re-read of the real state.</p>
+            <p><strong>The situation.</strong> You ask the AI to go into an order-admin page (staging): filter the
+              <em>Pending</em> orders, then move 30 of them to <em>Shipping</em>. The AI clicks away and, two minutes
+              later, reports <em>"updated 30 orders."</em> You reopen it: 8 are still <em>Pending</em>, and 2 got moved
+              on the wrong customer.</p>
+            <p>The AI isn't lying. It acts on what it <strong>sees</strong> — and what it sees can be stale or partial: a
+              popup just covered a button, a table half-loaded, an input got overwritten by autocomplete. And it
+              <strong>never re-reads</strong> after each action. The fix isn't telling the AI to "be more careful" — it's
+              forcing every action through a fixed loop: <strong>do one step → re-read the real result → then
+              continue.</strong></p>
 
-            <div class="compare">
-              <div class="compare-col good"><span class="eyebrow">Minimum configuration</span>
-                <ul>
-                  <li><strong>A separate browser profile</strong> for the AI — not the profile holding
-                    banking/email/password-manager cookies</li>
-                  <li><strong>An IT-issued staging/demo account</strong>, not your prod</li>
-                  <li><strong>A separate machine or OS account</strong> if you run Computer Use at a high automation
-                    level</li>
-                  <li>Start with a checkpoint on write actions; reduce checkpoints only after a pilot and once automated
-                    checks exist</li>
-                </ul>
-              </div>
-              <div class="compare-col good"><span class="eyebrow">Safe login pattern</span>
-                <ul>
-                  <li><strong>A person logs in once</strong>, the AI inherits the session — the default pattern</li>
-                  <li><strong>Never</strong> paste a password into the chat box</li>
-                  <li>Prefer a <strong>magic link</strong> or a narrow-permission demo account</li>
-                  <li>On a captcha/payment, the agent stops and hands control back — that's correct, don't try to defeat
-                    it</li>
-                </ul>
-              </div>
+            <div class="steps">
+              <span class="eyebrow" style="display:block;margin-bottom:10px">Walk it through · move one order to "Shipping"</span>
+              <ul style="list-style:none;padding:0">
+                <li>
+                  <h4>1 · navigate → reach the right page</h4>
+                  <p>Open the URL and confirm you're in the right place via a landmark (the "Order management" title, the
+                    "Filter" button). <em>Trap:</em> a stale link redirects to a login page the AI assumes it's past.</p>
+                </li>
+                <li>
+                  <h4>2 · wait → wait for an element, not for seconds</h4>
+                  <p>Wait until <strong>the order table has appeared</strong>, not "5 seconds then go." <em>Trap:</em> the
+                    table half-loads and the AI reads it at 12 of 50 rows.</p>
+                </li>
+                <li>
+                  <h4>3 · read → read the current state</h4>
+                  <p>Note it down: which filter is on, how many rows, the ID of the order to change, any popup in the
+                    way. <em>Trap:</em> a "survey" popup covers the Save button and the AI doesn't see it.</p>
+                </li>
+                <li>
+                  <h4>4 · type → act on the right object</h4>
+                  <p>Locate the order by its <strong>order ID</strong> (label), not by "the 3rd row" or coordinates.
+                    <em>Trap:</em> the table just re-sorted, so "the 3rd row" is now a different customer's order — those
+                    are the 2 wrong updates from the opening.</p>
+                </li>
+                <li>
+                  <h4>5 · validate → re-read the result (the most-skipped step)</h4>
+                  <p>Re-read that same order: is the status now "Shipping"? If the system stores server-side, reload and
+                    find it by ID. Different from expected → <strong>STOP, report.</strong></p>
+                </li>
+                <li>
+                  <h4>6 · next → only continue when step 5 passes</h4>
+                  <p>Move to the next order only after validate passes. Skipping step 5 is exactly how 8 orders
+                    "disappeared" in the opening.</p>
+                </li>
+              </ul>
             </div>
 
             <div class="prompt-card">
@@ -3456,16 +3476,37 @@ Don't conclude "done" unless phase 3 outputs an empty diff, or every differing r
             </div>
 
             <div class="callout danger">
-              <div class="callout-title">Validate after a write action</div>
-              <p>Typing into a box doesn't guarantee the value landed there — autocomplete can overwrite it, a field can
-                mask it, a form can reset. Re-reading the field catches this before the next record.</p>
+              <div class="callout-title">Validate is two checks, not one</div>
+              <p>After you <strong>type</strong>: re-read the field and compare to the intended value — autocomplete or a
+                mask may have changed it. After you <strong>Save</strong>: reload or find the record by ID to confirm the
+                server stored it. "Landed in the right box" and "durably saved" are different questions; skip either and
+                you miss errors.</p>
             </div>
 
-            <div class="callout insight">
-              <div class="callout-title">Why you can't skip re-reading the result</div>
-              <p>After entering, re-read the field's value; after Save, reload or find the record by ID if the system
-                stores server-side. The two checks answer different questions: did the data land in the right box, and
-                was it durably saved.</p>
+            <div>
+              <span class="eyebrow" style="display:block;margin:6px 0 10px">Set up before you let the AI run on a real site</span>
+              <div class="compare">
+                <div class="compare-col good"><span class="eyebrow">Minimum configuration</span>
+                  <ul>
+                    <li><strong>A separate browser profile</strong> for the AI — not the profile holding
+                      banking/email/password-manager cookies</li>
+                    <li><strong>An IT-issued staging/demo account</strong>, not your prod</li>
+                    <li><strong>A separate machine or OS account</strong> if you run Computer Use at a high automation
+                      level</li>
+                    <li>Keep a checkpoint on write actions; reduce it only after a pilot and once automated checks
+                      exist</li>
+                  </ul>
+                </div>
+                <div class="compare-col good"><span class="eyebrow">Safe login pattern</span>
+                  <ul>
+                    <li><strong>A person logs in once</strong>, the AI inherits the session — the default pattern</li>
+                    <li><strong>Never</strong> paste a password into the chat box</li>
+                    <li>Prefer a <strong>magic link</strong> or a narrow-permission demo account</li>
+                    <li>On a captcha/payment, the agent stops and hands control back — that's correct, don't try to
+                      defeat it</li>
+                  </ul>
+                </div>
+              </div>
             </div>
 
             <div class="takeaway">
@@ -3527,8 +3568,11 @@ Don't conclude "done" unless phase 3 outputs an empty diff, or every differing r
               </ul>
             </div>
 
-            <p>Each mode below has a sign and a check. Number 08 is an unverified completion report; it can show up
-              alongside any of 01 through 07.</p>
+            <p>The AI reports <em>"processed 100 customers"</em> — a round number, no file attached. That's usually the
+              first sign of a failure hiding underneath. Below are <strong>8 common failure modes</strong> when an agent
+              drives the web; each has a <strong>sign to spot it</strong> and a <strong>check to catch it</strong>.
+              Number 08 (an unverified completion report) can ride along with any of 01–07 — so always demand numbers and
+              files, don't trust the summary.</p>
 
             <div class="table-wrap">
               <table>
@@ -3677,9 +3721,11 @@ Don't conclude "done" unless phase 3 outputs an empty diff, or every differing r
               </ul>
             </div>
 
-            <p>A research report can contain dead links, a source that doesn't hold the cited number, or a claim split
-              from context. Count and diff — used for data tables — don't catch these; you need to back-check each
-              claim to its source.</p>
+            <p><strong>The situation.</strong> The AI hands you a report: <em>"Vietnam's e-commerce market grew 34% in
+                2025 (per Gartner)."</em> You open the attached Gartner link — the page is real, but there's no 34%
+              anywhere on it. This is the kind of error that count and diff (Lesson 2.4) <strong>can't</strong> catch: a
+              research report isn't a data table, it's a chain of sourced claims — you have to back-check each claim to
+              its actual source.</p>
 
             <div class="concept">
               <span class="eyebrow">Key concept</span>
