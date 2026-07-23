@@ -1806,7 +1806,7 @@
     <aside class="sidebar" id="sidebar" aria-label="Course navigation">
       <div class="sidebar-brand">
         <div class="sidebar-brand-title">Operating <em>AI Agents</em></div>
-        <div class="sidebar-brand-sub">21 lessons · 2026 · Observe Ground Act Verify</div>
+        <div class="sidebar-brand-sub">22 lessons · 2026 · Observe Ground Act Verify</div>
       </div>
       <div class="progress-wrap">
         <div class="progress-meta"><span>Progress</span><span><b id="pg-done">0</b>/<span id="pg-total">0</span> · <span
@@ -1845,7 +1845,7 @@
               evidence</strong>. This course is about how to operate agents — not how to write prompts or code.</p>
             <div class="hero-meta">
               <span class="chip">Level L1 → L5</span>
-              <span class="chip">21 lessons · 2 labs</span>
+              <span class="chip">22 lessons · 2 labs</span>
             </div>
             <div style="margin-top:28px;display:flex;gap:12px;flex-wrap:wrap">
               <a class="btn btn-primary" id="start-btn">Start learning →</a>
@@ -4439,6 +4439,149 @@ description: Sync customers from a source Sheet into the CRM staging.
           </div>
           <div class="lesson-nav" data-navfor="m5-l4"></div>
         </article>
+
+        <!-- ===================== LESSON m5-l5 ===================== -->
+        <article class="lesson" id="m5-l5" data-lesson>
+          <div class="lesson-head">
+            <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px">
+              <div>
+                <span class="eyebrow">Lesson 5.5</span>
+                <h3>From a personal skill to a shared team skill</h3>
+              </div>
+              <div style="display:flex;gap:8px;flex-wrap:wrap">
+                <span class="level-badge">L4 · Advanced
+                  <span class="level-dots"><i class="on"></i><i class="on"></i><i class="on"></i><i
+                      class="on"></i><i></i></span>
+                </span>
+              </div>
+            </div>
+          </div>
+          <div class="lesson-body">
+
+            <div class="objectives">
+              <span class="eyebrow">After this lesson you can</span>
+              <ul>
+                <li>Package a skill into a self-contained folder: SKILL.md + assets (relative paths) + a runner README.</li>
+                <li>Put the skill in one shared internal place (repo · team Drive · plugin), each skill with an owner + version.</li>
+                <li>Success criterion: someone <em>other</em> than the author, doing a <em>different</em> job, pulls the skill and runs it without asking.</li>
+              </ul>
+            </div>
+
+            <p><strong>Scenario.</strong> You finish the <code>crm-staging-sync</code> skill and it runs fine on your
+              machine. A teammate copies <code>SKILL.md</code> into their chat — and it fails at step 1:
+              <em>"cannot open 02-TEMPLATES/field-map-crm.csv"</em>. Your skill silently assumes a whole setup that only
+              your machine has. This lesson turns a personal skill into a <strong>package</strong> anyone on the team
+              can pull and run.</p>
+
+            <div class="concept">
+              <span class="eyebrow">Key idea</span>
+              <h4>Runs-for-you ≠ shareable</h4>
+              <p>A personal skill carries <em>implicit</em> assumptions — file paths, accounts, templates — that are
+                only true on the author's machine. Packaging a skill means <strong>making those assumptions
+                explicit</strong> and shipping them alongside the skill in a self-contained folder, so it no longer
+                depends on any one person's setup.</p>
+            </div>
+
+            <div class="prompt-card">
+              <div class="prompt-head"><span>One skill = one self-contained folder · copy</span><button class="copy-btn"
+                  onclick="copyCode(this)">Copy</button></div>
+              <pre>skills/crm-staging-sync/
+├── SKILL.md            # the procedure (Lesson 5.2): Steps · Gotchas · Validation · Stop
+├── README.md           # what the runner needs to start (see below)
+├── assets/             # ships with the skill, NOT on anyone's private machine
+│   └── field-map-crm.csv
+└── examples/           # 1 sample input + 1 correct output to check against
+    ├── input-sample.csv
+    └── output-expected.csv</pre>
+            </div>
+
+            <div class="callout warn">
+              <div class="callout-title">Relative paths, not your machine's paths</div>
+              <p>In <code>SKILL.md</code>, reference <code>assets/field-map-crm.csv</code> (relative, inside the
+                package) — <strong>never</strong> <code>/Users/you/...</code>. The one-line rule: everything the skill
+                needs must live <em>inside</em> the package folder. If a skill reads anything outside that folder,
+                that is exactly where it will break on someone else's machine.</p>
+            </div>
+
+            <div class="concept">
+              <span class="eyebrow">A runner README — 4 lines, no more</span>
+              <h4>What someone else needs before they hit run</h4>
+              <p><strong>Connector / account:</strong> what's required (e.g. CRM staging — runner logs in themselves). ·
+                <strong>Environment:</strong> where it runs (Cowork · desktop app · staging only). ·
+                <strong>Owner:</strong> who is responsible for keeping this skill current. ·
+                <strong>Version:</strong> which build, last changed on what date.</p>
+            </div>
+
+            <div class="compare">
+              <div class="compare-col bad"><span class="eyebrow">Personal skill · runs only on your machine</span>
+                <ul>
+                  <li>References absolute paths on the author's machine</li>
+                  <li>Field-map / templates scattered across a personal Drive</li>
+                  <li>Only the author knows which connector / account is needed</li>
+                  <li>Nobody knows which build is in use, or who changed what</li>
+                </ul>
+              </div>
+              <div class="compare-col good"><span class="eyebrow">Skill package · anyone on the team can run</span>
+                <ul>
+                  <li>Assets live inside the package, referenced by relative path</li>
+                  <li>One folder = one skill; pull the whole package</li>
+                  <li>README states the run conditions before you start</li>
+                  <li>Has an owner + version + changelog</li>
+                </ul>
+              </div>
+            </div>
+
+            <div class="callout insight">
+              <div class="callout-title">Three rules that keep a skill library usable</div>
+              <p><strong>1 · One owner per skill</strong> — a named person responsible for keeping it current, just as
+                a scheduled task must have someone reading its output (Lesson 5.3). <strong>2 · Version +
+                changelog</strong> — record the date and what changed, so the runner knows which build they're on.
+                <strong>3 · "Someone else ran it"</strong> — a skill only enters the shared library after someone
+                <em>other</em> than the author runs it successfully without asking. That's exactly the success
+                criterion from Lesson 5.2.</p>
+            </div>
+
+            <div class="callout success">
+              <div class="callout-title">Keep it in one shared place — no public sharing needed</div>
+              <p>One single place the whole team pulls from: an <strong>internal Git repo</strong>, a
+                <strong>team Drive folder</strong>, or packaged as a <strong>plugin</strong> (tier 3 in the tool
+                priority — "a bundled skill + connector + subagent for one role"). Many skills together form a
+                library; each person picks the skill for the job they need, without having to understand all of them.
+                This is how a team gets <em>many different jobs</em> done reliably without depending on one person.</p>
+            </div>
+
+            <div class="takeaway">
+              <span class="eyebrow">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
+                  aria-hidden="true" focusable="false">
+                  <path
+                    d="M12 2v6m0 8v6M4.9 4.9l4.2 4.2m5.8 5.8l4.2 4.2M2 12h6m8 0h6M4.9 19.1l4.2-4.2m5.8-5.8l4.2-4.2" />
+                </svg>
+                Takeaway
+              </span>
+              <p>A shared skill package = <span class="hl">SKILL.md + assets (relative paths) + a runner README</span>,
+                kept in one shared place, each skill with an owner + version; it enters the library only after someone
+                else runs it. Running on your machine is not the same as being shareable.</p>
+            </div>
+
+            <div class="quiz" data-correct="1">
+              <span class="eyebrow">Quick check</span>
+              <p class="quiz-q">You hand <code>SKILL.md</code> to a teammate. Same tools, yet it fails at step 1:
+                <em>"cannot open /Users/you/field-map.csv"</em>. What is the core problem?</p>
+              <button class="quiz-opt" onclick="quizPick(this,0)"><span class="quiz-letter">A</span><span>The teammate
+                  hasn't installed the right software.</span></button>
+              <button class="quiz-opt" onclick="quizPick(this,1)"><span class="quiz-letter">B</span><span>SKILL.md
+                  references an absolute path on your machine; a shareable package must ship its assets and reference
+                  them by relative path.</span></button>
+              <button class="quiz-opt" onclick="quizPick(this,2)"><span class="quiz-letter">C</span><span>It needs a
+                  fuller Gotchas section.</span></button>
+              <div class="quiz-feedback" role="status"
+                data-explain="B is right. The skill fails not for lack of procedure but because it silently assumes a file only your machine has. A is wrong — same tools still fail, so it's not a software issue; the path simply doesn't exist on the other machine. C is wrong — Gotchas can't rescue a path that isn't there. A shareable package: assets live inside the package folder and SKILL.md references 'assets/field-map.csv' (relative). Add an owner + version + a README of run conditions so someone else can use it without asking.">
+              </div>
+            </div>
+          </div>
+          <div class="lesson-nav" data-navfor="m5-l5"></div>
+        </article>
       </div><!-- /container module 5 -->
 
       <!-- ============================================================
@@ -5529,6 +5672,7 @@ Only when role 3 outputs an empty diff table (or every differing row is in rejec
       { id: 'm5-l2', mod: 5, part: 'Part V · Systematizing', title: 'Turn an SOP into a Skill the AI can run', desc: 'Four parts: Steps · Gotchas · Validation · Stop — without the last two it is just notes.' },
       { id: 'm5-l3', mod: 5, part: 'Part V · Systematizing', title: 'Scheduled work and the tool-priority order', desc: 'Every task needs a reader + an alert threshold; connector → file → plugin → browser → computer.' },
       { id: 'm5-l4', mod: 5, part: 'Part V · Systematizing', title: 'Memory across sessions', desc: 'A context layer the AI writes itself — check it against the source of truth, no secrets, review it regularly.' },
+      { id: 'm5-l5', mod: 5, part: 'Part V · Systematizing', title: 'From a personal skill to a shared team skill', desc: 'SKILL.md + assets (relative paths) + a runner README; owner + version; enters the library only after someone else runs it.' },
       { id: 'm6-l1', mod: 6, part: 'Part VI · Sustaining reliability', title: 'The oversight-decay curve + 4 structural gates', desc: 'HITL decay is not fixed by reminders; pilot · checksum · dual control · sample audit.' },
       { id: 'm7-l1', mod: 7, part: 'Part VII · Practice', title: 'Lab A — Open, filter, export, name', desc: 'In pairs, 45 min: the OBSERVE→ACT→VERIFY loop; the UI-count ≠ export-count trap.' },
       { id: 'm7-l2', mod: 7, part: 'Part VII · Practice', title: 'Lab B — Migrate system A → B (staging)', desc: 'In squads, 90 min: 10 fake rows with 6 errors + 1 disputed; row 1005 must stop and ask.' },
