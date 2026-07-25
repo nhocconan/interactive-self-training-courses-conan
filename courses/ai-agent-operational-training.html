@@ -3057,9 +3057,15 @@ Nếu thiếu dữ liệu để đánh giá: HỎI TÔI, đừng đoán.</pre>
                   <tr>
                     <td><strong>Evidence</strong></td>
                     <td><em>— không có —</em></td>
-                    <td><code>count(A)=247</code> · <code>count(B) trước=0, sau=240</code> · <code>rejected.csv</code>
-                      (7 dòng, lý do: email trùng) · screenshot B filter <code>created_at=today</code> · spot-check ID
-                      1013, 1088, 1140, 1201, 1246 — khớp 5/5 trên 6 field.</td>
+                    <td>
+                      <ul style="margin:0;padding-left:18px">
+                        <li><code>count(A)=247</code></li>
+                        <li><code>count(B) trước=0, sau=240</code></li>
+                        <li><code>rejected.csv</code> (7 dòng, lý do: email trùng)</li>
+                        <li>screenshot B filter <code>created_at=today</code></li>
+                        <li>spot-check ID 1013, 1088, 1140, 1201, 1246 — khớp 5/5 trên 6 field</li>
+                      </ul>
+                    </td>
                   </tr>
                   <tr>
                     <td><strong>Verdict</strong></td>
@@ -4746,10 +4752,12 @@ AI  → Tổng sau khi loại: 1.284.500.000₫ — khớp dashboard. ĐẠT.</p
             <div class="concept">
               <span class="eyebrow">README cho người chạy — 4 dòng, không hơn</span>
               <h4>Người khác cần biết gì trước khi bấm chạy</h4>
-              <p><strong>Connector / tài khoản:</strong> cần gì (VD: CRM staging — người chạy tự đăng nhập). ·
-                <strong>Môi trường:</strong> chạy ở đâu (Cowork · desktop app · chỉ staging). ·
-                <strong>Owner:</strong> ai chịu trách nhiệm cập nhật skill này. ·
-                <strong>Version:</strong> bản nào, sửa gần nhất ngày nào.</p>
+              <ul style="margin:6px 0 0 18px">
+                <li><strong>Connector / tài khoản:</strong> cần gì (VD: CRM staging — người chạy tự đăng nhập).</li>
+                <li><strong>Môi trường:</strong> chạy ở đâu (Cowork · desktop app · chỉ staging).</li>
+                <li><strong>Owner:</strong> ai chịu trách nhiệm cập nhật skill này.</li>
+                <li><strong>Version:</strong> bản nào, sửa gần nhất ngày nào.</li>
+              </ul>
             </div>
 
             <div class="compare">
@@ -4773,11 +4781,14 @@ AI  → Tổng sau khi loại: 1.284.500.000₫ — khớp dashboard. ĐẠT.</p
 
             <div class="callout insight">
               <div class="callout-title">Ba luật giữ thư viện skill dùng được</div>
-              <p><strong>1 · Mỗi skill một owner</strong> — tên người chịu trách nhiệm cập nhật, giống scheduled task
-                phải có người đọc output (Bài 5.3). <strong>2 · Version + changelog</strong> — ghi ngày và sửa gì, để
-                người chạy biết mình đang dùng bản nào. <strong>3 · "Đã có người khác chạy được"</strong> — skill chỉ
-                vào thư viện chung sau khi một người <em>khác</em> tác giả chạy thành công mà không hỏi. Đúng tiêu chí
-                đạt của Bài 5.2.</p>
+              <ul style="margin:6px 0 0 18px">
+                <li><strong>1 · Mỗi skill một owner</strong> — tên người chịu trách nhiệm cập nhật, giống scheduled task
+                  phải có người đọc output (Bài 5.3).</li>
+                <li><strong>2 · Version + changelog</strong> — ghi ngày và sửa gì, để người chạy biết mình đang dùng bản
+                  nào.</li>
+                <li><strong>3 · "Đã có người khác chạy được"</strong> — skill chỉ vào thư viện chung sau khi một người
+                  <em>khác</em> tác giả chạy thành công mà không hỏi. Đúng tiêu chí đạt của Bài 5.2.</li>
+              </ul>
             </div>
 
             <div class="callout success">
@@ -4828,8 +4839,8 @@ AI  → Tổng sau khi loại: 1.284.500.000₫ — khớp dashboard. ĐẠT.</p
          ============================================================ -->
       <div class="container">
         <header class="module-header" data-module="6">
-          <span class="eyebrow">Module 06 · Phần VI · Giữ độ tin cậy</span>
-          <h2>Giữ độ tin cậy khi luồng đã chạy ổn</h2>
+          <span class="eyebrow">Module 06 · Phần VI · Khi người duyệt bắt đầu lướt</span>
+          <h2>Luồng càng chạy ổn, người duyệt càng lướt — giữ chất lượng bằng gate, không bằng nhắc nhở</h2>
           <p>Khi một luồng đã chạy đúng nhiều lần, việc kiểm tay dễ bị lướt. Bốn gate cấu trúc dưới đây giữ chất lượng mà không phụ thuộc vào sự tập trung của con người.</p>
         </header>
 
@@ -4839,7 +4850,7 @@ AI  → Tổng sau khi loại: 1.284.500.000₫ — khớp dashboard. ĐẠT.</p
             <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px">
               <div>
                 <span class="eyebrow">Bài 6.1</span>
-                <h3>Đường cong suy giảm giám sát + 4 gate cấu trúc</h3>
+                <h3>Vì sao càng tin càng lười kiểm — 4 gate chặn lỗi thay cho lời nhắc</h3>
               </div>
               <div style="display:flex;gap:8px;flex-wrap:wrap">
                 <span class="level-badge">L5 · Chuyên gia / lead
@@ -4854,8 +4865,8 @@ AI  → Tổng sau khi loại: 1.284.500.000₫ — khớp dashboard. ĐẠT.</p
             <div class="objectives">
               <span class="eyebrow">Sau bài này bạn có thể</span>
               <ul>
-                <li>Đọc đường cong suy giảm giám sát (HITL decay) và giải thích vì sao nhắc nhở đơn thuần khó giữ được
-                  nó.</li>
+                <li>Giải thích vì sao người duyệt lướt dần theo thời gian (HITL decay) và vì sao nhắc nhở đơn thuần
+                  không giữ được.</li>
                 <li>Thiết kế 4 gate cấu trúc thay cho lời nhắc: pilot bắt buộc · checksum · dual control · kiểm mẫu.
                 </li>
                 <li>Phân biệt guardrail (trước) vs validation (sau) — cần cả hai.</li>
@@ -5040,9 +5051,10 @@ AI  → Tổng sau khi loại: 1.284.500.000₫ — khớp dashboard. ĐẠT.</p
         <header class="module-header" data-module="7">
           <span class="eyebrow">Module 07 · Phần VII · Thực hành</span>
           <h2>Lab A &amp; Lab B</h2>
-          <p>Hai lab bắt buộc. Lab A làm theo cặp (45') để quen vòng lặp NHÌN → LÀM → SOI. Lab B làm theo squad 3–4 người
-            (90') để chạy trọn vòng lặp 4 bước với gate người duyệt và verifier độc lập. Cả hai trên dữ liệu giả và môi
-            trường staging.</p>
+          <p>Hai lab thực hành, tự làm theo nhịp của bạn. Lab A (~45 phút) để quen vòng lặp NHÌN → LÀM → SOI. Lab B
+            (~90 phút) chạy trọn vòng lặp 4 bước — bạn đóng vai người duyệt ở từng gate, còn kiểm chứng độc lập giao cho
+            một phiên AI riêng (khung prompt 04, Bài 8.1). Cả hai chạy trên dữ liệu giả và môi trường staging. Có đồng
+            nghiệp cùng học thì chấm chéo càng tốt — không có cũng chạy được trọn vẹn.</p>
         </header>
 
         <!-- ===================== LESSON m7-l1 ===================== -->
@@ -5050,7 +5062,7 @@ AI  → Tổng sau khi loại: 1.284.500.000₫ — khớp dashboard. ĐẠT.</p
           <div class="lesson-head">
             <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px">
               <div>
-                <span class="eyebrow">Bài 7.1 · Lab A · 45 phút · Theo cặp</span>
+                <span class="eyebrow">Bài 7.1 · Lab A · ~45 phút · Tự làm</span>
                 <h3>Lab A — Mở, lọc, xuất, đặt tên</h3>
               </div>
               <div style="display:flex;gap:8px;flex-wrap:wrap">
@@ -5077,7 +5089,7 @@ AI  → Tổng sau khi loại: 1.284.500.000₫ — khớp dashboard. ĐẠT.</p
             <div class="callout info">
               <div class="callout-title">Chuẩn bị</div>
               <ul style="margin:6px 0 0 18px">
-                <li>Một trang danh sách công khai có bộ lọc và nút export — hoặc trang demo nội bộ do IT cấp</li>
+                <li>Một trang danh sách công khai có bộ lọc và nút export — chọn trang bạn hay dùng hằng ngày càng tốt</li>
                 <li>Thư mục <code>~/AI-Workspace/03-OUTPUTS/</code> đã cấp quyền</li>
                 <li>Chế độ <strong>Manual</strong>. Không hạ xuống Auto trong lab này.</li>
               </ul>
@@ -5121,7 +5133,7 @@ Nếu lệch: DỪNG, không kết luận thành công, giải thích nguyên nh
 Hỏi tôi nếu thiếu fact. Đừng đoán bộ lọc.</pre>
             </div>
 
-            <h4>Checklist chấm — người ngồi cặp chấm chéo</h4>
+            <h4>Checklist tự chấm — đối chiếu từng mục sau khi chạy</h4>
             <div class="steps">
               <ul style="list-style:none;padding:0">
                 <li>
@@ -5155,9 +5167,9 @@ Hỏi tôi nếu thiếu fact. Đừng đoán bộ lọc.</pre>
             <div class="callout danger">
               <div class="callout-title">Bẫy cố ý của lab này</div>
               <p>Ở nhiều trang, số hiển thị UI và số dòng export <strong>sẽ lệch</strong> — do phân trang, lazy-load,
-                hoặc export bao gồm bản ghi ẩn. Nhóm nào phát hiện ra và dừng lại là nhóm <strong>đạt</strong>. Nhóm nào
-                nhận báo cáo "đã hoàn thành" mà không đối chiếu là nhóm <strong>rớt</strong>, dù file vẫn đúng. Đây là
-                lỗi 02 (bảng thiếu dòng) ở dạng thật.</p>
+                hoặc export bao gồm bản ghi ẩn. Phát hiện lệch và dừng lại là <strong>đạt</strong>. Nhận báo cáo "đã
+                hoàn thành" mà không đối chiếu là <strong>rớt</strong>, dù file vẫn đúng. Đây là lỗi 02 (bảng thiếu
+                dòng) ở dạng thật.</p>
             </div>
 
             <div class="takeaway">
@@ -5197,7 +5209,7 @@ Hỏi tôi nếu thiếu fact. Đừng đoán bộ lọc.</pre>
           <div class="lesson-head">
             <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px">
               <div>
-                <span class="eyebrow">Bài 7.2 · Lab B · 90 phút · Theo squad 3–4 người</span>
+                <span class="eyebrow">Bài 7.2 · Lab B · ~90 phút · Tự làm</span>
                 <h3>Lab B — Migrate hệ thống A → B (staging)</h3>
               </div>
               <div style="display:flex;gap:8px;flex-wrap:wrap">
@@ -5224,8 +5236,13 @@ Hỏi tôi nếu thiếu fact. Đừng đoán bộ lọc.</pre>
 
             <div class="callout danger">
               <div class="callout-title">Điều kiện tiên quyết — không thoả thì không chạy</div>
-              <p>Tài khoản staging do IT cấp · dữ liệu là bộ giả dưới đây (không phải dữ liệu khách hàng thật) · chế độ
-                Manual cho phase ghi đầu tiên · có một người ngoài squad đóng vai người duyệt.</p>
+              <ul style="margin:6px 0 0 18px">
+                <li>Một môi trường staging/demo bạn được phép ghi — tuyệt đối không phải prod</li>
+                <li>Dữ liệu là bộ giả dưới đây — không phải dữ liệu khách hàng thật</li>
+                <li>Chế độ <strong>Manual</strong> cho phase ghi đầu tiên</li>
+                <li>Bạn đóng vai người duyệt ở từng gate; kiểm chứng độc lập chạy bằng một phiên AI riêng không đọc log
+                  (khung prompt 04, Bài 8.1)</li>
+              </ul>
             </div>
 
             <h4>Dữ liệu giả — nguồn A (Sheet)</h4>
@@ -5339,7 +5356,7 @@ Hỏi tôi nếu thiếu fact. Đừng đoán bộ lọc.</pre>
             <p>10 dòng, trong đó <strong>6 dòng có vấn đề cố ý</strong>: email trùng (1004), email sai định dạng (1006),
               thiếu SĐT (1007), thiếu nguồn (1003), ngày không tồn tại (1010), giá trị nguồn ngoài danh mục (1009). Cộng
               <strong>một dòng gây tranh cãi</strong> — 1005 ghi "Giới thiệu", nghĩa là <code>referral</code> nhưng chữ
-              không khớp danh mục. Squad nào migrate 10/10 là squad <strong>rớt</strong>: AI đã tự bịa để lấp chỗ trống.
+              không khớp danh mục. Migrate đủ 10/10 là <strong>rớt</strong>: AI đã tự bịa để lấp chỗ trống.
             </p>
 
             <h4>Field map — nguồn A → đích B</h4>
@@ -5409,13 +5426,13 @@ Hỏi tôi nếu thiếu fact. Đừng đoán bộ lọc.</pre>
                     OUTPUTS. <strong>Chưa ghi gì.</strong></li>
                   <li><strong>CHỐT:</strong> áp field map, xuất <code>clean.csv</code> + <code>rejected.csv</code> kèm
                     cột <code>ly_do</code>.</li>
-                  <li><strong>Gate:</strong> người duyệt đọc <code>rejected.csv</code> trước khi đi tiếp.</li>
+                  <li><strong>Gate:</strong> bạn đọc <code>rejected.csv</code> trước khi đi tiếp.</li>
                 </ul>
               </div>
               <div class="compare-col good"><span class="eyebrow">Phase 3 · LÀM + Phase 4 · SOI</span>
                 <ul>
                   <li><strong>LÀM:</strong> ghi <strong>1 dòng pilot</strong> vào B, chụp record vừa tạo.
-                    <strong>Gate:</strong> người duyệt xác nhận từng field. Rồi mới bulk.</li>
+                    <strong>Gate:</strong> bạn xác nhận từng field. Rồi mới bulk.</li>
                   <li><strong>SOI:</strong> mở luồng kiểm tra <strong>không đọc log phase 2–3</strong>. Export lại từ B,
                     so <code>clean.csv</code>, xuất <code>diff.csv</code>.</li>
                   <li>Chỉ kết luận "xong" khi <code>diff.csv</code> rỗng hoặc mọi dòng lệch có trong
@@ -5456,7 +5473,7 @@ Hỏi tôi nếu thiếu fact. Đừng đoán bộ lọc.</pre>
                     <td><span style="color:var(--success);font-weight:600">Xuất sắc</span></td>
                     <td><code>3</code></td>
                     <td>Đạt + AI <strong>dừng hỏi về dòng 1005</strong> thay vì tự ánh xạ; luồng kiểm chứng thật sự độc
-                      lập; có <code>state.json</code> để resume; squad tự phát hiện ≥1 lỗi Bài 4.2 khi nó xảy ra
+                      lập; có <code>state.json</code> để resume; bạn tự phát hiện ≥1 lỗi Bài 4.2 khi nó xảy ra
                       thật.</td>
                   </tr>
                 </tbody>
@@ -5465,10 +5482,13 @@ Hỏi tôi nếu thiếu fact. Đừng đoán bộ lọc.</pre>
 
             <div class="callout success">
               <div class="callout-title">Đáp án kỳ vọng</div>
-              <p><strong>3 dòng chắc chắn hợp lệ:</strong> 1001, 1002, 1008. <strong>6 dòng chắc chắn bị loại:</strong>
-                1003 (thiếu nguồn), 1004 (email trùng 1002), 1006 (email sai định dạng), 1007 (thiếu SĐT), 1009 (nguồn
-                ngoài danh mục), 1010 (ngày 32/03 không tồn tại). <strong>1 dòng gây tranh cãi:</strong> 1005.</p>
-              <p style="margin-bottom:0"><strong>Dòng 1005 là bài học chính.</strong> "Giới thiệu" đúng nghĩa là
+              <ul style="margin:6px 0 0 18px">
+                <li><strong>3 dòng chắc chắn hợp lệ:</strong> 1001, 1002, 1008.</li>
+                <li><strong>6 dòng chắc chắn bị loại:</strong> 1003 (thiếu nguồn), 1004 (email trùng 1002), 1006 (email
+                  sai định dạng), 1007 (thiếu SĐT), 1009 (nguồn ngoài danh mục), 1010 (ngày 32/03 không tồn tại).</li>
+                <li><strong>1 dòng gây tranh cãi:</strong> 1005.</li>
+              </ul>
+              <p style="margin:10px 0 0"><strong>Dòng 1005 là bài học chính.</strong> "Giới thiệu" đúng nghĩa là
                 <code>referral</code>, nhưng field map là danh mục đóng và chuỗi không khớp. Đáp án đúng: <strong>AI
                   phải DỪNG và HỎI</strong>, không được tự ánh xạ. Nếu AI tự dịch "Giới thiệu" → <code>referral</code>
                 mà không hỏi, đó là lỗi 07 (Bài 4.2) ở dạng tinh vi nhất — lần này nó đoán đúng, lần sau nó sẽ
@@ -5477,7 +5497,7 @@ Hỏi tôi nếu thiếu fact. Đừng đoán bộ lọc.</pre>
 
             <div class="callout insight">
               <div class="callout-title">Điểm mấu chốt khi chấm</div>
-              <p>Con số cuối cùng ít quan trọng hơn <strong>lý do</strong>: squad phải giải thích được từng dòng, và lý
+              <p>Con số cuối cùng ít quan trọng hơn <strong>lý do</strong>: bạn phải giải thích được từng dòng, và lý
                 do phải dẫn về field map chứ không phải suy đoán. Migrate đúng 4/10 mà giải thích được cả 10 dòng + dừng
                 hỏi 1005 = Xuất sắc. Migrate 10/10 mà không giải thích được = Rớt.</p>
             </div>
@@ -5498,8 +5518,8 @@ Hỏi tôi nếu thiếu fact. Đừng đoán bộ lọc.</pre>
 
             <div class="quiz" data-correct="2">
               <span class="eyebrow">Kiểm tra nhanh</span>
-              <p class="quiz-q">Squad báo: "Đã migrate 10/10 dòng thành công, không có dòng lỗi." Theo rubric Lab B, đây
-                là mức nào?</p>
+              <p class="quiz-q">Báo cáo cuối ghi: "Đã migrate 10/10 dòng thành công, không có dòng lỗi." Theo rubric
+                Lab B, đây là mức nào?</p>
               <button class="quiz-opt" onclick="quizPick(this,0)"><span class="quiz-letter">A</span><span>Xuất sắc —
                   migrate đầy đủ, không lỗi.</span></button>
               <button class="quiz-opt" onclick="quizPick(this,1)"><span class="quiz-letter">B</span><span>Đạt — đủ dòng,
@@ -5508,7 +5528,7 @@ Hỏi tôi nếu thiếu fact. Đừng đoán bộ lọc.</pre>
                   liệu cố ý có 6 dòng lỗi + 1 dòng tranh cãi; 10/10 nghĩa là AI đã tự bịa để lấp chỗ trống (lỗi
                   07).</span></button>
               <div class="quiz-feedback" role="status"
-                data-explain="C đúng. A/B đều sai theo rubric ghi rõ: 'migrate đủ 10/10 = Rớt, AI đã tự bịa dữ liệu cho 6 dòng lỗi'. Bộ dữ liệu cố ý có 6 dòng chắc chắn bị loại (1003/1004/1006/1007/1009/1010) + 1 dòng tranh cãi (1005). 10/10 không thể đúng nếu tuân field map. Đây là kiểm tra 'sạch hơn nguồn = dấu hiệu tự bịa' (Bài 4.2). Đáp án kỳ vọng: 3 hợp lệ + 6 loại + 1 dừng hỏi. Squad Xuất sắc = dừng hỏi 1005 thay vì tự ánh xạ referral.">
+                data-explain="C đúng. A/B đều sai theo rubric ghi rõ: 'migrate đủ 10/10 = Rớt, AI đã tự bịa dữ liệu cho 6 dòng lỗi'. Bộ dữ liệu cố ý có 6 dòng chắc chắn bị loại (1003/1004/1006/1007/1009/1010) + 1 dòng tranh cãi (1005). 10/10 không thể đúng nếu tuân field map. Đây là kiểm tra 'sạch hơn nguồn = dấu hiệu tự bịa' (Bài 4.2). Đáp án kỳ vọng: 3 hợp lệ + 6 loại + 1 dừng hỏi. Mức Xuất sắc = dừng hỏi 1005 thay vì tự ánh xạ referral.">
               </div>
             </div>
           </div>
@@ -5662,7 +5682,7 @@ Hỏi tôi nếu thiếu fact. Đừng đoán bộ lọc.</pre>
                   </tr>
                   <tr>
                     <td>19</td>
-                    <td>HITL decay</td>
+                    <td>Người duyệt lướt dần</td>
                     <td>Nhắc nhở đơn thuần khó giữ đường cong; 4 gate cấu trúc giữ được — và chạy lại golden set mỗi lần
                       đổi phiên bản.</td>
                   </tr>
@@ -5836,34 +5856,67 @@ Chỉ khi vai 3 xuất bảng lệch rỗng (hoặc mọi dòng lệch đều c�
                 <tbody>
                   <tr>
                     <td><strong style="color:var(--danger)">1 · CẤM TUYỆT ĐỐI</strong></td>
-                    <td>Dùng agent trên <strong>prod có quyền ghi</strong> chưa có phê duyệt IT + Lãnh đạo · Cung cấp
-                      mật khẩu/OTP/khoá API prod/thẻ/PII thô · Agent trên ngân hàng/ví/HR/chính phủ/password manager ·
-                      Để AI tự chuyển tiền/ký/xoá vĩnh viễn/send ngoài · Dùng Skip trên máy có dữ liệu công ty · Vượt
-                      captcha/xác thực/giới hạn hành động</td>
+                    <td>
+                      <ul style="margin:0;padding-left:18px">
+                        <li>Dùng agent trên <strong>prod có quyền ghi</strong> chưa có phê duyệt IT + Lãnh đạo</li>
+                        <li>Cung cấp mật khẩu/OTP/khoá API prod/thẻ/PII thô</li>
+                        <li>Agent trên ngân hàng/ví/HR/chính phủ/password manager</li>
+                        <li>Để AI tự chuyển tiền/ký/xoá vĩnh viễn/send ngoài</li>
+                        <li>Dùng Skip trên máy có dữ liệu công ty</li>
+                        <li>Vượt captcha/xác thực/giới hạn hành động</li>
+                      </ul>
+                    </td>
                   </tr>
                   <tr>
                     <td><strong style="color:var(--warning)">2 · BẮT BUỘC</strong></td>
-                    <td>Thử nghiệm trên <strong>staging/demo</strong> do IT cấp · Chỉ cấp quyền
-                      <code>~/AI-Workspace/</code> · Profile trình duyệt riêng · Job có ghi: pilot 1 dòng → duyệt → bulk
-                      · Mọi job kết thúc bằng evidence (count/diff/screenshot) · Submit/Delete/Send/Publish luôn người
-                      bấm · Scheduled task có người đọc + ngưỡng cảnh báo</td>
+                    <td>
+                      <ul style="margin:0;padding-left:18px">
+                        <li>Thử nghiệm trên <strong>staging/demo</strong> do IT cấp</li>
+                        <li>Chỉ cấp quyền <code>~/AI-Workspace/</code></li>
+                        <li>Profile trình duyệt riêng</li>
+                        <li>Job có ghi: pilot 1 dòng → duyệt → bulk</li>
+                        <li>Mọi job kết thúc bằng evidence (count/diff/screenshot)</li>
+                        <li>Submit/Delete/Send/Publish luôn người bấm</li>
+                        <li>Scheduled task có người đọc + ngưỡng cảnh báo</li>
+                      </ul>
+                    </td>
                   </tr>
                   <tr>
                     <td><strong style="color:var(--success)">3 · CỔNG PHÊ DUYỆT</strong></td>
-                    <td>Đọc/export/tạo file mới → không cần · Ghi staging → người chạy tự duyệt pilot · Ghi prod → Data
-                      owner + trưởng BP · Gửi ngoài công ty → dual control 2 người · Xoá bất kỳ → dual control 2 người +
-                      bản sao lưu</td>
+                    <td>
+                      <ul style="margin:0;padding-left:18px">
+                        <li>Đọc/export/tạo file mới → không cần</li>
+                        <li>Ghi staging → người chạy tự duyệt pilot</li>
+                        <li>Ghi prod → Data owner + trưởng BP</li>
+                        <li>Gửi ngoài công ty → dual control 2 người</li>
+                        <li>Xoá bất kỳ → dual control 2 người + bản sao lưu</li>
+                      </ul>
+                    </td>
                   </tr>
                   <tr>
                     <td><strong>4 · KHI CÓ SỰ CỐ</strong></td>
-                    <td>Dừng phiên ngay · Không tự điều tra trước khi chặn · Báo IT trong <strong>30 phút</strong> ·
-                      Postmortem 5 dòng trong <strong>24 giờ</strong>: chuyện gì · vì sao lọt · gate nào thiếu · sửa gì
-                      · ai làm/hạn · <strong>không nêu tên người</strong> trong nguyên nhân</td>
+                    <td>
+                      <ul style="margin:0;padding-left:18px">
+                        <li>Dừng phiên ngay</li>
+                        <li>Không tự điều tra trước khi chặn</li>
+                        <li>Báo IT trong <strong>30 phút</strong></li>
+                        <li>Postmortem 5 dòng trong <strong>24 giờ</strong>: chuyện gì · vì sao lọt · gate nào thiếu ·
+                          sửa gì · ai làm/hạn</li>
+                        <li><strong>Không nêu tên người</strong> trong nguyên nhân</li>
+                      </ul>
+                    </td>
                   </tr>
                   <tr>
                     <td><strong>5 · DẤU HIỆU DỪNG KHẨN CẤP</strong></td>
-                    <td>Dừng ngay nếu agent: đột nhiên đổi chủ đề · truy cập domain ngoài kế hoạch · yêu cầu mật
-                      khẩu/OTP/thẻ · đề nghị gửi file tới địa chỉ lạ → dấu hiệu prompt injection</td>
+                    <td>Dừng ngay nếu agent:
+                      <ul style="margin:0;padding-left:18px">
+                        <li>Đột nhiên đổi chủ đề</li>
+                        <li>Truy cập domain ngoài kế hoạch</li>
+                        <li>Yêu cầu mật khẩu/OTP/thẻ</li>
+                        <li>Đề nghị gửi file tới địa chỉ lạ</li>
+                      </ul>
+                      <div style="margin-top:6px">→ dấu hiệu prompt injection</div>
+                    </td>
                   </tr>
                 </tbody>
               </table>
@@ -5959,9 +6012,9 @@ Chỉ khi vai 3 xuất bảng lệch rỗng (hoặc mọi dòng lệch đều c�
       { id: 'm5-l3', mod: 5, part: 'Phần V · Hệ thống hoá', title: 'Việc chạy theo lịch và thứ tự ưu tiên công cụ', desc: 'Phải có người đọc + ngưỡng cảnh báo; connector → file → plugin → browser → computer.' },
       { id: 'm5-l4', mod: 5, part: 'Phần V · Hệ thống hoá', title: 'Bộ nhớ giữa các phiên (memory)', desc: 'Tầng ngữ cảnh do AI tự viết — gợi ý cần đối chiếu nguồn sự thật, cấm secret, review định kỳ.' },
       { id: 'm5-l5', mod: 5, part: 'Phần V · Hệ thống hoá', title: 'Từ skill cá nhân → gói skill dùng chung cho team', desc: 'SKILL.md + assets (đường dẫn tương đối) + README người chạy; owner + version; chỉ vào thư viện sau khi người khác chạy được.' },
-      { id: 'm6-l1', mod: 6, part: 'Phần VI · Giữ độ tin cậy', title: 'Đường cong suy giảm giám sát + 4 gate cấu trúc', desc: 'HITL decay không sửa bằng nhắc; pilot · checksum · dual control · kiểm mẫu.' },
-      { id: 'm7-l1', mod: 7, part: 'Phần VII · Thực hành', title: 'Lab A — Mở, lọc, xuất, đặt tên', desc: 'Theo cặp 45\': vòng lặp NHÌN→LÀM→SOI; bẫy số UI ≠ số export.' },
-      { id: 'm7-l2', mod: 7, part: 'Phần VII · Thực hành', title: 'Lab B — Migrate hệ thống A → B (staging)', desc: 'Theo squad 90\': 10 dòng giả có 6 lỗi + 1 tranh cãi; dòng 1005 phải dừng hỏi.' },
+      { id: 'm6-l1', mod: 6, part: 'Phần VI · Khi người duyệt bắt đầu lướt', title: 'Vì sao càng tin càng lười kiểm — 4 gate thay lời nhắc', desc: 'Tuần 1 đọc từng dòng, tuần 12 bấm Approve cho qua; chặn bằng pilot · checksum · dual control · kiểm mẫu.' },
+      { id: 'm7-l1', mod: 7, part: 'Phần VII · Thực hành', title: 'Lab A — Mở, lọc, xuất, đặt tên', desc: 'Tự làm ~45\': vòng lặp NHÌN→LÀM→SOI; bẫy số UI ≠ số export.' },
+      { id: 'm7-l2', mod: 7, part: 'Phần VII · Thực hành', title: 'Lab B — Migrate hệ thống A → B (staging)', desc: 'Tự làm ~90\': 10 dòng giả có 6 lỗi + 1 tranh cãi; dòng 1005 phải dừng hỏi.' },
       { id: 'm8-l1', mod: 8, part: 'Phần VIII · Tổng kết', title: 'Bảng tóm tắt + 6 prompt mẫu + chính sách một trang', desc: '22 ý chính; 6 khung prompt có thể dùng lại; mẫu chính sách một trang.' },
 ];
 
