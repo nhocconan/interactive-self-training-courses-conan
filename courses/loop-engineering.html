@@ -13,7 +13,7 @@
 :root{
   --brand-navy:#0a2540; --brand-navy-deep:#061b33; --brand-sky:#2563eb;
   --brand-coral:#ea403f; --brand-gold:#ffe14e; --brand-red:#d82827;
-  --accent:#14314f; --accent-2:#0ea5e9; --accent-3:#f59e0b;
+  --accent:#14314f; --accent-2:#0ea5e9; --accent-3:#10b981; --brand-em:#047857;
   --grad:linear-gradient(135deg,var(--accent) 0%,var(--accent-2) 55%,var(--accent-3) 100%);
   --grad-bar:linear-gradient(90deg,var(--accent) 0%,var(--accent-2) 55%,var(--accent-3) 100%);
   --bg:#ffffff; --surface:#ffffff; --surface-2:#f1f5f9; --surface-3:#eef2f7;
@@ -35,7 +35,7 @@ html[data-mode="dark"]{
   --bg:#0a0d18; --surface:#11141f; --surface-2:#161a27; --surface-3:#1b2130;
   --border:#232938; --border-strong:#333b50;
   --ink:#e7e9f1; --ink-2:#9aa3b8; --ink-3:#7d879c;
-  --accent:#7dd3fc; --accent-2:#38bdf8;
+  --accent:#7dd3fc; --accent-2:#38bdf8; --accent-3:#34d399; --brand-em:#34d399;
   --success:#2dd4a8; --success-bg:#0c2a22; --warning:#fbbf24; --warning-bg:#2a2109;
   --danger:#f87171; --danger-bg:#2a1213; --info:#38bdf8; --info-bg:#0e223f;
   --shadow-lg:0 18px 48px -12px rgba(0,0,0,.6);
@@ -58,7 +58,7 @@ code{font-family:var(--font-mono);font-size:.85em;background:var(--surface-2);pa
 .sidebar{position:fixed;inset:0 auto 0 0;width:var(--sidebar-w);height:100vh;background:var(--surface);border-right:1px solid var(--border);display:flex;flex-direction:column;z-index:40}
 .sidebar-brand{padding:20px 20px 14px;border-bottom:1px solid var(--border)}
 .sidebar-brand-title{font-size:17px;font-weight:800;letter-spacing:-.02em}
-.sidebar-brand-title em{font-style:normal;color:var(--accent-3)}
+.sidebar-brand-title em{font-style:normal;color:var(--brand-em)}
 .sidebar-brand-sub{font-family:var(--font-mono);font-size:10.5px;color:var(--ink-3);letter-spacing:.08em;text-transform:uppercase;margin-top:4px}
 .progress-wrap{padding:12px 20px;border-bottom:1px solid var(--border)}
 .progress-meta{display:flex;justify-content:space-between;font-family:var(--font-mono);font-size:10.5px;color:var(--ink-3);text-transform:uppercase;letter-spacing:.08em;margin-bottom:6px}
@@ -78,9 +78,9 @@ code{font-family:var(--font-mono);font-size:.85em;background:var(--surface-2);pa
 .nav-title{flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .main{flex:1;margin-left:var(--sidebar-w);min-width:0}
 .container{max-width:var(--maxw);margin:0 auto 0 clamp(0px,calc((100% - var(--maxw))*.32),180px);padding:0 24px}
-.mobile-toggle{display:none;position:fixed;top:14px;left:14px;z-index:60;background:var(--accent);color:#fff;border:none;border-radius:10px;padding:9px;cursor:pointer;box-shadow:var(--shadow-md)}
+.mobile-toggle{display:none;position:fixed;min-width:44px;min-height:44px;top:14px;left:14px;z-index:60;background:var(--accent);color:#fff;border:none;border-radius:10px;padding:9px;cursor:pointer;box-shadow:var(--shadow-md)}
 .backdrop{display:none;position:fixed;inset:0;background:rgba(10,14,10,.5);z-index:35}
-@media (max-width:1024px){.sidebar{transform:translateX(-100%);transition:transform .25s ease;box-shadow:var(--shadow-lg)}.sidebar.open{transform:translateX(0)}.main{margin-left:0}.mobile-toggle{display:block}.backdrop.show{display:block}.container{margin-left:0;padding:0 18px}.main .topbar{padding-left:66px}.main .topbar-mini{display:none}}
+@media (max-width:1024px){.sidebar{transform:translateX(-100%);transition:transform .25s ease;box-shadow:var(--shadow-lg)}.sidebar.open{transform:translateX(0)}.main{margin-left:0}.mobile-toggle{display:block}.kbd-hint{display:none}.backdrop.show{display:block}.container{margin-left:0;padding:0 18px}.main .topbar{padding-left:66px}.main .topbar-mini{display:none}}
 .topbar{position:sticky;top:0;z-index:30;background:color-mix(in srgb,var(--bg) 85%,transparent);backdrop-filter:blur(10px);border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;padding:10px 24px;font-family:var(--font-mono);font-size:11px;color:var(--ink-2)}
 .mode-toggle{min-width:44px;min-height:44px;border:1px solid var(--border-strong);background:var(--surface-2);color:var(--ink);border-radius:10px;cursor:pointer;font-size:15px;line-height:1}
 .mode-toggle:focus-visible{outline:none;box-shadow:var(--focus)}
@@ -133,13 +133,13 @@ code{font-family:var(--font-mono);font-size:.85em;background:var(--surface-2);pa
 .objectives li{position:relative;padding-left:26px;color:var(--ink-2);font-size:14.5px}
 .objectives li::before{content:"→";position:absolute;left:4px;color:var(--accent-2);font-weight:700}
 .callout{border-radius:var(--radius);padding:16px 18px 16px 46px;position:relative;border:1px solid var(--border);background:var(--surface-2)}
-.callout::before{position:absolute;left:16px;top:15px;font-size:17px;line-height:1}
+.callout::before{position:absolute;left:16px;top:15px;content:"";width:17px;height:17px;border-radius:1px;background-color:currentColor}
 .callout-title{font-weight:700;font-size:14px;margin-bottom:3px}.callout p{font-size:14.5px;color:var(--ink-2)}
-.callout.info{border-color:color-mix(in srgb,var(--info) 40%,var(--border));background:var(--info-bg)}.callout.info::before{content:"ℹ️"}
-.callout.warn{border-color:color-mix(in srgb,var(--warning) 45%,var(--border));background:var(--warning-bg)}.callout.warn::before{content:"⚠️"}
-.callout.success{border-color:color-mix(in srgb,var(--success) 45%,var(--border));background:var(--success-bg)}.callout.success::before{content:"✅"}
-.callout.danger{border-color:color-mix(in srgb,var(--danger) 45%,var(--border));background:var(--danger-bg)}.callout.danger::before{content:"🛑"}
-.callout.insight{border-color:color-mix(in srgb,var(--accent-2) 40%,var(--border));background:var(--info-bg)}.callout.insight::before{content:"💡"}
+.callout.info{border-color:color-mix(in srgb,var(--info) 40%,var(--border));background:var(--info-bg)}.callout.info::before{-webkit-mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='12' cy='12' r='9'/%3E%3Cpath d='M12 11.2v4.6'/%3E%3Cpath d='M12 7.9h.01'/%3E%3C/svg%3E") center/contain no-repeat;mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='12' cy='12' r='9'/%3E%3Cpath d='M12 11.2v4.6'/%3E%3Cpath d='M12 7.9h.01'/%3E%3C/svg%3E") center/contain no-repeat;color:var(--info)}
+.callout.warn{border-color:color-mix(in srgb,var(--warning) 45%,var(--border));background:var(--warning-bg)}.callout.warn::before{-webkit-mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M12 3.6 21.4 20H2.6z'/%3E%3Cpath d='M12 10.2v4'/%3E%3Cpath d='M12 17.3h.01'/%3E%3C/svg%3E") center/contain no-repeat;mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M12 3.6 21.4 20H2.6z'/%3E%3Cpath d='M12 10.2v4'/%3E%3Cpath d='M12 17.3h.01'/%3E%3C/svg%3E") center/contain no-repeat;color:var(--warning)}
+.callout.success{border-color:color-mix(in srgb,var(--success) 45%,var(--border));background:var(--success-bg)}.callout.success::before{-webkit-mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='12' cy='12' r='9'/%3E%3Cpath d='m7.9 12.3 2.8 2.8 5.4-5.6'/%3E%3C/svg%3E") center/contain no-repeat;mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='12' cy='12' r='9'/%3E%3Cpath d='m7.9 12.3 2.8 2.8 5.4-5.6'/%3E%3C/svg%3E") center/contain no-repeat;color:var(--success)}
+.callout.danger{border-color:color-mix(in srgb,var(--danger) 45%,var(--border));background:var(--danger-bg)}.callout.danger::before{-webkit-mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M8.6 3h6.8L21 8.6v6.8L15.4 21H8.6L3 15.4V8.6z'/%3E%3Cpath d='M12 7.9v5'/%3E%3Cpath d='M12 16.5h.01'/%3E%3C/svg%3E") center/contain no-repeat;mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M8.6 3h6.8L21 8.6v6.8L15.4 21H8.6L3 15.4V8.6z'/%3E%3Cpath d='M12 7.9v5'/%3E%3Cpath d='M12 16.5h.01'/%3E%3C/svg%3E") center/contain no-repeat;color:var(--danger)}
+.callout.insight{border-color:color-mix(in srgb,var(--accent-2) 40%,var(--border));background:var(--info-bg)}.callout.insight::before{-webkit-mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='2.4' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M12 2v6m0 8v6M4.9 4.9l4.2 4.2m5.8 5.8l4.2 4.2M2 12h6m8 0h6M4.9 19.1l4.2-4.2m5.8-5.8l4.2-4.2'/%3E%3C/svg%3E") center/contain no-repeat;mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='2.4' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M12 2v6m0 8v6M4.9 4.9l4.2 4.2m5.8 5.8l4.2 4.2M2 12h6m8 0h6M4.9 19.1l4.2-4.2m5.8-5.8l4.2-4.2'/%3E%3C/svg%3E") center/contain no-repeat;color:var(--accent-2)}
 .compare{display:grid;grid-template-columns:1fr 1fr;gap:14px}
 @media (max-width:640px){.compare{grid-template-columns:1fr}}
 .compare-col{border-radius:var(--radius);padding:16px 18px;border-left:4px solid}
@@ -192,7 +192,7 @@ tbody tr:last-child td{border-bottom:none}tbody tr:hover{background:var(--surfac
 .badge.ok{background:var(--success-bg);color:var(--success);border-color:color-mix(in srgb,var(--success) 40%,var(--border))}
 .exercise{border:1px dashed var(--border-strong);border-radius:var(--radius);padding:18px 20px;background:var(--surface)}
 .exercise h5{font-size:14px;display:flex;align-items:center;gap:8px;margin-bottom:8px}
-.exercise h5::before{content:"🎯";font-size:15px}
+.exercise h5::before{content:"";display:inline-block;width:15px;height:15px;vertical-align:-2px;background-color:var(--accent-2);-webkit-mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='2.3' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='12' cy='12' r='8.4'/%3E%3Ccircle cx='12' cy='12' r='3.9'/%3E%3Cpath d='M12 12h.01'/%3E%3C/svg%3E") center/contain no-repeat;mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='2.3' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='12' cy='12' r='8.4'/%3E%3Ccircle cx='12' cy='12' r='3.9'/%3E%3Cpath d='M12 12h.01'/%3E%3C/svg%3E") center/contain no-repeat}
 .exercise ol,.exercise ul{padding-left:20px;font-size:14.5px;color:var(--ink-2)}
 .takeaway{background:var(--grad);color:#fff;border-radius:var(--radius);padding:22px 26px;position:relative;overflow:hidden}
 .takeaway .eyebrow{color:color-mix(in srgb,var(--brand-gold) 92%,#fff);margin-bottom:8px;display:flex;align-items:center;gap:8px}
@@ -249,7 +249,7 @@ footer.site{border-top:1px solid var(--border);padding:26px 24px;text-align:cent
       <span class="mono" id="tb-crumb">Tổng quan</span>
       <div class="topbar-mini"><div class="topbar-mini-fill" id="tb-fill"></div></div>
       <div style="display:flex;align-items:center;gap:14px">
-        <span class="mono" style="color:var(--ink-3)">← → chuyển bài</span>
+        <span class="mono kbd-hint" style="color:var(--ink-3)">← → chuyển bài</span>
         <a href="#overview" class="mono">↺ Về đầu</a>
         <button class="mode-toggle" id="modeToggle" aria-label="Đổi giao diện sáng/tối" title="Sáng / tối">🌙</button>
       </div>
@@ -263,7 +263,7 @@ footer.site{border-top:1px solid var(--border);padding:26px 24px;text-align:cent
           <p class="hero-sub">Một lệnh gọi model là một câu trả lời. Một <strong>vòng lặp</strong> được thiết kế tốt là một <em>đồng nghiệp tự hành</em>. Khóa học dạy bạn thiết kế, đặt biên, đóng vòng và điều phối các loop agent — bậc tiếp theo của tự động hóa phát triển phần mềm sau Context &amp; Harness Engineering.</p>
           <div class="hero-meta">
             <span class="chip">📶 L1 → L5</span>
-            <span class="chip">🔁 10 bài</span>
+            <span class="chip">🔁 11 bài</span>
           </div>
           <div style="margin-top:28px;display:flex;gap:12px;flex-wrap:wrap">
             <a class="btn btn-primary" id="start-btn">Bắt đầu học →</a>
@@ -924,6 +924,125 @@ CẤM: tuyên bố "đã xong" khi chưa dán output verifier đạt.</pre>
         <div class="lesson-nav" data-navfor="m6-l1"></div>
       </article>
 
+      <article class="lesson" id="m6-l2" data-lesson>
+        <div class="lesson-head">
+          <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px">
+            <div><span class="eyebrow">Bài 6.2</span><h3>Hợp đồng của một đội agent: vai, biên, context</h3></div>
+            <div style="display:flex;gap:8px;flex-wrap:wrap"><span class="level-badge">L4 · Nâng cao <span class="level-dots"><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i></i></span></span></div>
+          </div>
+        </div>
+        <div class="lesson-body">
+          <div class="objectives">
+            <span class="eyebrow">Học xong bài này bạn có thể</span>
+            <ul>
+              <li>Qua cổng chặn trước khi fan-out: việc này có thật sự cần nhiều agent, hay chỉ cần nhiều tiền?</li>
+              <li>Viết role card cho mỗi agent con: mục tiêu, quyền đọc/ghi, model &amp; effort, biên spawn, đường trả kết quả.</li>
+              <li>Chọn context cho agent con — fresh hay fork — và biết cái giá đi kèm từng lựa chọn.</li>
+            </ul>
+          </div>
+          <p>Bạn spawn ba con scout đọc song song ba vùng code, rồi ngồi chờ. 30 giây — trống. 60 giây — trống. 180 giây — vẫn trống. Mở log của mấy con nhỏ ra: chúng <em>không</em> đọc code. Chúng gọi <span class="mono">wait_agent</span> để chờ nhau, cố <span class="mono">close_agent</span> lẫn nhau, bình luận về nhau, rồi tự tắt. Parent không nhận được một dòng phát hiện nào.</p>
+          <p>Đây là một báo cáo có thật trên tracker của Codex CLI (issue #26822, 06/06/2026): scout được spawn với context rỗng và prompt đọc-thôi, nhưng lại hành xử như orchestrator. Người báo cáo không kết luận model kém — họ chỉ ra rằng <strong>prompt của scout không nói nó là lá</strong>, mà trong tay nó vẫn có tool điều phối. Bài 6.1 nói về <em>hình dạng</em>; bài này nói về thứ thường nên viết ra <em>trước khi</em> spawn con đầu tiên.</p>
+
+          <div class="callout warn"><div class="callout-title">Con số 90,2% đi kèm một con số 15×</div><p>Anthropic công bố (13/06/2025) một hệ multi-agent — Opus 4 làm lead, các subagent Sonnet 4 — hơn single-agent Opus 4 <strong>90,2%</strong> trên eval <em>nghiên cứu</em> nội bộ của họ. Cùng bài đó ghi: agent dùng ~4× token so với chat, multi-agent ~15×, và <em>"token usage by itself explains 80% of the variance"</em>. Đọc hai con số cạnh nhau thì một phần đáng kể của khoảng cách kia là <strong>tiền</strong> chứ chưa hẳn là topology — một so sánh không giữ ngân sách token gần nhau thì khó nói là đang đo topology. Cũng chính bài đó viết: <em>"most coding tasks involve fewer truly parallelizable tasks than research"</em>. Đây là eval nghiên cứu của năm 2025, không phải eval code — nên mang sang việc code với sự dè dặt.</p></div>
+
+          <div class="compare">
+            <div class="compare-col bad"><span class="eyebrow">Dấu hiệu chưa nên fan-out</span><ul>
+              <li>Các nhánh sẽ fail vì <em>cùng</em> một lý do (Hình 6.1, bài trước) — song song chỉ nhân bản một chỗ tắc.</li>
+              <li>Hai agent trở lên cần <strong>ghi</strong> vào cùng file hoặc cùng bảng — bạn đang mua merge conflict.</li>
+              <li>Việc cần một giọng thống nhất: một bản thiết kế, một ADR, một API contract.</li>
+              <li>Bước sau phụ thuộc chặt vào bước trước — đó là việc tuần tự đội lốt việc song song.</li>
+            </ul></div>
+            <div class="compare-col good"><span class="eyebrow">Dấu hiệu đáng nhiều agent</span><ul>
+              <li>Bề mặt lỗi độc lập: mỗi nhánh fail vì lý do riêng.</li>
+              <li>Việc vượt quá một context window — nhiều vùng code, nhiều tài liệu, nhiều nguồn.</li>
+              <li>Cần một góc nhìn <em>tách biệt</em>: verifier không được thấy lý lẽ tự biện hộ của maker (Chương 5).</li>
+              <li>Đọc nhiều, ghi một chỗ: nhiều agent khảo sát, đúng một agent sửa.</li>
+            </ul></div>
+          </div>
+
+          <div class="table-wrap">
+            <table>
+              <thead><tr><th style="width:180px">Trường trong role card</th><th>Nó chốt điều gì</th><th>Bỏ trống thì hỏng kiểu gì</th></tr></thead>
+              <tbody>
+                <tr><td><span class="badge">Mục tiêu + tiêu chí xong</span></td><td>Một câu việc, và bằng chứng nào thì coi là xong.</td><td>Agent trả về "đã khảo sát xong" — không ai biết xong nghĩa là gì, không đóng được vòng (Chương 4).</td></tr>
+                <tr><td><span class="badge">Quyền đọc / ghi</span></td><td>Chỉ đọc, hay được sửa — và sửa được đúng những file/bảng nào.</td><td>Hai agent ghi cùng chỗ: đè nhau hoặc conflict, và không ai biết bản nào đúng.</td></tr>
+                <tr><td><span class="badge">Model + effort</span></td><td>Việc grep thì rẻ và nhanh; việc phán xử thì đắt và kỹ.</td><td>Scout chạy effort cao để đi tìm tên file — đốt tiền ở đúng chỗ không cần suy nghĩ.</td></tr>
+                <tr><td><span class="badge">Được spawn tiếp không</span></td><td>Con này là <em>lá</em> hay là <em>cành</em>.</td><td>Đúng vụ ba con scout ở đầu bài: lá tưởng mình là cành, đi điều phối anh em rồi tắt.</td></tr>
+                <tr><td><span class="badge">Kết quả trả về đâu</span></td><td>Định dạng trả về, và ai gộp.</td><td>Parent nhận văn xuôi tự do, không gộp máy móc được — barrier biến thành việc đọc tay.</td></tr>
+              </tbody>
+            </table>
+          </div>
+
+          <figure class="figure">
+            <svg viewBox="0 0 660 250" role="img" aria-label="Sơ đồ ba núm vặn của điều phối: một coordinator bên trái nối tới ba agent con scout, worker, verifier; mỗi con được chú thích bởi một núm vặn là vai kèm model và effort, context fresh hay fork, và biên spawn">
+              <defs><marker id="al62" markerWidth="9" markerHeight="9" refX="7" refY="4.5" orient="auto"><path d="M0 0 L9 4.5 L0 9 z" fill="var(--accent-2)"/></marker></defs>
+              <rect class="dgm-accent" x="20" y="100" width="130" height="48" rx="9" stroke-width="2"/>
+              <text class="dgm-ink" x="85" y="121" text-anchor="middle" font-size="10.5" font-family="IBM Plex Mono">coordinator</text>
+              <text class="dgm-ink2" x="85" y="137" text-anchor="middle" font-size="8.5" font-family="IBM Plex Mono">giữ approval</text>
+              <path class="dgm-flow" d="M150 114 L211 50" stroke-width="2" marker-end="url(#al62)"/>
+              <path class="dgm-flow" d="M150 124 H211" stroke-width="2" marker-end="url(#al62)"/>
+              <path class="dgm-flow" d="M150 134 L211 198" stroke-width="2" marker-end="url(#al62)"/>
+              <rect class="dgm-box" x="215" y="26" width="160" height="44" rx="8"/>
+              <text class="dgm-ink" x="295" y="45" text-anchor="middle" font-size="10" font-family="IBM Plex Mono">scout</text>
+              <text class="dgm-ink2" x="295" y="60" text-anchor="middle" font-size="8.5" font-family="IBM Plex Mono">low · fresh</text>
+              <rect class="dgm-box" x="215" y="102" width="160" height="44" rx="8"/>
+              <text class="dgm-ink" x="295" y="121" text-anchor="middle" font-size="10" font-family="IBM Plex Mono">worker</text>
+              <text class="dgm-ink2" x="295" y="136" text-anchor="middle" font-size="8.5" font-family="IBM Plex Mono">medium · fresh</text>
+              <rect class="dgm-box" x="215" y="178" width="160" height="44" rx="8"/>
+              <text class="dgm-ink" x="295" y="197" text-anchor="middle" font-size="10" font-family="IBM Plex Mono">verifier</text>
+              <text class="dgm-ink2" x="295" y="212" text-anchor="middle" font-size="8.5" font-family="IBM Plex Mono">high · fresh</text>
+              <line class="dgm-line" x1="378" y1="48" x2="405" y2="48" stroke-width="1.5" stroke-dasharray="3 3"/>
+              <line class="dgm-line" x1="378" y1="124" x2="405" y2="124" stroke-width="1.5" stroke-dasharray="3 3"/>
+              <line class="dgm-line" x1="378" y1="200" x2="405" y2="200" stroke-width="1.5" stroke-dasharray="3 3"/>
+              <text class="dgm-ink" x="412" y="45" font-size="9" font-weight="700">1 · vai + model + effort</text>
+              <text class="dgm-ink2" x="412" y="59" font-size="8" font-family="IBM Plex Mono">chọn theo việc, không theo thói quen</text>
+              <text class="dgm-ink" x="412" y="121" font-size="9" font-weight="700">2 · context: fresh hay fork</text>
+              <text class="dgm-ink2" x="412" y="135" font-size="8" font-family="IBM Plex Mono">fork kéo theo model + effort parent</text>
+              <text class="dgm-ink" x="412" y="197" font-size="9" font-weight="700">3 · biên spawn</text>
+              <text class="dgm-ink2" x="412" y="211" font-size="8" font-family="IBM Plex Mono">lá không được spawn — phải viết ra</text>
+            </svg>
+            <figcaption><b>Hình 6.2</b> — Ba núm vặn này có ở cả Codex CLI lẫn Claude Code, dù tên gọi khác nhau. Tên tham số là chi tiết của 07/2026 và nhiều khả năng sẽ đổi; ba câu hỏi thì ở lại: agent con này <b>là ai</b>, nó <b>biết gì</b>, và nó <b>có được đẻ tiếp không</b>.</figcaption>
+          </figure>
+
+          <div class="callout danger"><div class="callout-title">Biên spawn không tự có — nó là thứ phải viết ra</div><p>Theo tài liệu cộng đồng về Codex Multi-Agent V2, <span class="mono">agent_max_depth</span> mặc định là <strong>3</strong> (đặt trong <span class="mono">~/.codex/config.toml</span>); vượt giới hạn thì hệ thống trả lỗi bảo agent tự làm lấy. Nhưng trần độ sâu <em>không phải</em> biên lá: trong giới hạn đó, subagent vẫn được phép spawn subagent. Nếu bạn muốn scout là lá, câu đó cần nằm trong prompt của chính scout — <em>"đây là toàn bộ việc của bạn; không spawn, không gọi tool điều phối, không nhắn cho agent khác; trả về phát hiện rồi dừng"</em>. Trường hợp ở đầu bài rơi đúng vào chỗ dòng này bỏ trống.</p></div>
+
+          <div class="callout warn"><div class="callout-title">Núm context dính chặt với núm vai</div><p>Hai núm này trông độc lập nhưng không phải. Trên Codex Multi-Agent V2, fork toàn bộ lịch sử khiến agent con <strong>kế thừa</strong> model và reasoning effort của parent, và các override bị bỏ qua (issue #20077, #32031). Trong harness Claude Code cũng vậy: subagent kiểu fork luôn chạy trên model của parent, tham số model truyền vào bị bỏ. Hệ quả thực dụng trên hai harness này: <strong>chưa có con "scout rẻ mà biết hết những gì parent biết"</strong>. Muốn rẻ → context fresh + brief tự chứa. Muốn kế thừa các quyết định đã chốt → chấp nhận trả giá của parent.</p></div>
+
+          <div class="table-wrap">
+            <table>
+              <thead><tr><th style="width:150px">Context của agent con</th><th>Chọn khi…</th><th>Cái giá</th></tr></thead>
+              <tbody>
+                <tr><td><span class="badge">fresh</span><br><span class="mono" style="font-size:11px;color:var(--ink-3)">bắt đầu từ brief tự chứa</span></td><td>Khảo sát, grep, đọc tài liệu, review độc lập — và mọi lúc bạn cần một góc nhìn <em>không</em> bị nhiễm bởi lý lẽ của parent.</td><td>Bạn phải viết brief đủ để làm việc mà không hỏi lại. Brief thiếu → agent đoán.</td></tr>
+                <tr><td><span class="badge">fork</span><br><span class="mono" style="font-size:11px;color:var(--ink-3)">mang theo lịch sử của parent</span></td><td>Việc nối tiếp một chuỗi quyết định đã bàn kỹ, giải thích lại thì tốn hơn là chép sang.</td><td>Kéo theo cả token, cả model, cả effort của parent — và cả những giả định sai nếu parent đang đi sai đường.</td></tr>
+              </tbody>
+            </table>
+          </div>
+
+          <div class="callout danger"><div class="callout-title">Agent con context fresh không thừa hưởng những dặn dò của bạn</div><p>Đây là chỗ dễ hụt an toàn mà lại khó thấy. Bạn dặn parent rất kỹ: "không chạy migration trên prod", "không push thẳng lên main". Rồi parent spawn một worker với context fresh — <strong>worker đó không có những dặn dò kia</strong>. Nó chỉ có brief của nó. Điều này dẫn về đúng kết luận của Chương 7: <em>authorization thuộc harness, không thuộc phán đoán model</em>. Ràng buộc an toàn nên nằm ở tầng harness — allowlist tool, sandbox, quyền ghi, cổng duyệt theo hành động — hơn là nằm trong đoạn văn viết cho parent. Prompt không di truyền; cấu hình harness thì có.</p></div>
+
+          <div class="exercise">
+            <h5>Bài tập · Điền role card trước khi spawn</h5>
+            <p>Lấy một việc bạn đang định fan-out. Trước khi spawn con nào, thử điền đủ <strong>năm trường</strong> role card cho từng agent con. Rồi đọc lại: trường nào bạn <em>không</em> điền nổi? Chỗ điền không nổi thường là chỗ việc chưa chia được — hoặc là chỗ sắp trả tiền cho một agent chưa rõ mình phải làm gì. Trường hay gãy đầu tiên là "kết quả trả về đâu".</p>
+          </div>
+
+          <div class="takeaway">
+            <span class="eyebrow"><svg aria-hidden="true" focusable="false" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 2v6m0 8v6M4.9 4.9l4.2 4.2m5.8 5.8l4.2 4.2M2 12h6m8 0h6M4.9 19.1l4.2-4.2m5.8-5.8l4.2-4.2"/></svg>Takeaway</span>
+            <p><span class="hl">Thêm agent không phải thêm IQ — là thêm topology và thêm hoá đơn.</span> Qua cổng chặn trước (nhánh có fail vì lý do khác nhau không · có ai ghi đè ai không · có đáng ~15× token không), rồi mới viết role card năm trường cho từng con. Ba núm vặn luôn là: <span class="hl">vai + effort</span>, <span class="hl">context fresh hay fork</span>, <span class="hl">biên spawn</span> — và núm context dính với núm vai, fork thì hết rẻ. Cuối cùng: agent con fresh không thừa hưởng dặn dò an toàn của parent, nên <span class="hl">ràng buộc phải nằm ở harness</span>.</p>
+          </div>
+
+          <div class="quiz" data-correct="1">
+            <span class="eyebrow">Kiểm tra nhanh</span>
+            <p class="quiz-q">Bạn muốn ba scout rẻ quét ba module để tìm chỗ dùng một API sắp bỏ. Bạn cũng muốn chúng "hiểu bối cảnh cuộc thảo luận nãy giờ" nên định fork toàn bộ lịch sử của parent cho cả ba. Vấn đề lớn nhất của cách này là gì?</p>
+            <button class="quiz-opt" onclick="quizPick(this,0)"><span class="quiz-letter">A</span><span>Không có vấn đề gì — fork luôn tốt hơn vì agent con biết nhiều hơn thì làm đúng hơn.</span></button>
+            <button class="quiz-opt" onclick="quizPick(this,1)"><span class="quiz-letter">B</span><span>Fork kéo theo model và effort của parent, nên "scout rẻ" không còn rẻ; và vì lịch sử parent không nói rõ mỗi con là lá, chúng có thể đi điều phối nhau thay vì quét module. Cách đúng: context fresh + brief tự chứa + một dòng biên lá.</span></button>
+            <button class="quiz-opt" onclick="quizPick(this,2)"><span class="quiz-letter">C</span><span>Ba scout là quá ít — nên fan-out mỗi file một agent để chắc chắn không bỏ sót.</span></button>
+            <button class="quiz-opt" onclick="quizPick(this,3)"><span class="quiz-letter">D</span><span>Nên bỏ hẳn scout và để một agent lớn đọc cả ba module trong một phiên.</span></button>
+            <div class="quiz-feedback" data-explain="B đúng, và nó chạm cả hai núm cùng lúc. Núm context: fork toàn bộ lịch sử khiến agent con kế thừa model + effort của parent (override bị bỏ qua — issue #20077/#32031 trên Codex, và fork trong Claude Code cũng luôn chạy model của parent), nên ý định 'scout rẻ' bị chính lựa chọn context phá. Núm biên: lịch sử parent đầy hoạt động điều phối, con đọc được nó rất dễ tự coi mình là cành — đúng kịch bản issue #26822. A sai vì 'biết nhiều hơn' không miễn phí và còn kéo theo giả định sai của parent. C sai vì bề mặt lỗi ở đây không độc lập tới mức đó — mỗi file một agent chỉ nhân hoá đơn. D vứt bỏ đúng chỗ multi-agent có lợi thật: ba module là ba vùng đọc độc lập, vượt một context window."></div>
+          </div>
+        </div>
+        <div class="lesson-nav" data-navfor="m6-l2"></div>
+      </article>
+
       <!-- ============ CHƯƠNG 7 ============ -->
       <header class="module-header" data-module="7">
         <span class="eyebrow">Chương 07 · Phần III · Điều phối</span>
@@ -1290,7 +1409,7 @@ Mỗi phiên mới: (1) đọc file này + `git log -5`; (2) chạy `npm test --
                 <tr><td><span class="badge">C3 · Biên &amp; điều kiện dừng</span></td><td>Phân biệt dừng-thành-công với biên-an-toàn; đặt ngưỡng runtime từ trace/eval và mức thiệt hại chấp nhận được.</td></tr>
                 <tr><td><span class="badge">C4 · Verifier</span></td><td>Verifier phải kiểm đúng tiêu chí: xếp tầng từ kiểm cấu trúc tới hành vi, browser/eval và cổng người theo rủi ro.</td></tr>
                 <tr><td><span class="badge">C5 · Tự sửa</span></td><td>Khi code không kiểm hết tiêu chí, dùng generate→critique→revise với evaluator tách biệt, rubric cụ thể và điểm dừng theo eval + ngân sách.</td></tr>
-                <tr><td><span class="badge">C6 · Điều phối</span></td><td>Tất định hóa mọi thứ có thể tất định; chỉ giao model phần thật sự cần phán đoán. Mặc định pipeline, barrier khi bước sau cần đủ kết quả.</td></tr>
+                <tr><td><span class="badge">C6 · Điều phối</span></td><td>Tất định hóa mọi thứ có thể tất định; chỉ giao model phần thật sự cần phán đoán. Mặc định pipeline, barrier khi bước sau cần đủ kết quả. Trước khi fan-out: role card năm trường, và ba núm vai · context · biên spawn.</td></tr>
                 <tr><td><span class="badge">C7 · Mức tự chủ &amp; cổng</span></td><td>Chọn in/on/out-of-the-loop theo hai trục đảo-ngược × bán-kính; gate theo hành động, không theo loop.</td></tr>
                 <tr><td><span class="badge">C8 · Loop nền</span></td><td>Loop nền sống quanh state bền vững, không quanh phiên chat; "nền" không phải "quên" — càng cần observability &amp; cảnh báo.</td></tr>
                 <tr><td><span class="badge">C9 · Guardrail &amp; kinh tế</span></td><td>Chọn đúng loop theo kinh tế, rào đủ guardrail, đo bằng kết quả — không bằng "số loop chạy".</td></tr>
@@ -1397,6 +1516,7 @@ const LESSONS=[
   {id:'m4-l1', mod:4, part:'Phần II · Vòng lặp tự sửa', title:'Verifier đóng vòng', desc:'Chọn bằng chứng sát tiêu chí; xếp tầng verifier; vòng generate→verify→feedback.'},
   {id:'m5-l1', mod:5, part:'Phần II · Vòng lặp tự sửa', title:'Tự sửa: generate→critique→revise', desc:'Reflection loop, LLM-as-judge, pattern maker–checker, ba cạm bẫy, prompt template loop tối giản.'},
   {id:'m6-l1', mod:6, part:'Phần III · Điều phối', title:'Đa agent & workflow tất định', desc:'Điều phối do code vs do model; fan-out vs pipeline; khi nào cần barrier.'},
+  {id:'m6-l2', mod:6, part:'Phần III · Điều phối', title:'Hợp đồng của một đội agent', desc:'Cổng chặn trước khi fan-out; role card năm trường; ba núm vặn vai · context · biên spawn.'},
   {id:'m7-l1', mod:7, part:'Phần III · Điều phối', title:'Mức tự chủ & cổng người', desc:'Human in/on/out-of-the-loop; ma trận đảo-ngược × bán-kính; cổng theo hành động.'},
   {id:'m8-l1', mod:8, part:'Phần IV · Vận hành bền vững', title:'Vòng lặp nền & bất đồng bộ', desc:'Trigger, worker nền, pattern Ralph, state bền vững, idempotency và artifact bàn giao.'},
   {id:'m9-l1', mod:9, part:'Phần IV · Vận hành bền vững', title:'Guardrail, kinh tế & đưa vào đội', desc:'Guardrail stack, khi nào loop đáng tự động, anti-pattern, adoption 3 pha.'},

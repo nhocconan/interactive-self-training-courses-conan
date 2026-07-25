@@ -3149,6 +3149,9 @@
   @media (max-width: 1023px) {
     #sidebar { transform: translateX(-100%); transition: transform 250ms ease; }
     #sidebar.open { transform: translateX(0); }
+    .kbd-hint { display: none; }
+    main .topbar { padding-left: 66px; }
+    .topbar-mini { display: none; }
   }
   /* Print-friendly */
   @media print {
@@ -3166,7 +3169,12 @@
   details > summary::-webkit-details-marker { display:none; }
   details[open] .chev { transform: rotate(90deg); }
   .chev { transition: transform 200ms ease; }
-  .mode-toggle{border:1px solid var(--border);background:var(--white);color:var(--navy);border-radius:10px;padding:10px 12px;font:600 12px 'IBM Plex Mono',monospace;cursor:pointer}
+  .mode-toggle{border:1px solid var(--border);min-width:44px;min-height:44px;background:var(--white);color:var(--navy);border-radius:10px;padding:10px 12px;font:600 12px 'IBM Plex Mono',monospace;cursor:pointer}
+  .topbar{position:sticky;top:0;z-index:30;background:color-mix(in srgb,var(--white) 85%,transparent);backdrop-filter:blur(10px);border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;gap:14px;padding:10px 24px;font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--gray500)}
+  #tb-crumb{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;min-width:0}
+  .topbar-mini{height:3px;background:var(--mist);border-radius:99px;flex:1;max-width:180px;margin:0 16px;overflow:hidden}
+  .topbar-mini-fill{height:100%;width:0;background:linear-gradient(90deg,#0a2540 0%,#2563eb 55%,#ea403f 100%);transition:width .3s}
+  .topbar a{color:var(--gray500)}
   html[data-mode="dark"] body{background:#0b1220;color:#e5edf6}
   html[data-mode="dark"] #sidebar,html[data-mode="dark"] .bg-white,html[data-mode="dark"] .lesson[data-shell="card"]{background:#111827!important}
   html[data-mode="dark"] .bg-mist,html[data-mode="dark"] .bg-gray2-100,html[data-mode="dark"] .brand-mesh{background-color:#172033!important;background-image:none}
@@ -3175,6 +3183,9 @@
   html[data-mode="dark"] .border-brand-100,html[data-mode="dark"] .border-gray2-200,html[data-mode="dark"] .border-gray2-200\/40,html[data-mode="dark"] .border-gray2-200\/60{border-color:#334155!important}
   html[data-mode="dark"] pre,html[data-mode="dark"] table tbody{color:#dbe5f1}
   html[data-mode="dark"] .mode-toggle{background:#172033;color:#e5edf6;border-color:#475569}
+  html[data-mode="dark"] .topbar{background:color-mix(in srgb,#111827 85%,transparent);border-color:#334155}
+  html[data-mode="dark"] .topbar,html[data-mode="dark"] #tb-crumb,html[data-mode="dark"] .kbd-hint,html[data-mode="dark"] .topbar a{color:#b8c4d4}
+  html[data-mode="dark"] .topbar-mini{background:#1c2739}
   html[data-mode="dark"] .objectives,html[data-mode="dark"] .quiz{background:#172033;color:#e5edf6;border-color:#334155}
   html[data-mode="dark"] .objectives,html[data-mode="dark"] .quiz-q,html[data-mode="dark"] .quiz-question{color:#e5edf6}
   html[data-mode="dark"] .quiz-opt{background:#111827;color:#e5edf6;border-color:#475569}
@@ -3240,12 +3251,19 @@
 
   <div class="px-4 py-3 border-t border-gray2-200 text-[11px] text-gray2-500 mono flex items-center justify-between gap-2">
     <span>v1.5</span>
-    <button type="button" class="mode-toggle" id="modeToggle" aria-label="Đổi giao diện sáng tối" title="Sáng / tối">🌙</button>
   </div>
 </aside>
 
 <!-- ============== MAIN ============== -->
 <main class="lg:ml-72">
+
+<div class="topbar">
+  <span class="mono" id="tb-crumb">Overview · Tổng quan</span>
+  <div class="topbar-mini"><div class="topbar-mini-fill" id="tb-fill"></div></div>
+  <span class="mono kbd-hint" style="color:var(--gray500)">← → chuyển bài</span>
+  <a href="#overview" class="mono">↺ Về đầu</a>
+  <button type="button" class="mode-toggle" id="modeToggle" aria-label="Đổi giao diện sáng tối" title="Sáng / tối">🌙</button>
+</div>
 
 <!-- ============== OVERVIEW (landing page) ============== -->
 <article class="module-intro-block" id="overview" data-lesson="overview">
@@ -7236,6 +7254,8 @@ async function updateProgress() {
   if (pctEl) pctEl.textContent = pct;
   if (doneEl) doneEl.textContent = done;
   if (totalEl) totalEl.textContent = total;
+  const tbFill = document.getElementById('tb-fill');
+  if (tbFill) tbFill.style.width = pct + '%';
   reportProgress();
 }
 
@@ -7311,6 +7331,16 @@ function showLesson(id) {
   document.querySelectorAll('.nav-link').forEach(a => {
     a.classList.toggle('active', a.dataset.lesson === id);
   });
+
+  const crumb = document.getElementById('tb-crumb');
+  if (crumb) {
+    if (id === 'overview') crumb.textContent = 'Overview · Tổng quan';
+    else if (id === 'references') crumb.textContent = 'References & finish';
+    else {
+      const l = LESSONS.find(x => x.id === id);
+      crumb.textContent = l ? l.title : 'Overview · Tổng quan';
+    }
+  }
 
   // Bring the active nav-link into view so the learner always sees its
   // surrounding lessons. scrollIntoView({block:'center'}) ends up scrolling
