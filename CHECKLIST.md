@@ -59,6 +59,12 @@ say so explicitly; never skip silently.
   "source directory is empty"; use plain `mv` (or stage first, then `git mv`).
 - [ ] **NEVER skip the browser walk-through for UI work.** Type-check passing
   ≠ feature works. See §5 below.
+- [ ] **NEVER put two connectors in one SVG `<path>`.** `marker-end` paints on
+  the LAST vertex of the path element, so `d="M0 0h20 M0 40h20"` renders ONE
+  arrowhead and silently drops the other. One `<path>` per connector. And the
+  final segment of `d` sets the arrow's direction — a trailing jog like
+  `…v60h-4` turns the head backwards, out of the box it should enter. Both bugs
+  shipped live on 2026-07-25. Gate: `python3 scripts/audit-svg-arrows.py`.
 
 ## 4 · Pre-commit verification
 
@@ -69,6 +75,7 @@ Run **all** of these. Don't claim "done" if any fails:
   from your changes. Pre-existing lint errors in other files are out of scope
   unless the task explicitly says otherwise.
 - [ ] `npm test` (if you touched lib code with vitest coverage).
+- [ ] `python3 scripts/audit-svg-arrows.py` — clean (course/SVG changes).
 - [ ] Dev server restarts cleanly: `tail -30 logs/dev.log` shows
   `✓ Ready in <Nms>` and **zero** lines matching `error|panic|fail`.
 
