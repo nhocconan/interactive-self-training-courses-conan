@@ -13,6 +13,15 @@ Two bug classes, both invisible to tsc/eslint and easy to miss when skimming:
      With orient="auto" the marker rotates to that final direction, so the
      arrowhead renders pointing out of its target box.
 
+  C. STUBBY APPROACH — the final segment is SHORTER than the arrowhead drawn on
+     it. `markerUnits` defaults to `strokeWidth`, so a markerWidth="9" head on a
+     stroke-width="2" path renders 18 user units long. Sit that on a 4-unit jog
+     (`…V127H250`) and the head overhangs 14 units backwards across the segment
+     before it — on screen it reads as a detached blob beside the line, not as
+     an arrow. Classes A and B both passed this exact figure; only measuring the
+     head against its runway catches it. Fix by giving the connector a real
+     approach run (turn earlier), not by shrinking the head.
+
 Usage:  python3 scripts/audit-svg-arrows.py [files...]     (default: courses/*.html)
 Exit 1 if anything is flagged.
 """
@@ -82,6 +91,36 @@ def gap(pt, r):
     return math.hypot(min(max(x, rx), rx + rw) - x, min(max(y, ry), ry + rh) - y)
 
 
+def markers(svg):
+    """id -> (refX, scales_with_stroke).
+
+    refX is the point in marker space pinned to the path's end vertex, so the
+    head reaches refX units BACKWARDS from that vertex — that backward reach,
+    not markerWidth, is what can spill across the corner onto the previous
+    segment. markerUnits defaults to strokeWidth, so the reach is multiplied by
+    the path's stroke-width."""
+    out = {}
+    for tag in re.findall(r'<marker[^>]*>', svg):
+        mid = re.search(r'id="([^"]+)"', tag)
+        if not mid:
+            continue
+        rx = re.search(r'refX="(' + NUM + r')"', tag)
+        units = re.search(r'markerUnits="([^"]+)"', tag)
+        out[mid.group(1)] = (float(rx.group(1)) if rx else 0.0,
+                             (units.group(1) if units else 'strokeWidth') == 'strokeWidth')
+    return out
+
+
+def back_reach(tag, marks):
+    """How far this path's arrowhead extends back from its end vertex, in user units."""
+    ref = re.search(r'marker-(?:end|start)="url\(#([^)]+)\)"', tag)
+    if not ref or ref.group(1) not in marks:
+        return None
+    rx, scales = marks[ref.group(1)]
+    sw = re.search(r'stroke-width="(' + NUM + r')"', tag)
+    return rx * (float(sw.group(1)) if sw else 1.0) if scales else rx
+
+
 def audit(path):
     s = open(path, encoding='utf-8').read()
     found = []
@@ -90,8 +129,10 @@ def audit(path):
         lab = re.search(r'aria-label="([^"]{0,55})', svg)
         lab = lab.group(1) if lab else '(no aria-label)'
         boxes = rects(svg)
+        marks = markers(svg)
         for pm in re.finditer(r'<path\b[^>]*marker-(?:end|start)="url\(#[^)]+\)"[^>]*>', svg):
-            dm = re.search(r'\sd="([^"]+)"', pm.group(0))
+            tag = pm.group(0)
+            dm = re.search(r'\sd="([^"]+)"', tag)
             if not dm:
                 continue
             d = dm.group(1)
@@ -102,6 +143,15 @@ def audit(path):
             if len(pts) < 2:
                 continue
             (x0, y0), (x1, y1) = pts[-2], pts[-1]
+            reach = back_reach(tag, marks)
+            final_len = math.hypot(x1 - x0, y1 - y0)
+            if reach and len(pts) > 2 and final_len + 0.5 < reach:
+                found.append((path, lab, d,
+                              f'C: final segment is {final_len:g}u but the arrowhead reaches {reach:g}u '
+                              f'back from its tip — the head spills across the corner onto the previous '
+                              f'segment and reads as a blob; turn earlier so the approach run is longer, '
+                              f'do not shrink the head'))
+                continue
             dx, dy = x1 - x0, y1 - y0
             L = math.hypot(dx, dy)
             if not L:
