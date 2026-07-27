@@ -46,18 +46,25 @@ export default function CourseContent({
   const iframeRef = useRef<HTMLIFrameElement>(null);
   const videoRef = useRef<HTMLVideoElement>(null);
   const lastSent = useRef<number>(initialPercent);
+  const hasMessageProgress = useRef(false);
 
   // Track scroll for HTML kind (and post-message courses).
   useEffect(() => {
     if (kind !== "HTML") return;
     const onMsg = (e: MessageEvent) => {
-      if (e.data?.type === "lms:progress" && typeof e.data.percent === "number") {
+      if (
+        e.source === iframeRef.current?.contentWindow &&
+        e.data?.type === "lms:progress" &&
+        typeof e.data.percent === "number"
+      ) {
+        hasMessageProgress.current = true;
         const p = Math.min(99, Math.max(0, Math.round(e.data.percent)));
         setPercent((cur) => Math.max(cur, p));
       }
     };
     window.addEventListener("message", onMsg);
     const id = setInterval(() => {
+      if (hasMessageProgress.current) return;
       try {
         const iframe = iframeRef.current;
         const win = iframe?.contentWindow;

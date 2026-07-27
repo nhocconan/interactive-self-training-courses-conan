@@ -496,7 +496,7 @@ footer.site{border-top:1px solid var(--border);padding:26px 24px;text-align:cent
         <div class="hero-inner">
           <span class="hero-kicker">Khoá học tương tác · AI Engineering · 2026</span>
           <h1><span class="grad-text">Agent Reliability & Evaluation</span> — đo agent có đáng tin trước khi ship</h1>
-          <p class="hero-sub">Cho kỹ sư đã xây được agent và giờ cần chứng minh nó không âm thầm hỏng trên production. Ba trụ: <strong>eval</strong> (định nghĩa «tốt»), <strong>observability</strong> (bắt thực tế), <strong>gate</strong> (chặn regression) — outcome vs trajectory, LLM-as-judge và bias của nó, pass@k vs pass^k, tracing OpenTelemetry GenAI, eval-driven CI gate, guardrails, shadow→canary rollout. Minh hoạ trên một hệ agent ví dụ.</p>
+          <p class="hero-sub">Cho team đang định nghĩa, build hoặc vận hành một sản phẩm AI và cần bằng chứng nó không âm thầm hỏng. Ba trụ: <strong>eval</strong> (định nghĩa «tốt»), <strong>observability</strong> (bắt thực tế), <strong>gate</strong> (chặn regression) — outcome vs trajectory, LLM-as-judge và bias của nó, pass@k vs pass^k, tracing OpenTelemetry GenAI, eval-driven CI gate, guardrails, shadow→canary rollout. Ví dụ dùng agent, nhưng eval set và outcome check nên có từ trước khi automation.</p>
           <div class="hero-meta">
             <span class="chip">📶 L1 → L5</span>
             <span class="chip">🧩 19 bài</span>
@@ -527,7 +527,7 @@ footer.site{border-top:1px solid var(--border);padding:26px 24px;text-align:cent
             <tr><td><b>Position / verbosity / self-preference bias</b></td><td>Ba thiên lệch đo được của LLM judge: theo thứ tự hiện, theo độ dài, và thiên vị output cùng họ model.</td></tr>
             <tr><td><b>pass@k vs pass^k</b></td><td>pass@k = xác suất ít nhất 1 trong k lần đúng; pass^k = xác suất CẢ k lần đúng. User production gặp pass^k.</td></tr>
             <tr><td><b>Trace / span</b></td><td>Trace = một lần chạy agent end-to-end; span = một đơn vị việc trong đó (một LLM call, tool call, retrieval) với latency/token/cost riêng.</td></tr>
-            <tr><td><b>gen_ai.* (OpenTelemetry GenAI)</b></td><td>Chuẩn đặt tên span và thuộc tính cho telemetry GenAI; mặc định không log nội dung prompt/tool args để tránh rò PII.</td></tr>
+            <tr><td><b>gen_ai.* (OpenTelemetry GenAI)</b></td><td>Bộ semantic convention đang ở mức Development và đã chuyển sang repository riêng; pin version/commit khi triển khai. Nội dung prompt/tool args vẫn là opt-in để tránh rò PII.</td></tr>
             <tr><td><b>Drift</b></td><td>Chất lượng/hành vi model tụt dần theo thời gian không do input đổi — chỉ online eval liên tục mới bắt được.</td></tr>
             <tr><td><b>Guardrail / tripwire</b></td><td>Checkpoint chặn cứng ở input/tool/output; tripwire = cờ dừng thực thi ngay, khác filter khuyên nhủ.</td></tr>
             <tr><td><b>Eval-driven development</b></td><td>Biến mỗi lỗi prod thành một eval case rồi gác CI — như TDD nhưng chấm bằng eval.</td></tr>
@@ -542,7 +542,7 @@ footer.site{border-top:1px solid var(--border);padding:26px 24px;text-align:cent
       <header class="module-header" data-module="1">
         <span class="eyebrow">Module 01 · Phần I · Nền tảng</span>
         <h2>Nền tảng độ tin cậy</h2>
-        <p>Trước khi đo bất cứ gì, phải hiểu vì sao agent hỏng khác phần mềm thường và «đáng tin» thật ra nghĩa là gì. Ba bài này cho bạn ngôn ngữ nền — phi tất định, outcome vs trajectory, và bản đồ ba trụ eval·observability·gate — mà mọi phần sau xây lên. Khoá này giả định bạn đã có một agent chạy được (muốn học cách xây, xem «Loop Engineering»).</p>
+        <p>Trước khi đo bất cứ gì, phải hiểu vì sao hệ dùng model hỏng khác phần mềm thường và «đáng tin» thật ra nghĩa là gì. Ba bài này cho ngôn ngữ nền — phi tất định, outcome vs trajectory, và bản đồ ba trụ eval·observability·gate. Có thể đọc phần nền ngay lúc chốt brief; các phần tracing/rollout hữu ích hơn khi đã có prototype hoặc production traffic.</p>
       </header>
 <article class="lesson" id="m1-l1" data-lesson>
   <div class="lesson-head">
@@ -816,8 +816,8 @@ footer.site{border-top:1px solid var(--border);padding:26px 24px;text-align:cent
     </div>
 
     <div class="callout info">
-      <div class="callout-title">Khóa này đứng độc lập</div>
-      <p>Ta không dạy lại cách <em>xây</em> vòng lặp agent (đó là khóa «Loop Engineering») hay hệ <em>quyết định</em> tự cải thiện (khóa «Agentic Decision Systems»). Khóa này giả định bạn đã có một agent chạy được và giờ muốn <strong>đo</strong> nó.</p>
+      <div class="callout-title">Phần này đứng độc lập</div>
+      <p>Nội dung tập trung vào cách <strong>định nghĩa và đo độ tin cậy</strong>, không dạy lại cách build một loại sản phẩm cụ thể. Dùng sớm phần eval/outcome để chốt success criteria; quay lại phần observability/gate khi đã có hệ chạy thật.</p>
     </div>
 
     <div class="takeaway">
@@ -1414,7 +1414,7 @@ footer.site{border-top:1px solid var(--border);padding:26px 24px;text-align:cent
       <header class="module-header" data-module="4">
         <span class="eyebrow">Module 04 · Phần IV · Quan sát production</span>
         <h2>Quan sát production</h2>
-        <p>Eval offline chỉ thấy cái bạn nghĩ ra trước. Production mới lộ drift, tool hỏng, hội thoại trôi. Ba bài này dạy tracing: một run = một trace gồm span, chuẩn OpenTelemetry GenAI (và vì sao content là opt-in), rồi ba làn offline/guardrail/online nối thành flywheel nuôi lại bộ eval.</p>
+        <p>Eval offline chỉ thấy cái bạn nghĩ ra trước. Production mới lộ drift, tool hỏng, hội thoại trôi. Ba bài này dạy tracing: một run = một trace gồm span, cách đọc OpenTelemetry GenAI trong khi convention còn ở mức Development (và vì sao content là opt-in), rồi ba làn offline/guardrail/online nối lại với bộ eval.</p>
       </header>
 <article class="lesson" id="m4-l1" data-lesson>
   <div class="lesson-head">
@@ -1509,7 +1509,7 @@ footer.site{border-top:1px solid var(--border);padding:26px 24px;text-align:cent
     <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px">
       <div>
         <span class="eyebrow">Bài 4.2</span>
-        <h3>OpenTelemetry GenAI: log gì, và vì sao content là opt-in</h3>
+        <h3>OpenTelemetry GenAI: convention đang đổi, content vẫn opt-in</h3>
       </div>
       <div style="display:flex;gap:8px;flex-wrap:wrap">
         <span class="level-badge">L3 · Thực chiến
@@ -1523,9 +1523,9 @@ footer.site{border-top:1px solid var(--border);padding:26px 24px;text-align:cent
     <div class="objectives">
       <span class="eyebrow">Sau bài này bạn có thể</span>
       <ul>
-        <li>Đọc quy ước đặt tên span và thuộc tính <code>gen_ai.*</code> của OpenTelemetry.</li>
+        <li>Đọc quy ước đặt tên span và thuộc tính <code>gen_ai.*</code> mà không nhầm Development convention là contract ổn định.</li>
         <li>Biết log gì mặc định và vì sao nội dung prompt là opt-in.</li>
-        <li>Ra quyết định log-metadata-luôn / log-content-sau-cờ khi có PII.</li>
+        <li>Pin version/commit, đặt compatibility adapter và ra quyết định log-metadata-luôn / log-content-sau-cờ khi có PII.</li>
       </ul>
     </div>
 
@@ -1533,9 +1533,16 @@ footer.site{border-top:1px solid var(--border);padding:26px 24px;text-align:cent
 
     <div class="concept">
       <span class="eyebrow">Khái niệm</span>
-      <h4>Chuẩn <code>gen_ai.*</code> — và mặc định an toàn</h4>
-      <p>OpenTelemetry GenAI đặt tên span theo thao tác, không phải chữ tự do: span inference tên <code>"{gen_ai.operation.name} {gen_ai.request.model}"</code> — ví dụ <code>chat gpt-4o</code>; span tool tên <code>"execute_tool {gen_ai.tool.name}"</code>. Các giá trị <code>operation.name</code> cố định: <code>chat</code>, <code>execute_tool</code>, <code>retrieval</code>, <code>invoke_agent</code>… Token đo bằng <code>gen_ai.usage.input_tokens</code> / <code>output_tokens</code>. Điểm mấu chốt (OTel blog, nguyên văn): <em>"Mặc định, không nội dung prompt hay tool arguments nào được ghi cùng telemetry GenAI… chỉ metadata như tên model, số token, và thời lượng."</em> Ghi <code>gen_ai.input.messages</code> là <strong>opt-in</strong> có chủ đích.</p>
+      <h4>Quy ước <code>gen_ai.*</code> — hữu ích nhưng chưa đóng băng</h4>
+      <p>OpenTelemetry GenAI đặt tên span theo thao tác, không phải chữ tự do: span inference tên <code>"{gen_ai.operation.name} {gen_ai.request.model}"</code> — ví dụ <code>chat gpt-4o</code>; span tool tên <code>"execute_tool {gen_ai.tool.name}"</code>. Các well-known value gồm <code>chat</code>, <code>execute_tool</code>, <code>retrieval</code>, <code>invoke_agent</code>… Token đo bằng <code>gen_ai.usage.input_tokens</code> / <code>output_tokens</code>. Nhưng đây là <strong>snapshot 26/07/2026</strong>, không phải schema bất biến.</p>
     </div>
+
+    <div class="callout warn">
+      <div class="callout-title">Maturity check · 26/07/2026</div>
+      <p><a href="https://opentelemetry.io/docs/specs/semconv/registry/attributes/gen-ai/" target="_blank" rel="noreferrer">Registry OpenTelemetry 1.43.0</a> đánh dấu các value của <code>gen_ai.operation.name</code> là <strong>Development</strong>; nhóm GenAI đã chuyển sang repository riêng và nhiều entry ở registry cũ mang trạng thái moved/deprecated. Khi triển khai: pin semantic-convention version hoặc commit, map telemetry nội bộ qua một adapter, test dashboard trên cả schema cũ/mới khi migration. Ý tưởng ổn định là trace/span + metadata an toàn; tên attribute cụ thể có thể đổi.</p>
+    </div>
+
+    <p>Phần content giữ nguyên nguyên tắc an toàn: prompt, output và tool arguments là dữ liệu nhạy cảm. Chỉ ghi <code>gen_ai.input.messages</code>/<code>output.messages</code> khi đã bật có chủ đích qua policy, sampling và redaction; metadata như model, token, latency, finish reason là baseline quan sát rẻ hơn.</p>
 
     <figure class="figure">
       <svg viewBox="0 0 640 250" role="img" aria-label="Một span box chat gpt-4o với các nhóm thuộc tính tỏa ra: Identity, Params, Usage, Content opt-in viền đứt, Outcome">
@@ -1591,7 +1598,7 @@ footer.site{border-top:1px solid var(--border);padding:26px 24px;text-align:cent
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true" focusable="false"><path d="M12 2v6m0 8v6M4.9 4.9l4.2 4.2m5.8 5.8l4.2 4.2M2 12h6m8 0h6M4.9 19.1l4.2-4.2m5.8-5.8l4.2-4.2"/></svg>
         Takeaway
       </span>
-      <p>Chuẩn <code>gen_ai.*</code> đặt tên span và thuộc tính; <span class="hl">mặc định chỉ log metadata, nội dung prompt/tool là opt-in</span> — bật content là quyết định có chủ đích để không rò PII vào backend.</p>
+      <p><code>gen_ai.*</code> giúp các hệ nói cùng ngôn ngữ nhưng còn Development: <span class="hl">pin version + adapter schema; metadata mặc định, content opt-in</span> để vừa không vỡ dashboard vừa không rò PII.</p>
     </div>
 
     <div class="quiz" data-correct="0">
@@ -2330,7 +2337,7 @@ footer.site{border-top:1px solid var(--border);padding:26px 24px;text-align:cent
           <tr><td><strong>3.2</strong></td><td>Judge có bias đo được theo hướng — position, verbosity, self-preference. Trị bằng swap-and-check và reference-guided (rẻ), rồi calibrate TPR/TNR trên tập nhãn giữ riêng.</td></tr>
           <tr><td><strong>3.3</strong></td><td>pass@k đẹp trên giấy, pass^k là cái user gặp — báo cả hai trước khi launch. Và đừng tin điểm eval khi chưa đọc transcript: 0% thường là task hỏng.</td></tr>
           <tr><td><strong>4.1</strong></td><td>Một run = một trace gồm nhiều span; mỗi LLM/tool/retrieval call là span con có latency/token/cost riêng — đơn vị biến "chậm 45s" thành "chậm ở đâu".</td></tr>
-          <tr><td><strong>4.2</strong></td><td>Chuẩn gen_ai.* đặt tên span + thuộc tính; mặc định chỉ log metadata, nội dung prompt/tool là opt-in — bật content là quyết định có chủ đích để không rò PII vào backend.</td></tr>
+          <tr><td><strong>4.2</strong></td><td>gen_ai.* còn Development và đã chuyển repo: pin version/commit + adapter schema; mặc định metadata, content opt-in để không rò PII.</td></tr>
           <tr><td><strong>4.3</strong></td><td>Offline gác ship, guardrail chặn inline, online chấm mẫu prod — chỉ online bắt drift, và trace lỗi online quay về nuôi golden set. Ba làn, ba ràng buộc latency, một feedback loop.</td></tr>
           <tr><td><strong>5.1</strong></td><td>Biến mỗi lỗi production thành một eval case vĩnh viễn trước khi sửa — như TDD nhưng chấm bằng eval. Bắt đầu ~20 case; giai đoạn đầu effect size lớn.</td></tr>
           <tr><td><strong>5.2</strong></td><td>Đừng wire judge chưa calibrate vào blocking gate — leo thang reporting → calibrate → blocking. Gate tồi gây alert fatigue và bị tắt.</td></tr>
@@ -2348,7 +2355,7 @@ footer.site{border-top:1px solid var(--border);padding:26px 24px;text-align:cent
       <li><h4>Chốt golden set</h4><p>Đóng băng các task rút từ lỗi đó thành bộ eval, và chấm cả outcome (query trạng thái thật) lẫn trajectory từng bước (1.2 / 2.2).</p></li>
       <li><h4>Code grader trước judge</h4><p>Cái gì check được bằng assertion — row tồn tại? args đúng? diff pass test? — thì dùng code: rẻ, tất định, miễn nhiễm bias (2.3).</p></li>
       <li><h4>Calibrate judge trước khi tin</h4><p>Chỉ dùng LLM-judge cho nuance thật, rubric tách chiều, swap-and-check, và đo TPR/TNR trên tập nhãn giữ riêng trước khi để nó quyết (3.1 / 3.2).</p></li>
-      <li><h4>Bật tracing</h4><p>Mỗi run một trace, mỗi call một span có latency/token/cost; dùng gen_ai.* và để content opt-in để không rò PII (4.1 / 4.2).</p></li>
+      <li><h4>Bật tracing</h4><p>Mỗi run một trace, mỗi call một span có latency/token/cost; nếu dùng gen_ai.* thì pin convention version + adapter, để content opt-in nhằm không rò PII (4.1 / 4.2).</p></li>
       <li><h4>Dựng ba làn eval</h4><p>Offline gác ship, guardrail chặn inline, online chấm mẫu prod — nhớ chỉ online mới bắt được drift (4.3).</p></li>
       <li><h4>Gate leo thang</h4><p>Chạy eval-driven CI ở reporting mode trước, cho người annotate bất đồng, calibrate, rồi mới cho blocking — gate lệch gây alert fatigue (5.1 / 5.2).</p></li>
       <li><h4>Guardrail ba điểm</h4><p>Đặt tripwire dừng-cứng ở input, ở mỗi tool-call, và ở output; dùng HITL pause-resume cho hành động nguy hiểm (5.3).</p></li>
@@ -2390,7 +2397,7 @@ footer.site{border-top:1px solid var(--border);padding:26px 24px;text-align:cent
       <div class="complete">
         <div class="complete-badge">✓</div>
         <h2>Hoàn thành khoá học</h2>
-        <p>Bạn đã đi từ «vì sao agent phi tất định cần đo khác» → dựng bộ eval từ lỗi thật → outcome/trajectory + code grader → LLM-as-judge và cách trị bias → pass@k vs pass^k → tracing OpenTelemetry GenAI → ba làn offline/guardrail/online → eval-driven CI gate → guardrails hard-stop → progressive rollout, và ghép tất cả trên một hệ agent ví dụ. Việc đáng làm trong 24 giờ tới: mở agent của bạn, chọn MỘT lỗi thật gần đây, biến nó thành một eval case, và thêm một outcome check truy trạng thái hệ thống thật. Muốn học cách xây vòng lặp agent, tiếp tục với «Loop Engineering»; muốn hệ quyết định tự cải thiện có kiểm soát, xem «Agentic Decision Systems».</p>
+        <p>Bạn đã đi từ «vì sao agent phi tất định cần đo khác» → dựng bộ eval từ lỗi thật → outcome/trajectory + code grader → LLM-as-judge và cách trị bias → pass@k vs pass^k → tracing OpenTelemetry GenAI → ba làn offline/guardrail/online → eval-driven CI gate → guardrails hard-stop → progressive rollout, và ghép tất cả trên một hệ agent ví dụ. Việc đáng làm tiếp theo: mở sản phẩm AI của bạn, chọn MỘT lỗi thật gần đây, biến nó thành eval case, và thêm một outcome check truy trạng thái hệ thống thật. Đây là phần nền về độ tin cậy; các chuyên đề khác chỉ cần mở khi đúng bài toán.</p>
         <div style="margin-top:26px"><a class="btn btn-primary" href="#overview">Về trang đầu</a></div>
       </div>
     </section>
@@ -2420,7 +2427,7 @@ const LESSONS = [
   {id:'m3-l2', mod:3, part:'Phần III · LLM-judge & chỉ số tin cậy', title:'Judge không phải trọng tài trung lập: 3 bias và cách trị', desc:'Position/verbosity/self-preference bias; swap-and-check; calibrate TPR/TNR; binary hơn Likert.'},
   {id:'m3-l3', mod:3, part:'Phần III · LLM-judge & chỉ số tin cậy', title:'pass@k vs pass^k — và khi chính eval đánh lừa bạn', desc:'pass@k đẹp nhưng pass^k là cái user gặp; saturation, grading bug, 0% task hỏng, đọc transcript.'},
   {id:'m4-l1', mod:4, part:'Phần IV · Quan sát production', title:'Trace và span: giải phẫu một lần chạy agent', desc:'1 run = 1 trace gồm span; mỗi call là span con có latency/token/cost.'},
-  {id:'m4-l2', mod:4, part:'Phần IV · Quan sát production', title:'OpenTelemetry GenAI: log gì, vì sao content opt-in', desc:'Chuẩn gen_ai.* đặt tên span + thuộc tính; mặc định chỉ metadata, content opt-in vì PII.'},
+  {id:'m4-l2', mod:4, part:'Phần IV · Quan sát production', title:'OpenTelemetry GenAI: convention đang đổi, content vẫn opt-in', desc:'gen_ai.* còn Development: pin version + adapter schema; metadata mặc định, content opt-in vì PII.'},
   {id:'m4-l3', mod:4, part:'Phần IV · Quan sát production', title:'Ba làn: offline · guardrail · online, và flywheel nuôi eval', desc:'Ba chế độ latency khác nhau; chỉ online bắt drift; trace lỗi quay về golden set.'},
   {id:'m5-l1', mod:5, part:'Phần V · Cổng tin cậy', title:'Eval-driven development: mỗi regression thành test vĩnh viễn', desc:'Biến lỗi prod thành eval case; như TDD nhưng chấm bằng eval; bắt đầu ~20 case.'},
   {id:'m5-l2', mod:5, part:'Phần V · Cổng tin cậy', title:'CI gate cho hệ phi tất định: reporting → calibrate → blocking', desc:'Leo thang gate; đừng wire judge chưa calibrate vào blocking; gate tồi gây alert fatigue.'},

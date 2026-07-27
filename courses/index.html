@@ -3,8 +3,8 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Khóa học AI chuyên sâu · học theo topic · @nhocconan</title>
-<meta name="description" content="Các khóa học AI chuyên sâu, mỗi khóa đào sâu một chủ đề — AI Practical Playbook, Context & Harness, Loop Engineering, MCP & Tool Layer, RAG, Agent Reliability & Evaluation, LLM Fine-tuning, DSS/IDSS, Agentic Decision Systems. Mỗi khóa là một file HTML, chạy offline.">
+<title>AI Working Notes · chọn đúng phần đang cần · @nhocconan</title>
+<meta name="description" content="Interactive AI courses: một trục chung từ brief tới sản phẩm đáng tin, cùng các chuyên đề độc lập về agent loop, MCP, RAG, fine-tuning và hệ ra quyết định. Mở đúng phần đang cần, không có thứ tự bắt buộc.">
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>📚</text></svg>">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -50,10 +50,30 @@ a:focus-visible,button:focus-visible{outline:3px solid var(--accent-2);outline-o
 .hero .kicker{font-family:var(--mono);font-size:12px;letter-spacing:.16em;text-transform:uppercase;color:var(--accent-3);font-weight:600}
 .hero h1{font-size:clamp(30px,5vw,52px);line-height:1.08;letter-spacing:-.025em;margin:10px 0 14px;font-weight:900}
 .hero h1 .grad{background:var(--grad);-webkit-background-clip:text;background-clip:text;color:transparent}
-.hero p.lede{color:var(--ink-2);font-size:17.5px}
-.path{margin-top:22px;padding:14px 18px;border:1px dashed var(--border-strong);border-radius:14px;background:var(--surface-2);font-size:13.5px;color:var(--ink-2)}
-.path .pt{font-family:var(--mono);font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--accent-3);font-weight:600;margin-right:8px}
-.path b{color:var(--ink);font-weight:600}
+[data-mode="dark"] .hero h1 .grad{background:linear-gradient(100deg,#8bb8ff 0%,#a8a4ff 50%,#ff8d82 100%);-webkit-background-clip:text;background-clip:text}
+.hero p.lede{color:var(--ink-2);font-size:17.5px;max-width:76ch}
+/* Knowledge route — a shared spine with optional specialist exits. */
+.route-map{margin-top:30px;padding:22px 0 8px;border-top:1px solid var(--border);border-bottom:1px solid var(--border)}
+.route-head{display:flex;align-items:baseline;justify-content:space-between;gap:16px;margin-bottom:22px}
+.route-head h2{font-size:15px;font-family:var(--mono);letter-spacing:.13em;text-transform:uppercase}
+.route-head p{font-size:13px;color:var(--ink-3)}
+.route-grid{position:relative;display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:18px}
+.route-grid::before{content:"";position:absolute;left:11px;right:11px;top:11px;height:2px;background:linear-gradient(90deg,var(--brand-navy),var(--brand-sky),var(--brand-coral));opacity:.32}
+.route-step{position:relative;padding-top:31px;animation:route-enter .45s ease both;animation-delay:var(--delay,0ms)}
+.route-step::before{content:"";position:absolute;z-index:1;top:4px;left:4px;width:14px;height:14px;border-radius:50%;background:var(--surface);border:4px solid var(--step,var(--brand-sky));box-shadow:0 0 0 4px var(--bg);transition:transform .18s,background .18s}
+.route-step:hover::before,.route-step:focus-within::before{transform:scale(1.18);background:var(--step,var(--brand-sky))}
+.route-step .step-no{display:block;font:600 10px/1 var(--mono);letter-spacing:.1em;color:var(--ink-3);margin-bottom:6px}
+.route-step a{color:var(--ink);font-size:14px;font-weight:750;text-decoration:none}
+.route-step a:hover{text-decoration:underline;text-underline-offset:3px}
+.route-step p{font-size:12.5px;line-height:1.5;color:var(--ink-3);margin-top:5px}
+.branch-label{margin:24px 0 10px;font:600 10px/1 var(--mono);letter-spacing:.13em;text-transform:uppercase;color:var(--accent-3)}
+.branch-rail{display:grid;grid-template-columns:repeat(4,1fr);border-top:1px solid var(--border)}
+.branch-link{position:relative;padding:15px 16px 15px 14px;color:var(--ink);text-decoration:none;border-left:2px solid var(--branch,var(--brand-sky));transition:background .18s,transform .18s}
+.branch-link+.branch-link{border-top:0}
+.branch-link:hover,.branch-link:focus-visible{background:var(--surface-2);transform:translateY(-2px);outline-offset:-2px}
+.branch-link b{display:block;font-size:13px}
+.branch-link span{display:block;font-size:11.5px;color:var(--ink-3);margin-top:3px}
+@keyframes route-enter{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
 /* Sections */
 .sect{margin:38px 0 6px;display:flex;align-items:baseline;gap:12px;flex-wrap:wrap}
 .sect h2{font-size:15px;font-family:var(--mono);letter-spacing:.14em;text-transform:uppercase;color:var(--ink-3);font-weight:600}
@@ -82,24 +102,73 @@ footer a{color:var(--ink-2)}
 @media (max-width:720px){
   .grid{grid-template-columns:1fr}
   .hero{padding-top:40px}
+  .route-head{display:block}.route-head p{margin-top:5px}
+  .route-grid{grid-template-columns:1fr;gap:0}
+  .route-grid::before{left:11px;right:auto;top:11px;bottom:10px;width:2px;height:auto}
+  .route-step{padding:0 0 22px 38px}
+  .route-step::before{top:3px}
+  .branch-rail{grid-template-columns:1fr 1fr}
 }
+@media (max-width:440px){.branch-rail{grid-template-columns:1fr}}
 </style>
 </head>
 <body>
 <header class="topbar">
-  <a class="brand" href="./"><span class="dot" aria-hidden="true"></span>Khóa học tương tác · @nhocconan</a>
+  <a class="brand" href="./"><span class="dot" aria-hidden="true"></span>Ghi chép tương tác · @nhocconan</a>
   <button class="mode-toggle" id="modeToggle" aria-label="Đổi giao diện sáng/tối" title="Sáng / tối">🌙</button>
 </header>
 
 <main class="wrap">
   <section class="hero">
-    <div class="kicker">10 khóa học tương tác · chuyên sâu từng topic · chạy offline</div>
-    <h1>Khóa học AI <span class="grad">chuyên sâu</span>,<br>học theo topic</h1>
-    <p class="lede">Mỗi khóa đào sâu một chủ đề — từ playbook dùng AI cho ra việc, tới kỹ nghệ context, vòng lặp agent, MCP, RAG, đo độ tin cậy, fine-tuning và hệ ra quyết định. Học cái nào cần cái đó, độc lập, không ép thứ tự. Mỗi khóa là một file HTML tự chứa, mở được offline, đọc tốt trên điện thoại.</p>
-    <div class="path"><span class="pt">Lộ trình gợi ý</span><b>Playbook</b> → <b>Vận hành Agent</b> → <b>Context &amp; Harness</b> → <b>Loop Engineering</b> → <b>MCP</b> → <b>RAG</b> → <b>Reliability &amp; Eval</b> → <b>Fine-tuning</b> — còn <b>DSS/IDSS</b> và <b>Agentic Decision Systems</b> cho nhánh hệ ra quyết định.</div>
+    <div class="kicker">11 ghi chép tương tác · mở độc lập · chạy offline</div>
+    <h1>Kho ghi chép AI,<br><span class="grad">chọn đúng phần đang cần</span></h1>
+    <p class="lede">Đây là những interactive courses được tạo ra trong quá trình Conan làm việc với Gen AI, không phải một giáo trình mà là chia sẻ ngắn gọn cách người viết học, làm và hệ thống hoá kiến thức. 
+      Có một đường chung đủ dùng để đi từ brief tới sản phẩm đáng tin; Loop, MCP, RAG, fine-tuning và decision systems là các chuyên đề riêng — bài toán gọi tên cái nào thì mở cái đó.</p>
+
+    <nav class="route-map" aria-labelledby="route-title">
+      <div class="route-head">
+        <h2 id="route-title">Đường chung đủ dùng</h2>
+        <p>Năm câu hỏi để tự định vị, không phải năm môn bắt buộc.</p>
+      </div>
+      <div class="route-grid">
+        <div class="route-step" style="--delay:40ms;--step:#0a2540">
+          <span class="step-no">01 · BRIEF</span>
+          <a href="ai-practical-playbook.html">Việc gì cần hoàn thành?</a>
+          <p>Đầu ra, bằng chứng, ràng buộc và điều kiện dừng.</p>
+        </div>
+        <div class="route-step" style="--delay:100ms;--step:#0f766e">
+          <span class="step-no">02 · WORK</span>
+          <a href="chatgpt-work-claude-cowork-practical-guide.html">Giao việc có biên</a>
+          <p>Chọn chế độ, giới hạn quyền, kiểm lại receipt.</p>
+        </div>
+        <div class="route-step" style="--delay:160ms;--step:#2f6bff">
+          <span class="step-no">03 · CONTEXT</span>
+          <a href="context-harness-engineering.html">Cho model đúng môi trường</a>
+          <p>Context, tool, memory và recovery vừa đủ.</p>
+        </div>
+        <div class="route-step" style="--delay:220ms;--step:#0ea5e9">
+          <span class="step-no">04 · EVIDENCE</span>
+          <a href="agent-reliability-evaluation.html">Đo trước khi tin</a>
+          <p>Eval set, outcome check và failure cases trước automation.</p>
+        </div>
+        <div class="route-step" style="--delay:280ms;--step:#ea403f">
+          <span class="step-no">05 · SHIP</span>
+          <a href="agent-reliability-evaluation.html#m5-l4">Đưa ra dùng theo từng nấc</a>
+          <p>Trace, guardrail, canary và đường rollback rõ ràng.</p>
+        </div>
+      </div>
+
+      <div class="branch-label">Rẽ nhánh khi công việc thật sự cần</div>
+      <div class="branch-rail">
+        <a class="branch-link" style="--branch:#f59e0b" href="loop-engineering.html"><b>Automation / agent loop</b><span>Khi một lượt gọi model không đủ.</span></a>
+        <a class="branch-link" style="--branch:#2563eb" href="mcp-tool-layer.html"><b>Tool &amp; integration</b><span>Khi sản phẩm phải chạm hệ bên ngoài.</span></a>
+        <a class="branch-link" style="--branch:#ea403f" href="rag-information-retrieval-course.html"><b>Knowledge / chatbot</b><span>Khi câu trả lời cần kho tri thức riêng.</span></a>
+        <a class="branch-link" style="--branch:#6366f1" href="llm-finetuning.html"><b>Model behavior</b><span>Khi prompt và context đã chạm trần.</span></a>
+      </div>
+    </nav>
   </section>
 
-  <div class="sect"><h2>Bắt đầu ở đây</h2><span class="line" aria-hidden="true"></span></div>
+  <div class="sect"><h2>Nền chung — mở chỗ đang thiếu</h2><span class="line" aria-hidden="true"></span></div>
   <div class="grid">
     <article class="card" style="--ca:#0a2540">
       <span class="num">01</span>
@@ -107,104 +176,114 @@ footer a{color:var(--ink-2)}
       <div class="badges"><span class="badge lang">Tiếng Việt</span><a class="badge en" href="ai-practical-playbook.en.html" aria-label="Bản tiếng Anh của AI Practical Playbook">EN ↗</a><span class="badge">Nhập môn</span><span class="badge">25 bài</span></div>
       <h2>AI Practical Playbook</h2>
       <p>Playbook AI thực chiến cho công việc production: chọn model đúng việc, pattern prompting, agent và vòng đánh giá. Bài nào cũng có ví dụ chạy được.</p>
-      <a class="go" href="ai-practical-playbook.html">Vào học →</a>
-      <div class="rel">Bắt đầu ở đây nếu bạn mới dùng AI nghiêm túc · bản Việt và bản Anh cập nhật 07/2026.</div>
+      <a class="go" href="ai-practical-playbook.html">Mở ghi chép →</a>
+      <div class="rel">Mở phần này nếu brief, prompt hoặc cách kiểm đầu ra vẫn còn mơ hồ · bản Việt và bản Anh cập nhật 07/2026.</div>
+    </article>
+
+    <article class="card" style="--ca:#0f766e">
+      <span class="num">02</span>
+      <span class="level-tag">Nhập môn · practical guide cho người không code</span>
+      <div class="badges"><span class="badge lang">Tiếng Việt</span><span class="badge">L1→L5</span><span class="badge">18 bài</span><span class="badge">Cập nhật 26/07/2026</span></div>
+      <h2>ChatGPT Work &amp; Claude Cowork thực chiến</h2>
+      <p>Chọn đúng chế độ, giao task nhiều bước bằng Brief 6 ô, làm research · report · spreadsheet · deck, giới hạn quyền, kiểm chứng bằng receipt và chỉ schedule sau ba run có giám sát.</p>
+      <a class="go" href="chatgpt-work-claude-cowork-practical-guide.html">Mở ghi chép →</a>
+      <div class="rel">Dành cho mọi bộ phận, không cần biết code · chọn một lane ChatGPT Work hoặc Claude Cowork để làm toàn bộ bài.</div>
     </article>
 
     <article class="card" style="--ca:#16a34a">
-      <span class="num">02</span>
+      <span class="num">03</span>
       <span class="level-tag">Nhập môn · vận hành agent an toàn</span>
       <div class="badges"><span class="badge lang">Tiếng Việt</span><a class="badge en" href="ai-agent-operational-training.en.html" aria-label="Bản tiếng Anh của khóa Vận hành AI Agent">EN ↗</a><span class="badge">L1→L5</span><span class="badge">22 bài</span></div>
       <h2>Vận hành AI Agent</h2>
       <p>Vòng lặp Nhìn·Chốt·Làm·Soi để giao việc cho AI agent mà không mất kiểm soát: chọn đúng môi trường làm việc (Chat, Cowork·Agent, Code, Browser), dựng vùng làm việc an toàn với sandbox và phê duyệt, rồi bắt AI nộp bằng chứng thay vì tin lời tự khai. Dành cho mọi bộ phận, không cần biết code.</p>
-      <a class="go" href="ai-agent-operational-training.html">Vào học →</a>
-      <div class="rel">Học ngay sau <a href="ai-practical-playbook.html">AI Practical Playbook</a> · trước khi đi sâu <a href="context-harness-engineering.html">Context &amp; Harness</a>.</div>
+      <a class="go" href="ai-agent-operational-training.html">Mở ghi chép →</a>
+      <div class="rel">Đi sâu hơn Work &amp; Cowork ở sandbox, approval, bằng chứng và cách vận hành agent không mất kiểm soát.</div>
     </article>
 
     <article class="card" style="--ca:#2f6bff">
-      <span class="num">03</span>
+      <span class="num">04</span>
       <span class="level-tag">Chuyên sâu · kỹ nghệ ngữ cảnh &amp; runtime</span>
       <div class="badges"><span class="badge lang">Tiếng Việt</span><a class="badge en" href="context-harness-engineering.en.html" aria-label="Bản tiếng Anh của khóa Context &amp; Harness">EN ↗</a><span class="badge">L1→L5</span><span class="badge">17 bài</span></div>
       <h2>Context &amp; Harness Engineering</h2>
       <p>Kỹ nghệ ngữ cảnh và runtime cho AI — vì sao AI "hỏng ở prod" và thứ tự chẩn đoán; xây harness (tools, loop, memory, recovery, observability) biến LLM thành đồng đội tin cậy. Cập nhật công cụ 2026: Claude Code, Codex.</p>
-      <a class="go" href="context-harness-engineering.html">Vào học →</a>
+      <a class="go" href="context-harness-engineering.html">Mở ghi chép →</a>
       <div class="rel">Liên quan: <a href="loop-engineering.html">Loop Engineering</a> đào sâu một trong 5 trụ của harness.</div>
+    </article>
+
+    <article class="card" style="--ca:#0ea5e9">
+      <span class="num">05</span>
+      <span class="level-tag">Nền chung · đo trước khi tin và ship</span>
+      <div class="badges"><span class="badge lang">Tiếng Việt</span><span class="badge">L1→L5</span><span class="badge">19 bài</span></div>
+      <h2>Agent Reliability &amp; Evaluation</h2>
+      <p>Outcome vs trajectory eval, grader cứng trước LLM-as-judge, tracing, eval-driven gate, guardrails và progressive rollout shadow→canary.</p>
+      <a class="go" href="agent-reliability-evaluation.html">Mở ghi chép →</a>
+      <div class="rel">Không cần đợi xây xong agent mới đọc: phần eval set và outcome check hữu ích ngay từ lúc chốt brief.</div>
     </article>
   </div>
 
-  <div class="sect"><h2>AI Engineering — xây · nối · đo · tuỳ biến</h2><span class="line" aria-hidden="true"></span></div>
+  <div class="sect"><h2>Chuyên đề xây sản phẩm — chỉ lấy khi cần</h2><span class="line" aria-hidden="true"></span></div>
   <div class="grid">
     <article class="card" style="--ca:#f59e0b">
-      <span class="num">04</span>
+      <span class="num">A1</span>
       <span class="level-tag">Chuyên sâu · vòng lặp agent tự hành</span>
       <div class="badges"><span class="badge lang">Tiếng Việt</span><span class="badge">L1→L5</span><span class="badge">11 bài</span></div>
       <h2>Loop Engineering</h2>
       <p>Thiết kế, đặt biên, đóng vòng và điều phối vòng lặp agent tự hành: verifier là vua, generate→critique→revise, đa agent, guardrail và kinh tế vòng lặp — kèm widget tính chi phí.</p>
-      <a class="go" href="loop-engineering.html">Vào học →</a>
-      <div class="rel">Liên quan: <a href="context-harness-engineering.html">Context &amp; Harness</a> · <a href="rag-information-retrieval-course.html">RAG</a> khi agent cần tri thức riêng.</div>
+      <a class="go" href="loop-engineering.html">Mở chuyên đề →</a>
+      <div class="rel">Nhánh automation/agent nâng cao, không phải bước bắt buộc sau Context &amp; Harness.</div>
     </article>
 
     <article class="card" style="--ca:#2563eb">
-      <span class="num">05</span>
+      <span class="num">A2</span>
       <span class="level-tag">Chuyên sâu · tầng tool &amp; tích hợp cho agent</span>
       <div class="badges"><span class="badge lang">Tiếng Việt</span><span class="badge">L1→L5</span><span class="badge">17 bài</span></div>
       <h2>MCP &amp; Tool Layer</h2>
       <p>Model Context Protocol từ kiến trúc host·client·server và sáu primitive, qua transport, OAuth 2.1 resource server, ba đòn tấn công đã có case thật (tool poisoning, rug pull, confused deputy) và cách phòng thủ, tới thiết kế tool mà agent dùng được thật — và khi nào KHÔNG cần MCP.</p>
-      <a class="go" href="mcp-tool-layer.html">Vào học →</a>
-      <div class="rel">Liên quan: <a href="context-harness-engineering.html">Context &amp; Harness</a> cho kỹ nghệ ngữ cảnh · <a href="agent-reliability-evaluation.html">Reliability &amp; Eval</a> để đo agent trước khi ship.</div>
+      <a class="go" href="mcp-tool-layer.html">Mở chuyên đề →</a>
+      <div class="rel">Nhánh tích hợp tool. Nếu gọi API trực tiếp đã đủ rõ và an toàn thì không cần MCP.</div>
     </article>
 
     <article class="card" style="--ca:#ea403f">
-      <span class="num">06</span>
+      <span class="num">A3</span>
       <span class="level-tag">Chuyên sâu · retrieval-augmented generation</span>
-      <div class="badges"><span class="badge lang">Tiếng Việt</span><a class="badge en" href="rag-information-retrieval-course.en.html" aria-label="Bản tiếng Anh của khóa RAG">EN ↗</a><span class="badge">L1→L5</span><span class="badge">18 bài</span></div>
+      <div class="badges"><span class="badge lang">Tiếng Việt</span><a class="badge en" href="rag-information-retrieval-course.en.html" aria-label="Bản tiếng Anh của khóa RAG">EN ↗</a><span class="badge">L1→L5</span><span class="badge">19 bài</span></div>
       <h2>RAG, Layer by Layer</h2>
       <p>Từ naive RAG (embed một chunk, tìm hàng xóm gần nhất) lên 13 lớp production — chunking, hybrid BM25 + RRF, multi-query, contextual chunking, cross-encoder rerank, CRAG, entity planning, distillation, caching — mỗi lớp vá một lỗi của lớp trước, đối chiếu với một nền tảng chatbot multi-tenant ví dụ.</p>
-      <a class="go" href="rag-information-retrieval-course.html">Vào học →</a>
-      <div class="rel">Liên quan: <a href="loop-engineering.html">Loop Engineering</a> cho vòng agent · <a href="context-harness-engineering.html">Context &amp; Harness</a> cho kỹ nghệ ngữ cảnh.</div>
-    </article>
-
-    <article class="card" style="--ca:#0ea5e9">
-      <span class="num">07</span>
-      <span class="level-tag">Chuyên sâu · đo độ tin cậy của agent</span>
-      <div class="badges"><span class="badge lang">Tiếng Việt</span><span class="badge">L1→L5</span><span class="badge">19 bài</span></div>
-      <h2>Agent Reliability &amp; Evaluation</h2>
-      <p>Đo agent có đáng tin trước khi ship: outcome vs trajectory eval, LLM-as-judge và 3 bias của nó, pass@k vs pass^k, tracing OpenTelemetry GenAI, eval-driven CI gate, guardrails và progressive rollout shadow→canary — ba trụ eval · observability · gate nối thành một flywheel.</p>
-      <a class="go" href="agent-reliability-evaluation.html">Vào học →</a>
-      <div class="rel">Liên quan: <a href="loop-engineering.html">Loop Engineering</a> để xây vòng agent · <a href="decision-intelligence-agentic-systems.html">Agentic Decision Systems</a> cho hệ tự cải thiện.</div>
+      <a class="go" href="rag-information-retrieval-course.html">Mở chuyên đề →</a>
+      <div class="rel">Nhánh knowledge/chatbot. Không cần cho sản phẩm không có bài toán truy xuất tri thức riêng.</div>
     </article>
 
     <article class="card" style="--ca:#6366f1">
-      <span class="num">08</span>
+      <span class="num">A4</span>
       <span class="level-tag">Chuyên sâu · tuỳ biến model trên dữ liệu riêng</span>
       <div class="badges"><span class="badge lang">Tiếng Việt</span><span class="badge">L1→L5</span><span class="badge">17 bài</span></div>
       <h2>LLM Fine-tuning &amp; Model Customization</h2>
       <p>Khi nào fine-tune (vs RAG vs prompting) theo khung hai trục, LoRA/QLoRA với số thật từ paper gốc, DPO/GRPO thay RLHF, data curation kiểu LIMA, eval ba lớp chống điểm số nói dối, toolchain và license open-weight 2026, quantization và multi-LoRA serving.</p>
-      <a class="go" href="llm-finetuning.html">Vào học →</a>
-      <div class="rel">Liên quan: <a href="rag-information-retrieval-course.html">RAG</a> khi vấn đề là kiến thức · <a href="agent-reliability-evaluation.html">Reliability &amp; Eval</a> cho kỷ luật đo lường.</div>
+      <a class="go" href="llm-finetuning.html">Mở chuyên đề →</a>
+      <div class="rel">Nhánh tuỳ biến hành vi. Chỉ cân nhắc sau khi eval cho thấy prompt/context/RAG không giải đúng loại lỗi.</div>
     </article>
   </div>
 
-  <div class="sect"><h2>Hệ ra quyết định &amp; dữ liệu</h2><span class="line" aria-hidden="true"></span></div>
+  <div class="sect"><h2>Decision &amp; data — kho riêng</h2><span class="line" aria-hidden="true"></span></div>
   <div class="grid">
     <article class="card" style="--ca:#14b8a6">
-      <span class="num">09</span>
+      <span class="num">D1</span>
       <span class="level-tag">Chuyên sâu · hệ ra quyết định &amp; kho dữ liệu</span>
       <div class="badges"><span class="badge lang">Tiếng Việt</span><span class="badge">L1→L5</span><span class="badge">21 bài</span></div>
       <h2>DSS &amp; Data Warehouse → IDSS</h2>
       <p>Lý thuyết quyết định, kho dữ liệu (bronze→silver→gold), kiến trúc DSS/IDSS, quản lý bất định, recommender — mỗi khái niệm đối chiếu với một hệ ra quyết định ví dụ cho ngành bán lẻ.</p>
-      <a class="go" href="dss-datawarehouse-idss-course.html">Vào học →</a>
-      <div class="rel">Liên quan: <a href="rag-information-retrieval-course.html">RAG</a> cho phần tri thức · <a href="decision-intelligence-agentic-systems.html">Agentic Decision Systems</a> đào sâu tiếp.</div>
+      <a class="go" href="dss-datawarehouse-idss-course.html">Mở chuyên đề →</a>
+      <div class="rel">Kiến thức chuyên ngành decision/data, không nối vào đường chung phía trên.</div>
     </article>
 
     <article class="card" style="--ca:#a855f7">
-      <span class="num">10</span>
+      <span class="num">D2</span>
       <span class="level-tag">Chuyên sâu · hệ quyết định tự cải thiện</span>
       <div class="badges"><span class="badge lang">Tiếng Việt</span><span class="badge">L1→L5</span><span class="badge">13 bài</span></div>
       <h2>Agentic Decision Systems</h2>
       <p>Từ deterministic decision kernel tới decision episode, provenance, memory có vòng đời, causal/OPE evidence, action recovery, evals, observability và champion–challenger promotion.</p>
-      <a class="go" href="decision-intelligence-agentic-systems.html">Vào học →</a>
-      <div class="rel">Liên quan: <a href="dss-datawarehouse-idss-course.html">DSS &amp; IDSS</a> · Luận điểm: self-improving ≠ self-editing.</div>
+      <a class="go" href="decision-intelligence-agentic-systems.html">Mở chuyên đề →</a>
+      <div class="rel">Kiến thức chuyên ngành về hệ quyết định và learning loop có quản trị; không phải phần tiếp theo của agent engineering.</div>
     </article>
   </div>
 
@@ -212,7 +291,7 @@ footer a{color:var(--ink-2)}
 
 <footer>
   <div class="wrap">
-    <span>© 2026 Tiến Lê — ghi chép lại trong lúc học.</span>
+    <span>© 2026 Tiến Lê — ghi chép lại trong lúc làm.</span>
     <span><a href="https://x.com/nhocconan">X</a> · <a href="https://github.com/nhocconan">GitHub</a> · <a href="https://tienle.com">tienle.com</a></span>
   </div>
 </footer>

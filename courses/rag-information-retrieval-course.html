@@ -469,7 +469,7 @@ footer.site{border-top:1px solid var(--border);padding:26px 24px;text-align:cent
   <aside class="sidebar" id="sidebar" aria-label="Điều hướng khoá học">
     <div class="sidebar-brand">
       <div class="sidebar-brand-title">RAG, <em>Layer by Layer</em></div>
-      <div class="sidebar-brand-sub">18 bài · phiên bản 2026</div>
+      <div class="sidebar-brand-sub">19 bài · phiên bản 2026</div>
     </div>
     <div class="progress-wrap">
       <div class="progress-meta"><span>Tiến độ</span><span><b id="pg-done">0</b>/<span id="pg-total">0</span> · <span id="pg-pct">0</span>%</span></div>
@@ -496,10 +496,10 @@ footer.site{border-top:1px solid var(--border);padding:26px 24px;text-align:cent
         <div class="hero-inner">
           <span class="hero-kicker">Khoá học tương tác · 2026</span>
           <h1><span class="grad-text">RAG, Layer by Layer</span> — từ naive RAG lên production</h1>
-          <p class="hero-sub">Cho kỹ sư đã dùng AI, muốn xây pipeline retrieval production: từ RAG ngây thơ nhất (embed một chunk, tìm hàng xóm gần nhất) lên 13 lớp — chunking, hybrid BM25 + RRF, multi-query, contextual chunking, cross-encoder rerank, CRAG, entity planning, distillation, caching — và thấy từng khái niệm chạy trên một nền tảng chatbot multi-tenant ví dụ.</p>
+          <p class="hero-sub">Cho kỹ sư đang build sản phẩm knowledge/chatbot: từ RAG ngây thơ nhất (embed một chunk, tìm hàng xóm gần nhất) tới cách đo retrieval, rồi 13 lớp production — chunking, hybrid BM25 + RRF, multi-query, contextual chunking, cross-encoder rerank, CRAG, entity planning, distillation, caching. Mỗi lớp chỉ được giữ khi eval chứng minh nó sửa đúng lỗi trên một nền tảng chatbot multi-tenant ví dụ.</p>
           <div class="hero-meta">
             <span class="chip">📶 L1 → L5</span>
-            <span class="chip">🧩 18 bài</span>
+            <span class="chip">🧩 19 bài</span>
           </div>
           <div style="margin-top:28px;display:flex;gap:12px;flex-wrap:wrap">
             <a class="btn btn-primary" id="start-btn">Bắt đầu học →</a>
@@ -523,6 +523,9 @@ footer.site{border-top:1px solid var(--border);padding:26px 24px;text-align:cent
             <tr><td><b>Embedding</b></td><td>Hàm ánh xạ text → vector nhiều chiều; text gần nghĩa → gần nhau về hình học.</td></tr>
             <tr><td><b>Cosine similarity</b></td><td>Cos góc giữa 2 vector, [−1..1]; chỉ đo hướng, không đo độ lớn — thước khoảng cách ngữ nghĩa.</td></tr>
             <tr><td><b>Chunk</b></td><td>Đơn vị nguyên tử retrieval; một mảnh text được embed và truy xuất riêng.</td></tr>
+            <tr><td><b>Recall@K / Hit@K</b></td><td>Recall@K đo phần relevant chunk xuất hiện trong top K; Hit@K hỏi nhị phân top K có ít nhất một relevant chunk hay không.</td></tr>
+            <tr><td><b>MRR / nDCG@K</b></td><td>MRR thưởng relevant chunk đầu tiên lên sớm; nDCG@K đo thứ tự khi nhiều chunk có mức liên quan khác nhau.</td></tr>
+            <tr><td><b>Ablation</b></td><td>Giữ nguyên eval set, bật đúng một thay đổi, đo quality · latency · cost rồi giữ hoặc hoàn tác — không cộng layer theo cảm giác.</td></tr>
             <tr><td><b>BM25 / tsvector</b></td><td>Hàm xếp hạng lexical: điểm theo tần số term hiếm (IDF), giảm theo độ dài chunk — bắt proper noun mà vector bỏ sót.</td></tr>
             <tr><td><b>RRF (Reciprocal Rank Fusion)</b></td><td>Gộp nhiều ranking chỉ dùng thứ hạng: RRF(d)=Σ 1/(k+rank), k=60 — không cần chuẩn hoá score.</td></tr>
             <tr><td><b>Multi-query expansion</b></td><td>Mở rộng 1 query thành nhiều biến thể (entity/intent/paraphrase), RRF gộp kết quả — nâng recall.</td></tr>
@@ -548,7 +551,7 @@ footer.site{border-top:1px solid var(--border);padding:26px 24px;text-align:cent
       <header class="module-header" data-module="1">
         <span class="eyebrow">Module 01 · Phần I · Nền tảng retrieval</span>
         <h2>Nền tảng retrieval</h2>
-        <p>Trước khi thêm lớp nào, phải hiểu vì sao cần retrieval và dạng đơn giản nhất của nó. Ba bài này cho bạn vấn đề hallucination, 4 bước naive RAG, và chunking — bộ từ vựng nền mà mọi lớp sau xây lên.</p>
+        <p>Trước khi thêm lớp nào, phải hiểu vì sao cần retrieval, dạng đơn giản nhất của nó, và cách đo xem một thay đổi có thật sự tốt hơn. Bốn bài này đi từ hallucination → naive RAG → chunking → eval/ablation, tạo baseline cho mọi lớp phía sau.</p>
       </header>
 <article class="lesson" id="m1-l1" data-lesson>
         <div class="lesson-head">
@@ -811,6 +814,109 @@ footer.site{border-top:1px solid var(--border);padding:26px 24px;text-align:cent
           </div>
         </div>
         <div class="lesson-nav" data-navfor="m1-l3"></div>
+      </article>
+
+      <article class="lesson" id="m1-l4" data-lesson>
+        <div class="lesson-head">
+          <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px">
+            <div>
+              <span class="eyebrow">Bài 1.4</span>
+              <h3>Eval trước layer — đo retrieval rồi mới nâng cấp</h3>
+            </div>
+            <div style="display:flex;gap:8px;flex-wrap:wrap">
+              <span class="level-badge">L2 · Cơ bản <span class="level-dots"><i class="on"></i><i class="on"></i><i></i><i></i><i></i></span></span>
+            </div>
+          </div>
+        </div>
+        <div class="lesson-body">
+          <div class="objectives">
+            <span class="eyebrow">Đọc xong bạn có thể</span>
+            <ul>
+              <li>Dựng một eval set nhỏ nhưng đại diện cho query thật và failure mode quan trọng.</li>
+              <li>Tách retrieval quality khỏi answer quality bằng đúng metric cho từng tầng.</li>
+              <li>Chạy ablation một thay đổi mỗi lần và bỏ layer không tạo measured lift.</li>
+            </ul>
+          </div>
+
+          <p>Hybrid, reranker hay multi-query đều có thể làm dashboard trông “production” hơn mà sản phẩm không tốt hơn. Nếu không có baseline cố định, mỗi lần thêm layer bạn chỉ biết hệ <em>khác đi</em> — không biết nó tốt hơn, tốn hơn hay đang sửa segment này bằng cách làm hỏng segment khác.</p>
+
+          <h3>Eval set tối thiểu trước khi tối ưu</h3>
+          <p>Khởi đầu bằng khoảng <strong>30–100 query đại diện</strong> lấy từ log thật và người hiểu domain. Mỗi dòng giữ: query, relevant chunk/document ID (<em>qrels</em>), evidence hoặc answer mong đợi, segment và failure tag. Phải có cả câu dễ lẫn các nhóm hay hỏng: proper noun gần nhau, typo, đa ngữ, tài liệu cũ/mới, câu không có đáp án, query mơ hồ và nguồn chứa chỉ thị độc. Synthetic query giúp phủ khoảng trống, nhưng một người hiểu corpus vẫn phải duyệt mẫu trước khi biến nó thành gate.</p>
+
+          <div class="table-wrap"><table>
+            <thead><tr><th>Tầng cần đo</th><th>Câu hỏi</th><th>Metric khởi đầu</th></tr></thead>
+            <tbody>
+              <tr><td><strong>Retrieval</strong></td><td>Đúng evidence có xuất hiện và lên đủ sớm?</td><td>Hit/Recall@K · MRR · nDCG@K</td></tr>
+              <tr><td><strong>Generation</strong></td><td>Câu trả lời có dùng đúng evidence, đúng câu hỏi và trích đúng nguồn?</td><td>Faithfulness/groundedness · answer correctness/relevance · citation correctness · abstention</td></tr>
+              <tr><td><strong>Production</strong></td><td>Chất lượng đó đổi lấy bao nhiêu?</td><td>p50/p95 latency · cost/query · error/timeout rate</td></tr>
+            </tbody>
+          </table></div>
+
+          <div class="callout info"><div class="callout-title">Đừng gom thành một “RAG score”</div><p>Retrieval đúng mà answer sai là lỗi generator/prompt; retrieval sai mà answer nghe hợp lý là hallucination được che đẹp. Giữ metric theo component để biết sửa ở đâu. LLM-judge hữu ích cho faithfulness/relevance, nhưng phải calibrate trên một tập người đã gắn nhãn — không dùng điểm judge làm sự thật tuyệt đối. Cách tách retrieval · generation · efficiency này cũng là trục chính trong <a href="https://arxiv.org/abs/2504.14891" target="_blank" rel="noreferrer">survey RAG evaluation 2025</a>.</p></div>
+
+          <figure class="figure">
+            <svg viewBox="0 0 760 300" role="img" aria-label="Ablation gate: một thay đổi đi qua frozen eval set, retrieval metrics, answer metrics và budget gate; nếu đạt thì giữ, nếu không thì hoàn tác.">
+              <text x="380" y="28" text-anchor="middle" font-family="var(--font-mono)" font-size="13" font-weight="600">ONE CHANGE · ONE FROZEN SET · KEEP OR REVERT</text>
+              <rect class="dgm-box" x="20" y="95" width="120" height="58" rx="7"/>
+              <text class="dgm-ink" x="80" y="118" text-anchor="middle" font-weight="600" font-size="11">1 thay đổi</text>
+              <text class="dgm-ink2" x="80" y="137" text-anchor="middle" font-size="10">+ hybrid / + rerank</text>
+              <path class="dgm-flow" d="M140 124 L175 124" marker-end="url(#m1l4-a)"/>
+              <rect class="dgm-accent" x="175" y="95" width="120" height="58" rx="7"/>
+              <text class="dgm-ink" x="235" y="118" text-anchor="middle" font-weight="600" font-size="11">Frozen eval set</text>
+              <text class="dgm-ink2" x="235" y="137" text-anchor="middle" font-size="10">query · qrels · segment</text>
+              <path class="dgm-flow" d="M295 124 L330 124" marker-end="url(#m1l4-a)"/>
+              <rect class="dgm-box" x="330" y="62" width="130" height="58" rx="7"/>
+              <text class="dgm-ink" x="395" y="85" text-anchor="middle" font-weight="600" font-size="11">Retrieval</text>
+              <text class="dgm-ink2" x="395" y="104" text-anchor="middle" font-size="10">Recall · MRR · nDCG</text>
+              <path class="dgm-flow" d="M460 91 L495 91" marker-end="url(#m1l4-a)"/>
+              <rect class="dgm-box" x="330" y="146" width="130" height="58" rx="7"/>
+              <text class="dgm-ink" x="395" y="169" text-anchor="middle" font-weight="600" font-size="11">Answer</text>
+              <text class="dgm-ink2" x="395" y="188" text-anchor="middle" font-size="10">faithful · relevant · cite</text>
+              <path class="dgm-flow" d="M460 175 L495 175" marker-end="url(#m1l4-a)"/>
+              <rect class="dgm-box" x="495" y="95" width="120" height="76" rx="7"/>
+              <text class="dgm-ink" x="555" y="119" text-anchor="middle" font-weight="600" font-size="11">Quality + budget</text>
+              <text class="dgm-ink2" x="555" y="138" text-anchor="middle" font-size="10">p95 · cost · timeout</text>
+              <text class="dgm-ink2" x="555" y="155" text-anchor="middle" font-size="10">theo từng segment</text>
+              <path d="M615 115 L652 86" stroke="var(--success)" stroke-width="1.8" fill="none" marker-end="url(#m1l4-good)"/>
+              <path d="M615 150 L652 190" stroke="var(--danger)" stroke-width="1.8" fill="none" marker-end="url(#m1l4-bad)"/>
+              <rect x="652" y="58" width="88" height="48" rx="7" fill="var(--success-bg)" stroke="var(--success)"/>
+              <text x="696" y="87" text-anchor="middle" font-weight="700" font-size="11" fill="var(--success)">GIỮ</text>
+              <rect class="dgm-warn" x="652" y="176" width="88" height="48" rx="7"/>
+              <text x="696" y="205" text-anchor="middle" font-weight="700" font-size="11" fill="var(--danger)">HOÀN TÁC</text>
+              <text class="dgm-ink2" x="380" y="262" text-anchor="middle" font-size="11">Không có lift đo được → không có lý do giữ layer.</text>
+              <defs>
+                <marker id="m1l4-a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0 L10 5 L0 10 Z" fill="var(--ink-3)"/></marker>
+                <marker id="m1l4-good" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0 L10 5 L0 10 Z" fill="var(--success)"/></marker>
+                <marker id="m1l4-bad" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0 L10 5 L0 10 Z" fill="var(--danger)"/></marker>
+              </defs>
+            </svg>
+            <figcaption><b>Hình 1.4</b> — Ablation gate giữ eval set cố định và thay đúng một biến. Một layer chỉ sống tiếp khi cải thiện đúng failure mode mà không phá segment hoặc budget quan trọng.</figcaption>
+          </figure>
+
+          <h3>Ablation: layer phải tự trả tiền thuê</h3>
+          <ol>
+            <li>Chạy naive baseline và lưu cả config, corpus version, model/version, K, latency, cost.</li>
+            <li>Bật đúng <strong>một</strong> thay đổi — ví dụ hybrid — rồi chạy lại cùng eval set.</li>
+            <li>Đọc theo segment, không chỉ average: proper noun tốt lên nhưng multilingual có rớt không?</li>
+            <li>Giữ khi metric mục tiêu tăng đủ để biện minh regression/cost; nếu không, hoàn tác. Không có ngưỡng chung cho mọi corpus.</li>
+          </ol>
+
+          <div class="takeaway">
+            <span class="eyebrow"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true" focusable="false"><path d="M12 2v6m0 8v6M4.9 4.9l4.2 4.2m5.8 5.8l4.2 4.2M2 12h6m8 0h6M4.9 19.1l4.2-4.2m5.8-5.8l4.2-4.2"/></svg>Takeaway</span>
+            <p>RAG không trưởng thành bằng số layer. Nó trưởng thành khi mỗi thay đổi đi qua <span class="hl">frozen eval set + component metrics + budget gate</span> và layer không tạo lift bị bỏ.</p>
+          </div>
+
+          <div class="quiz" data-correct="2">
+            <span class="eyebrow">Kiểm tra nhanh</span>
+            <p class="quiz-q">Sau khi bật reranker, answer faithfulness tăng nhưng p95 latency tăng gấp ba và Recall@10 không đổi. Kết luận đúng nhất?</p>
+            <button class="quiz-opt" onclick="quizPick(this,0)"><span class="quiz-letter">A</span><span>Reranker chắc chắn tốt hơn vì faithfulness tăng.</span></button>
+            <button class="quiz-opt" onclick="quizPick(this,1)"><span class="quiz-letter">B</span><span>Reranker vô dụng vì Recall@10 không đổi.</span></button>
+            <button class="quiz-opt" onclick="quizPick(this,2)"><span class="quiz-letter">C</span><span>Chưa thể giữ hay bỏ chỉ từ average: kiểm nDCG/MRR và segment cần rerank, rồi so lift faithfulness với budget p95; có thể chỉ bật cho query khó thay vì mặc định.</span></button>
+            <button class="quiz-opt" onclick="quizPick(this,3)"><span class="quiz-letter">D</span><span>Thêm multi-query để bù latency.</span></button>
+            <div class="quiz-feedback" role="status" data-explain="Đúng: reranker sắp lại candidate nên Recall@10 có thể không đổi trong khi MRR/nDCG và faithfulness tăng. Quyết định phải theo segment + budget; routing query khó thường tốt hơn bật toàn cục."></div>
+          </div>
+        </div>
+        <div class="lesson-nav" data-navfor="m1-l4"></div>
       </article>
     </div><!-- /container module 1 -->
 
@@ -2069,6 +2175,7 @@ footer.site{border-top:1px solid var(--border);padding:26px 24px;text-align:cent
               <tr><td>1.1 Sàn hallucination</td><td>LLM là máy xác suất — nạp fact trước khi trả lời, đừng bắt model "biết".</td></tr>
               <tr><td>1.2 Naive RAG</td><td>Một bảng Postgres có cột vector — hỏng ngay khi hai product tên gần nhau.</td></tr>
               <tr><td>1.3 Chunking</td><td>Cắt sai thì mọi lớp phía trên debug splitter; cắt theo cấu trúc, overlap 20%.</td></tr>
+              <tr><td>1.4 Eval &amp; ablation</td><td>Frozen set, component metrics, một thay đổi mỗi lần; không measured lift thì bỏ layer.</td></tr>
               <tr><td>2.1 Metadata</td><td>Chunk phải biết mình là ai: filter/boost/route; language là filter không boost.</td></tr>
               <tr><td>2.2 BM25</td><td>Vector giỏi nghĩa, tồi identifier; BM25 song song bắt tên riêng; cần cả hai.</td></tr>
               <tr><td>2.3 RRF</td><td>Bỏ score dùng rank 1/(k+rank), k=60; không tune lại khi corpus đổi.</td></tr>
@@ -2090,6 +2197,7 @@ footer.site{border-top:1px solid var(--border);padding:26px 24px;text-align:cent
           <div class="table-wrap"><table>
             <thead><tr><th>Bước</th><th>Hỏi</th><th>Nếu không</th></tr></thead>
             <tbody>
+              <tr><td>0. Baseline</td><td>Có frozen eval set với qrels, segment, answer/evidence mong đợi và budget p95/cost?</td><td>Không biết layer mới tốt hơn hay chỉ phức tạp hơn.</td></tr>
               <tr><td>1. Chunking</td><td>Cắt theo cấu trúc (đoạn→dòng→câu), đếm ký tự, overlap 20%?</td><td>Mọi lớp phía trên debug splitter.</td></tr>
               <tr><td>2. Metadata</td><td>Chunk mang trust/role/intent/entities; filter cứng cái nào, boost cái nào?</td><td>Không rank đúng, không route theo intent.</td></tr>
               <tr><td>3. Hybrid</td><td>Có đường lexical song song vector? 'simple' cho đa ngữ?</td><td>Nhầm proper-noun; hỏng trên rephrase nếu chỉ vector.</td></tr>
@@ -2141,7 +2249,7 @@ footer.site{border-top:1px solid var(--border);padding:26px 24px;text-align:cent
       <div class="complete">
         <div class="complete-badge">✓</div>
         <h2>Hoàn thành khoá học</h2>
-        <p>Bạn đã đi từ vấn đề hallucination → naive RAG → 13 lớp retrieval → kỹ thuật production (distillation, dispatcher, curation) → caching. Việc đáng làm trong 24 giờ tới: mở pipeline RAG của bạn, lần theo MỘT query từ planner tới grounded answer, ghi lại lớp nào đang hỏng. Muốn học sâu vòng lặp agent tự hành, tiếp tục với khoá «Loop Engineering»; muốn hệ quyết định tự cải thiện, xem «Agentic Decision Systems».</p>
+        <p>Bạn đã đi từ vấn đề hallucination → naive RAG → eval/ablation gate → 13 lớp retrieval → kỹ thuật production (distillation, dispatcher, curation) → caching. Việc đáng làm tiếp theo: lấy MỘT query thật đang hỏng, thêm nó vào frozen eval set, chạy baseline rồi chỉ bật đúng một thay đổi. RAG là chuyên đề độc lập cho sản phẩm knowledge/chatbot; không phải bước bắt buộc của một lộ trình AI chung.</p>
         <div style="margin-top:26px"><a class="btn btn-primary" href="#overview">Về trang đầu</a></div>
       </div>
     </section>
@@ -2164,6 +2272,7 @@ const LESSONS = [
   {id:'m1-l1', mod:1, part:'Phần I · Nền tảng retrieval', title:'Vì sao cần retrieval — vấn đề hallucination', desc:'LLM là máy xác suất; retrieval nạp fact trước khi trả lời để không bịa tự tin.'},
   {id:'m1-l2', mod:1, part:'Phần I · Nền tảng retrieval', title:'RAG ngây thơ — embed hết, tìm bằng cosine', desc:'4 bước chunk→embed→store→cosine; phải cùng model embed; 5 lỗi chờ sửa.'},
   {id:'m1-l3', mod:1, part:'Phần I · Nền tảng retrieval', title:'Chunking — đừng cắt đứt dòng bảng', desc:'Natural-separator chunking + size/overlap; đếm ký tự không đếm token.'},
+  {id:'m1-l4', mod:1, part:'Phần I · Nền tảng retrieval', title:'Eval trước layer — đo retrieval rồi mới nâng cấp', desc:'Frozen eval set + Recall/MRR/nDCG + faithfulness/cost; ablation một thay đổi mỗi lần, không lift thì bỏ.'},
   {id:'m2-l1', mod:2, part:'Phần II · Nhận diện & trộn retrieval', title:'Metadata — chunk không chỉ là text', desc:'Metadata làm 3 việc: filter, boost, route; language là filter không boost.'},
   {id:'m2-l2', mod:2, part:'Phần II · Nhận diện & trộn retrieval', title:'Hybrid lexical — BM25 bắt cái vector bỏ sót', desc:'BM25/tsvector bắt proper noun; chạy song song vector; \'simple\' không \'english\'.'},
   {id:'m2-l3', mod:2, part:'Phần II · Nhận diện & trộn retrieval', title:'Reciprocal Rank Fusion — gộp hai ranking không chuẩn hoá', desc:'RRF bỏ score dùng rank, k=60; không tune lại khi corpus đổi.'},
@@ -2178,7 +2287,7 @@ const LESSONS = [
   {id:'m4-l4', mod:4, part:'Phần IV · Kỹ thuật production', title:'Lớp 2026-Q3 · Surgical curation — override, scopeMode, synonym', desc:'Per-page metadata override (sparse merge), scopeMode single vs multi, synonym entity merge (overlap ≥ 0.75).'},
   {id:'m4-l5', mod:4, part:'Phần IV · Kỹ thuật production', title:'Caching — cắt token cost & latency', desc:'4-layer cache (L0 prompt, L1 exact Redis, L2 semantic pgvector opt-in 0.95, L3 result single-flight) + relocation trick.'},
   {id:'m5-l1', mod:5, part:'Phần V · Ghép toàn bộ', title:'Bức tranh trọn vẹn — mọi lớp chạy cùng lúc', desc:'13 khái niệm 1 pipeline, mỗi lớp sửa 1 lỗi của lớp dưới; cache bọc quanh; retrieval là attack surface.'},
-  {id:'m6-l1', mod:6, part:'Tổng kết', title:'Cheat sheet — takeaway từng bài + checklist thiết kế RAG', desc:'Tổng hợp takeaway của 18 bài, checklist khi thiết kế hệ RAG mới, và 2 quiz capstone để tự chẩn đoán lỗi.'},
+  {id:'m6-l1', mod:6, part:'Tổng kết', title:'Cheat sheet — takeaway từng bài + checklist thiết kế RAG', desc:'Tổng hợp takeaway của 19 bài, checklist khi thiết kế hệ RAG mới, và 2 quiz capstone để tự chẩn đoán lỗi.'},
 ];
 
 const PANES = ['overview','complete'];

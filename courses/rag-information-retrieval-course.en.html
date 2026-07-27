@@ -469,7 +469,7 @@ footer.site{border-top:1px solid var(--border);padding:26px 24px;text-align:cent
   <aside class="sidebar" id="sidebar" aria-label="Course navigation">
     <div class="sidebar-brand">
       <div class="sidebar-brand-title">RAG, <em>Layer by Layer</em></div>
-      <div class="sidebar-brand-sub">18 lessons · 2026 edition</div>
+      <div class="sidebar-brand-sub">19 lessons · 2026 edition</div>
     </div>
     <div class="progress-wrap">
       <div class="progress-meta"><span>Progress</span><span><b id="pg-done">0</b>/<span id="pg-total">0</span> · <span id="pg-pct">0</span>%</span></div>
@@ -496,10 +496,10 @@ footer.site{border-top:1px solid var(--border);padding:26px 24px;text-align:cent
         <div class="hero-inner">
           <span class="hero-kicker">Interactive course · 2026</span>
           <h1><span class="grad-text">RAG, Layer by Layer</span> — from naive RAG to production</h1>
-          <p class="hero-sub">For engineers who already use AI and want to build a production retrieval pipeline: from the most naive RAG (embed one chunk, find the nearest neighbor) up through 13 layers — chunking, hybrid BM25 + RRF, multi-query, contextual chunking, cross-encoder rerank, CRAG, entity planning, distillation, caching — and see each concept running on an example multi-tenant chatbot platform.</p>
+          <p class="hero-sub">For engineers building a knowledge or chatbot product: from the most naive RAG (embed one chunk, find the nearest neighbor) to measuring retrieval, then through 13 production layers — chunking, hybrid BM25 + RRF, multi-query, contextual chunking, cross-encoder rerank, CRAG, entity planning, distillation, caching. A layer stays only when eval proves it fixes the intended failure on an example multi-tenant chatbot platform.</p>
           <div class="hero-meta">
             <span class="chip">📶 L1 → L5</span>
-            <span class="chip">🧩 18 lessons</span>
+            <span class="chip">🧩 19 lessons</span>
           </div>
           <div style="margin-top:28px;display:flex;gap:12px;flex-wrap:wrap">
             <a class="btn btn-primary" id="start-btn">Start learning →</a>
@@ -523,6 +523,9 @@ footer.site{border-top:1px solid var(--border);padding:26px 24px;text-align:cent
             <tr><td><b>Embedding</b></td><td>A function mapping text → a high-dimensional vector; text close in meaning → close in geometry.</td></tr>
             <tr><td><b>Cosine similarity</b></td><td>The cosine of the angle between two vectors, [−1..1]; measures direction only, not magnitude — a ruler for semantic distance.</td></tr>
             <tr><td><b>Chunk</b></td><td>The atomic unit of retrieval; a piece of text embedded and retrieved on its own.</td></tr>
+            <tr><td><b>Recall@K / Hit@K</b></td><td>Recall@K measures the fraction of relevant chunks present in the top K; Hit@K asks whether top K contains at least one relevant chunk.</td></tr>
+            <tr><td><b>MRR / nDCG@K</b></td><td>MRR rewards putting the first relevant chunk early; nDCG@K scores ordering when several chunks have graded relevance.</td></tr>
+            <tr><td><b>Ablation</b></td><td>Keep the eval set fixed, enable exactly one change, measure quality · latency · cost, then keep or revert — never accumulate layers by feel.</td></tr>
             <tr><td><b>BM25 / tsvector</b></td><td>A lexical ranking function: scores by rare-term frequency (IDF), decays with chunk length — catches the proper nouns that vectors miss.</td></tr>
             <tr><td><b>RRF (Reciprocal Rank Fusion)</b></td><td>Fuses multiple rankings using rank alone: RRF(d)=Σ 1/(k+rank), k=60 — no score normalization needed.</td></tr>
             <tr><td><b>Multi-query expansion</b></td><td>Expand one query into several variants (entity/intent/paraphrase), fuse with RRF — raises recall.</td></tr>
@@ -548,7 +551,7 @@ footer.site{border-top:1px solid var(--border);padding:26px 24px;text-align:cent
       <header class="module-header" data-module="1">
         <span class="eyebrow">Module 01 · Part I · Retrieval foundations</span>
         <h2>Retrieval foundations</h2>
-        <p>Before adding any layer, you have to understand why retrieval is needed and its simplest form. These three lessons give you the hallucination problem, the 4 steps of naive RAG, and chunking — the base vocabulary every later layer builds on.</p>
+        <p>Before adding any layer, understand why retrieval exists, its simplest form, and how to tell whether a change is actually better. These four lessons go hallucination → naive RAG → chunking → evaluation/ablation, establishing the baseline for every later layer.</p>
       </header>
 <article class="lesson" id="m1-l1" data-lesson>
         <div class="lesson-head">
@@ -811,6 +814,109 @@ footer.site{border-top:1px solid var(--border);padding:26px 24px;text-align:cent
           </div>
         </div>
         <div class="lesson-nav" data-navfor="m1-l3"></div>
+      </article>
+
+      <article class="lesson" id="m1-l4" data-lesson>
+        <div class="lesson-head">
+          <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px">
+            <div>
+              <span class="eyebrow">Lesson 1.4</span>
+              <h3>Evaluate before layering — measure retrieval before upgrading</h3>
+            </div>
+            <div style="display:flex;gap:8px;flex-wrap:wrap">
+              <span class="level-badge">L2 · Basic <span class="level-dots"><i class="on"></i><i class="on"></i><i></i><i></i><i></i></span></span>
+            </div>
+          </div>
+        </div>
+        <div class="lesson-body">
+          <div class="objectives">
+            <span class="eyebrow">By the end you can</span>
+            <ul>
+              <li>Build a small evaluation set that represents real queries and important failure modes.</li>
+              <li>Separate retrieval quality from answer quality with the right metric for each layer.</li>
+              <li>Run one-change-at-a-time ablations and remove layers that create no measured lift.</li>
+            </ul>
+          </div>
+
+          <p>Hybrid search, rerankers, and multi-query can make an architecture diagram look more “production” without making the product better. Without a fixed baseline, every new layer only tells you the system is <em>different</em> — not whether it is better, more expensive, or fixing one segment by breaking another.</p>
+
+          <h3>The minimum eval set before optimization</h3>
+          <p>Start with roughly <strong>30–100 representative queries</strong> from real logs and domain experts. Each row keeps the query, relevant chunk/document IDs (<em>qrels</em>), expected evidence or answer, segment, and failure tag. Include both easy cases and the groups that tend to fail: similar proper nouns, typos, multilingual queries, stale/current documents, no-answer cases, ambiguous queries, and sources containing malicious instructions. Synthetic queries can fill coverage gaps, but someone who understands the corpus should review a sample before the set becomes a gate.</p>
+
+          <div class="table-wrap"><table>
+            <thead><tr><th>Layer to measure</th><th>Question</th><th>Starter metrics</th></tr></thead>
+            <tbody>
+              <tr><td><strong>Retrieval</strong></td><td>Did the right evidence appear, and did it rank early enough?</td><td>Hit/Recall@K · MRR · nDCG@K</td></tr>
+              <tr><td><strong>Generation</strong></td><td>Did the answer use the evidence, answer the question, and cite the right source?</td><td>Faithfulness/groundedness · answer correctness/relevance · citation correctness · abstention</td></tr>
+              <tr><td><strong>Production</strong></td><td>What did that quality cost?</td><td>p50/p95 latency · cost/query · error/timeout rate</td></tr>
+            </tbody>
+          </table></div>
+
+          <div class="callout info"><div class="callout-title">Do not collapse this into one “RAG score”</div><p>Correct retrieval plus a wrong answer points to the generator or prompt; wrong retrieval plus a plausible answer is a well-disguised hallucination. Keep component metrics so you know where to intervene. An LLM judge helps with faithfulness and relevance, but calibrate it against a human-labeled slice rather than treating its score as ground truth. Separating retrieval, generation, and efficiency is also a central axis of this <a href="https://arxiv.org/abs/2504.14891" target="_blank" rel="noreferrer">2025 survey of RAG evaluation</a>.</p></div>
+
+          <figure class="figure">
+            <svg viewBox="0 0 760 300" role="img" aria-label="Ablation gate: one change passes through a frozen eval set, retrieval metrics, answer metrics, and a budget gate; keep it if it passes, otherwise revert it.">
+              <text x="380" y="28" text-anchor="middle" font-family="var(--font-mono)" font-size="13" font-weight="600">ONE CHANGE · ONE FROZEN SET · KEEP OR REVERT</text>
+              <rect class="dgm-box" x="20" y="95" width="120" height="58" rx="7"/>
+              <text class="dgm-ink" x="80" y="118" text-anchor="middle" font-weight="600" font-size="11">One change</text>
+              <text class="dgm-ink2" x="80" y="137" text-anchor="middle" font-size="10">+ hybrid / + rerank</text>
+              <path class="dgm-flow" d="M140 124 L175 124" marker-end="url(#m1l4-a)"/>
+              <rect class="dgm-accent" x="175" y="95" width="120" height="58" rx="7"/>
+              <text class="dgm-ink" x="235" y="118" text-anchor="middle" font-weight="600" font-size="11">Frozen eval set</text>
+              <text class="dgm-ink2" x="235" y="137" text-anchor="middle" font-size="10">query · qrels · segment</text>
+              <path class="dgm-flow" d="M295 124 L330 124" marker-end="url(#m1l4-a)"/>
+              <rect class="dgm-box" x="330" y="62" width="130" height="58" rx="7"/>
+              <text class="dgm-ink" x="395" y="85" text-anchor="middle" font-weight="600" font-size="11">Retrieval</text>
+              <text class="dgm-ink2" x="395" y="104" text-anchor="middle" font-size="10">Recall · MRR · nDCG</text>
+              <path class="dgm-flow" d="M460 91 L495 91" marker-end="url(#m1l4-a)"/>
+              <rect class="dgm-box" x="330" y="146" width="130" height="58" rx="7"/>
+              <text class="dgm-ink" x="395" y="169" text-anchor="middle" font-weight="600" font-size="11">Answer</text>
+              <text class="dgm-ink2" x="395" y="188" text-anchor="middle" font-size="10">faithful · relevant · cite</text>
+              <path class="dgm-flow" d="M460 175 L495 175" marker-end="url(#m1l4-a)"/>
+              <rect class="dgm-box" x="495" y="95" width="120" height="76" rx="7"/>
+              <text class="dgm-ink" x="555" y="119" text-anchor="middle" font-weight="600" font-size="11">Quality + budget</text>
+              <text class="dgm-ink2" x="555" y="138" text-anchor="middle" font-size="10">p95 · cost · timeout</text>
+              <text class="dgm-ink2" x="555" y="155" text-anchor="middle" font-size="10">by segment</text>
+              <path d="M615 115 L652 86" stroke="var(--success)" stroke-width="1.8" fill="none" marker-end="url(#m1l4-good)"/>
+              <path d="M615 150 L652 190" stroke="var(--danger)" stroke-width="1.8" fill="none" marker-end="url(#m1l4-bad)"/>
+              <rect x="652" y="58" width="88" height="48" rx="7" fill="var(--success-bg)" stroke="var(--success)"/>
+              <text x="696" y="87" text-anchor="middle" font-weight="700" font-size="11" fill="var(--success)">KEEP</text>
+              <rect class="dgm-warn" x="652" y="176" width="88" height="48" rx="7"/>
+              <text x="696" y="205" text-anchor="middle" font-weight="700" font-size="11" fill="var(--danger)">REVERT</text>
+              <text class="dgm-ink2" x="380" y="262" text-anchor="middle" font-size="11">No measured lift → no reason to keep the layer.</text>
+              <defs>
+                <marker id="m1l4-a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0 L10 5 L0 10 Z" fill="var(--ink-3)"/></marker>
+                <marker id="m1l4-good" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0 L10 5 L0 10 Z" fill="var(--success)"/></marker>
+                <marker id="m1l4-bad" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0 L10 5 L0 10 Z" fill="var(--danger)"/></marker>
+              </defs>
+            </svg>
+            <figcaption><b>Figure 1.4</b> — The ablation gate keeps the eval set fixed and changes one variable. A layer survives only when it improves its target failure without breaking an important segment or budget.</figcaption>
+          </figure>
+
+          <h3>Ablation: every layer pays rent</h3>
+          <ol>
+            <li>Run the naive baseline and save its config, corpus version, model/version, K, latency, and cost.</li>
+            <li>Enable exactly <strong>one</strong> change — hybrid search, for example — and rerun the same set.</li>
+            <li>Read by segment, not just average: did proper nouns improve while multilingual queries regressed?</li>
+            <li>Keep it when target lift justifies regressions and cost; otherwise revert it. No threshold is universal across corpora.</li>
+          </ol>
+
+          <div class="takeaway">
+            <span class="eyebrow"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true" focusable="false"><path d="M12 2v6m0 8v6M4.9 4.9l4.2 4.2m5.8 5.8l4.2 4.2M2 12h6m8 0h6M4.9 19.1l4.2-4.2m5.8-5.8l4.2-4.2"/></svg>Takeaway</span>
+            <p>RAG maturity is not a layer count. Every change goes through a <span class="hl">frozen eval set + component metrics + budget gate</span>, and a layer with no lift gets removed.</p>
+          </div>
+
+          <div class="quiz" data-correct="2">
+            <span class="eyebrow">Quick check</span>
+            <p class="quiz-q">After enabling a reranker, answer faithfulness rises, p95 latency triples, and Recall@10 stays flat. What is the best conclusion?</p>
+            <button class="quiz-opt" onclick="quizPick(this,0)"><span class="quiz-letter">A</span><span>The reranker is definitely better because faithfulness rose.</span></button>
+            <button class="quiz-opt" onclick="quizPick(this,1)"><span class="quiz-letter">B</span><span>The reranker is useless because Recall@10 did not change.</span></button>
+            <button class="quiz-opt" onclick="quizPick(this,2)"><span class="quiz-letter">C</span><span>The averages are insufficient: inspect MRR/nDCG and the segments that need reranking, then compare faithfulness lift with the p95 budget; routing only difficult queries may beat enabling it globally.</span></button>
+            <button class="quiz-opt" onclick="quizPick(this,3)"><span class="quiz-letter">D</span><span>Add multi-query to offset the latency.</span></button>
+            <div class="quiz-feedback" role="status" data-explain="Correct: a reranker reorders candidates, so Recall@10 can remain flat while MRR/nDCG and faithfulness improve. Decide by segment and budget; routing hard queries is often better than turning it on globally."></div>
+          </div>
+        </div>
+        <div class="lesson-nav" data-navfor="m1-l4"></div>
       </article>
     </div><!-- /container module 1 -->
 
@@ -2069,6 +2175,7 @@ footer.site{border-top:1px solid var(--border);padding:26px 24px;text-align:cent
               <tr><td>1.1 The hallucination floor</td><td>An LLM is a probability machine — load the facts before answering, don't force the model to "know".</td></tr>
               <tr><td>1.2 Naive RAG</td><td>One Postgres table with a vector column — breaks the moment two products have similar names.</td></tr>
               <tr><td>1.3 Chunking</td><td>Cut it wrong and every layer above debugs the splitter; cut by structure, overlap 20%.</td></tr>
+              <tr><td>1.4 Eval &amp; ablation</td><td>Frozen set, component metrics, one change at a time; no measured lift means remove the layer.</td></tr>
               <tr><td>2.1 Metadata</td><td>A chunk must know who it is: filter/boost/route; language is a filter, not a boost.</td></tr>
               <tr><td>2.2 BM25</td><td>Vectors good at meaning, bad at identifiers; a parallel BM25 catches proper nouns; you need both.</td></tr>
               <tr><td>2.3 RRF</td><td>Drop score, use rank 1/(k+rank), k=60; no retuning when the corpus changes.</td></tr>
@@ -2090,6 +2197,7 @@ footer.site{border-top:1px solid var(--border);padding:26px 24px;text-align:cent
           <div class="table-wrap"><table>
             <thead><tr><th>Step</th><th>Ask</th><th>If not</th></tr></thead>
             <tbody>
+              <tr><td>0. Baseline</td><td>Is there a frozen eval set with qrels, segments, expected answer/evidence, and p95/cost budgets?</td><td>You cannot tell whether a new layer is better or merely more complex.</td></tr>
               <tr><td>1. Chunking</td><td>Cut by structure (paragraph→line→sentence), count characters, overlap 20%?</td><td>Every layer above debugs the splitter.</td></tr>
               <tr><td>2. Metadata</td><td>Chunks carry trust/role/intent/entities; which do you hard-filter, which do you boost?</td><td>No correct ranking, no routing by intent.</td></tr>
               <tr><td>3. Hybrid</td><td>Is there a lexical path parallel to the vector one? 'simple' for multilingual?</td><td>Proper-noun confusion; broken on rephrase if vector-only.</td></tr>
@@ -2141,7 +2249,7 @@ footer.site{border-top:1px solid var(--border);padding:26px 24px;text-align:cent
       <div class="complete">
         <div class="complete-badge">✓</div>
         <h2>Course complete</h2>
-        <p>You went from the hallucination problem → naive RAG → 13 retrieval layers → production engineering (distillation, dispatcher, curation) → caching. Worth doing in the next 24 hours: open your RAG pipeline, trace ONE query from planner to grounded answer, and note which layer is failing. To go deep on self-driving agent loops, continue with the «Loop Engineering» course; for self-improving decision systems, see «Agentic Decision Systems».</p>
+        <p>You went from the hallucination problem → naive RAG → an evaluation/ablation gate → 13 retrieval layers → production engineering (distillation, dispatcher, curation) → caching. Next, take ONE real failing query, add it to the frozen eval set, run the baseline, then enable exactly one change. RAG is an independent specialty for knowledge and chatbot products, not a required step in a general AI path.</p>
         <div style="margin-top:26px"><a class="btn btn-primary" href="#overview">Back to the start</a></div>
       </div>
     </section>
@@ -2164,6 +2272,7 @@ const LESSONS = [
   {id:'m1-l1', mod:1, part:'Part I · Retrieval foundations', title:'Why retrieval is needed — the hallucination problem', desc:'An LLM is a probability machine; retrieval loads the facts before answering so it doesn\'t confidently make things up.'},
   {id:'m1-l2', mod:1, part:'Part I · Retrieval foundations', title:'Naive RAG — embed everything, find by cosine', desc:'4 steps chunk→embed→store→cosine; must embed with the same model; 5 failures waiting to be fixed.'},
   {id:'m1-l3', mod:1, part:'Part I · Retrieval foundations', title:'Chunking — don\'t cut a table row in half', desc:'Natural-separator chunking + size/overlap; count characters, not tokens.'},
+  {id:'m1-l4', mod:1, part:'Part I · Retrieval foundations', title:'Evaluate before layering — measure retrieval before upgrading', desc:'Frozen eval set + Recall/MRR/nDCG + faithfulness/cost; one-change ablation, remove layers with no lift.'},
   {id:'m2-l1', mod:2, part:'Part II · Identifying & fusing retrieval', title:'Metadata — a chunk is not just text', desc:'Metadata does 3 jobs: filter, boost, route; language is a filter, not a boost.'},
   {id:'m2-l2', mod:2, part:'Part II · Identifying & fusing retrieval', title:'Hybrid lexical — BM25 catches what vectors miss', desc:'BM25/tsvector catches proper nouns; runs parallel to the vector path; \'simple\' not \'english\'.'},
   {id:'m2-l3', mod:2, part:'Part II · Identifying & fusing retrieval', title:'Reciprocal Rank Fusion — merging two rankings without normalization', desc:'RRF drops score and uses rank, k=60; no retuning when the corpus changes.'},
@@ -2178,7 +2287,7 @@ const LESSONS = [
   {id:'m4-l4', mod:4, part:'Part IV · Production engineering', title:'2026-Q3 layer · Surgical curation — override, scopeMode, synonym', desc:'Per-page metadata override (sparse merge), scopeMode single vs multi, synonym entity merge (overlap ≥ 0.75).'},
   {id:'m4-l5', mod:4, part:'Part IV · Production engineering', title:'Caching — cut token cost & latency', desc:'4-layer cache (L0 prompt, L1 exact Redis, L2 semantic pgvector opt-in 0.95, L3 result single-flight) + relocation trick.'},
   {id:'m5-l1', mod:5, part:'Part V · Putting it all together', title:'The complete picture — every layer running at once', desc:'13 concepts, 1 pipeline, each layer fixing 1 failure of the layer below; the cache wraps around it; retrieval is an attack surface.'},
-  {id:'m6-l1', mod:6, part:'Summary', title:'Cheat sheet — per-lesson takeaways + RAG design checklist', desc:'The takeaways of all 18 lessons, a checklist for designing a new RAG system, and 2 capstone quizzes to self-diagnose failures.'},
+  {id:'m6-l1', mod:6, part:'Summary', title:'Cheat sheet — per-lesson takeaways + RAG design checklist', desc:'The takeaways of all 19 lessons, a checklist for designing a new RAG system, and 2 capstone quizzes to self-diagnose failures.'},
 ];
 
 const PANES = ['overview','complete'];

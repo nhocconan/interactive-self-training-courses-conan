@@ -43,6 +43,14 @@ const COURSES = [
     level: "Beginner", durationMin: 120, tags: ["AI", "Prompting", "Models", "Playbook"],
   },
   {
+    slug: "chatgpt-work-claude-cowork",
+    title: "ChatGPT Work & Claude Cowork thực chiến",
+    description: "Practical guide cho người không code: giao task nhiều bước, xử lý file, tạo report · spreadsheet · deck, kiểm chứng đầu ra và đưa workflow lặp lại vào vận hành có giám sát.",
+    htmlPath: "chatgpt-work-claude-cowork-practical-guide.html",
+    categorySlug: "ai-engineering",
+    level: "Beginner", durationMin: 160, tags: ["AI", "ChatGPT Work", "Claude Cowork", "Non-coder"],
+  },
+  {
     slug: "rag-information-retrieval",
     title: "RAG & Information Retrieval",
     description: "Hands-on tour of RAG: chunking, embeddings, vector search, re-ranking, multi-layer caching (prompt/semantic/retrieval) and evaluation.",
