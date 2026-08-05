@@ -1,8 +1,10 @@
 # Anthropic · Claude Cowork — source digest
 
-Verified against official Anthropic/Claude sources on 2026-07-26. Cowork is
-evolving quickly, including beta surfaces; the course must date capabilities
-and avoid claiming that every plan, tenant, or device has the same feature set.
+Verified against official Anthropic/Claude sources on 2026-07-26; re-verified
+2026-08-05 (no new Cowork product announcement in that window — the last
+officially documented Cowork change is 2026-07-07). Cowork is evolving
+quickly, including beta surfaces; the course must date capabilities and avoid
+claiming that every plan, tenant, or device has the same feature set.
 
 ## Key concepts & definitions
 
@@ -19,7 +21,18 @@ and avoid claiming that every plan, tenant, or device has the same feature set.
 - **Starting Cowork.** Chat and Cowork share the Claude home. On supported
   surfaces, select Cowork near the message box and describe the task. Desktop
   is the fullest experience because it can reach local files and a browser.
+  Web and mobile are in beta for Max, Team, and Enterprise, rolling out to Pro
+  (as of 2026-08-05).
   Source: https://support.claude.com/en/articles/15520349-use-claude-cowork-on-web-desktop-and-mobile
+- **Dispatch (assign from anywhere).** From the mobile app, a task can be
+  assigned to the user's own computer: Claude Desktop must be open and the
+  computer awake while Claude works. Beta for Pro and Max. This is the local
+  path, distinct from remote cloud sessions.
+  Source: https://support.claude.com/en/articles/13947068-assign-tasks-from-anywhere-in-claude-cowork
+- **Team/Enterprise admin defaults.** Cloud (remote) sessions are on by
+  default for Team and off (manual activation) for Enterprise; Enterprise
+  admins get group- and custom-role-level control.
+  Source: https://support.claude.com/en/articles/13455879-use-claude-cowork-on-team-and-enterprise-plans
 - **Remote sessions.** Cowork sessions run remotely by default in the current
   beta rollout. Work can continue in the background and sessions can move
   between surfaces. Reaching local files, local connectors, browser, or
@@ -56,20 +69,42 @@ and avoid claiming that every plan, tenant, or device has the same feature set.
   into Cowork; Cowork memory is supported inside Projects. Cowork sessions are
   not shareable; some artifacts/plugins are desktop-only.
   Source: https://support.claude.com/en/articles/13345190-get-started-with-claude-cowork
-- **Computer use.** Computer use is a research preview for eligible Pro/Max
-  users on desktop. It can click, type, and navigate apps; there is no sandbox
-  between the agent and what is visible on screen. The user should begin with
-  low-stakes tasks, block sensitive apps, and monitor actions.
+- **Computer use.** Computer use is a research preview for the Pro and Max
+  plans (Team and Enterprise excluded), in Cowork and Claude Code via Claude
+  Desktop on macOS and Windows. It can click, type, and navigate apps; there
+  is no sandbox between the agent and what is visible on screen. The user
+  should begin with low-stakes tasks, block sensitive apps, and monitor
+  actions.
   Sources:
   - https://support.claude.com/en/articles/14128542-let-claude-use-your-computer-in-cowork
   - https://support.claude.com/en/articles/13364135-use-claude-cowork-safely
-- **Scheduled tasks.** Scheduled Cowork tasks run remotely for paid plans and
-  can use configured connectors, skills, and plugins. They cannot be tied to a
-  local computer folder. Each run should be reviewed; sensitive data,
-  messages, purchases, and hard-to-undo actions are poor unattended tasks.
+- **Scheduled tasks.** Scheduled Cowork tasks run remotely for paid plans
+  (Pro, Max, Team, Enterprise; rollout started with Max) and can use
+  configured connectors, skills, and plugins — even when the computer is
+  asleep or Claude Desktop is closed. They cannot be tied to a local computer
+  folder. Each run should be reviewed; sensitive data, messages, purchases,
+  and hard-to-undo actions are poor unattended tasks.
   Sources:
   - https://support.claude.com/en/articles/13854387-schedule-recurring-tasks-in-claude-cowork
   - https://support.claude.com/en/articles/13364135-use-claude-cowork-safely
+- **Connector write actions grow over time.** The Microsoft 365 connector
+  gained write tools on 2026-07-07 (draft/send email, manage calendar events,
+  update OneDrive/SharePoint files) while Teams remains read-only — an example
+  of why read-vs-write must be checked per connector, per workspace, per date.
+  Source: https://support.claude.com/en/articles/12138966-release-notes
+- **Role-based tutorials and workflows.** Anthropic publishes a role-indexed
+  tutorials hub (HR, marketing, finance) at claude.com/resources/tutorials,
+  including a marketing-ops weekly review walkthrough (build a prep skill →
+  schedule the prep run → run the review from the auto-generated draft → fold
+  corrections back into the skill). An internal Anthropic case study
+  (2026-07-08) reports a weekly marketing metrics review going from 1–2 days
+  to ~2 hours with connectors and skills. Claude for Small Business
+  (2026-05-13) toggles on inside Cowork with 15 agentic workflows across
+  finance, ops, sales, marketing, HR, and customer service.
+  Sources:
+  - https://claude.com/resources/tutorials/using-claude-cowork-for-marketing-ops-review
+  - https://claude.com/blog/how-anthropics-marketing-operations-team-uses-claude-cowork-to-automate-reporting-and-campaign-builds
+  - https://www.anthropic.com/news/claude-for-small-business
 
 ## Figures worth recreating
 
