@@ -525,10 +525,10 @@ footer.site{border-top:1px solid var(--border);padding:26px 24px;text-align:cent
             <tr><td><b>Golden set / eval dataset</b></td><td>Bộ task chuẩn (bắt đầu 20–50 từ lỗi thật) dùng để đo agent qua mỗi thay đổi.</td></tr>
             <tr><td><b>LLM-as-judge</b></td><td>Dùng một LLM chấm output theo rubric — bắt được nuance mà code không bắt, nhưng non-deterministic và có bias.</td></tr>
             <tr><td><b>Position / verbosity / self-preference bias</b></td><td>Ba thiên lệch đo được của LLM judge: theo thứ tự hiện, theo độ dài, và thiên vị output cùng họ model.</td></tr>
-            <tr><td><b>pass@k vs pass^k</b></td><td>pass@k = xác suất ít nhất 1 trong k lần đúng; pass^k = xác suất CẢ k lần đúng. User production gặp pass^k.</td></tr>
+            <tr><td><b>pass@k vs pass^k</b></td><td>pass@k = xác suất ít nhất 1 trong k lần đúng; pass^k = xác suất CẢ k lần đúng (đề xuất bởi τ-bench). Số headline nên là <b>p</b> — tỷ lệ đúng một-shot, cái user gặp mỗi lượt; pass^k là bài stress test độ nhất quán, với mọi p thực tế nó tiến về 0 khi k lớn nên đọc như chẩn đoán chứ không phải ngưỡng gate.</td></tr>
             <tr><td><b>Trace / span</b></td><td>Trace = một lần chạy agent end-to-end; span = một đơn vị việc trong đó (một LLM call, tool call, retrieval) với latency/token/cost riêng.</td></tr>
             <tr><td><b>gen_ai.* (OpenTelemetry GenAI)</b></td><td>Bộ semantic convention đang ở mức Development và đã chuyển sang repository riêng; pin version/commit khi triển khai. Nội dung prompt/tool args vẫn là opt-in để tránh rò PII.</td></tr>
-            <tr><td><b>Drift</b></td><td>Chất lượng/hành vi model tụt dần theo thời gian không do input đổi — chỉ online eval liên tục mới bắt được.</td></tr>
+            <tr><td><b>Drift (hai loại)</b></td><td><b>Behavior drift</b> = provider/model đổi hành vi trong khi input không đổi — bắt sớm nhất bằng chính bộ eval offline chạy theo lịch trên endpoint live. <b>Distribution drift</b> = input user đổi nên bộ offline không còn đại diện thực tế — loại này mới cần sample online.</td></tr>
             <tr><td><b>Guardrail / tripwire</b></td><td>Checkpoint chặn cứng ở input/tool/output; tripwire = cờ dừng thực thi ngay, khác filter khuyên nhủ.</td></tr>
             <tr><td><b>Eval-driven development</b></td><td>Biến mỗi lỗi prod thành một eval case rồi gác CI — như TDD nhưng chấm bằng eval.</td></tr>
             <tr><td><b>Shadow / canary / rainbow deployment</b></td><td>Các tầng rollout: shadow mirror 100% không lộ user; canary phục vụ 1–5% traffic thật; rainbow dịch traffic dần cho session stateful.</td></tr>
@@ -1090,8 +1090,14 @@ footer.site{border-top:1px solid var(--border);padding:26px 24px;text-align:cent
         <text class="dgm-ink2" x="610" y="34" font-size="11" font-family="IBM Plex Mono" text-anchor="end">Đắt, đáng tin</text>
         <defs><marker id="m2l3-ah" markerWidth="9" markerHeight="9" refX="7" refY="4.5" orient="auto"><path d="M0 0 L9 4.5 L0 9 z" fill="var(--accent-2)"/></marker></defs>
       </svg>
-      <figcaption><b>Hình 2.3</b> — Bạn không chọn một loại — bạn triangulate: check được bằng code thì dùng code (rẻ, tất định, miễn nhiễm bias), dành judge cho nuance, và dùng human để <em>calibrate</em> cả hai. Phổ đi từ rẻ/giòn sang đắt/đáng tin.</figcaption>
+      <figcaption><b>Hình 2.3</b> — Bạn không chọn một loại — bạn triangulate: check được bằng code thì dùng code (rẻ, tất định — nhưng có bias riêng của nó, xem callout dưới), dành judge cho nuance, và dùng human để <em>calibrate</em> cả hai. Phổ đi từ rẻ/giòn sang đắt/đáng tin.</figcaption>
     </figure>
+
+    <div class="callout warn">
+      <div class="callout-title">Code grader không "miễn nhiễm bias" — nó có bias riêng</div>
+      <p>Tất định và rẻ thì đúng. Nhưng một code grader chỉ chấp nhận <em>hình dạng câu trả lời mà tác giả của nó tưởng tượng ra</em>. Một lời giải hợp lệ nhưng khác dạng sẽ bị đánh fail — lặng lẽ, không exception, không cảnh báo — và bạn ngồi sửa model cho một thứ không hỏng. Đó là false negative có hệ thống, đúng nghĩa một bias; chỉ là bias của người viết grader thay vì của model. Bạn sẽ gặp lại chính chuyện này ở bài 3.3: điểm CORE-Bench của Opus 4.5 nhảy từ 42% lên 95% chỉ vì sửa một grader cứng nhắc.</p>
+      <p>Nên code grader cũng phải được kiểm lại. Tối thiểu: đọc transcript những ca nó đánh fail, xem có ca nào bị oan. Tốt hơn: đối chiếu một lát cắt với nhãn người — đúng cái kỷ luật calibrate mà bạn áp cho judge.</p>
+    </div>
 
     <div class="callout info">
       <div class="callout-title">Tool-call: dùng đúng loại grader</div>
@@ -1123,7 +1129,7 @@ footer.site{border-top:1px solid var(--border);padding:26px 24px;text-align:cent
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true" focusable="false"><path d="M12 2v6m0 8v6M4.9 4.9l4.2 4.2m5.8 5.8l4.2 4.2M2 12h6m8 0h6M4.9 19.1l4.2-4.2m5.8-5.8l4.2-4.2"/></svg>
         Takeaway
       </span>
-      <p>Check được bằng code thì <span class="hl">đừng dùng LLM judge</span> — code-based grader rẻ, tất định, miễn nhiễm bias. Dành judge cho nuance thật sự, và dùng human để calibrate cả hai.</p>
+      <p>Check được bằng code thì <span class="hl">đừng dùng LLM judge</span> — code-based grader rẻ và tất định. Nhưng nó có bias riêng: chỉ nhận đúng hình dạng đáp án tác giả nghĩ ra, nên cũng phải đối chiếu với nhãn người. Dành judge cho nuance thật sự, và dùng human để calibrate cả hai.</p>
     </div>
 
     <div class="quiz" data-correct="1">
@@ -1261,7 +1267,7 @@ footer.site{border-top:1px solid var(--border);padding:26px 24px;text-align:cent
     <div class="concept">
       <span class="eyebrow">Khái niệm</span>
       <h4>Ba bias đo được (MT-Bench, Zheng et al. 2023)</h4>
-      <p><strong>Position bias</strong>: verdict đổi theo câu nào hiện trước, độc lập chất lượng. <strong>Verbosity bias</strong>: judge thiên vị câu dài hơn "dù không rõ ràng, chất lượng hay chính xác hơn". <strong>Self-enhancement (self-preference) bias</strong>: judge thiên vị output do chính nó hoặc model cùng họ sinh ra. Các con số (đều từ MT-Bench): position-bias consistency của một judge chỉ <strong>65%</strong> với GPT-4 (nghĩa là ~30% vẫn theo vị trí đầu) — nhưng lên <strong>98.8%</strong> khi hai câu chênh nhau rõ về chất lượng (bias chủ yếu quan trọng ở các ca sát nút).</p>
+      <p><strong>Position bias</strong>: verdict đổi theo câu nào hiện trước, độc lập chất lượng. <strong>Verbosity bias</strong>: judge thiên vị câu dài hơn "dù không rõ ràng, chất lượng hay chính xác hơn". <strong>Self-enhancement (self-preference) bias</strong>: judge thiên vị output do chính nó hoặc model cùng họ sinh ra — cách trị là chọn judge <em>khác họ model</em> với model đang bị chấm, hoặc đo thẳng độ lệch bằng hai judge chéo họ; và tuyệt đối đừng dùng judge cùng họ để so pairwise output nhà mình với output đối thủ. Các con số (đều từ MT-Bench): position-bias consistency của một judge chỉ <strong>65%</strong> với GPT-4 (nghĩa là ~30% vẫn theo vị trí đầu) — nhưng lên <strong>98.8%</strong> khi hai câu chênh nhau rõ về chất lượng (bias chủ yếu quan trọng ở các ca sát nút).</p>
     </div>
 
     <figure class="figure">
@@ -1296,6 +1302,12 @@ footer.site{border-top:1px solid var(--border);padding:26px 24px;text-align:cent
       <span class="eyebrow">Khái niệm</span>
       <h4>Calibrate bằng TPR/TNR, và thích binary hơn Likert</h4>
       <p>Hamel: calibrate judge trên một <strong>tập nhãn giữ riêng</strong>, nhắm <strong>True Positive Rate</strong> và <strong>True Negative Rate</strong> cao; nếu lệch nhiều thì "đổi model đi" thay vì chỉnh prompt mãi. Và ưu tiên <strong>nhãn binary pass/fail</strong> hơn thang Likert: "khác biệt giữa 3 và 4 là chủ quan và không nhất quán giữa người chấm". Thang nhiều điểm là "nâng cao và thường không cần thiết".</p>
+    </div>
+
+    <div class="callout warn">
+      <div class="callout-title">Judge là một dependency — hãy pin nó</div>
+      <p>Một judge đã calibrate là một dụng cụ đo đã hiệu chuẩn, và nó sẽ trôi nếu bạn để bất kỳ mảnh nào của nó tự đổi. Pin cả ba mảnh: <strong>model ID</strong> của judge (đúng snapshot cụ thể, không phải alias trỏ "bản mới nhất"), <strong>version của rubric</strong>, và <strong>hash của prompt template</strong>. Đổi bất kỳ cái nào trong ba là một cuộc <em>eval migration</em>, không phải một lần sửa prompt: chạy lại tập nhãn giữ riêng, so TPR/TNR cũ với mới, rồi mới đổi.</p>
+      <p>Provider ship snapshot mới cũng chạy lại đúng tập nhãn đó trước khi chuyển sang. Và định kỳ lấy một lát cắt nhỏ verdict production cho người chấm lại — hiệu chuẩn là việc lặp theo nhịp, không phải việc làm một lần rồi quên.</p>
     </div>
 
     <div class="callout info">
@@ -1352,8 +1364,9 @@ footer.site{border-top:1px solid var(--border);padding:26px 24px;text-align:cent
 
     <div class="concept">
       <span class="eyebrow">Khái niệm</span>
-      <h4>pass@k vs pass^k (Anthropic)</h4>
-      <p>Với k lần thử: <strong>pass@k</strong> = "xác suất agent có ít nhất một lời giải đúng trong k lần" — hữu ích khi một lần thành công là đủ. <strong>pass^k</strong> = "xác suất cả k lần đều đúng" — metric quan trọng cho agent hướng-khách-hàng phải nhất quán mỗi lần, không chỉ giỏi một lần. Minh họa đắt giá: "ở k=1 chúng bằng nhau. Tới k=10, pass@k tiến gần 100% còn pass^k rơi về 0%." Team chỉ tối ưu pass@k có thể ship một agent đẹp trên giấy nhưng hỏng phần lớn tương tác thật.</p>
+      <h4>pass@k vs pass^k (τ-bench, Yao et al.)</h4>
+      <p>Với k lần thử: <strong>pass@k</strong> = "xác suất agent có ít nhất một lời giải đúng trong k lần" — hữu ích khi một lần thành công là đủ. <strong>pass^k</strong> = "xác suất cả k lần đều đúng" — chỉ số này do <a href="https://arxiv.org/abs/2406.12045" target="_blank" rel="noreferrer">τ-bench (Yao et al., Sierra, 2024)</a> đề xuất làm thước đo độ tin cậy, và Anthropic là bên dùng lại rồi phổ biến nó. Con số của chính paper đó: gpt-4o thành công <strong>&lt;50%</strong> số task, và "khá thiếu nhất quán (pass^8 &lt;25% ở miền retail)" — phần lớn cái nó làm được một lần, nó không làm được tám lần liên tiếp.</p>
+      <p><strong>Đọc hai chỉ số này cho đúng vai.</strong> Số headline nên là <strong>p</strong> — tỷ lệ đúng một-shot, đúng cái một user gặp ở mỗi lượt. pass^k <em>không</em> phải một ngưỡng để gate: với mọi p thực tế, pass^k = p<sup>k</sup> tiến về 0 khi k lớn, kể cả với một agent rất tốt, nên đặt luật "pass^8 phải ≥ X%" là tự đặt bẫy cho mình. Vai của nó là <em>stress test độ nhất quán</em>: so hai phiên bản ở cùng một k, hoặc trả lời "trong tám khách hỏi cùng một việc, bao nhiêu người được phục vụ như nhau".</p>
     </div>
 
     <figure class="figure">
@@ -1375,7 +1388,7 @@ footer.site{border-top:1px solid var(--border);padding:26px 24px;text-align:cent
         <text class="dgm-ink2" x="360" y="120" font-size="10" font-family="IBM Plex Mono" text-anchor="middle">"ít nhất 1 lần đúng"</text>
         <text class="dgm-ink2" x="360" y="176" font-size="10" font-family="IBM Plex Mono" text-anchor="middle">"cả k lần đều đúng"</text>
       </svg>
-      <figcaption><b>Hình 3.3</b> — Ở k=1 hai metric bằng nhau; tới k=10 chúng phân kỳ hoàn toàn — pass@k tiến ~100%, pass^k rơi ~0%. Metric bạn tối ưu quyết định "đáng tin" nghĩa là gì. User production sống với pass^k (k=1 là cái họ gặp mỗi lần).</figcaption>
+      <figcaption><b>Hình 3.3</b> — Ở k=1 hai metric bằng nhau, và đều bằng p — đó là số headline, cái user gặp mỗi lượt. Tăng k thì chúng phân kỳ: pass@k tiến ~100%, pass^k tiến ~0% với mọi p thực tế. Nên pass^k đọc như một bài stress test độ nhất quán để so hai phiên bản, không phải một ngưỡng để gate.</figcaption>
     </figure>
 
     <div class="callout danger">
@@ -1393,7 +1406,7 @@ footer.site{border-top:1px solid var(--border);padding:26px 24px;text-align:cent
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true" focusable="false"><path d="M12 2v6m0 8v6M4.9 4.9l4.2 4.2m5.8 5.8l4.2 4.2M2 12h6m8 0h6M4.9 19.1l4.2-4.2m5.8-5.8l4.2-4.2"/></svg>
         Takeaway
       </span>
-      <p><span class="hl">pass@k đẹp trên giấy, pass^k là cái user gặp</span> — báo cả hai, nhất là trước khi launch. Và đừng tin điểm eval khi chưa đọc transcript: 0% thường là task hỏng, và một grading bug có thể xê dịch điểm hơn 50 điểm.</p>
+      <p><span class="hl">pass@k đẹp trên giấy; số user thật sự gặp là p (một-shot)</span> — báo p làm headline, kèm pass^k như một bài stress test độ nhất quán, nhất là trước khi launch. Và đừng tin điểm eval khi chưa đọc transcript: 0% thường là task hỏng, và một grading bug có thể xê dịch điểm hơn 50 điểm.</p>
     </div>
 
     <div class="quiz" data-correct="1">
@@ -1534,12 +1547,12 @@ footer.site{border-top:1px solid var(--border);padding:26px 24px;text-align:cent
     <div class="concept">
       <span class="eyebrow">Khái niệm</span>
       <h4>Quy ước <code>gen_ai.*</code> — hữu ích nhưng chưa đóng băng</h4>
-      <p>OpenTelemetry GenAI đặt tên span theo thao tác, không phải chữ tự do: span inference tên <code>"{gen_ai.operation.name} {gen_ai.request.model}"</code> — ví dụ <code>chat gpt-4o</code>; span tool tên <code>"execute_tool {gen_ai.tool.name}"</code>. Các well-known value gồm <code>chat</code>, <code>execute_tool</code>, <code>retrieval</code>, <code>invoke_agent</code>… Token đo bằng <code>gen_ai.usage.input_tokens</code> / <code>output_tokens</code>. Nhưng đây là <strong>snapshot 26/07/2026</strong>, không phải schema bất biến.</p>
+      <p>OpenTelemetry GenAI đặt tên span theo thao tác, không phải chữ tự do: span inference tên <code>"{gen_ai.operation.name} {gen_ai.request.model}"</code> — ví dụ <code>chat gpt-4o</code>; span tool tên <code>"execute_tool {gen_ai.tool.name}"</code>. Các well-known value gồm <code>chat</code>, <code>execute_tool</code>, <code>retrieval</code>, <code>invoke_agent</code>… Token đo bằng <code>gen_ai.usage.input_tokens</code> / <code>output_tokens</code>. Nhưng đây là <strong>snapshot 21/08/2026</strong>, không phải schema bất biến.</p>
     </div>
 
     <div class="callout warn">
-      <div class="callout-title">Maturity check · 26/07/2026</div>
-      <p><a href="https://opentelemetry.io/docs/specs/semconv/registry/attributes/gen-ai/" target="_blank" rel="noreferrer">Registry OpenTelemetry 1.43.0</a> đánh dấu các value của <code>gen_ai.operation.name</code> là <strong>Development</strong>; nhóm GenAI đã chuyển sang repository riêng và nhiều entry ở registry cũ mang trạng thái moved/deprecated. Khi triển khai: pin semantic-convention version hoặc commit, map telemetry nội bộ qua một adapter, test dashboard trên cả schema cũ/mới khi migration. Ý tưởng ổn định là trace/span + metadata an toàn; tên attribute cụ thể có thể đổi.</p>
+      <div class="callout-title">Maturity check · 21/08/2026</div>
+      <p>Nội dung <code>gen_ai.*</code> nay sống ở một repo riêng: <a href="https://github.com/open-telemetry/semantic-conventions-genai" target="_blank" rel="noreferrer">open-telemetry/semantic-conventions-genai</a>. Tính tới 21/08/2026 repo đó <strong>chưa có release hay tag nào</strong> — nên trên thực tế bạn không pin được "version convention"; bạn pin một <strong>commit</strong>, hoặc pin theo release của thư viện instrumentation mình dùng. Các value của <code>gen_ai.operation.name</code> vẫn ở mức <strong>Development</strong>, nhưng nay đã phủ cả vòng đời agent — <code>create_agent</code>, <code>invoke_agent</code>, <code>invoke_workflow</code>, <code>plan</code>, và nhóm thao tác memory — và quy ước cho MCP cũng nằm trong repo này. Khi triển khai: map telemetry nội bộ qua một adapter, test dashboard trên cả schema cũ/mới khi migration. Ý tưởng ổn định là trace/span + metadata an toàn; tên attribute cụ thể có thể đổi.</p>
     </div>
 
     <p>Phần content giữ nguyên nguyên tắc an toàn: prompt, output và tool arguments là dữ liệu nhạy cảm. Chỉ ghi <code>gen_ai.input.messages</code>/<code>output.messages</code> khi đã bật có chủ đích qua policy, sampling và redaction; metadata như model, token, latency, finish reason là baseline quan sát rẻ hơn.</p>
@@ -1633,7 +1646,7 @@ footer.site{border-top:1px solid var(--border);padding:26px 24px;text-align:cent
       <span class="eyebrow">Sau bài này bạn có thể</span>
       <ul>
         <li>Phân biệt ba chế độ: offline eval, guardrail inline, online eval.</li>
-        <li>Giải thích vì sao chỉ online mới bắt được drift.</li>
+        <li>Tách hai loại drift — behavior vs distribution — và biết làn nào bắt được loại nào.</li>
         <li>Khép vòng: trace lỗi production → làm giàu golden dataset.</li>
       </ul>
     </div>
@@ -1643,7 +1656,7 @@ footer.site{border-top:1px solid var(--border);padding:26px 24px;text-align:cent
     <div class="concept">
       <span class="eyebrow">Khái niệm</span>
       <h4>Ba làn, ba ràng buộc latency</h4>
-      <p><strong>Offline</strong> (pre-deploy): unit test tất định + LLM-judge trên golden set, gác cổng ship. <strong>Guardrail</strong> (inline, trong prod): kiểm từng request với ngân sách millisecond, chặn <em>trước</em> khi trả lời. <strong>Online</strong> (post-deploy): sample traffic thật, chấm async, cảnh báo khi điểm cuộn tụt. Phân biệt then chốt (nguyên văn): "một evaluator chấm chất lượng output async, sau khi việc xảy ra, còn một guardrail chặn một failure mode cụ thể inline, với yêu cầu độ trễ millisecond." <strong>Drift</strong> — "thay đổi ngoài ý muốn trong hành vi/tông/chất lượng suy luận theo thời gian mà không có thay đổi input rõ ràng" — chỉ online bắt được, vì offline "không lường được input chưa thấy".</p>
+      <p><strong>Offline</strong> (pre-deploy): unit test tất định + LLM-judge trên golden set, gác cổng ship. <strong>Guardrail</strong> (inline, trong prod): kiểm từng request với ngân sách millisecond, chặn <em>trước</em> khi trả lời. <strong>Online</strong> (post-deploy): sample traffic thật, chấm async, cảnh báo khi điểm cuộn tụt. Phân biệt then chốt (nguyên văn): "một evaluator chấm chất lượng output async, sau khi việc xảy ra, còn một guardrail chặn một failure mode cụ thể inline, với yêu cầu độ trễ millisecond." <strong>Drift</strong> — "thay đổi ngoài ý muốn trong hành vi/tông/chất lượng suy luận theo thời gian" — có hai loại, và hai loại đó không cùng một người bắt (callout ngay dưới).</p>
     </div>
 
     <figure class="figure">
@@ -1661,14 +1674,25 @@ footer.site{border-top:1px solid var(--border);padding:26px 24px;text-align:cent
         <rect class="dgm-accent" x="20" y="156" width="600" height="60" rx="8" stroke-width="2"/>
         <text class="dgm-ink" x="34" y="176" font-size="11" font-weight="700">Online — post-deploy</text>
         <text class="dgm-ink2" x="34" y="194" font-size="10" font-family="IBM Plex Mono">sample 5–10% traffic (ví dụ, không phải chuẩn ngành) → judge async → cảnh báo khi tụt</text>
-        <text class="dgm-ink2" x="34" y="208" font-size="10" font-family="IBM Plex Mono">→ bắt DRIFT mà offline không thấy</text>
+        <text class="dgm-ink2" x="34" y="208" font-size="10" font-family="IBM Plex Mono">→ bắt DISTRIBUTION DRIFT mà offline không đại diện nổi</text>
 
         <path class="dgm-flow" d="M600 156 Q625 120 622 78" stroke-width="2.5" marker-end="url(#m4l3-ah)"/>
         <text class="dgm-ink2" x="612" y="120" font-size="9" font-family="IBM Plex Mono" text-anchor="end">lỗi → golden set ↑</text>
         <defs><marker id="m4l3-ah" markerWidth="9" markerHeight="9" refX="7" refY="4.5" orient="auto"><path d="M0 0 L9 4.5 L0 9 z" fill="var(--accent-2)"/></marker></defs>
       </svg>
-      <figcaption><b>Hình 4.3</b> — Ba chế độ giải ba bài toán khác nhau ở ba ràng buộc latency, nối bằng một feedback loop: trace lỗi từ online quay về làm giàu golden dataset của offline. Guardrail chặn inline (bài 5.3); evaluator chấm async. Drift chỉ hiện ở làn online.</figcaption>
+      <figcaption><b>Hình 4.3</b> — Ba chế độ giải ba bài toán khác nhau ở ba ràng buộc latency, nối bằng một feedback loop: trace lỗi từ online quay về làm giàu golden dataset của offline. Guardrail chặn inline (bài 5.3); evaluator chấm async. Behavior drift hiện sớm nhất ở làn offline chạy theo lịch; distribution drift thì chỉ làn online thấy.</figcaption>
     </figure>
+
+    <div class="callout insight">
+      <div class="callout-title">Hai loại drift, hai người bắt khác nhau</div>
+      <p><strong>Behavior drift</strong>: provider đổi model hoặc snapshot, hành vi lệch đi trong khi input của bạn không đổi gì cả. Loại này <em>không</em> cần online eval. Chính bộ offline của bạn — chạy theo lịch (ví dụ mỗi đêm) trên endpoint live thay vì chỉ chạy khi có commit — là cách bắt sớm nhất và rẻ nhất: cùng input, cùng grader, nên điểm tụt là một tín hiệu sạch, không lẫn nhiễu từ việc user hỏi thứ khác.</p>
+      <p><strong>Distribution drift</strong>: model không đổi, nhưng user bắt đầu hỏi những việc khác — bộ offline của bạn thôi không còn đại diện cho thực tế nữa. Loại này chỉ sample traffic thật mới thấy, vì theo đúng định nghĩa nó nằm ngoài cái bạn nghĩ ra trước lúc ship. Đây mới là việc của làn online. Nhầm hai loại là cách người ta dựng cả một đường ống online eval để bắt thứ mà một cron job nightly đã bắt được từ lâu.</p>
+    </div>
+
+    <div class="callout success">
+      <div class="callout-title">Sample online có phân tầng, đừng ngẫu nhiên thuần</div>
+      <p>Sample ngẫu nhiên 5% thì 95% cái bạn đọc là những run bình thường. Đảo ngược ưu tiên: lấy <strong>100% các run có tín hiệu xấu</strong> — user hỏi lại cùng một việc, user bỏ giữa chừng, ca escalate cho người, tool trả lỗi, guardrail nổ tripwire, thumbs-down — cộng một lát cắt ngẫu nhiên nhỏ làm đường nền để biết "bình thường" trông ra sao. Bản thân các tín hiệu hành vi đó đã là nhãn miễn phí: không cần judge nào để biết một user hỏi lại ba lần là chưa được phục vụ.</p>
+    </div>
 
     <div class="callout info">
       <div class="callout-title">Khép vòng flywheel (nhắc bài 1.3)</div>
@@ -1685,16 +1709,16 @@ footer.site{border-top:1px solid var(--border);padding:26px 24px;text-align:cent
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true" focusable="false"><path d="M12 2v6m0 8v6M4.9 4.9l4.2 4.2m5.8 5.8l4.2 4.2M2 12h6m8 0h6M4.9 19.1l4.2-4.2m5.8-5.8l4.2-4.2"/></svg>
         Takeaway
       </span>
-      <p>Offline gác ship, guardrail chặn inline, online chấm mẫu prod — <span class="hl">chỉ online bắt được drift</span>, và trace lỗi online quay về nuôi golden dataset. Ba làn, ba ràng buộc latency, một feedback loop.</p>
+      <p>Offline gác ship, guardrail chặn inline, online chấm mẫu prod — và <span class="hl">behavior drift do offline chạy theo lịch bắt, distribution drift mới cần online</span>, còn trace lỗi online quay về nuôi golden dataset. Ba làn, ba ràng buộc latency, một feedback loop.</p>
     </div>
 
     <div class="quiz" data-correct="1">
       <span class="eyebrow">Kiểm tra nhanh</span>
       <p class="quiz-q">Agent pass toàn bộ eval offline lúc ship. Ba tuần sau chất lượng tụt dần nhưng không crash, không lỗi, input không đổi shape. Cái gì đang xảy ra và ai bắt được nó?</p>
       <button class="quiz-opt" onclick="quizPick(this,0)"><span class="quiz-letter">A</span><span>Không có gì bất thường — eval offline đã pass nên hệ vẫn ổn.</span></button>
-      <button class="quiz-opt" onclick="quizPick(this,1)"><span class="quiz-letter">B</span><span>Đây là drift — suy giảm âm thầm không do input đổi; chỉ online eval (sample + chấm liên tục) bắt được, vì offline chỉ kiểm cái nghĩ ra trước khi ship.</span></button>
+      <button class="quiz-opt" onclick="quizPick(this,1)"><span class="quiz-letter">B</span><span>Đây là behavior drift — input không đổi, nên chính bộ eval offline chạy theo lịch (vd nightly) trên endpoint live bắt được sớm nhất và rẻ nhất; online sampling để dành cho distribution drift, tức khi input user mới là cái đổi.</span></button>
       <button class="quiz-opt" onclick="quizPick(this,2)"><span class="quiz-letter">C</span><span>Là lỗi hạ tầng; thêm guardrail inline với ngân sách millisecond sẽ phát hiện suy giảm chất lượng dần này.</span></button>
-      <div class="quiz-feedback" role="status" data-explain="B đúng: mô tả đúng drift và ai bắt được nó (online eval liên tục). A bỏ sót vì offline pass không đảm bảo prod không drift. C nhầm vai — guardrail chặn failure mode cụ thể inline theo millisecond, không phải công cụ theo dõi suy giảm chất lượng dần theo tuần."></div>
+      <div class="quiz-feedback" role="status" data-explain="B đúng: input không đổi shape nên đây là behavior drift, và cùng-input-cùng-grader chính là điều kiện lý tưởng cho bộ offline — bạn chỉ cần chuyển nó từ 'chạy khi có commit' sang 'chạy theo lịch trên endpoint live'. A bỏ sót vì offline pass lúc ship không nói gì về hành vi model ba tuần sau. C nhầm vai — guardrail chặn một failure mode cụ thể inline theo millisecond, không phải công cụ theo dõi suy giảm dần theo tuần."></div>
     </div>
   </div>
   <div class="lesson-nav" data-navfor="m4-l3"></div>
@@ -1774,21 +1798,36 @@ footer.site{border-top:1px solid var(--border);padding:26px 24px;text-align:cent
       <p>"Eval case từ lỗi thật" chính là error analysis của bài 2.1 áp vào CI, và "lỗi prod mới thành case mới" là feedback loop của bài 4.3. Eval-driven development là cách ba trụ khớp thành nhịp làm việc hằng ngày.</p>
     </div>
 
+    <div>
+      <span class="eyebrow" style="display:block;margin-bottom:10px">Vệ sinh bộ eval — bốn quy tắc giữ nó còn nói thật</span>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th style="width:200px">Quy tắc</th><th>Vì sao</th></tr></thead>
+          <tbody>
+            <tr><td><b>Holdout không đụng tới</b></td><td>Cắt riêng một lát mà bạn KHÔNG bao giờ lặp prompt trên đó. Bộ bạn tinh chỉnh hằng ngày sẽ dần chỉ còn đo được khả năng khớp chính nó; holdout là thứ duy nhất còn trả lời được "có thật sự tốt lên không".</td></tr>
+            <tr><td><b>Chia tầng theo nhịp</b></td><td>smoke (nhanh, mỗi PR) · full (mỗi đêm) · holdout (trước release). Chạy tất cả ở mọi PR thì hoặc quá chậm hoặc quá đắt — và cái gì chậm thì sớm muộn cũng bị tắt.</td></tr>
+            <tr><td><b>Case có chủ, có hạn</b></td><td>Mỗi case ghi rõ ai sở hữu và nó tồn tại vì lỗi nào. Case mã hoá một hành vi mà sản phẩm cố tình đổi thì <em>retire kèm ghi chú</em> — khác hẳn việc lặng lẽ xoá một case đang fail cho gate xanh.</td></tr>
+            <tr><td><b>Version cùng repo</b></td><td>Bộ eval đi cùng code trong git: một commit luôn ứng với đúng một định nghĩa "tốt". Bộ eval sống trong Google Sheet thì điểm hôm nay không so được với điểm tháng trước.</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
     <div class="takeaway">
       <span class="eyebrow">
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true" focusable="false"><path d="M12 2v6m0 8v6M4.9 4.9l4.2 4.2m5.8 5.8l4.2 4.2M2 12h6m8 0h6M4.9 19.1l4.2-4.2m5.8-5.8l4.2-4.2"/></svg>
         Takeaway
       </span>
-      <p>Biến mỗi lỗi production thành một <span class="hl">eval case vĩnh viễn</span> trước khi sửa — như TDD nhưng chấm bằng eval. Bắt đầu ~20 case; giai đoạn đầu effect size lớn nên chưa cần N khổng lồ.</p>
+      <p>Biến mỗi lỗi production thành một <span class="hl">eval case, mặc định giữ vĩnh viễn</span> trước khi sửa — như TDD nhưng chấm bằng eval. Mỗi case có một chủ và một lý do tồn tại; chỉ retire kèm ghi chú khi hành vi sản phẩm cố tình đổi. Bắt đầu ~20 case; giai đoạn đầu effect size lớn nên chưa cần N khổng lồ.</p>
     </div>
 
     <div class="quiz" data-correct="0">
       <span class="eyebrow">Kiểm tra nhanh</span>
       <p class="quiz-q">Một user báo agent xử sai một loại ticket. Cách phản ứng theo eval-driven development là gì?</p>
-      <button class="quiz-opt" onclick="quizPick(this,0)"><span class="quiz-letter">A</span><span>Biến ca lỗi thành một eval case (fail trước), sửa prompt/tool tới khi gate xanh, giữ case đó vĩnh viễn để chống tái phát.</span></button>
+      <button class="quiz-opt" onclick="quizPick(this,0)"><span class="quiz-letter">A</span><span>Biến ca lỗi thành một eval case (fail trước), sửa prompt/tool tới khi gate xanh, và giữ case đó — mặc định vĩnh viễn, có chủ và có lý do tồn tại; chỉ retire kèm ghi chú nếu sau này sản phẩm cố tình đổi hành vi đó.</span></button>
       <button class="quiz-opt" onclick="quizPick(this,1)"><span class="quiz-letter">B</span><span>Sửa prompt ngay theo trực giác rồi deploy, không thêm test — để đỡ mất thời gian.</span></button>
       <button class="quiz-opt" onclick="quizPick(this,2)"><span class="quiz-letter">C</span><span>Chờ gom đủ vài trăm ca tương tự rồi mới xử lý một thể cho có ý nghĩa thống kê.</span></button>
-      <div class="quiz-feedback" role="status" data-explain="A đúng: đây là vòng eval-driven — regression thành test vĩnh viễn. B là ship-then-hope, không lưới, dễ làm lệch case khác. C trì hoãn vô ích — giai đoạn đầu effect size lớn, một case cũng đủ bắt đầu."></div>
+      <div class="quiz-feedback" role="status" data-explain="A đúng: đây là vòng eval-driven — regression thành test, mặc định vĩnh viễn. B là ship-then-hope, không lưới, dễ làm lệch case khác. C trì hoãn vô ích — giai đoạn đầu effect size lớn, một case cũng đủ bắt đầu. Lưu ý 'vĩnh viễn' nghĩa là mặc định, không phải bất khả xâm phạm: xoá lặng lẽ một case đang fail cho gate xanh thì luôn sai, còn retire công khai kèm lý do khi sản phẩm cố tình đổi hành vi thì đúng."></div>
     </div>
   </div>
   <div class="lesson-nav" data-navfor="m5-l1"></div>
@@ -1813,7 +1852,8 @@ footer.site{border-top:1px solid var(--border);padding:26px 24px;text-align:cent
     <div class="objectives">
       <span class="eyebrow">Sau bài này bạn có thể</span>
       <ul>
-        <li>Leo thang gate: reporting mode → calibration → blocking.</li>
+        <li>Leo thang gate chấm-bằng-judge: reporting mode → calibration → blocking, và tách nó khỏi làn check tất định.</li>
+        <li>Đo sàn nhiễu của bộ eval trước khi đặt ngưỡng chặn.</li>
         <li>Giải thích vì sao không wire một judge chưa calibrate vào blocking gate.</li>
         <li>Nối calibrate gate với TPR/TNR đã học ở bài 3.2.</li>
       </ul>
@@ -1821,10 +1861,17 @@ footer.site{border-top:1px solid var(--border);padding:26px 24px;text-align:cent
 
     <p>Bạn muốn "gate CI chặn regression", nên bật blocking eval gate ngay hôm nay. Build đỏ liên tục — vì judge còn nhiễu, nó fail cả những thay đổi tốt. Sau ba ngày, cả team tắt gate cho đỡ phiền. Bạn vừa mất luôn cái gate lẽ ra bảo vệ mình.</p>
 
+    <div class="callout danger">
+      <div class="callout-title">Trước khi trao quyền chặn: đo sàn nhiễu của chính bộ eval</div>
+      <p>Một gate chỉ có nghĩa nếu tín hiệu nó đọc lớn hơn nhiễu của chính nó. Nên đo sàn nhiễu trước: chạy <em>cùng một commit</em> qua bộ eval n lần rồi xem điểm dao động trong dải nào. Ngưỡng chặn phải nằm ngoài dải đó — nếu không bạn đang fail build bằng xúc xắc. Với 50 case, 92% và 88% thường là cùng một hệ, hai lần tung của một đồng xu, không phải một regression.</p>
+      <p>Ba kỹ thuật rẻ để đọc con số cho tử tế, theo <a href="https://arxiv.org/abs/2411.00640" target="_blank" rel="noreferrer">Miller, "Adding Error Bars to Evals" (2024)</a>: (1) so <strong>paired</strong> theo từng task — cùng bộ câu hỏi cho hai phiên bản rồi làm thống kê trên chênh lệch từng câu, không phải trên hai con số tổng; (2) báo <strong>khoảng tin cậy 95%</strong> thay vì một con số trần trụi; (3) dùng <strong>clustered standard error</strong> khi nhiều case sinh ra từ cùng một nguồn — paper cho thấy sai số cụm có thể lớn hơn 3× sai số tính ngây thơ, tức bạn đang tự tin gấp ba lần mức đáng có.</p>
+    </div>
+
     <div class="concept">
       <span class="eyebrow">Khái niệm</span>
       <h4>Thang trưởng thành của gate</h4>
       <p>Đừng wire một LLM-judge chưa calibrate thẳng vào blocking gate. Leo thang (Confident AI): <strong>(1) reporting mode</strong> — điểm được log, không chặn gì; <strong>(2) calibration</strong> — người annotate các ca bất đồng, chỉnh điểm tự động khớp phán đoán người; <strong>(3) blocking gate</strong> — build fail khi điểm dưới ngưỡng. Chỉ leo lên khi bậc dưới đã đáng tin. Nguyên tắc: "gate tồi tạo alert fatigue. Gate được calibrate ngăn regression."</p>
+      <p><strong>Nhưng thang này chỉ áp cho gate chấm-bằng-judge.</strong> Các check tất định — outcome đối chiếu DB, schema validation, assertion trên tool call, trần chi phí/latency — không có gì để calibrate: chúng đúng hoặc sai, không nhiễu, không bias theo thứ tự hay độ dài. Nhóm đó phải <em>chặn ngay từ ngày đầu</em>. Nên tách cổng làm hai làn: làn tất định blocking luôn, làn judge leo thang. Trộn chung là cách bạn hoãn mất lớp bảo vệ rẻ nhất mình đang có.</p>
     </div>
 
     <figure class="figure">
@@ -1860,7 +1907,7 @@ footer.site{border-top:1px solid var(--border);padding:26px 24px;text-align:cent
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true" focusable="false"><path d="M12 2v6m0 8v6M4.9 4.9l4.2 4.2m5.8 5.8l4.2 4.2M2 12h6m8 0h6M4.9 19.1l4.2-4.2m5.8-5.8l4.2-4.2"/></svg>
         Takeaway
       </span>
-      <p>Đừng wire judge chưa calibrate vào blocking gate — <span class="hl">leo thang reporting → calibrate → blocking</span>. Gate tồi tạo alert fatigue và bị tắt; gate được calibrate mới thật sự ngăn regression.</p>
+      <p>Đừng wire judge chưa calibrate vào blocking gate — <span class="hl">leo thang reporting → calibrate → blocking</span>. Gate tồi tạo alert fatigue và bị tắt; gate được calibrate mới thật sự ngăn regression. Nhưng thang đó chỉ dành cho làn judge: check tất định chặn ngay từ ngày đầu, vì chúng không có gì để calibrate. Và đo sàn nhiễu trước khi đặt ngưỡng.</p>
     </div>
 
     <div class="quiz" data-correct="2">
@@ -1930,9 +1977,20 @@ footer.site{border-top:1px solid var(--border);padding:26px 24px;text-align:cent
       <figcaption><b>Hình 5.3</b> — Guardrail là checkpoint với primitive dừng-cứng (tripwire), không phải filter khuyên nhủ, và chạy ở ba điểm: input, mỗi tool-call, output. Tool <code>needsApproval</code> tạm dừng, trả <code>interruptions</code> + <code>state</code> để người duyệt rồi resume <em>cùng</em> run — giữ nguyên ngữ cảnh.</figcaption>
     </figure>
 
+    <div class="callout insight">
+      <div class="callout-title">Lớp phòng thủ thứ nhất nằm trong chính cái tool</div>
+      <p>Guardrail của framework là lớp thứ hai, và yếu hơn bạn tưởng: nó bypass được, không có tính transaction, và không sống sót qua retry ở tầng trên nó. Lớp thứ nhất là bản thân cái tool. Cho mỗi tool nguy hiểm một <strong>idempotency key</strong> dẫn xuất từ đối tượng nghiệp vụ — mã ticket, mã đơn — để lần gọi thứ hai không tạo thêm hiệu ứng nào; và cấp <strong>credential hẹp theo phiên</strong> thay vì một token vạn năng dùng chung.</p>
+      <p>Câu hỏi kiểm tra cho mọi tool: "nếu agent gọi tool này hai lần, hệ thống có hỏng không?" Nếu có, đó là bug của tool — đừng đi vá nó bằng một guardrail.</p>
+    </div>
+
+    <div class="callout danger">
+      <div class="callout-title">Làn adversarial: agent đọc cả những chữ user không viết</div>
+      <p>Input guardrail canh cái user gõ vào. Nhưng agent còn nuốt nội dung không ai trong đội bạn viết: kết quả web search, thân ticket khách gửi, output của một MCP server, file đính kèm. Chữ nằm trong đó có thể là chỉ thị nhắm thẳng vào model — indirect prompt injection. Việc cần làm khá cơ học: <strong>liệt kê mọi kênh</strong> nội dung ngoại lai đi vào context, <strong>bắn payload thử</strong> cho từng kênh một, rồi <strong>giữ chúng lại thành một bộ regression adversarial chạy trong CI</strong> như mọi eval case khác — vì kênh mới sẽ được thêm vào, và người thêm nó thường không nghĩ tới chuyện này.</p>
+    </div>
+
     <div class="callout info">
       <div class="callout-title">Blocking vs parallel</div>
-      <p>OpenAI cho hai chế độ chạy guardrail: <strong>blocking</strong> (guardrail xong trước khi agent bắt đầu — dùng khi "chi phí/rủi ro khởi động agent quá cao") vs <strong>parallel</strong> (<code>runInParallel:true</code>, guardrail và agent chạy song song — dùng khi latency quan trọng hơn tránh việc suy đoán). Nhớ bài 4.3: guardrail là làn inline có ngân sách millisecond.</p>
+      <p>OpenAI cho hai chế độ chạy guardrail, và <strong>parallel là mặc định</strong> — guardrail chạy song song với agent (<code>run_in_parallel=True</code> trong openai-agents-python, <code>runInParallel: true</code> trong openai-agents-js). Đổi lại: khi tripwire nổ thì model có thể đã tiêu token và chạy tool rồi. <strong>Blocking</strong> là thứ bạn phải bật có chủ đích (đặt cờ đó thành <code>false</code>): guardrail xong <em>trước</em> khi agent bắt đầu, nên không tốn token cũng không có side effect từ tool — dùng khi chi phí/rủi ro khởi động agent quá cao. Nhớ bài 4.3: guardrail là làn inline có ngân sách millisecond.</p>
     </div>
 
     <div class="takeaway">
@@ -2189,7 +2247,7 @@ footer.site{border-top:1px solid var(--border);padding:26px 24px;text-align:cent
         <text class="dgm-ink2" x="54" y="126" font-size="9.5" font-family="IBM Plex Mono">code grader (2.3)</text>
         <text class="dgm-ink2" x="54" y="142" font-size="9.5" font-family="IBM Plex Mono">judge calibrated (3.1/3.2)</text>
         <text class="dgm-ink2" x="54" y="158" font-size="9.5" font-family="IBM Plex Mono">offline + online (4.3)</text>
-        <text class="dgm-ink2" x="54" y="176" font-size="9.5" font-family="IBM Plex Mono">pass^k là thước (3.3)</text>
+        <text class="dgm-ink2" x="54" y="176" font-size="9.5" font-family="IBM Plex Mono">p headline + pass^k (3.3)</text>
 
         <rect class="dgm-box" x="420" y="72" width="180" height="120" rx="8"/>
         <text class="dgm-ink" x="434" y="92" font-size="11" font-weight="700">Trụ 3 · Gate</text>
@@ -2223,6 +2281,22 @@ footer.site{border-top:1px solid var(--border);padding:26px 24px;text-align:cent
         </tbody>
       </table>
     </div>
+
+    <span class="eyebrow" style="display:block;margin-top:18px">Tờ SLI/SLO — sáu con số đáng treo lên tường</span>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th style="width:230px">SLI</th><th>Ngưỡng của nó là một điều kiện rollback viết sẵn</th></tr></thead>
+        <tbody>
+          <tr><td>Task success một-shot (p)</td><td>Tụt dưới mức của bản đang chạy → dừng ramp (bài 5.4)</td></tr>
+          <tr><td>p95 latency end-to-end</td><td>Vượt trần → rollback, kể cả khi chất lượng vẫn tốt</td></tr>
+          <tr><td>Chi phí mỗi task <em>thành công</em></td><td>Mẫu số là task thành công chứ không phải task chạy — agent thử ba lần rồi bỏ cuộc vẫn tiêu tiền của bạn</td></tr>
+          <tr><td>Tỷ lệ escalate cho người</td><td>Tăng đột ngột = agent đang gặp một lớp việc mới (distribution drift, bài 4.3)</td></tr>
+          <tr><td>Tỷ lệ guardrail trip</td><td>Tăng = hoặc đang bị tấn công, hoặc guardrail vừa trở nên quá chặt — hai chuyện khác nhau, phải mở trace ra xem</td></tr>
+          <tr><td>Tool error rate</td><td>Lỗi tầng tool hay đội lốt "agent kém"; tách riêng ra mới sửa đúng chỗ</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p>Sáu dòng này là <em>danh sách cần đo</em>, không phải danh sách con số. Khoá này cố tình không đưa ngưỡng: một ngưỡng chỉ có nghĩa sau khi bạn đo baseline của chính hệ mình. Nhưng mỗi dòng <strong>phải</strong> có một ngưỡng viết ra trước khi ship — vì ngưỡng chưa viết ra thì lúc 2 giờ sáng nó sẽ được "quyết" bằng cảm tính của người đang trực.</p>
 
     <div class="callout warn">
       <div class="callout-title">So sánh hai kiến trúc agent: giữ ngân sách gần nhau trước đã</div>
@@ -2332,15 +2406,15 @@ footer.site{border-top:1px solid var(--border);padding:26px 24px;text-align:cent
           <tr><td><strong>1.3</strong></td><td>Reliability là flywheel ba trụ: eval định nghĩa "tốt", observability bắt thực tế, gate chặn regression — trace lỗi quay lại nuôi eval. Bỏ một mắt xích thì vòng đứng.</td></tr>
           <tr><td><strong>2.1</strong></td><td>Đừng bịa rubric — derive eval từ lỗi thật: 20–50 task rút từ trace lỗi, open→axial coding tới saturation. Metric đóng hộp như ROUGE/cosine tạo tự tin giả.</td></tr>
           <tr><td><strong>2.2</strong></td><td>Pass/fail tổng chỉ nói <em>rằng</em> agent hỏng; step-level + transition matrix nói <em>ở đâu</em> và <em>vì sao</em>. Annotate lỗi đầu tiên trước vì lỗi sau thường là cascade.</td></tr>
-          <tr><td><strong>2.3</strong></td><td>Check được bằng code thì đừng dùng LLM judge — code grader rẻ, tất định, miễn nhiễm bias. Dành judge cho nuance thật, và dùng human để calibrate cả hai.</td></tr>
+          <tr><td><strong>2.3</strong></td><td>Check được bằng code thì đừng dùng LLM judge — code grader rẻ và tất định, nhưng có bias riêng (chỉ nhận hình dạng đáp án tác giả nghĩ ra) nên cũng phải đối chiếu nhãn người. Dành judge cho nuance thật.</td></tr>
           <tr><td><strong>3.1</strong></td><td>Judge chỉ đáng tin khi rubric rõ, chấm từng chiều bằng judge riêng, cho judge đường thoát ("Unknown"), và calibrate với người. Một judge ôm mọi tiêu chí cho điểm mờ không sửa được.</td></tr>
           <tr><td><strong>3.2</strong></td><td>Judge có bias đo được theo hướng — position, verbosity, self-preference. Trị bằng swap-and-check và reference-guided (rẻ), rồi calibrate TPR/TNR trên tập nhãn giữ riêng.</td></tr>
-          <tr><td><strong>3.3</strong></td><td>pass@k đẹp trên giấy, pass^k là cái user gặp — báo cả hai trước khi launch. Và đừng tin điểm eval khi chưa đọc transcript: 0% thường là task hỏng.</td></tr>
+          <tr><td><strong>3.3</strong></td><td>pass@k đẹp trên giấy; số headline phải là p (một-shot, cái user gặp), còn pass^k là stress test độ nhất quán chứ không phải ngưỡng gate. Và đừng tin điểm eval khi chưa đọc transcript: 0% thường là task hỏng.</td></tr>
           <tr><td><strong>4.1</strong></td><td>Một run = một trace gồm nhiều span; mỗi LLM/tool/retrieval call là span con có latency/token/cost riêng — đơn vị biến "chậm 45s" thành "chậm ở đâu".</td></tr>
           <tr><td><strong>4.2</strong></td><td>gen_ai.* còn Development và đã chuyển repo: pin version/commit + adapter schema; mặc định metadata, content opt-in để không rò PII.</td></tr>
-          <tr><td><strong>4.3</strong></td><td>Offline gác ship, guardrail chặn inline, online chấm mẫu prod — chỉ online bắt drift, và trace lỗi online quay về nuôi golden set. Ba làn, ba ràng buộc latency, một feedback loop.</td></tr>
-          <tr><td><strong>5.1</strong></td><td>Biến mỗi lỗi production thành một eval case vĩnh viễn trước khi sửa — như TDD nhưng chấm bằng eval. Bắt đầu ~20 case; giai đoạn đầu effect size lớn.</td></tr>
-          <tr><td><strong>5.2</strong></td><td>Đừng wire judge chưa calibrate vào blocking gate — leo thang reporting → calibrate → blocking. Gate tồi gây alert fatigue và bị tắt.</td></tr>
+          <tr><td><strong>4.3</strong></td><td>Offline gác ship, guardrail chặn inline, online chấm mẫu prod — behavior drift do offline chạy theo lịch bắt, distribution drift mới cần online; sample online thì ưu tiên run có tín hiệu xấu. Ba làn, một feedback loop.</td></tr>
+          <tr><td><strong>5.1</strong></td><td>Biến mỗi lỗi production thành một eval case, mặc định giữ vĩnh viễn, có chủ và có lý do — retire kèm ghi chú khi sản phẩm cố tình đổi hành vi. Giữ một lát holdout không bao giờ đụng tới.</td></tr>
+          <tr><td><strong>5.2</strong></td><td>Đo sàn nhiễu trước khi đặt ngưỡng; leo thang reporting → calibrate → blocking cho gate chấm-bằng-judge, còn check tất định thì chặn ngay từ ngày đầu.</td></tr>
           <tr><td><strong>5.3</strong></td><td>Guardrail là checkpoint dừng-cứng (tripwire), không phải lời dặn trong prompt — chạy ở ba điểm input/tool/output, và HITL pause-resume giữ nguyên state cho người duyệt.</td></tr>
           <tr><td><strong>5.4</strong></td><td>Mỗi tầng rollout trả lời một câu khác nhau — shadow: hợp lý? canary: tốt hơn? ramp: delta thật? full: chịu tải? — nên không nhảy cóc. Offline xanh vẫn giấu regression segment.</td></tr>
           <tr><td><strong>6.1</strong></td><td>Độ tin cậy là một lắp ráp harness tám cơ chế, không phải prompt — reflection tách theo lớp lỗi (process/data/draft), và state persistence + trần retry làm agent dài khả thi.</td></tr>
@@ -2353,12 +2427,13 @@ footer.site{border-top:1px solid var(--border);padding:26px 24px;text-align:cent
     <ol class="steps">
       <li><h4>Error analysis trước</h4><p>Đọc 20–50 trace lỗi thật, open→axial coding tới khi hết category mới (saturation) — đừng bịa rubric từ trí tưởng tượng (2.1).</p></li>
       <li><h4>Chốt golden set</h4><p>Đóng băng các task rút từ lỗi đó thành bộ eval, và chấm cả outcome (query trạng thái thật) lẫn trajectory từng bước (1.2 / 2.2).</p></li>
-      <li><h4>Code grader trước judge</h4><p>Cái gì check được bằng assertion — row tồn tại? args đúng? diff pass test? — thì dùng code: rẻ, tất định, miễn nhiễm bias (2.3).</p></li>
+      <li><h4>Code grader trước judge</h4><p>Cái gì check được bằng assertion — row tồn tại? args đúng? diff pass test? — thì dùng code: rẻ, tất định. Rồi đọc transcript các ca nó đánh fail để bắt false negative do grader quá hẹp (2.3).</p></li>
       <li><h4>Calibrate judge trước khi tin</h4><p>Chỉ dùng LLM-judge cho nuance thật, rubric tách chiều, swap-and-check, và đo TPR/TNR trên tập nhãn giữ riêng trước khi để nó quyết (3.1 / 3.2).</p></li>
       <li><h4>Bật tracing</h4><p>Mỗi run một trace, mỗi call một span có latency/token/cost; nếu dùng gen_ai.* thì pin convention version + adapter, để content opt-in nhằm không rò PII (4.1 / 4.2).</p></li>
-      <li><h4>Dựng ba làn eval</h4><p>Offline gác ship, guardrail chặn inline, online chấm mẫu prod — nhớ chỉ online mới bắt được drift (4.3).</p></li>
-      <li><h4>Gate leo thang</h4><p>Chạy eval-driven CI ở reporting mode trước, cho người annotate bất đồng, calibrate, rồi mới cho blocking — gate lệch gây alert fatigue (5.1 / 5.2).</p></li>
-      <li><h4>Guardrail ba điểm</h4><p>Đặt tripwire dừng-cứng ở input, ở mỗi tool-call, và ở output; dùng HITL pause-resume cho hành động nguy hiểm (5.3).</p></li>
+      <li><h4>Dựng ba làn eval</h4><p>Offline gác ship, guardrail chặn inline, online chấm mẫu prod. Behavior drift: chạy chính bộ offline theo lịch trên endpoint live; distribution drift: mới cần sample online, và ưu tiên các run có tín hiệu xấu (4.3).</p></li>
+      <li><h4>Gate leo thang</h4><p>Đo sàn nhiễu trước rồi mới đặt ngưỡng. Check tất định chặn từ ngày đầu; riêng gate chấm-bằng-judge thì chạy reporting mode trước, cho người annotate bất đồng, calibrate, rồi mới cho blocking (5.1 / 5.2).</p></li>
+      <li><h4>Guardrail ba điểm</h4><p>Đặt tripwire dừng-cứng ở input, ở mỗi tool-call, và ở output; dùng HITL pause-resume cho hành động nguy hiểm. Trước đó, làm tool idempotent đã — gọi hai lần mà hỏng là bug của tool (5.3).</p></li>
+      <li><h4>Làn adversarial</h4><p>Liệt kê mọi kênh nội dung ngoại lai đi vào context (kết quả web, thân ticket, output MCP, file đính kèm), bắn payload injection thử từng kênh, giữ lại thành bộ regression chạy trong CI (5.3).</p></li>
       <li><h4>Rollout shadow → canary</h4><p>Đi shadow → canary → ramp → full, mỗi tầng trả lời một câu hỏi riêng; đừng nhảy thẳng 100% khi chưa có tín hiệu tương đương (5.4).</p></li>
     </ol>
 
@@ -2384,8 +2459,8 @@ footer.site{border-top:1px solid var(--border);padding:26px 24px;text-align:cent
       <p class="quiz-q">Một agent pass offline eval (xanh) rồi ship thẳng 100% user. Vài tuần sau chất lượng tụt dần mà error rate không đổi; và một lần nó gọi tool nguy hiểm với args sai. Bộ thực hành nào lẽ ra đã chặn/bắt được cả hai?</p>
       <button class="quiz-opt" onclick="quizPick(this,0)"><span class="quiz-letter">A</span><span>Chỉ cần tăng tần suất chạy offline eval là bắt được drift và chặn luôn tool nguy hiểm.</span></button>
       <button class="quiz-opt" onclick="quizPick(this,1)"><span class="quiz-letter">B</span><span>Drift chắc chắn do model, nên thay model mới là cách duy nhất; guardrail và rollout không liên quan.</span></button>
-      <button class="quiz-opt" onclick="quizPick(this,2)"><span class="quiz-letter">C</span><span>Ba lớp bù nhau: online eval trên mẫu prod bắt drift (offline không thấy), guardrail ở tool-call chặn cứng args nguy hiểm ngay tại điểm gọi, và rollout shadow→canary lộ regression sớm thay vì nhảy thẳng 100%.</span></button>
-      <div class="quiz-feedback" role="status" data-explain="C đúng: ba lớp bù nhau — online eval trên mẫu prod mới bắt được drift mà offline không thấy (4.3), guardrail ở tool-call chặn cứng args nguy hiểm ngay tại điểm gọi (5.3), và rollout shadow→canary lộ regression segment trước khi tới 100% user (5.4). A sai: offline eval chạy trước ship, không quan sát prod nên không bắt drift, cũng không chặn được tool-call inline. B sai: drift chưa chắc do model, và bỏ qua guardrail + rollout là bỏ hai lớp bảo vệ khác nhau."></div>
+      <button class="quiz-opt" onclick="quizPick(this,2)"><span class="quiz-letter">C</span><span>Ba lớp bù nhau: bộ offline chạy theo lịch trên endpoint live bắt behavior drift còn sample online bắt distribution drift, guardrail ở tool-call chặn cứng args nguy hiểm ngay tại điểm gọi, và rollout shadow→canary lộ regression sớm thay vì nhảy thẳng 100%.</span></button>
+      <div class="quiz-feedback" role="status" data-explain="C đúng: ba lớp bù nhau — với drift phải hỏi loại nào: behavior drift thì chính bộ offline chạy theo lịch trên endpoint live bắt sớm nhất, distribution drift thì cần sample online (4.3); guardrail ở tool-call chặn cứng args nguy hiểm ngay tại điểm gọi (5.3); và rollout shadow→canary lộ regression segment trước khi tới 100% user (5.4). A sai không phải vì offline vô dụng mà vì 'chạy thường xuyên hơn' lúc CI không đồng nghĩa chạy trên endpoint live, và offline cũng không chặn được tool-call inline. B sai: drift chưa chắc do model, và bỏ qua guardrail + rollout là bỏ hai lớp bảo vệ khác nhau."></div>
     </div>
   </div>
   <div class="lesson-nav" data-navfor="m7-l1"></div>
@@ -2428,7 +2503,7 @@ const LESSONS = [
   {id:'m3-l3', mod:3, part:'Phần III · LLM-judge & chỉ số tin cậy', title:'pass@k vs pass^k — và khi chính eval đánh lừa bạn', desc:'pass@k đẹp nhưng pass^k là cái user gặp; saturation, grading bug, 0% task hỏng, đọc transcript.'},
   {id:'m4-l1', mod:4, part:'Phần IV · Quan sát production', title:'Trace và span: giải phẫu một lần chạy agent', desc:'1 run = 1 trace gồm span; mỗi call là span con có latency/token/cost.'},
   {id:'m4-l2', mod:4, part:'Phần IV · Quan sát production', title:'OpenTelemetry GenAI: convention đang đổi, content vẫn opt-in', desc:'gen_ai.* còn Development: pin version + adapter schema; metadata mặc định, content opt-in vì PII.'},
-  {id:'m4-l3', mod:4, part:'Phần IV · Quan sát production', title:'Ba làn: offline · guardrail · online, và flywheel nuôi eval', desc:'Ba chế độ latency khác nhau; chỉ online bắt drift; trace lỗi quay về golden set.'},
+  {id:'m4-l3', mod:4, part:'Phần IV · Quan sát production', title:'Ba làn: offline · guardrail · online, và flywheel nuôi eval', desc:'Ba chế độ latency khác nhau; behavior drift vs distribution drift; trace lỗi quay về golden set.'},
   {id:'m5-l1', mod:5, part:'Phần V · Cổng tin cậy', title:'Eval-driven development: mỗi regression thành test vĩnh viễn', desc:'Biến lỗi prod thành eval case; như TDD nhưng chấm bằng eval; bắt đầu ~20 case.'},
   {id:'m5-l2', mod:5, part:'Phần V · Cổng tin cậy', title:'CI gate cho hệ phi tất định: reporting → calibrate → blocking', desc:'Leo thang gate; đừng wire judge chưa calibrate vào blocking; gate tồi gây alert fatigue.'},
   {id:'m5-l3', mod:5, part:'Phần V · Cổng tin cậy', title:'Guardrails: checkpoint có hard-stop, ba điểm', desc:'Input/tool/output guardrail; tripwire dừng-cứng; HITL needsApproval pause-resume.'},
