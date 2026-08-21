@@ -533,6 +533,8 @@ footer.site{border-top:1px solid var(--border);padding:26px 24px;text-align:cent
             <tr><td><b>Bi-encoder / Cross-encoder</b></td><td>Bi: encodes query and doc separately, fast/blurry. Cross: joins (query,doc) at once, slow/precise — used to rerank the top 30.</td></tr>
             <tr><td><b>CRAG</b></td><td>Corrective RAG — classifies retrieval into 4 states (confident/moderate/low/empty) before generation, deciding whether to answer at all.</td></tr>
             <tr><td><b>Self-corrective retrieval</b></td><td>A single rescue pass loosening the filter when strict returns low/empty, accepted only when the CRAG tier is strictly higher — no downgrade risk.</td></tr>
+            <tr><td><b>Retrieval gate (G1) / Faithfulness gate (G2)</b></td><td>G1 = CRAG, checking retrieval before generation (cheap, deterministic); G2 checks whether the answer is supported by the evidence, after generation (opt-in, costlier — NLI / LLM-judge).</td></tr>
+            <tr><td><b>Adaptive routing</b></td><td>Pick the processing path by query difficulty: a simple lookup → the modular pipeline → agentic/GraphRAG only for multi-hop cross-document questions, and only when evals prove it is worth it.</td></tr>
             <tr><td><b>Entity planner</b></td><td>Resolves entities (proper nouns) with a lexical match before retrieval — fixes the sibling-confusion that vectors cause.</td></tr>
             <tr><td><b>Semantic dedup</b></td><td>Groups near-duplicate chunks (cosine ≥ 0.85), tags dedupOf without deleting — +13.55% retrieval accuracy.</td></tr>
             <tr><td><b>versionState</b></td><td>A lifecycle field {draft, current, approved, deprecated}; retrieval returns only current + approved.</td></tr>
@@ -1405,6 +1407,7 @@ footer.site{border-top:1px solid var(--border);padding:26px 24px;text-align:cent
             <li>Classify retrieval into the 4 CRAG states and their corresponding actions.</li>
             <li>Explain why "I don't know" preserves trust better than making something up.</li>
             <li>Distinguish CRAG (classify after retrieval) from the clarification gate (before retrieval).</li>
+            <li>Draw the 3-gate control plane — clarify (before retrieval), G1 retrieval gate (after retrieval), G2 faithfulness gate (after generation) — and say why production runs G1 before G2.</li>
           </ul></div>
 
           <p>Even with reranking, the top result can still be garbage — the user asks about a topic the corpus doesn't cover, or the rerank scores are flat (nothing stands out). Handing garbage to the LLM → a confident wrong answer; the model doesn't distinguish low-confidence retrieval from high-confidence.</p>
@@ -1450,9 +1453,82 @@ footer.site{border-top:1px solid var(--border);padding:26px 24px;text-align:cent
 
           <div class="callout insight"><div class="callout-title">Distinction</div><p>CRAG handles the case where retrieval <em>has already run</em> but came out weak. The planner clarification gate (Lesson 4.1) handles the case <em>before</em> retrieval: if the planner sees an ambiguous query (two matching siblings), it asks for clarification before retrieval runs. Two gates at different stages.</p></div>
 
+          <p>Put CRAG in the bigger picture: a production pipeline has a <strong>quality control plane</strong> with up to three gates, each sitting at a different stage. The clarify gate sits <em>before</em> retrieval. CRAG is <strong>G1 — the retrieval gate</strong>: <em>after</em> retrieval, <em>before</em> generation. And there is a third gate this lesson hasn't mentioned yet: <strong>G2 — the faithfulness gate</strong>, sitting <em>after</em> generation — because good retrieval still doesn't guarantee a faithful answer. Top-1 after rerank can score 0.92 and the model can still cite a fact that isn't in the chunk; G1 can't catch that, because it finishes before the answer exists. G2 asks "is this answer supported by the evidence?" (an entailment/NLI check, a citation check, or an LLM-judge — the same family as Self-RAG's IsSUP reflection token). Production puts G1 ahead of G2 because G1 is cheap and deterministic: it blocks garbage <em>before</em> you burn generation tokens; G2 costs more, so it is an opt-in layer — exactly the dispatcher pattern from Lesson 4.3.</p>
+
+          <figure class="figure">
+            <svg viewBox="0 0 920 305" role="img" aria-label="Quality control plane: user query → clarify gate (4.1, before retrieval) → retrieve + rerank → G1 CRAG gate (3.3) → generate + cite → G2 faithfulness gate (optional). Downward branches: ambiguous query → ask the user; low/empty → one rescue pass (3.4); unsupported → soften or abstain; OK → answer + citations.">
+              <rect class="dgm-box" x="16" y="50" width="84" height="52" rx="6"/>
+              <text class="dgm-ink" x="58" y="80" text-anchor="middle" font-size="11" font-weight="600">User query</text>
+              <path class="dgm-flow" d="M100 76 L130 76" marker-end="url(#m3l3b-a)"/>
+              <rect x="130" y="50" width="130" height="52" rx="6" fill="var(--warning-bg)" stroke="var(--warning)"/>
+              <text class="dgm-ink" x="195" y="70" text-anchor="middle" font-size="11" font-weight="600">Clarify gate</text>
+              <text class="dgm-ink2" x="195" y="88" text-anchor="middle" font-size="9">4.1 · before retrieval</text>
+              <path class="dgm-flow" d="M260 76 L290 76" marker-end="url(#m3l3b-a)"/>
+              <rect class="dgm-box" x="290" y="50" width="140" height="52" rx="6"/>
+              <text class="dgm-ink" x="360" y="70" text-anchor="middle" font-size="11" font-weight="600">Retrieve + rerank</text>
+              <text class="dgm-ink2" x="360" y="88" text-anchor="middle" font-size="9">2.2 → 3.2</text>
+              <path class="dgm-flow" d="M430 76 L460 76" marker-end="url(#m3l3b-a)"/>
+              <rect x="460" y="50" width="130" height="52" rx="6" fill="var(--warning-bg)" stroke="var(--warning)" stroke-width="2"/>
+              <text class="dgm-ink" x="525" y="70" text-anchor="middle" font-size="11" font-weight="600" fill="var(--warning)">G1 · CRAG</text>
+              <text class="dgm-ink2" x="525" y="88" text-anchor="middle" font-size="9">3.3 · after retrieval</text>
+              <path class="dgm-flow" d="M590 76 L620 76" marker-end="url(#m3l3b-a)"/>
+              <rect class="dgm-box" x="620" y="50" width="130" height="52" rx="6"/>
+              <text class="dgm-ink" x="685" y="70" text-anchor="middle" font-size="11" font-weight="600">Generate + cite</text>
+              <text class="dgm-ink2" x="685" y="88" text-anchor="middle" font-size="9">grounded answer</text>
+              <path class="dgm-flow" d="M750 76 L780 76" marker-end="url(#m3l3b-a)"/>
+              <rect x="780" y="50" width="124" height="52" rx="6" fill="var(--warning-bg)" stroke="var(--warning)" stroke-dasharray="5 3"/>
+              <text class="dgm-ink" x="842" y="70" text-anchor="middle" font-size="11" font-weight="600" fill="var(--warning)">G2 · faithfulness</text>
+              <text class="dgm-ink2" x="842" y="88" text-anchor="middle" font-size="9">optional · after generate</text>
+              <path class="dgm-flow" d="M195 102 L195 190" marker-end="url(#m3l3b-a)"/>
+              <text class="dgm-ink2" x="205" y="150" font-size="10" fill="var(--warning)">ambiguous</text>
+              <rect class="dgm-box" x="110" y="190" width="170" height="54" rx="6"/>
+              <text class="dgm-ink" x="195" y="211" text-anchor="middle" font-size="10" font-weight="600">Ask the user</text>
+              <text class="dgm-ink2" x="195" y="228" text-anchor="middle" font-size="9">two sibling matches (4.1)</text>
+              <path class="dgm-flow" d="M525 102 L525 190" marker-end="url(#m3l3b-a)"/>
+              <text class="dgm-ink2" x="535" y="150" font-size="10" fill="var(--danger)">low / empty</text>
+              <rect x="420" y="190" width="210" height="54" rx="6" fill="var(--danger-bg)" stroke="var(--danger)"/>
+              <text class="dgm-ink" x="525" y="211" text-anchor="middle" font-size="10" font-weight="600" fill="var(--danger)">One rescue pass (3.4)</text>
+              <text class="dgm-ink2" x="525" y="228" text-anchor="middle" font-size="9">still weak → "I don't know" / clarify</text>
+              <path class="dgm-flow" d="M810 102 L810 150 L720 150 L720 190" marker-end="url(#m3l3b-a)"/>
+              <text class="dgm-ink2" x="800" y="142" text-anchor="end" font-size="10" fill="var(--danger)">unsupported</text>
+              <rect x="640" y="190" width="160" height="54" rx="6" fill="var(--danger-bg)" stroke="var(--danger)"/>
+              <text class="dgm-ink" x="720" y="211" text-anchor="middle" font-size="10" font-weight="600" fill="var(--danger)">Soften / abstain</text>
+              <text class="dgm-ink2" x="720" y="228" text-anchor="middle" font-size="9">regenerate ≤ 1 time</text>
+              <path class="dgm-flow" d="M862 102 L862 190" marker-end="url(#m3l3b-a)"/>
+              <text class="dgm-ink2" x="870" y="150" font-size="10" fill="var(--success)">OK</text>
+              <rect x="812" y="190" width="96" height="54" rx="6" fill="var(--success-bg)" stroke="var(--success)"/>
+              <text class="dgm-ink" x="860" y="211" text-anchor="middle" font-size="10" font-weight="600" fill="var(--success)">Answer</text>
+              <text class="dgm-ink2" x="860" y="228" text-anchor="middle" font-size="9">+ citations</text>
+              <text class="dgm-ink2" x="16" y="275" font-size="10">G1 (retrieval gate): cheap, deterministic — blocks garbage before burning generate tokens.</text>
+              <text class="dgm-ink2" x="16" y="292" font-size="10">G2 (faithfulness gate): optional, costlier (NLI / LLM-judge) — catches answers the evidence does not support.</text>
+              <defs><marker id="m3l3b-a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0 L10 5 L0 10 Z" fill="var(--ink-3)"/></marker></defs>
+            </svg>
+            <figcaption><b>Figure 3.3b</b> — The quality control plane: three gates, three stages. Clarify before retrieval, G1 (CRAG) after retrieval, G2 (faithfulness) after generation. G1 comes first because it is cheap and deterministic; G2 is the opt-in layer.</figcaption>
+          </figure>
+
+          <p>If you Google "CRAG" you'll hit the original paper (Yan et al. 2024) using different terms than this lesson. There's no contradiction — the course deliberately simplifies for a closed-tenant B2B corpus:</p>
+          <div class="table-wrap"><table>
+            <thead><tr><th>Paper CRAG (Yan et al. 2024)</th><th>Course (production B2B)</th><th>Why simplified</th></tr></thead>
+            <tbody>
+              <tr><td>A separate retrieval evaluator (a fine-tuned model) scoring <strong>Correct / Ambiguous / Incorrect</strong></td><td>4 tiers read off the cross-encoder score distribution (confident/moderate/low/empty)</td><td>No extra model to train and host; the rerank scores are already in the pipeline, and sweeping thresholds on a frozen eval set is enough.</td></tr>
+              <tr><td>Knowledge refinement: <strong>decompose-then-recompose</strong> — cut the document into strips, score each strip, keep the relevant ones</td><td>Focused excerpts + the filter-loosening rescue pass (3.4)</td><td>Same goal — put cleaner evidence in the prompt — but deterministic, with no extra LLM call.</td></tr>
+              <tr><td><strong>Web search fallback</strong> on Incorrect/Ambiguous</td><td>None — empty means "I don't know" / clarify</td><td>The corpus is closed per tenant: a web fallback is both an attack surface (5.1) and a breach of the promise to answer only from your knowledge.</td></tr>
+            </tbody>
+          </table></div>
+
+          <div class="callout danger"><div class="callout-title">Three anti-patterns when shipping a retrieval gate</div><ul>
+            <li><strong>Thresholding on bi-encoder cosine.</strong> Bi-encoder cosine is blurry (3.2) and produces falsely high scores for close siblings. The cross-encoder doesn't fully escape either: reranker scores are not calibrated probabilities — Cohere and BGE say so explicitly in their reranker docs: 0.91 does not mean "twice as relevant as 0.45", and the score distribution shifts with the model and the domain. Put the threshold on the cross-encoder score, sweep it on an eval set, re-sweep when you change reranker.</li>
+            <li><strong>Empty, but the model falls back to its training data.</strong> "Not found" has to become "I don't know" — general model knowledge overriding tenant knowledge is how you break B2B trust.</li>
+            <li><strong>Low → opening an unbounded agentic loop.</strong> One bounded rescue (3.4) first; a free-running loop is paid for in cost, latency and non-determinism.</li>
+          </ul></div>
+
+          <div class="callout insight"><div class="callout-title">Set thresholds with evals, not vibes</div><p>The floor and the high threshold of the 4 tiers have no "standard" values — they are parameters you sweep: take the frozen eval set (1.4), split it by segment (simple lookups vs comparison questions), sweep floor/high on a holdout, and optimize <em>abstain precision</em> (when the bot says "I don't know", is there really no answer?) plus faithfulness — <strong>not</strong> "answers the most questions". The highest answer-rate always belongs to the bot that fabricates the most. For steadier thresholds still, apply standard calibration (Platt / isotonic) to the reranker scores before comparing against the threshold.</p></div>
+
+          <p>Finally, remember this lesson's limit: CRAG only <em>classifies</em> — on its own it fixes nothing. The corrective action lives in Lesson 3.4, and it is bounded: a classifier plus a bounded policy, not a free agent.</p>
+
           <div class="takeaway">
             <span class="eyebrow"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true" focusable="false"><path d="M12 2v6m0 8v6M4.9 4.9l4.2 4.2m5.8 5.8l4.2 4.2M2 12h6m8 0h6M4.9 19.1l4.2-4.2m5.8-5.8l4.2-4.2"/></svg>Takeaway</span>
-            <p>Retrieval can return garbage; CRAG <span class="hl">classifies 4 states before generating</span> — and "I don't know" is a feature, not a failure.</p>
+            <p>Retrieval can return garbage; CRAG <span class="hl">classifies 4 states before generating</span> — and "I don't know" is a feature, not a failure. In the control plane, CRAG is G1 — the cheap, deterministic gate before generation; G2 faithfulness is the opt-in gate after generation, catching the case where retrieval was good but the answer was fabricated.</p>
           </div>
 
           <div class="quiz" data-correct="2">
@@ -1463,6 +1539,16 @@ footer.site{border-top:1px solid var(--border);padding:26px 24px;text-align:cent
             <button class="quiz-opt" onclick="quizPick(this,2)"><span class="quiz-letter">C</span><span>A chatbot saying "I don't have that information — would you like to talk to support?" preserves trust; a chatbot that makes up an answer destroys it. When retrieval is empty, the model must not fall back to its training data.</span></button>
             <button class="quiz-opt" onclick="quizPick(this,3)"><span class="quiz-letter">D</span><span>Because CRAG always classifies as empty when there's no reranking.</span></button>
             <div class="quiz-feedback" role="status" data-explain="Correct: trust is a B2B chatbot's asset. The architectural rule: never let general model knowledge override the retrieved tenant knowledge — when retrieval is empty, the model must say it doesn't know, not fall back to training data."></div>
+          </div>
+
+          <div class="quiz" data-correct="1">
+            <span class="eyebrow">Quick check</span>
+            <p class="quiz-q">Top-1 after rerank scores 0.92 (the confident tier), but the generated answer cites a fact that is nowhere in the chunk. Which gate fails?</p>
+            <button class="quiz-opt" onclick="quizPick(this,0)"><span class="quiz-letter">A</span><span>G1 — 0.92 still isn't high enough; raise the confident threshold.</span></button>
+            <button class="quiz-opt" onclick="quizPick(this,1)"><span class="quiz-letter">B</span><span>G2 — retrieval was genuinely good, but the answer isn't supported by the chunk. G1 can't catch this because it finishes before the answer exists.</span></button>
+            <button class="quiz-opt" onclick="quizPick(this,2)"><span class="quiz-letter">C</span><span>The clarify gate — the query must have been ambiguous, which is why it went wrong.</span></button>
+            <button class="quiz-opt" onclick="quizPick(this,3)"><span class="quiz-letter">D</span><span>No gate — a score of 0.92 means the answer is correct.</span></button>
+            <div class="quiz-feedback" role="status" data-explain="Correct: G1 measures retrieval quality and runs before generation — it never sees the answer. A hallucination on good retrieval is only caught by G2 (a faithfulness check: NLI / citation check / LLM-judge). This is exactly why Self-RAG separates the relevance token (IsREL) from the support token (IsSUP): two different questions at two different stages."></div>
           </div>
         </div>
         <div class="lesson-nav" data-navfor="m3-l3"></div>
@@ -1527,7 +1613,7 @@ footer.site{border-top:1px solid var(--border);padding:26px 24px;text-align:cent
           <ul>
             <li><strong>No downgrade risk</strong> — the rescue is accepted only when the CRAG tier is strictly higher (<code>empty &lt; low &lt; moderate &lt; confident</code>). It can't make a good answer worse.</li>
             <li><strong>Cheap</strong> — the query embedding is computed once and reused, so a rescue costs one extra SQL recall (+ at most one rerank call), never a second embedding round-trip, and <em>never</em> an extra LLM call.</li>
-            <li><strong>Deterministic</strong> — no model in the loop. A single corrective retry, not an open-ended reasoning agent. A full agentic loop is ruled out as over-engineered for this query mix.</li>
+            <li><strong>Deterministic</strong> — no model in the loop. A single corrective retry, not an open-ended reasoning agent. A full agentic loop is ruled out as over-engineered for this query mix — and independent measurement confirms the direction: agentic RAG costs on average ~3.3× more input tokens than an enhanced modular pipeline, without consistently winning on quality (<a href="https://arxiv.org/abs/2601.07711" target="_blank" rel="noreferrer">Ferrazzi et al., ACL 2026 Industry</a>).</li>
           </ul>
 
           <div class="takeaway">
@@ -2182,7 +2268,7 @@ footer.site{border-top:1px solid var(--border);padding:26px 24px;text-align:cent
               <tr><td>2.4 Multi-query</td><td>One query, four deterministic variants, fused by RRF — recall for free, auditable.</td></tr>
               <tr><td>3.1 Contextual chunking</td><td>One LLM-generated context sentence, prepended before embedding, −35% retrieval failure (−49% combined with contextual BM25).</td></tr>
               <tr><td>3.2 Cross-encoder</td><td>Funnel top-30 → top-15: cheap-and-wide then sharp-and-narrow.</td></tr>
-              <tr><td>3.3 CRAG</td><td>Classify 4 states before generating; "I don't know" is a feature.</td></tr>
+              <tr><td>3.3 CRAG</td><td>Classify 4 states before generating; "I don't know" is a feature. G1 cheap before generate, G2 opt-in after.</td></tr>
               <tr><td>3.4 Self-corrective</td><td>One rescue pass loosens the filter, accepted only when the tier is clearly higher — no downgrade.</td></tr>
               <tr><td>4.1 Entity planning</td><td>Resolve proper nouns with a lexical match before retrieval — vectors are the wrong tool.</td></tr>
               <tr><td>4.2 Distillation</td><td>Dedup tags without deleting (+13.55%); the Q→A index is for high-value sources.</td></tr>
@@ -2204,7 +2290,7 @@ footer.site{border-top:1px solid var(--border);padding:26px 24px;text-align:cent
               <tr><td>4. Fusion</td><td>RRF fuses the two rankings (k=60)? Multi-query cap + embedding cache?</td><td>The largest scale always wins; low recall.</td></tr>
               <tr><td>5. Context</td><td>Contextual chunking (LLM-generated context) for high-value sources?</td><td>A mid-document chunk loses context, −35% potential retrieval failure.</td></tr>
               <tr><td>6. Rerank</td><td>Bi top-30 → cross top-15? Dispatcher opt-in, off by default?</td><td>Bi-encoder blur mixes in siblings; cost runs away if on by default.</td></tr>
-              <tr><td>7. Quality gate</td><td>CRAG 4 states + self-corrective rescue (no downgrade)?</td><td>Confidently answering garbage; no rescue for an answer a filter hides.</td></tr>
+              <tr><td>7. Quality gate</td><td>G1: CRAG 4 states + self-corrective rescue (no downgrade)? G2 faithfulness check opt-in after generation?</td><td>Confidently answering garbage; no rescue for an answer a filter hides; fabricated answers on good retrieval go uncaught.</td></tr>
               <tr><td>8. Entity planning</td><td>Planner resolves entities lexically before retrieval? Sibling reject + clarify?</td><td>Sibling-confusion; "Demo AM" returns "Demo Media".</td></tr>
               <tr><td>9. Distillation</td><td>Semantic dedup (≥0.85, tag)? Q→A for high-value sources? versionState?</td><td>Near-duplicates bury the canonical; an old version wins a new query.</td></tr>
               <tr><td>10. Curation</td><td>Per-page override? scopeMode for a one-product bot? Synonym merge (overlap)?</td><td>A noisy URL wins queries; a one-product bot loops clarify.</td></tr>
@@ -2279,7 +2365,7 @@ const LESSONS = [
   {id:'m2-l4', mod:2, part:'Part II · Identifying & fusing retrieval', title:'Multi-query expansion — ask one question four ways', desc:'Deterministic expansion into 4 variants, fused by RRF; cap variants to keep cost down.'},
   {id:'m3-l1', mod:3, part:'Part III · Advanced retrieval quality', title:'Contextual chunking — prepend "what this chunk is about"', desc:'LLM generates 1–2 context sentences, prepended before embedding; −35% retrieval failure (−49% combined with contextual BM25).'},
   {id:'m3-l2', mod:3, part:'Part III · Advanced retrieval quality', title:'Cross-encoder reranking — a smaller, smarter judge', desc:'Bi-encoder fast and blurry, cross-encoder slow and sharp; funnel top-30 → top-15.'},
-  {id:'m3-l3', mod:3, part:'Part III · Advanced retrieval quality', title:'CRAG — knowing when retrieval has failed', desc:'Classify retrieval into 4 states confident/moderate/low/empty; \'I don\'t know\' is a feature.'},
+  {id:'m3-l3', mod:3, part:'Part III · Advanced retrieval quality', title:'CRAG — knowing when retrieval has failed', desc:'Classify retrieval into 4 states confident/moderate/low/empty; \'I don\'t know\' is a feature; control plane G1/G2.'},
   {id:'m3-l4', mod:3, part:'Part III · Advanced retrieval quality', title:'Self-corrective retrieval — a bounded rescue loop', desc:'1 rescue pass loosens the filter, accepted only when the tier is strictly higher; cheap, deterministic.'},
   {id:'m4-l1', mod:4, part:'Part IV · Production engineering', title:'Entity-aware planning — the production "secret sauce"', desc:'The planner resolves entities with a lexical match before retrieval; rejects the sibling trap; clarifies on a tie.'},
   {id:'m4-l2', mod:4, part:'Part IV · Production engineering', title:'2026-Q3 layer · Distillation — dedup + Q→A', desc:'Semantic dedup (cosine ≥ 0.85, tag dedupOf, +13.55%) + opt-in Q→A index for high-value sources.'},

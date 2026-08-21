@@ -533,6 +533,8 @@ footer.site{border-top:1px solid var(--border);padding:26px 24px;text-align:cent
             <tr><td><b>Bi-encoder / Cross-encoder</b></td><td>Bi: encode query và doc riêng, nhanh/mờ. Cross: ghép (query,doc) cùng lúc, chậm/chính xác — dùng làm rerank top 30.</td></tr>
             <tr><td><b>CRAG</b></td><td>Corrective RAG — phân loại retrieval 4 trạng thái (confident/moderate/low/empty) trước khi sinh, quyết định có trả lời không.</td></tr>
             <tr><td><b>Self-corrective retrieval</b></td><td>1 rescue pass nới filter khi strict trả low/empty, nhận chỉ khi CRAG tier strictly cao hơn — không rủi ro hạ cấp.</td></tr>
+            <tr><td><b>Retrieval gate (G1) / Faithfulness gate (G2)</b></td><td>G1 = CRAG, kiểm tra retrieval trước generate (rẻ, deterministic); G2 kiểm tra câu trả lời có được evidence đỡ không, sau generate (opt-in, đắt hơn — NLI / LLM-judge).</td></tr>
+            <tr><td><b>Adaptive routing</b></td><td>Chọn đường xử lý theo độ khó query: lookup đơn giản → pipeline modular → agentic/GraphRAG chỉ khi multi-hop cross-doc và eval chứng minh đáng giá.</td></tr>
             <tr><td><b>Entity planner</b></td><td>Giải thực thể (proper noun) bằng match lexical trước retrieval — sửa sibling-confusion mà vector gây ra.</td></tr>
             <tr><td><b>Semantic dedup</b></td><td>Gom chunk gần-trùng (cosine ≥ 0.85), tag dedupOf không xoá — +13.55% retrieval accuracy.</td></tr>
             <tr><td><b>versionState</b></td><td>Trường lifecycle {draft, current, approved, deprecated}; retrieval chỉ trả current + approved.</td></tr>
@@ -1405,6 +1407,7 @@ footer.site{border-top:1px solid var(--border);padding:26px 24px;text-align:cent
             <li>Phân loại retrieval vào 4 trạng thái CRAG và hành động tương ứng.</li>
             <li>Giải thích vì sao "tôi không biết" giữ niềm tin tốt hơn bịa.</li>
             <li>Phân biệt CRAG (phân loại sau retrieval) với clarification gate (trước retrieval).</li>
+            <li>Vẽ control plane 3 cổng — clarify (trước retrieval), G1 retrieval gate (sau retrieval), G2 faithfulness gate (sau generate) — và nêu vì sao production chạy G1 trước G2.</li>
           </ul></div>
 
           <p>Dù có rerank, top result vẫn có thể là rác — user hỏi topic corpus không phủ, hoặc score rerank phẳng (không ai nổi). Đưa rác cho LLM → câu sai tự tin; model không phân biệt retrieval low-confidence với high-confidence.</p>
@@ -1450,9 +1453,82 @@ footer.site{border-top:1px solid var(--border);padding:26px 24px;text-align:cent
 
           <div class="callout insight"><div class="callout-title">Phân biệt</div><p>CRAG xử lý trường hợp retrieval <em>đã chạy</em> nhưng ra yếu. Planner clarification gate (Bài 4.1) xử lý trường hợp <em>trước</em> retrieval: nếu planner thấy query mơ hồ (hai sibling match), hỏi clarify trước khi retrieval chạy. Hai cổng khác giai đoạn.</p></div>
 
+          <p>Đặt CRAG vào bức tranh lớn: một pipeline production có <strong>quality control plane</strong> với tối đa ba cổng, mỗi cổng đứng ở một giai đoạn khác nhau. Clarify gate đứng <em>trước</em> retrieval. CRAG là <strong>G1 — retrieval gate</strong>: đứng <em>sau</em> retrieval, <em>trước</em> generate. Và còn một cổng thứ ba mà bài này chưa nói tới: <strong>G2 — faithfulness gate</strong>, đứng <em>sau</em> generate — vì retrieval tốt vẫn chưa bảo đảm câu trả lời trung thực. Top-1 rerank có thể đạt 0.92 mà model vẫn cite sai fact không có trong chunk; G1 không thể bắt lỗi đó vì nó chạy xong trước khi câu trả lời tồn tại. G2 kiểm tra "câu trả lời có được evidence đỡ không" (entailment/NLI check, citation check, hoặc LLM-judge — cùng họ với reflection token IsSUP của Self-RAG). Production ưu tiên G1 trước G2 vì G1 rẻ và deterministic: chặn rác <em>trước</em> khi đốt token generate; G2 đắt hơn nên là lớp opt-in — đúng pattern dispatcher của Bài 4.3.</p>
+
+          <figure class="figure">
+            <svg viewBox="0 0 920 305" role="img" aria-label="Quality control plane: user query → clarify gate (4.1, trước retrieval) → retrieve + rerank → G1 CRAG gate (3.3) → generate + cite → G2 faithfulness gate (optional). Nhánh xuống: query mơ hồ → hỏi lại user; low/empty → rescue 1 lần (3.4); unsupported → làm mềm hoặc abstain; OK → answer + nguồn.">
+              <rect class="dgm-box" x="16" y="50" width="84" height="52" rx="6"/>
+              <text class="dgm-ink" x="58" y="80" text-anchor="middle" font-size="11" font-weight="600">User query</text>
+              <path class="dgm-flow" d="M100 76 L130 76" marker-end="url(#m3l3b-a)"/>
+              <rect x="130" y="50" width="130" height="52" rx="6" fill="var(--warning-bg)" stroke="var(--warning)"/>
+              <text class="dgm-ink" x="195" y="70" text-anchor="middle" font-size="11" font-weight="600">Clarify gate</text>
+              <text class="dgm-ink2" x="195" y="88" text-anchor="middle" font-size="9">4.1 · trước retrieval</text>
+              <path class="dgm-flow" d="M260 76 L290 76" marker-end="url(#m3l3b-a)"/>
+              <rect class="dgm-box" x="290" y="50" width="140" height="52" rx="6"/>
+              <text class="dgm-ink" x="360" y="70" text-anchor="middle" font-size="11" font-weight="600">Retrieve + rerank</text>
+              <text class="dgm-ink2" x="360" y="88" text-anchor="middle" font-size="9">2.2 → 3.2</text>
+              <path class="dgm-flow" d="M430 76 L460 76" marker-end="url(#m3l3b-a)"/>
+              <rect x="460" y="50" width="130" height="52" rx="6" fill="var(--warning-bg)" stroke="var(--warning)" stroke-width="2"/>
+              <text class="dgm-ink" x="525" y="70" text-anchor="middle" font-size="11" font-weight="600" fill="var(--warning)">G1 · CRAG</text>
+              <text class="dgm-ink2" x="525" y="88" text-anchor="middle" font-size="9">3.3 · sau retrieval</text>
+              <path class="dgm-flow" d="M590 76 L620 76" marker-end="url(#m3l3b-a)"/>
+              <rect class="dgm-box" x="620" y="50" width="130" height="52" rx="6"/>
+              <text class="dgm-ink" x="685" y="70" text-anchor="middle" font-size="11" font-weight="600">Generate + cite</text>
+              <text class="dgm-ink2" x="685" y="88" text-anchor="middle" font-size="9">grounded answer</text>
+              <path class="dgm-flow" d="M750 76 L780 76" marker-end="url(#m3l3b-a)"/>
+              <rect x="780" y="50" width="124" height="52" rx="6" fill="var(--warning-bg)" stroke="var(--warning)" stroke-dasharray="5 3"/>
+              <text class="dgm-ink" x="842" y="70" text-anchor="middle" font-size="11" font-weight="600" fill="var(--warning)">G2 · faithfulness</text>
+              <text class="dgm-ink2" x="842" y="88" text-anchor="middle" font-size="9">optional · sau generate</text>
+              <path class="dgm-flow" d="M195 102 L195 190" marker-end="url(#m3l3b-a)"/>
+              <text class="dgm-ink2" x="205" y="150" font-size="10" fill="var(--warning)">mơ hồ</text>
+              <rect class="dgm-box" x="110" y="190" width="170" height="54" rx="6"/>
+              <text class="dgm-ink" x="195" y="211" text-anchor="middle" font-size="10" font-weight="600">Hỏi lại user</text>
+              <text class="dgm-ink2" x="195" y="228" text-anchor="middle" font-size="9">hai sibling match (4.1)</text>
+              <path class="dgm-flow" d="M525 102 L525 190" marker-end="url(#m3l3b-a)"/>
+              <text class="dgm-ink2" x="535" y="150" font-size="10" fill="var(--danger)">low / empty</text>
+              <rect x="420" y="190" width="210" height="54" rx="6" fill="var(--danger-bg)" stroke="var(--danger)"/>
+              <text class="dgm-ink" x="525" y="211" text-anchor="middle" font-size="10" font-weight="600" fill="var(--danger)">Rescue 1 lần (3.4)</text>
+              <text class="dgm-ink2" x="525" y="228" text-anchor="middle" font-size="9">vẫn yếu → "tôi không biết" / clarify</text>
+              <path class="dgm-flow" d="M810 102 L810 150 L720 150 L720 190" marker-end="url(#m3l3b-a)"/>
+              <text class="dgm-ink2" x="800" y="142" text-anchor="end" font-size="10" fill="var(--danger)">không đỡ</text>
+              <rect x="640" y="190" width="160" height="54" rx="6" fill="var(--danger-bg)" stroke="var(--danger)"/>
+              <text class="dgm-ink" x="720" y="211" text-anchor="middle" font-size="10" font-weight="600" fill="var(--danger)">Làm mềm / abstain</text>
+              <text class="dgm-ink2" x="720" y="228" text-anchor="middle" font-size="9">regenerate ≤ 1 lần</text>
+              <path class="dgm-flow" d="M862 102 L862 190" marker-end="url(#m3l3b-a)"/>
+              <text class="dgm-ink2" x="870" y="150" font-size="10" fill="var(--success)">OK</text>
+              <rect x="812" y="190" width="96" height="54" rx="6" fill="var(--success-bg)" stroke="var(--success)"/>
+              <text class="dgm-ink" x="860" y="211" text-anchor="middle" font-size="10" font-weight="600" fill="var(--success)">Answer</text>
+              <text class="dgm-ink2" x="860" y="228" text-anchor="middle" font-size="9">+ nguồn</text>
+              <text class="dgm-ink2" x="16" y="275" font-size="10">G1 (retrieval gate): rẻ, deterministic — chặn rác trước khi đốt token generate.</text>
+              <text class="dgm-ink2" x="16" y="292" font-size="10">G2 (faithfulness gate): optional, đắt hơn (NLI / LLM-judge) — bắt câu trả lời không được evidence đỡ.</text>
+              <defs><marker id="m3l3b-a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0 L10 5 L0 10 Z" fill="var(--ink-3)"/></marker></defs>
+            </svg>
+            <figcaption><b>Hình 3.3b</b> — Quality control plane: ba cổng, ba giai đoạn. Clarify trước retrieval, G1 (CRAG) sau retrieval, G2 (faithfulness) sau generate. G1 đứng trước vì rẻ và deterministic; G2 là lớp opt-in.</figcaption>
+          </figure>
+
+          <p>Nếu bạn Google "CRAG" sẽ gặp paper gốc (Yan et al. 2024) với thuật ngữ khác bài này. Không mâu thuẫn — course đơn giản hoá có chủ đích cho corpus B2B closed-tenant:</p>
+          <div class="table-wrap"><table>
+            <thead><tr><th>Paper CRAG (Yan et al. 2024)</th><th>Course (production B2B)</th><th>Vì sao đơn giản hoá</th></tr></thead>
+            <tbody>
+              <tr><td>Retrieval evaluator riêng (model fine-tune) chấm <strong>Correct / Ambiguous / Incorrect</strong></td><td>4 tier từ phân bố score cross-encoder (confident/moderate/low/empty)</td><td>Không phải train + host thêm model; score rerank đã có sẵn trong pipeline, sweep ngưỡng trên frozen eval set là đủ.</td></tr>
+              <tr><td>Knowledge refinement: <strong>decompose-then-recompose</strong> — cắt document thành strip, chấm từng strip, giữ strip liên quan</td><td>Focused excerpts + rescue pass nới filter (3.4)</td><td>Cùng mục tiêu — đưa evidence sạch hơn vào prompt — nhưng deterministic, không thêm LLM call.</td></tr>
+              <tr><td><strong>Web search fallback</strong> khi Incorrect/Ambiguous</td><td>Không có — empty thì "tôi không biết" / clarify</td><td>Corpus đóng theo tenant: web fallback vừa là attack surface (5.1) vừa phá cam kết "chỉ trả lời từ tri thức của bạn".</td></tr>
+            </tbody>
+          </table></div>
+
+          <div class="callout danger"><div class="callout-title">Ba anti-pattern khi triển khai retrieval gate</div><ul>
+            <li><strong>Lấy cosine bi-encoder làm ngưỡng CRAG.</strong> Cosine bi-encoder mờ (3.2) và cho sibling score cao giả. Cross-encoder cũng không thoát hẳn: score reranker không phải calibrated probability — Cohere và BGE nói thẳng trong docs reranker của họ: 0.91 không có nghĩa "relevant gấp đôi 0.45", và phân bố score đổi theo model lẫn domain. Ngưỡng đặt trên score cross-encoder, sweep trên eval set, sweep lại khi đổi reranker.</li>
+            <li><strong>Empty nhưng cho model fallback về training data.</strong> "Không tìm thấy" phải ra "tôi không biết" — model knowledge chung ghi đè tenant knowledge là phá trust B2B.</li>
+            <li><strong>Low → mở agentic loop không biên.</strong> Một rescue bounded (3.4) trước đã; loop tự do trả giá bằng cost, latency và non-determinism.</li>
+          </ul></div>
+
+          <div class="callout insight"><div class="callout-title">Đặt ngưỡng bằng eval, không bằng cảm giác</div><p>Floor và ngưỡng cao của 4 tier không có giá trị "chuẩn" — chúng là tham số phải sweep: lấy frozen eval set (1.4), chia theo segment (lookup đơn giản vs câu hỏi so sánh), sweep floor/high trên holdout, và optimize <em>abstain precision</em> (khi bot nói "không biết", có thật là không có câu trả lời không?) cộng faithfulness — <strong>không</strong> optimize "trả lời được nhiều nhất". Answer-rate cao nhất luôn thuộc về bot bịa nhiều nhất. Muốn ngưỡng ổn định hơn nữa, áp calibration chuẩn (Platt / isotonic) lên score reranker trước khi so ngưỡng.</p></div>
+
+          <p>Cuối cùng, nhớ giới hạn của bài này: CRAG chỉ <em>phân loại</em> — tự nó không sửa gì. Hành động sửa nằm ở Bài 3.4, và nó có biên: classifier + bounded policy, không phải agent tự do.</p>
+
           <div class="takeaway">
             <span class="eyebrow"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true" focusable="false"><path d="M12 2v6m0 8v6M4.9 4.9l4.2 4.2m5.8 5.8l4.2 4.2M2 12h6m8 0h6M4.9 19.1l4.2-4.2m5.8-5.8l4.2-4.2"/></svg>Takeaway</span>
-            <p>Retrieval có thể trả về kết quả rác; CRAG <span class="hl">phân loại 4 trạng thái trước khi sinh</span> — và "tôi không biết" là feature, không phải failure.</p>
+            <p>Retrieval có thể trả về kết quả rác; CRAG <span class="hl">phân loại 4 trạng thái trước khi sinh</span> — và "tôi không biết" là feature, không phải failure. Trong control plane, CRAG là G1 — cổng rẻ, deterministic trước generate; G2 faithfulness là cổng opt-in sau generate, bắt case retrieval tốt nhưng câu trả lời bịa.</p>
           </div>
 
           <div class="quiz" data-correct="2">
@@ -1463,6 +1539,16 @@ footer.site{border-top:1px solid var(--border);padding:26px 24px;text-align:cent
             <button class="quiz-opt" onclick="quizPick(this,2)"><span class="quiz-letter">C</span><span>Chatbot nói "tôi không có thông tin — bạn muốn nói chuyện với nhân viên hỗ trợ?" giữ niềm tin; chatbot bịa câu trả lời phá nó. Khi retrieval rỗng, model không được fallback vào training data.</span></button>
             <button class="quiz-opt" onclick="quizPick(this,3)"><span class="quiz-letter">D</span><span>Vì CRAG luôn phân loại rỗng khi không có rerank.</span></button>
             <div class="quiz-feedback" role="status" data-explain="Đúng: niềm tin là tài sản của chatbot B2B. Quy tắc kiến trúc: không để model knowledge chung ghi đè tenant knowledge đã truy xuất — retrieval rỗng thì model phải nói không biết, không fallback training data."></div>
+          </div>
+
+          <div class="quiz" data-correct="1">
+            <span class="eyebrow">Kiểm tra nhanh</span>
+            <p class="quiz-q">Top-1 sau rerank đạt score 0.92 (tier confident), nhưng câu trả lời sinh ra cite một fact không hề có trong chunk. Gate nào fail?</p>
+            <button class="quiz-opt" onclick="quizPick(this,0)"><span class="quiz-letter">A</span><span>G1 — vì score 0.92 vẫn chưa đủ cao, cần nâng ngưỡng confident.</span></button>
+            <button class="quiz-opt" onclick="quizPick(this,1)"><span class="quiz-letter">B</span><span>G2 — retrieval tốt thật, nhưng câu trả lời không được chunk đỡ. G1 không thể bắt lỗi này vì nó chạy xong trước khi câu trả lời tồn tại.</span></button>
+            <button class="quiz-opt" onclick="quizPick(this,2)"><span class="quiz-letter">C</span><span>Clarify gate — query chắc chắn mơ hồ nên mới sai.</span></button>
+            <button class="quiz-opt" onclick="quizPick(this,3)"><span class="quiz-letter">D</span><span>Không gate nào — score 0.92 nghĩa là câu trả lời đúng.</span></button>
+            <div class="quiz-feedback" role="status" data-explain="Đúng: G1 đo chất lượng retrieval, chạy trước generate — nó không nhìn thấy câu trả lời. Hallucination trên retrieval tốt chỉ G2 (faithfulness check: NLI/citation check/LLM-judge) bắt được. Đây chính là lý do Self-RAG tách token relevance (IsREL) khỏi token support (IsSUP): hai câu hỏi khác nhau, hai giai đoạn khác nhau."></div>
           </div>
         </div>
         <div class="lesson-nav" data-navfor="m3-l3"></div>
@@ -1527,7 +1613,7 @@ footer.site{border-top:1px solid var(--border);padding:26px 24px;text-align:cent
           <ul>
             <li><strong>Không rủi ro hạ cấp</strong> — rescue nhận chỉ khi CRAG tier strictly cao hơn (<code>empty &lt; low &lt; moderate &lt; confident</code>). Không thể làm câu tốt tồi hơn.</li>
             <li><strong>Rẻ</strong> — query embedding tính một lần và tái dùng, nên rescue tốn thêm một SQL recall (+ nhiều nhất một rerank call), không bao giờ round-trip embedding thứ hai, <em>không bao giờ</em> LLM call thêm.</li>
-            <li><strong>Deterministic</strong> — không model trong vòng. Một retry sửa chữa đơn, không agent suy luận mở. Full agentic loop bị loại vì over-engineered cho mix query này.</li>
+            <li><strong>Deterministic</strong> — không model trong vòng. Một retry sửa chữa đơn, không agent suy luận mở. Full agentic loop bị loại vì over-engineered cho mix query này — và đo lường độc lập xác nhận hướng đó: agentic RAG tốn trung bình ~3.3× input token so với pipeline modular tăng cường mà không thắng ổn định về chất lượng (<a href="https://arxiv.org/abs/2601.07711" target="_blank" rel="noreferrer">Ferrazzi et al., ACL 2026 Industry</a>).</li>
           </ul>
 
           <div class="takeaway">
@@ -2182,7 +2268,7 @@ footer.site{border-top:1px solid var(--border);padding:26px 24px;text-align:cent
               <tr><td>2.4 Multi-query</td><td>Một query bốn biến thể deterministic, RRF gộp — recall miễn phí, kiểm được.</td></tr>
               <tr><td>3.1 Contextual chunking</td><td>Một câu ngữ cảnh LLM sinh, prepend trước embed, −35% lỗi retrieval (−49% khi kết hợp contextual BM25).</td></tr>
               <tr><td>3.2 Cross-encoder</td><td>Funnel top-30 → top-15: rẻ-rộng rồi sắc-hẹp.</td></tr>
-              <tr><td>3.3 CRAG</td><td>Phân loại 4 trạng thái trước khi sinh; "tôi không biết" là feature.</td></tr>
+              <tr><td>3.3 CRAG</td><td>Phân loại 4 trạng thái trước khi sinh; "tôi không biết" là feature. G1 rẻ trước generate, G2 opt-in sau.</td></tr>
               <tr><td>3.4 Self-corrective</td><td>Một rescue pass nới filter, nhận chỉ khi tier cao hơn rõ rệt — không hạ cấp.</td></tr>
               <tr><td>4.1 Entity planning</td><td>Giải proper-noun bằng match lexical trước retrieval — vector sai công cụ.</td></tr>
               <tr><td>4.2 Distillation</td><td>Dedup tag không xoá (+13.55%); Q→A index cho nguồn giá trị cao.</td></tr>
@@ -2204,7 +2290,7 @@ footer.site{border-top:1px solid var(--border);padding:26px 24px;text-align:cent
               <tr><td>4. Fusion</td><td>RRF gộp hai ranking (k=60)? Multi-query cap + cache embedding?</td><td>Scale lớn nhất luôn thắng; recall thấp.</td></tr>
               <tr><td>5. Context</td><td>Contextual chunking (LLM sinh ngữ cảnh) cho nguồn giá trị cao?</td><td>Chunk giữa tài liệu mất ngữ cảnh, −35% lỗi retrieval tiềm năng.</td></tr>
               <tr><td>6. Rerank</td><td>Bi top-30 → cross top-15? Dispatcher opt-in, off-by-default?</td><td>Mờ bi-encoder lẫn sibling; chi phí mất kiểm soát nếu on-by-default.</td></tr>
-              <tr><td>7. Quality gate</td><td>CRAG 4 trạng thái + self-corrective rescue (no downgrade)?</td><td>Tự tin trả lời rác; không cứu câu bị filter giấu.</td></tr>
+              <tr><td>7. Quality gate</td><td>G1: CRAG 4 trạng thái + self-corrective rescue (no downgrade)? G2 faithfulness check opt-in sau generate?</td><td>Tự tin trả lời rác; không cứu câu bị filter giấu; câu bịa trên retrieval tốt không ai bắt.</td></tr>
               <tr><td>8. Entity planning</td><td>Planner giải thực thể lexical trước retrieval? Sibling reject + clarify?</td><td>Sibling-confusion; "Demo AM" trả "Demo Media".</td></tr>
               <tr><td>9. Distillation</td><td>Semantic dedup (≥0.85, tag)? Q→A cho nguồn giá trị cao? versionState?</td><td>Near-duplicate dìm canonical; version cũ thắng query mới.</td></tr>
               <tr><td>10. Curation</td><td>Per-page override? scopeMode cho bot 1 product? Synonym merge (overlap)?</td><td>URL ồn thắng query; bot 1 product lặp clarify.</td></tr>
@@ -2279,7 +2365,7 @@ const LESSONS = [
   {id:'m2-l4', mod:2, part:'Phần II · Nhận diện & trộn retrieval', title:'Multi-query expansion — hỏi một câu bốn cách', desc:'Mở rộng deterministic 4 biến thể, RRF gộp; cap variant để giữ cost.'},
   {id:'m3-l1', mod:3, part:'Phần III · Chất lượng retrieval nâng cao', title:'Contextual chunking — thêm tiền tố "chunk này nói gì"', desc:'LLM sinh 1–2 câu ngữ cảnh, prepend trước embed; −35% retrieval failure (−49% khi kết hợp contextual BM25).'},
   {id:'m3-l2', mod:3, part:'Phần III · Chất lượng retrieval nâng cao', title:'Cross-encoder reranking — giám khảo nhỏ hơn, khôn hơn', desc:'Bi-encoder nhanh mờ, cross-encoder chậm sắc; funnel top-30 → top-15.'},
-  {id:'m3-l3', mod:3, part:'Phần III · Chất lượng retrieval nâng cao', title:'CRAG — biết khi retrieval hỏng', desc:'Phân loại retrieval 4 trạng thái confident/moderate/low/empty; \'tôi không biết\' là feature.'},
+  {id:'m3-l3', mod:3, part:'Phần III · Chất lượng retrieval nâng cao', title:'CRAG — biết khi retrieval hỏng', desc:'Phân loại retrieval 4 trạng thái confident/moderate/low/empty; \'tôi không biết\' là feature; control plane G1/G2.'},
   {id:'m3-l4', mod:3, part:'Phần III · Chất lượng retrieval nâng cao', title:'Self-corrective retrieval — vòng cứu hỏng có biên', desc:'1 rescue pass nới filter, nhận chỉ khi tier strictly cao hơn; cheap, deterministic.'},
   {id:'m4-l1', mod:4, part:'Phần IV · Kỹ thuật production', title:'Entity-aware planning — "secret sauce" production', desc:'Planner giải thực thể bằng match lexical trước retrieval; reject sibling trap; clarify khi tie.'},
   {id:'m4-l2', mod:4, part:'Phần IV · Kỹ thuật production', title:'Lớp 2026-Q3 · Distillation — dedup + Q→A', desc:'Semantic dedup (cosine ≥ 0.85, tag dedupOf, +13.55%) + Q→A index opt-in cho nguồn giá trị cao.'},
