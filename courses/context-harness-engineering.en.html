@@ -526,7 +526,7 @@ PROMPT:
           <p>Every model call assembles <em>a single linear sequence</em>. Understanding how many tokens each segment costs — and how it interacts with the cache — is the foundation for every other context-engineering technique.</p>
           <div class="callout insight">
             <div class="callout-title">The 1M-token era · what changes, what doesn't</div>
-            <p>As of Jul 2026, GPT-5.6, Claude Sonnet 5 and Opus 4.8 all offer a context option around 1M tokens. That capacity is useful for long documents and tasks, but doesn't prove that any given monorepo or PDF will be understood in full. <strong>The context window is capacity; effective context is the part the model uses correctly on your eval.</strong></p>
+            <p>As of Aug 2026, GPT-5.6, Claude Sonnet 5 and Opus 5 all offer a context option around 1M tokens. That capacity is useful for long documents and tasks, but doesn't prove that any given monorepo or PDF will be understood in full. <strong>The context window is capacity; effective context is the part the model uses correctly on your eval.</strong></p>
           </div>
           <figure class="figure" style="padding:18px 20px 4px">
             <div class="stack-caption">a typical agent call · 200k working budget (1M ceiling)</div>
@@ -604,7 +604,7 @@ PROMPT:
 
           <div class="concept">
             <span class="eyebrow">Prompt caching — the lever you must understand</span>
-            <p>Both Anthropic and OpenAI offer <em>prefix</em>-based prompt caching. For Claude (re-checked 25 Jul 2026), a cache read is billed at 0.1× base input, but a 5-minute cache write is 1.25× and a cache hit requires an identical prefix. Take 100k stable tokens: the first call pays a write cost equivalent to 125k input; a later call, if it hits, makes that part equivalent to 10k. <strong>Put the stable part first, the dynamic part last</strong>; a timestamp at the top can wipe out the hit for everything behind it.</p>
+            <p>Both Anthropic and OpenAI offer <em>prefix</em>-based prompt caching. For Claude (re-checked 21 Aug 2026), a cache read is billed at 0.1× base input, but a 5-minute cache write is 1.25× and a cache hit requires an identical prefix. Take 100k stable tokens: the first call pays a write cost equivalent to 125k input; a later call, if it hits, makes that part equivalent to 10k. <strong>Put the stable part first, the dynamic part last</strong>; a timestamp at the top can wipe out the hit for everything behind it. One threshold that's easy to miss: each model has a <em>minimum</em> cacheable length (Sonnet 5: 1,024 tokens) — a shorter block marked with <code>cache_control</code> still runs normally but is silently not cached, with no error.</p>
           </div>
           <div class="callout success">
             <div class="callout-title">Cache-friendly order (by decreasing stability)</div>
@@ -679,12 +679,14 @@ console.log(result.providerMetadata?.anthropic);</pre>
           </div>
 
           <div class="callout warn">
-            <div class="callout-title">Product state · checked 25 Jul 2026</div>
-            <p>Three infrastructure-level changes have shifted the "hidden tax" this lesson describes. <em>Parameter and feature names can change — re-check the vendor docs before you rely on them; the mechanism underneath is the durable part.</em></p>
+            <div class="callout-title">Product state · checked 21 Aug 2026</div>
+            <p>Five infrastructure-level changes have shifted the "hidden tax" this lesson describes. <em>Parameter and feature names can change — re-check the vendor docs before you rely on them; the mechanism underneath is the durable part.</em></p>
             <ul>
               <li><strong>Load-on-demand tool loadouts are now GA.</strong> Instead of pushing the whole catalog into every call, the harness keeps tool definitions <em>outside</em> the context and loads a schema only when the tool is selected (Anthropic groups these mechanisms under tool search / deferred loading, introduced 11/2025; Anthropic reports it can cut the token share spent on tool definitions by more than 80% for large catalogs). The rule of thumb that ships with it: tool-selection accuracy starts degrading noticeably past roughly 30–50 tools loaded at once — treat that as a place to start measuring, not a constant.</li>
               <li><strong>Compaction has become an infrastructure primitive.</strong> It is no longer just a hand-typed <code>/compact</code> in the CLI: the API carries a compaction parameter (version <code>compact_20260112</code> at the time of checking) and context editing clears stale tool results as a session swells. The mechanism is durable — <strong>compaction happens in the infrastructure, not inside the model's head</strong>; the parameter name is a dated product detail.</li>
-              <li><strong>The 1M window is now priced normally at Anthropic</strong> (the surcharge on the portion above 200K was dropped, 04/2026). That makes <em>capacity</em> cheaper, not <em>context rot</em>: everything in Lesson 2.1 still holds.</li>
+              <li><strong>The 1M window is now priced normally at Anthropic</strong> (the surcharge on the portion above 200K was dropped, 03/2026). That makes <em>capacity</em> cheaper, not <em>context rot</em>: everything in Lesson 2.1 still holds.</li>
+              <li><strong>A new tokenizer on the Claude 5 generation.</strong> Sonnet 5 and Fable 5 use a new tokenizer that produces roughly 30% more tokens for the same text (the exact increase depends on the content). Any "token budget per section" intuition carried over from older models has to be re-measured on the new tokenizer.</li>
+              <li><strong>Changing instructions/tools mid-session no longer has to break the cache (beta).</strong> Mid-conversation system messages let you send <code>role: system</code> after a user turn, and a separate beta adds/removes tools between turns — both preserve cache hits when a long session changes direction. This is the infrastructure answer to two of this very lesson's pain points: instructions changing mid-flight and MCP toggling mid-session.</li>
             </ul>
           </div>
 
@@ -1407,7 +1409,7 @@ description: Use when exporting the weekly client report from the internal
               </tbody>
             </table>
           </div>
-          <div class="callout insight"><div class="callout-title">A new model doesn't make fan-out pay off on its own</div><p>Multi-agent orchestration is only worth it when the task splits, each branch has an output contract and a verifier, and the combined cost is lower than the time saved. Opus 4.8, Sonnet 5 or GPT-5.6 may raise the baseline, but the fan-out decision still has to rest on the workflow's eval. Parallelization buys speed with tokens, rate limits and merge effort.</p></div>
+          <div class="callout insight"><div class="callout-title">A new model doesn't make fan-out pay off on its own</div><p>Multi-agent orchestration is only worth it when the task splits, each branch has an output contract and a verifier, and the combined cost is lower than the time saved. Opus 5, Sonnet 5 or GPT-5.6 may raise the baseline, but the fan-out decision still has to rest on the workflow's eval. Parallelization buys speed with tokens, rate limits and merge effort.</p></div>
 
           <h4>Harness → Loop → Graph · three rungs of orchestration</h4>
           <p>The async mechanisms above aren't disconnected — they stack into three ascending rungs. Seeing these three rungs tells you where you are and what the next rung buys you.</p>

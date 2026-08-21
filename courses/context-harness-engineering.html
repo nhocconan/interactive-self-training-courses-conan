@@ -527,7 +527,7 @@ PROMPT:
           <p>Mỗi lệnh gọi mô hình lắp ráp <em>một chuỗi tuyến tính duy nhất</em>. Hiểu mỗi đoạn tốn bao nhiêu token — và tương tác với cache thế nào — là nền của mọi kỹ thuật context engineering còn lại.</p>
           <div class="callout insight">
             <div class="callout-title">Kỷ nguyên 1M token · cái gì đổi, cái gì không</div>
-            <p>Tính đến 07/2026, GPT-5.6, Claude Sonnet 5 và Opus 4.8 đều có lựa chọn context khoảng 1M token. Sức chứa này hữu ích cho tài liệu và task dài, nhưng không chứng minh một monorepo hay PDF bất kỳ sẽ được hiểu trọn vẹn. <strong>Context window là sức chứa; effective context là phần model dùng đúng trên eval của bạn.</strong></p>
+            <p>Tính đến 08/2026, GPT-5.6, Claude Sonnet 5 và Opus 5 đều có lựa chọn context khoảng 1M token. Sức chứa này hữu ích cho tài liệu và task dài, nhưng không chứng minh một monorepo hay PDF bất kỳ sẽ được hiểu trọn vẹn. <strong>Context window là sức chứa; effective context là phần model dùng đúng trên eval của bạn.</strong></p>
           </div>
           <figure class="figure" style="padding:18px 20px 4px">
             <div class="stack-caption">một lệnh gọi agent điển hình · ngân sách làm việc 200k (trần 1M)</div>
@@ -605,7 +605,7 @@ PROMPT:
 
           <div class="concept">
             <span class="eyebrow">Prompt caching — đòn bẩy bắt buộc phải hiểu</span>
-            <p>Cả Anthropic lẫn OpenAI đều có prompt caching theo <em>tiền tố</em> (prefix). Với Claude (kiểm lại 25/07/2026), cache read được tính bằng 0,1 lần base input, nhưng lần ghi cache 5 phút là 1,25 lần và cache hit đòi phần prefix giống hệt. Ví dụ 100k token ổn định: lần đầu trả chi phí ghi tương đương 125k input; lần sau, nếu hit, phần đó tương đương 10k. <strong>Đặt phần ổn định trước, phần động sau</strong>; timestamp ở đầu có thể làm mất hit cho toàn bộ phần phía sau.</p>
+            <p>Cả Anthropic lẫn OpenAI đều có prompt caching theo <em>tiền tố</em> (prefix). Với Claude (kiểm lại 21/08/2026), cache read được tính bằng 0,1 lần base input, nhưng lần ghi cache 5 phút là 1,25 lần và cache hit đòi phần prefix giống hệt. Ví dụ 100k token ổn định: lần đầu trả chi phí ghi tương đương 125k input; lần sau, nếu hit, phần đó tương đương 10k. <strong>Đặt phần ổn định trước, phần động sau</strong>; timestamp ở đầu có thể làm mất hit cho toàn bộ phần phía sau. Một ngưỡng hay bị bỏ qua: mỗi model có độ dài cache <em>tối thiểu</em> (Sonnet 5: 1.024 token) — khối ngắn hơn dù gắn <code>cache_control</code> vẫn chạy bình thường nhưng âm thầm không được cache, không báo lỗi.</p>
           </div>
           <div class="callout success">
             <div class="callout-title">Thứ tự thân thiện với cache (theo độ ổn định giảm dần)</div>
@@ -680,12 +680,14 @@ console.log(result.providerMetadata?.anthropic);</pre>
           </div>
 
           <div class="callout warn">
-            <div class="callout-title">Trạng thái sản phẩm · kiểm tra 25/07/2026</div>
-            <p>Ba thay đổi ở tầng hạ tầng đã dịch chuyển phần "thuế ẩn" của bài này. <em>Tên tham số và tên tính năng có thể đổi — kiểm tra lại tài liệu nhà cung cấp trước khi dùng; cơ chế bên dưới mới là phần đáng nhớ.</em></p>
+            <div class="callout-title">Trạng thái sản phẩm · kiểm tra 21/08/2026</div>
+            <p>Năm thay đổi ở tầng hạ tầng đã dịch chuyển phần "thuế ẩn" của bài này. <em>Tên tham số và tên tính năng có thể đổi — kiểm tra lại tài liệu nhà cung cấp trước khi dùng; cơ chế bên dưới mới là phần đáng nhớ.</em></p>
             <ul>
               <li><strong>Tool loadout nạp-khi-cần đã GA.</strong> Thay vì đẩy cả catalog vào mỗi lệnh gọi, harness giữ tool definitions <em>ngoài</em> context và chỉ nạp schema khi tool được chọn (Anthropic gọi nhóm cơ chế này là tool search / deferred loading, giới thiệu 11/2025 và Anthropic báo cáo có thể cắt phần token dành cho tool definitions tới hơn 80% với catalog lớn). Quy tắc thực dụng đi kèm: độ chính xác chọn tool bắt đầu giảm rõ khi nạp cùng lúc quá khoảng 30–50 tool — hãy coi đó là mốc để bắt đầu đo, không phải hằng số.</li>
               <li><strong>Compaction đã thành primitive ở hạ tầng.</strong> Nó không còn chỉ là lệnh <code>/compact</code> gõ tay trong CLI: API có tham số compaction (phiên bản <code>compact_20260112</code> tại thời điểm kiểm) và context editing tự dọn tool-result cũ khi phiên phình. Cơ chế thì bền — <strong>compaction xảy ra ở hạ tầng, không phải trong đầu model</strong>; tên tham số là chi tiết sản phẩm có ngày.</li>
-              <li><strong>Cửa sổ 1M nay tính giá chuẩn ở Anthropic</strong> (phần phụ phí cho phần vượt 200K đã bỏ, 04/2026). Điều này làm rẻ hơn <em>sức chứa</em>, không làm rẻ hơn <em>context rot</em>: bài 2.1 vẫn đúng nguyên.</li>
+              <li><strong>Cửa sổ 1M nay tính giá chuẩn ở Anthropic</strong> (phần phụ phí cho phần vượt 200K đã bỏ, 03/2026). Điều này làm rẻ hơn <em>sức chứa</em>, không làm rẻ hơn <em>context rot</em>: bài 2.1 vẫn đúng nguyên.</li>
+              <li><strong>Tokenizer mới trên thế hệ Claude 5.</strong> Sonnet 5 và Fable 5 dùng tokenizer mới, sinh nhiều token hơn khoảng 30% cho cùng một văn bản (mức tăng tùy nội dung). Mọi trực giác "ngân sách token cho mỗi phần" mang từ model cũ sang phải đo lại trên tokenizer mới.</li>
+              <li><strong>Đổi chỉ thị/tool giữa phiên không còn buộc phá cache (beta).</strong> Mid-conversation system message cho phép gửi <code>role: system</code> sau lượt user, và một beta riêng cho thêm/bớt tool giữa các lượt — cả hai giữ cache hit khi phiên dài đổi hướng. Đây là câu trả lời hạ tầng cho hai pain point của chính bài này: chỉ thị đổi giữa chừng và MCP bật/tắt giữa phiên.</li>
             </ul>
           </div>
 
@@ -1408,7 +1410,7 @@ description: Dùng khi cần xuất báo cáo tuần cho khách từ dashboard n
               </tbody>
             </table>
           </div>
-          <div class="callout insight"><div class="callout-title">Model mới không tự làm fan-out có lời</div><p>Điều phối đa agent chỉ đáng khi task chia được, mỗi nhánh có output contract và verifier, còn chi phí gộp thấp hơn thời gian tiết kiệm. Opus 4.8, Sonnet 5 hay GPT-5.6 có thể nâng baseline, nhưng quyết định fan-out vẫn phải dựa trên eval của workflow. Song song hóa mua tốc độ bằng token, rate limit và công sức merge.</p></div>
+          <div class="callout insight"><div class="callout-title">Model mới không tự làm fan-out có lời</div><p>Điều phối đa agent chỉ đáng khi task chia được, mỗi nhánh có output contract và verifier, còn chi phí gộp thấp hơn thời gian tiết kiệm. Opus 5, Sonnet 5 hay GPT-5.6 có thể nâng baseline, nhưng quyết định fan-out vẫn phải dựa trên eval của workflow. Song song hóa mua tốc độ bằng token, rate limit và công sức merge.</p></div>
 
           <h4>Harness → Loop → Graph · ba nấc điều phối</h4>
           <p>Các cơ chế async ở trên không rời rạc — chúng xếp thành ba nấc leo dần. Nhìn ra ba nấc này giúp bạn biết mình đang ở đâu và nấc kế tiếp mua thêm được gì.</p>
