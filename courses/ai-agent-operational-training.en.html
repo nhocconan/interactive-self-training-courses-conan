@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<!-- TRANSLATION_PARENT: vi LOCALE: en LAST_SYNCED: 2026-07-28 SIBLINGS: ai-agent-operational-training.html -->
+<!-- TRANSLATION_PARENT: vi LOCALE: en LAST_SYNCED: 2026-08-21 SIBLINGS: ai-agent-operational-training.html -->
 <!--
   ============================================================================
   INTERACTIVE COURSE — STARTER TEMPLATE  (house standard for ALL courses)
@@ -1851,7 +1851,7 @@
               evidence</strong>. This course is about how to operate agents — not how to write prompts or code.</p>
             <div class="hero-meta">
               <span class="chip">Level L1 → L5</span>
-              <span class="chip">23 lessons · 2 labs</span>
+              <span class="chip">23 lessons (2 of them labs)</span>
             </div>
             <div style="margin-top:28px;display:flex;gap:12px;flex-wrap:wrap">
               <a class="btn btn-primary" id="start-btn">Start learning →</a>
@@ -1864,7 +1864,7 @@
           <!-- Example-data disclaimer for learners -->
           <div class="callout info" style="margin-bottom:32px">
             <div class="callout-title">Tool names and numbers here are illustrative</div>
-            <p>This course uses the product names that exist as of <strong>July 2026</strong>: <strong>ChatGPT</strong>
+            <p>This course uses the product names that exist as of <strong>August 2026</strong>: <strong>ChatGPT</strong>
               (Chat/Work/Codex), <strong>Claude</strong> (Chat/Cowork/Claude Code), and apps/connectors such as
               Drive, Slack, and Sheets. Features and model names can change, so each lesson always states the
               <em>selection criteria</em> and not just a tool name. Likewise, every domain
@@ -1921,7 +1921,9 @@
                   <tr>
                     <td><strong>Voice / Remote</strong></td>
                     <td>A conversational control channel and a bridge to a paired host; it can start or steer remote
-                      work but adds no permission and does not replace the execution surface (Lesson 1.4).</td>
+                      work but adds no permission and does not replace the execution surface (Lesson 1.4). On the Claude
+                      side the product name for the "Remote" half is <strong>Dispatch</strong> — hand work over from the
+                      phone app, the desktop runs it.</td>
                   </tr>
                   <tr>
                     <td><strong>Prompt injection</strong></td>
@@ -2269,36 +2271,66 @@
             <p>Green zone (free to run): public sites, IT-issued demo/staging accounts, the <code>03-OUTPUTS</code>
               folder, files you created yourself.</p>
 
-            <p>The three approval modes below are the course's shared vocabulary; each tool has its own button names.</p>
+            <p>The four approval modes below are the course's shared vocabulary; each tool has its own button names.</p>
             <div class="table-wrap">
               <table>
                 <thead>
                   <tr>
                     <th>Approval mode</th>
                     <th>What it actually does</th>
+                    <th>Name in the tool (Claude Code, 2026-08)</th>
                     <th>Use when</th>
                   </tr>
                 </thead>
                 <tbody>
                   <tr>
+                    <td><strong>Plan</strong> (read-only)</td>
+                    <td>The agent reads and explores but <strong>writes nothing</strong>; it returns a plan for you to
+                      approve before any change happens.</td>
+                    <td><code>plan</code></td>
+                    <td>New work, unfamiliar systems, or when you have not settled the scope yet.</td>
+                  </tr>
+                  <tr>
                     <td><strong>Manual</strong></td>
                     <td>Stops and asks before each defined action.</td>
+                    <td><code>default</code> — shown as "Manual"</td>
                     <td>First run of a workflow. Work with real consequences: money, messages sent, important files.</td>
                   </tr>
                   <tr>
                     <td><strong>Auto</strong></td>
-                    <td>Runs pre-approved actions on its own; still stops at sensitive checkpoints the team defines.</td>
-                    <td>A flow already piloted on staging, with automated checks and no expansion of scope.</td>
+                    <td>A <strong>classifier approves in your place</strong> at each step; the session only stops at the
+                      class of actions that are irreversible, destructive, or that leave the declared environment.</td>
+                    <td><code>auto</code></td>
+                    <td>A flow already piloted, with automated checks and a written list of the actions allowed to run
+                      unattended.</td>
                   </tr>
                   <tr>
-                    <td><strong>Skip</strong></td>
+                    <td><strong>Bypass</strong> (Skip)</td>
                     <td>Uses none of this course's approval checkpoints. Other protections depend on the product and the
                       sandbox.</td>
+                    <td><code>bypassPermissions</code></td>
                     <td>Only on an isolated lab/sandbox machine with fake data. <strong>Do not use on a machine with
                         real data.</strong></td>
                   </tr>
                 </tbody>
               </table>
+            </div>
+            <p>Between Manual and Auto sit two intermediate variants in Claude Code: <code>acceptEdits</code>
+              (auto-accepts file edits inside the working directory) and <code>dontAsk</code> (runs only the tools you
+              pre-approved and denies the rest outright instead of asking).</p>
+
+            <div class="callout warn">
+              <div class="callout-title">Auto is not Skip with a nicer name · checked 2026-08-21</div>
+              <p><strong>Auto is only safe when you can list which actions run unattended.</strong> Without that list,
+                Auto is just Skip renamed — you still do not know what the session was allowed to do. That list has a
+                place to live: <strong>permission rules</strong> sit on top of the mode, and <strong>deny rules block in
+                  every mode</strong>, including <code>bypassPermissions</code> — that is the enforced version of the
+                paper deny-list you just wrote at the top of this lesson.</p>
+              <p>And here is the part that gets missed: since <strong>2026-08-14</strong>, <code>auto</code> is the
+                <strong>starting</strong> mode for new Claude Code sessions on Pro, Max, and Team — not Manual. An
+                operator's first job is to <strong>check which mode you are in</strong>; do not assume Manual. Source:
+                <a href="https://claude.com/blog/auto-mode-default-in-claude-code" target="_blank"
+                  rel="noopener noreferrer">claude.com/blog/auto-mode-default-in-claude-code</a>.</p>
             </div>
 
             <div class="callout info">
@@ -2306,6 +2338,17 @@
               <p>Never let the agent buy things, execute transactions, defeat anti-bot checks, or delete permanently on
                 its own. Creating accounts or sending externally must follow org policy and have a human approve. And
                 never drop a checkpoint just to cut the number of clicks.</p>
+            </div>
+
+            <div class="callout insight">
+              <div class="callout-title">Real discipline is asymmetric, not uniformly tight</div>
+              <p>Read the table above in one direction only and it is easy to conclude "tighter is better" — which is
+                the fastest way to get the whole team routing around your protections. The working principle is the
+                opposite: <strong>broad, automatic permission for reversible work</strong> (reading, drafting, writing
+                into <code>03-OUTPUTS</code>, editing files in a committed repo), and a <strong>hard, non-negotiable
+                  gate for the irreversible set</strong> — send · delete · publish · pay · write to prod. That is
+                exactly the split-by-reversibility taxonomy in Lesson 2.3; the boundary is whether an action can be
+                walked back, not how nervous it makes you feel.</p>
             </div>
 
             <div class="takeaway">
@@ -2418,6 +2461,11 @@
               <figcaption><b>Figure 1.2</b> — A command hidden in content the agent reads. Three defensive layers: restrict the site, restrict permissions, and keep an approval gate on irreversible actions.</figcaption>
             </figure>
 
+            <p>The line at the bottom of the figure is worth reading slowly, because it also covers prompts that look
+              perfectly safe: a <em>"write a plan first, don't run anything"</em> prompt (Prompt 01 in Lesson 8.1)
+              produces a better plan, but it is still only an instruction — <strong>the real lock is the tool's
+                permission mode</strong>, not the wording of the prompt.</p>
+
             <div class="compare">
               <div class="compare-col good"><span class="eyebrow">Check in your product</span>
                 <ul>
@@ -2451,12 +2499,15 @@
             </div>
 
             <div class="callout info">
-              <div class="callout-title">What the security agencies recommend · checked 2026-07-25</div>
-              <p>CISA and the Five Eyes cyber-security agencies published guidance (2026-05) pointing the same way: at
-                this stage, give agents only <strong>low-risk work on non-sensitive data</strong>, and grant access on a
-                least-privilege basis (just enough to do the job in front of it). One published incident shows the risk
-                isn't theoretical: Brave's research team described an agentic browser being steered by text hidden in a
-                web page, then going off to read OTP codes out of the user's inbox (Brave, 2025-08).</p>
+              <div class="callout-title">What the security agencies recommend · checked 2026-08-21</div>
+              <p>Worth knowing by its exact title so you cite it correctly: <strong>"Careful Adoption of Agentic
+                  Artificial Intelligence (AI) Services"</strong>, led by ASD's ACSC (Australia) with CISA and the rest
+                of the Five Eyes cyber-security agencies, published <strong>2026-05-01</strong>. Its opening
+                recommendation is the one operators should know by heart, verbatim: <em>"Begin with agentic AI use cases
+                  that are low-risk and non-sensitive"</em> — alongside granting access on a least-privilege basis, just
+                enough to do the job in front of it. One published incident shows the risk isn't theoretical: Brave's
+                research team described an agentic browser being steered by text hidden in a web page, then going off to
+                read OTP codes out of the user's inbox (Brave, 2025-08).</p>
               <p>What's worth noticing as an operator: this guidance lands on the same three defensive layers the lesson
                 just described — restrict the source, restrict the permissions, keep the approval gate. Agency names and
                 document contents change; check the current version before quoting it in an internal policy.</p>
@@ -2586,11 +2637,16 @@ At the end, report which file/diff/test/log I should inspect at my desk. Do not 
             </div>
 
             <div class="callout info">
-              <div class="callout-title">Sources · checked 28 Jul 2026</div>
+              <div class="callout-title">Sources · checked 21 Aug 2026</div>
               <p>Official documentation: <a href="https://learn.chatgpt.com/docs/features/voice"
                   target="_blank" rel="noopener noreferrer">ChatGPT Voice</a> and
                 <a href="https://learn.chatgpt.com/docs/remote-connections"
-                  target="_blank" rel="noopener noreferrer">Remote connections</a>.
+                  target="_blank" rel="noopener noreferrer">Remote connections</a>. On the Claude side, the "Remote"
+                half has its own product name — <strong>Dispatch</strong>: hand work over from the phone app, the
+                desktop picks it up and runs it (<a
+                  href="https://support.claude.com/en/articles/13947068-assign-tasks-from-anywhere-in-claude-cowork"
+                  target="_blank" rel="noopener noreferrer">support.claude.com · Assign tasks from anywhere in Claude
+                  Cowork</a>, shipped 2026-03 for Max, then opened down to Pro).
                 <a href="https://x.com/AlexFinn/status/2081757675407425682"
                   target="_blank" rel="noopener noreferrer">Alex Finn's post</a> was the UX signal, not a product
                 specification. Availability still depends on plan, rollout, and workspace policy.</p>
@@ -3402,6 +3458,25 @@ If data is missing to evaluate: ASK ME, don't guess.</pre>
                 reasoning level only when the measured result shows the error comes from reasoning capacity.</strong>
               ChatGPT and Claude have different controls, so they don't share one model-name table.</p>
 
+            <h4>Step (4) decides one more thing: sit with it, or hand it off</h4>
+            <p>Same task, same model, but two very different ways of working: <strong>sitting with it</strong> (you
+              follow each step and correct course as it goes) or <strong>handing it off</strong> (you come back when
+              there's a result). Three questions separate the two cases:</p>
+            <ul>
+              <li><strong>(a) Is it reversible?</strong> If it goes wrong, how long does it take to walk back, and how —
+                or can't you walk it back at all?</li>
+              <li><strong>(b) Can a machine check it?</strong> Is there a check a machine can run (count, diff, test) to
+                say "passed", or only your eyes?</li>
+              <li><strong>(c) Is the spec complete?</strong> Can you write the acceptance condition down before the run,
+                or only recognise it when you see the output?</li>
+            </ul>
+            <p>Three <strong>yes</strong> answers → hand it off. Any <strong>no</strong> → sit with it. And this part is
+              worth saying plainly: when the answer is "no", the thing that's missing is usually the
+              <strong>spec</strong>, and sitting with it is how you finish writing that spec, one correction at a time.
+              Taste-dependent work — the tone of a piece, how a deck is laid out, "make it feel like us" —
+              <strong>is never fully specified</strong>; don't hand it off and then blame the AI for guessing wrong at
+              something you never wrote down.</p>
+
             <div class="table-wrap">
               <table>
                 <thead>
@@ -3415,14 +3490,14 @@ If data is missing to evaluate: ASK ME, don't guess.</pre>
                 <tbody>
                   <tr>
                     <td><strong>ChatGPT Chat</strong></td>
-                    <td>Instant/Auto; Thinking; Pro</td>
+                    <td>Pick a model + a reasoning level right under the composer</td>
                     <td>Q&amp;A, analysis, research, or drafting within a conversation.</td>
-                    <td>Start on Instant/Auto. Pick Thinking when the task has many constraints or needs deep reasoning.
-                      Pro is for the hardest tasks and has its own tool limits.</td>
+                    <td>Start on the default. Raise the reasoning level when the task has many constraints or needs deep
+                      reasoning. The tier names change over time — check learn.chatgpt.com/docs/models.</td>
                   </tr>
                   <tr>
                     <td><strong>ChatGPT Work</strong></td>
-                    <td>Agent for long work; the product manages the model</td>
+                    <td>Agent for long work; pick a model per session where the product allows it</td>
                     <td>Multi-source research, file/app analysis, producing a document, spreadsheet, slide deck, report,
                       or a finished Site.</td>
                     <td>Don't waste time picking a model first. Describe the output, the sources allowed, the check
@@ -3430,11 +3505,11 @@ If data is missing to evaluate: ASK ME, don't guess.</pre>
                   </tr>
                   <tr>
                     <td><strong>Claude Chat/Cowork</strong></td>
-                    <td>Sonnet 5 by default; Opus 4.8 or Fable 5 for harder tasks</td>
+                    <td>Sonnet 5 · Opus 5 · Fable 5 — the default differs by plan</td>
                     <td>Chat for quick exchanges; Cowork for long jobs with connectors, plugins, files, and a
                       deliverable.</td>
-                    <td>Start with Sonnet. Raise to Opus/Fable only when a test shows more capacity is needed and the
-                      added value is worth the quota/credit.</td>
+                    <td>Start with <strong>whatever your plan defaults to</strong> → move up one notch if the test falls
+                      short, and only when the added value is worth the quota/credit.</td>
                   </tr>
                   <tr>
                     <td><strong>Codex / Claude Code</strong></td>
@@ -3448,10 +3523,17 @@ If data is missing to evaluate: ASK ME, don't guess.</pre>
             </div>
 
             <div class="callout info">
-              <div class="callout-title">Product status · updated 2026-07-22</div>
-              <p><strong>ChatGPT Work</strong> has replaced ChatGPT Agent for long work and finished artifacts, using a
-                product-managed model. ChatGPT Chat's current options are Instant/Auto, Thinking, and Pro. On Claude,
-                Sonnet 5 is the default; Opus 4.8 and Fable 5 handle harder tasks.</p>
+              <div class="callout-title">Product status · updated 2026-08-21</div>
+              <p><strong>ChatGPT Work</strong> has replaced ChatGPT Agent for long work and finished artifacts. In
+                ChatGPT Chat you pick a <strong>model</strong> and a <strong>reasoning level</strong> right under the
+                composer; the tier names change over time, so this course doesn't copy them in — check
+                <a href="https://learn.chatgpt.com/docs/models" target="_blank" rel="noopener">learn.chatgpt.com/docs/models</a>
+                for the current ones. On Claude, the current line is Sonnet 5, Opus 5 (shipped 2026-07-24), and
+                Fable 5.</p>
+              <p><strong>Defaults differ by plan</strong> — Pro and Team Standard typically default to Sonnet 5; Max,
+                Team Premium, and the API default to Opus 5. The operational consequence: two people on the same team
+                can be running two different models — <strong>check before you compare results</strong>, or you're
+                comparing two different things and calling it a prompt comparison.</p>
               <p>Cross-check: the <a href="https://help.openai.com/" target="_blank" rel="noopener">OpenAI help
                   center</a> — search there for the ChatGPT Work article and the model-picker article — and <a
                   href="https://www.anthropic.com/news/claude-sonnet-5" target="_blank" rel="noopener">Claude Sonnet
@@ -3467,12 +3549,15 @@ If data is missing to evaluate: ASK ME, don't guess.</pre>
             </div>
 
             <div class="callout warn">
-              <div class="callout-title">Benchmark scores don't speak for long work · checked 2026-07-25</div>
+              <div class="callout-title">Benchmark scores don't speak for long work · checked 2026-08-21</div>
               <p>One observation worth keeping in mind when reading leaderboards: the same model line scored around
-                <strong>83%</strong> on short computer-use tasks (OSWorld-Verified) but completed only about
-                <strong>21%</strong> of the multi-hour workflows in OSWorld 2.0 (the OSWorld team reported this,
-                2026-06). The specific numbers will move with each benchmark revision; what's worth keeping is the gap
-                between the two kinds of task.</p>
+                <strong>83%</strong> on short computer-use tasks (OSWorld-Verified), but on OSWorld 2.0 — 108
+                long-horizon workflows — it <strong>completed only 20.6%</strong> of tasks while scoring
+                <strong>54.8%</strong> on partial credit (arXiv 2606.29537, 2026-06).</p>
+              <p>Those two numbers side by side are the lesson: <strong>agents are genuinely improving, but they are not
+                  FINISHING.</strong> It gets more than halfway (54.8% partial) and then stalls somewhere — and for an
+                operational job, "got halfway" isn't half a result, it's an unfinished job someone has to untangle. The
+                gap from 54.8% down to 20.6% is exactly what you pay for in supervision.</p>
               <p>For an operator that means: a short demo that runs beautifully says little about a job that runs for
                 hours. The failure modes the benchmark team recorded line up with the mistakes this course teaches —
                 dropping a stated constraint, guessing instead of asking, skipping the verify step. Splitting work into
@@ -3606,6 +3691,20 @@ If data is missing to evaluate: ASK ME, don't guess.</pre>
                 interpretation.</p>
             </div>
 
+            <h4>Before you open a second thread: one question</h4>
+            <p><strong>"Do these two threads write to the same place?"</strong> Same place — same file, same table, same
+              record — then run them <strong>sequentially</strong>, or give each thread its own copy or its own region
+              and merge afterwards. Different places, run them <strong>in parallel</strong>, freely. Figure 3.2 above is
+              the correct shape: worker 1 reads, worker 2 writes into B, worker 3 collects logs — three separate write
+              regions.</p>
+            <p>But the real ceiling isn't how many threads the AI can open. <strong>The real ceiling is your review
+                bandwidth.</strong> Six threads finishing in ten minutes is no faster than three if you can only read
+              three results — the rest sit waiting, or worse, get approved to clear the queue. One more technical
+              constraint to know: cloud sessions <strong>share a single rate limit</strong> with the rest of your usage,
+              so running them in parallel consumes quota proportionately (<a
+                href="https://code.claude.com/docs/en/claude-code-on-the-web" target="_blank"
+                rel="noopener noreferrer">code.claude.com/docs/en/claude-code-on-the-web</a>, checked 2026-08-21).</p>
+
             <div class="prompt-card">
               <div class="prompt-head"><span>Orchestration prompt template · copy</span><button class="copy-btn"
                   onclick="copyCode(this)">Copy</button></div>
@@ -3707,20 +3806,33 @@ Don't conclude "done" unless phase 3 outputs an empty diff, or every differing r
                     multi-step actions, or an artifact needed, Chat answers more directly.</li>
                   <li><strong>Mistake 2 · Always picking the strongest reasoning level.</strong> "High just to be safe"
                     is an unmeasured assumption. Compare on the same test set before raising.</li>
-                  <li><strong>Mistake 3 · Splitting one workstream into too many sessions.</strong> Related work then
-                    has to reload the same sources and decisions. A new session helps only when you change topic,
-                    permissions, or source.</li>
+                  <li><strong>Mistake 3 · Letting one session grow without limit.</strong> Every turn resends the whole
+                    history, so the longer the session, the more each question costs — the same question at turn 60
+                    costs far more than at turn 5. The most expensive version is letting a long job break at minute 40
+                    and re-running it from the start.</li>
                 </ul>
               </div>
               <div class="compare-col good"><span class="eyebrow">Replace with</span>
                 <ul>
                   <li>Short question → Chat. Work/Cowork is for multi-step jobs with a deliverable.</li>
                   <li>Start on Auto/default; raise only when a test fails for lack of reasoning.</li>
-                  <li>Keep the same session while the context still holds; split when you change topic, data,
-                    permissions, or need an independent check.</li>
+                  <li>One job, one session: brief it properly → land it → close it. When the context fills up, compact
+                    deliberately or open a new session; don't let a session sprawl.</li>
                 </ul>
               </div>
             </div>
+
+            <h4>"One job, one session" — and a five-line handover note</h4>
+            <p>The short rule: <strong>brief it properly → land it → close it</strong>. When you see the context filling
+              up, don't cram more in; compact it deliberately, or open a new session and start with a five-line handover
+              note — <strong>what you're doing · what's done · which files · what's left · the acceptance
+                condition</strong>. Those five lines usually replace a hundred turns of old conversation.</p>
+            <p>And the reason isn't only cost. Lesson 3.2 just argued that the verification pass has to stay clean so it
+              doesn't inherit bias from the plan and the log — the same logic applies to the pass that's actually doing
+              the work: <strong>forty turns of trial and error sitting in the context skew the very agent running the
+                job.</strong> It starts re-reading assumptions that were already ruled out as if they still held.
+              Opening a new session with the right files and the acceptance condition isn't losing context — it's
+              dropping the part of the context that has gone bad.</p>
 
             <div class="callout insight">
               <div class="callout-title">Measure per passing result</div>
@@ -3887,6 +3999,33 @@ Don't conclude "done" unless phase 3 outputs an empty diff, or every differing r
                   </ul>
                 </div>
               </div>
+            </div>
+
+            <h4>Three buttons your hands must know</h4>
+            <p>The six-step loop above is the agent's part. Your part is much smaller — three buttons, and all three
+              have to be familiar enough that you press them without deliberating:</p>
+            <ul>
+              <li><strong>(1) Interrupt.</strong> If you see it go wrong at step 2, interrupt right there; don't sit
+                through all ten steps first. Seven steps built on one wrong step are seven suspect steps.</li>
+              <li><strong>(2) Steer.</strong> Once you've interrupted, say <strong>one sentence</strong> about exactly
+                what's wrong — "the status column is column 4, not column 3". If you find yourself having to rewrite the
+                whole brief to explain it, that isn't steering any more: that's the signal for button 3.</li>
+              <li><strong>(3) Throw it away.</strong> Three corrections and it's still off means the
+                <strong>context is broken</strong>, not the wording. Open a new session with just the files it needs and
+                the acceptance condition, and leave the whole argument behind. The feeling of "but I already explained
+                all that" is exactly what keeps you inside a session that can't be saved.</li>
+            </ul>
+
+            <div class="callout warn">
+              <div class="callout-title">The tool's undo covers less than you think · checked 2026-08-21</div>
+              <p>In Claude Code, <code>/rewind</code> (or pressing <code>Esc</code> twice with an empty input) restores a
+                checkpoint — 100 checkpoints per session, kept for 30 days. But it does <strong>not track</strong>
+                changes made by bash commands, by background subagents, or by anything editing files outside the session
+                (<a href="https://code.claude.com/docs/en/checkpointing" target="_blank"
+                  rel="noopener noreferrer">code.claude.com/docs/en/checkpointing</a>).</p>
+              <p>Put differently: the tool's undo is a convenience, not insurance. The real undo layer is still the same
+                two things: a <strong>narrow write region</strong> and <strong>an export or commit taken before the
+                  run</strong>.</p>
             </div>
 
             <div class="takeaway">
@@ -5052,8 +5191,8 @@ AI  → Total after dropping: 1,284,500,000₫ — matches dashboard. PASS.</pre
 
             <p>Human-factors research calls this <strong>automation complacency</strong> and <strong>vigilance
                 decrement</strong> — a phenomenon documented in aviation, medicine, and industrial monitoring for decades
-              before AI. With AI tools, a study presented at CHI 2025 points the same direction: the more users trusted
-              the tool, the less critical-evaluation effort they put in. This course doesn't claim the curve has a
+              before AI. With AI tools, a number of HCI studies on automation complacency point the same direction: the
+              more users trusted the tool, the less critical-evaluation effort they put in. This course doesn't claim the curve has a
               precise shape; what is familiar from operations is the pattern — week 1 you read every line, week 4 you
               skim, week 12 you click Approve during a meeting. It's not a personal-discipline failure, and it is also
               <strong>hard to fix with reminders alone</strong> — what helps is a <strong>structural gate</strong>: a
@@ -5146,6 +5285,25 @@ AI  → Total after dropping: 1,284,500,000₫ — matches dashboard. PASS.</pre
             </div>
             <p>You need both; they don't replace each other. Guardrails too tight → the team routes around them and turns
               protection off. Validation too loose → errors slip downstream and surface weeks later.</p>
+
+            <div class="callout insight">
+              <div class="callout-title">The check has to graduate: by the third run, write it as a script</div>
+              <p>A flow that runs over and over deserves a check that moves up with it, rather than standing still:</p>
+              <ul style="margin:6px 0 0 18px">
+                <li><strong>Run 1 — a human checks.</strong> You read it and count it yourself. This is where you learn
+                  <em>what "passed" actually means</em>.</li>
+                <li><strong>Run 2 — an independent AI thread.</strong> Give it only the source, the output, the field
+                  map, and the criteria; not the plan and not the log (Lesson 3.2).</li>
+                <li><strong>Run 3 onward — write the check as a SCRIPT.</strong> Deterministic, runs in 2 seconds, costs
+                  no quota, and <em>isn't tired in week 12</em> — which is precisely the curve this lesson is about.</li>
+              </ul>
+              <p style="margin:10px 0 0">Why you have to get to step 3 rather than stopping at "let a second AI read it
+                back": <strong>two LLM threads reading the same file are not statistically independent.</strong> They
+                share the same failure modes, so two "passes" don't double your confidence the way you assume. The
+                practical move: have the AI itself write the script from Prompt 04 (Lesson 8.1), read the script once
+                yourself, then drop it into the <strong>Validation</strong> section of <code>SKILL.md</code> so it runs
+                automatically next time.</p>
+            </div>
 
             <h4>Upgrade day: re-run the golden set before trusting the flow again</h4>
             <p>The four gates above quietly assume one thing: that the model and the product behave the same today as
@@ -5267,6 +5425,12 @@ AI  → Total after dropping: 1,284,500,000₫ — matches dashboard. PASS.</pre
                 <li>The <code>~/AI-Workspace/03-OUTPUTS/</code> folder, permissioned</li>
                 <li><strong>Manual</strong> mode. Don't drop to Auto in this lab.</li>
               </ul>
+              <p style="margin:10px 0 0">Worth saying why Manual is required, so you don't take away the wrong lesson:
+                this lab only reads and downloads a file into <code>03-OUTPUTS</code> — <strong>nothing here is
+                  dangerous.</strong> Manual is there so you <strong>practise reading</strong> each step the agent is
+                about to take, not because read-only work needs guarding. Outside the lab, real discipline is
+                <strong>asymmetric</strong> (Lesson 1.2): broad, automatic permission for reversible work, and a hard,
+                non-negotiable gate for the irreversible set — send · delete · publish · pay · write to prod.</p>
             </div>
 
             <div class="callout warn">
@@ -5401,7 +5565,8 @@ Ask me if a fact is missing. Don't guess the filter.</pre>
               <span class="eyebrow">By the end of this lab you can</span>
               <ul>
                 <li>Run the full four-step loop on fake data + staging.</li>
-                <li>Apply the field map correctly — especially handling the disputed row (stop and ask, don't self-map).
+                <li>Apply the field map correctly — especially handling the disputed row (reject by the rule and raise
+                  it for a human, don't self-map).
                 </li>
                 <li>Operate an independent verifier and self-grade against a 4-level rubric.</li>
               </ul>
@@ -5584,7 +5749,9 @@ Ask me if a fact is missing. Don't guess the filter.</pre>
                     <td><code>source</code></td>
                     <td>Yes</td>
                     <td>Accept only: <code>facebook</code>, <code>zalo</code>, <code>website</code>,
-                      <code>referral</code>. Out-of-list/empty → <strong>reject</strong>.</td>
+                      <code>referral</code>. Matching is <strong>case-insensitive</strong>; normalise case only,
+                      <strong>do NOT translate meaning</strong> ("Giới thiệu" → <code>referral</code> is translating
+                      meaning — that boundary is where the bug hides). Out-of-list/empty → <strong>reject</strong>.</td>
                   </tr>
                   <tr>
                     <td><code>notes</code></td>
@@ -5645,15 +5812,17 @@ Ask me if a fact is missing. Don't guess the filter.</pre>
                   <tr>
                     <td><span style="color:var(--accent-2);font-weight:600">Pass</span></td>
                     <td><code>2</code></td>
-                    <td>All 4 phases, all gates, <code>rejected.csv</code> with exactly 6 rows and reasons matching the
-                      field map, a <code>diff.csv</code>, before/after screenshots.</td>
+                    <td>All 4 phases, all gates, <code>rejected.csv</code> with exactly 7 rows (the 6 clear errors +
+                      1005) and reasons matching the field map, a <code>diff.csv</code>, before/after screenshots.</td>
                   </tr>
                   <tr>
                     <td><span style="color:var(--success);font-weight:600">Excellent</span></td>
                     <td><code>3</code></td>
-                    <td>Pass + the AI <strong>stops to ask about row 1005</strong> instead of self-mapping; the
-                      verification thread is genuinely independent; a <code>state.json</code> exists to resume; you catch
-                      ≥1 Lesson 4.2 failure when it happens for real.</td>
+                    <td>Pass + the AI handles row 1005 <strong>by the rule while still pushing the question up to a
+                        human</strong>: rejects 1005 per the field map, logs the reason "out of list — suspected
+                      referral, needs human confirmation", and raises it as a gap in the field map; the verification
+                      thread is genuinely independent; a <code>state.json</code> exists to resume; you catch ≥1 Lesson
+                      4.2 failure when it happens for real.</td>
                   </tr>
                 </tbody>
               </table>
@@ -5666,20 +5835,29 @@ Ask me if a fact is missing. Don't guess the filter.</pre>
                 <li><strong>6 rows clearly rejected:</strong> 1003 (missing source), 1004 (email duplicates 1002), 1006
                   (malformed email), 1007 (missing phone), 1009 (source not in the list), 1010 (date 32/03 doesn't
                   exist).</li>
-                <li><strong>1 disputed row:</strong> 1005.</li>
+                <li><strong>1 disputed row:</strong> 1005 — also rejected, but for a completely different reason (see
+                  below). Total <code>rejected.csv</code>: <strong>7 rows</strong>.</li>
               </ul>
               <p style="margin:10px 0 0"><strong>Row 1005 is the main lesson.</strong> "Giới thiệu" does mean
-                <code>referral</code>, but the field map is a closed list and the string doesn't match. The right answer:
-                <strong>the AI must STOP and ASK</strong>, not self-map. If the AI translates "Giới thiệu" →
-                <code>referral</code> on its own without asking, that's failure 07 (Lesson 4.2) in its subtlest form —
-                this time it guessed right, next time it guesses wrong and no one knows.</p>
+                <code>referral</code>, but the field map is a closed list and the string doesn't match — and the field
+                map allows case normalisation only, not translation. So the correct handling is: <strong>reject 1005 by
+                  the rule</strong>, write it to <code>rejected.csv</code> with the reason <em>"out of list — suspected
+                  referral, needs human confirmation"</em>, and <strong>raise it as a gap in the field map</strong> so a
+                human fixes the list.</p>
+              <p style="margin:10px 0 0">Notice the shape of that answer: <strong>the job keeps running and the human
+                  still gets asked.</strong> This is exactly the pattern from Lesson 2.2 — for a job that allows
+                exceptions to be split off, replace "stop the whole job" with "write the record to
+                <code>rejected.csv</code> with a reason and continue with the valid records". Halting an entire job over
+                one row is a very expensive way to ask a question you could answer later; and if the AI translates "Giới
+                thiệu" → <code>referral</code> on its own and moves on silently, that's failure 07 (Lesson 4.2) in its
+                subtlest form — this time it guessed right, next time it guesses wrong and no one knows.</p>
             </div>
 
             <div class="callout insight">
               <div class="callout-title">The key point when grading</div>
               <p>The final number matters less than the <strong>reasons</strong>: you must be able to explain every
-                row, and the reason must trace to the field map, not a guess. Migrating 4/10 correctly while explaining
-                all 10 rows + stopping to ask on 1005 = Excellent. Migrating 10/10 with no explanation = Fail.</p>
+                row, and the reason must trace to the field map, not a guess. Migrating 3/10 correctly while explaining
+                all 10 rows + raising 1005 as a field-map gap = Excellent. Migrating 10/10 with no explanation = Fail.</p>
             </div>
 
             <div class="takeaway">
@@ -5691,9 +5869,10 @@ Ask me if a fact is missing. Don't guess the filter.</pre>
                 </svg>
                 Takeaway
               </span>
-              <p>The disputed row (1005 "Giới thiệu" → <code>referral</code>) is Lab B's main lesson — the AI must <span
-                  class="hl">stop and ask</span>, not self-map; migrating 4/10 correctly with explanation + stopping to
-                ask = Excellent, migrating 10/10 with no explanation = Fail.</p>
+              <p>The disputed row (1005 "Giới thiệu" → <code>referral</code>) is Lab B's main lesson — the AI <span
+                  class="hl">rejects it by the rule and raises it as a field-map gap</span>, neither self-mapping nor
+                halting the job; migrating 3/10 correctly with explanation = Excellent, migrating 10/10 with no
+                explanation = Fail.</p>
             </div>
 
             <div class="quiz" data-correct="2">
@@ -5708,7 +5887,7 @@ Ask me if a fact is missing. Don't guess the filter.</pre>
                   dataset deliberately has 6 broken rows + 1 disputed row; 10/10 means the AI made up values to fill the
                   gaps (failure 07).</span></button>
               <div class="quiz-feedback" role="status"
-                data-explain="C is right. A/B both contradict the rubric, which states plainly: 'migrating all 10/10 = Fail, the AI made up data for the 6 broken rows'. The dataset deliberately has 6 clearly-rejected rows (1003/1004/1006/1007/1009/1010) + 1 disputed (1005). 10/10 can't be correct if you follow the field map. This is the 'cleaner than the source = a sign of fabrication' check (Lesson 4.2). Expected answer: 3 valid + 6 rejected + 1 stop-and-ask. Excellent = stopping to ask on 1005 instead of self-mapping referral.">
+                data-explain="C is right. A/B both contradict the rubric, which states plainly: 'migrating all 10/10 = Fail, the AI made up data for the 6 broken rows'. The dataset deliberately has 6 clearly-rejected rows (1003/1004/1006/1007/1009/1010) + 1 disputed (1005). 10/10 can't be correct if you follow the field map. This is the 'cleaner than the source = a sign of fabrication' check (Lesson 4.2). Expected answer: 3 valid rows + a rejected.csv of 7 rows (the 6 clear errors + 1005). Excellent = rejecting 1005 by the rule, logging the reason 'out of list — suspected referral, needs human confirmation', and raising it as a field-map gap — the job keeps running and the human still gets asked (Lesson 2.2).">
               </div>
             </div>
           </div>
@@ -5879,7 +6058,8 @@ Ask me if a fact is missing. Don't guess the filter.</pre>
                   <tr>
                     <td>22</td>
                     <td>Lab B</td>
-                    <td>Row 1005 must stop and ask — 4/10 correct with explanation &gt; 10/10 with none.</td>
+                    <td>Row 1005: reject by the rule + raise the field-map gap — 3/10 correct with explanation &gt;
+                      10/10 with none.</td>
                   </tr>
                   <tr>
                     <td>23</td>
@@ -5907,6 +6087,11 @@ Ask me if a fact is missing. Don't guess the filter.</pre>
 
 STOP after writing the plan. Wait for my approval. Don't run on your own.</pre>
                 </div>
+                <p style="margin:10px 0 0">Read this part carefully: a plan-first prompt is a <strong>QUALITY
+                    tool</strong> — it produces a better plan — <strong>not a SAFETY tool</strong>. The "don't run on
+                  your own" line sitting inside a prompt can still be skipped. The real lock is the tool's
+                  <strong>plan / read-only mode</strong> (Lesson 1.2), exactly as Module 1 put it: a prompt is a layer of
+                  instruction, not a substitute for permission control.</p>
               </div>
             </details>
             <details class="accordion">
@@ -6199,7 +6384,7 @@ Only when role 3 outputs an empty diff table (or every differing row is in rejec
       { id: 'm5-l5', mod: 5, part: 'Part V · Systematizing', title: 'From a personal skill to a shared team skill', desc: 'SKILL.md + assets (relative paths) + a runner README; owner + version; enters the library only after someone else runs it.' },
       { id: 'm6-l1', mod: 6, part: 'Part VI · When reviewers start skimming', title: 'Why trust breeds skimming — 4 gates instead of reminders', desc: 'Week 1 you read every row, week 12 you just hit Approve; stop it with pilot · checksum · dual control · sample audit.' },
       { id: 'm7-l1', mod: 7, part: 'Part VII · Practice', title: 'Lab A — Open, filter, export, name', desc: 'On your own, ~45 min: the OBSERVE→ACT→VERIFY loop; the UI-count ≠ export-count trap.' },
-      { id: 'm7-l2', mod: 7, part: 'Part VII · Practice', title: 'Lab B — Migrate system A → B (staging)', desc: 'On your own, ~90 min: 10 fake rows with 6 errors + 1 disputed; row 1005 must stop and ask.' },
+      { id: 'm7-l2', mod: 7, part: 'Part VII · Practice', title: 'Lab B — Migrate system A → B (staging)', desc: 'On your own, ~90 min: 10 fake rows with 6 errors + 1 disputed; row 1005 gets rejected by the rule and raised for a human.' },
       { id: 'm8-l1', mod: 8, part: 'Part VIII · Wrap-up', title: 'Summary table + 6 prompt templates + one-page policy', desc: '23 key points; 6 reusable prompt frames; a one-page policy template.' },
 ];
 

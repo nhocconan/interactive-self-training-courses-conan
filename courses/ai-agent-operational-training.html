@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<!-- TRANSLATION_PARENT: vi LOCALE: vi LAST_SYNCED: 2026-07-28 SIBLINGS: ai-agent-operational-training.en.html -->
+<!-- TRANSLATION_PARENT: vi LOCALE: vi LAST_SYNCED: 2026-08-21 SIBLINGS: ai-agent-operational-training.en.html -->
 <!--
   ============================================================================
   INTERACTIVE COURSE — STARTER TEMPLATE  (house standard for ALL courses)
@@ -1853,7 +1853,7 @@
               Khoá học tập trung vào cách vận hành, không đi sâu vào kỹ thuật viết prompt hay lập trình.</p>
             <div class="hero-meta">
               <span class="chip">Cấp độ L1 → L5</span>
-              <span class="chip">23 bài · 2 lab</span>
+              <span class="chip">23 bài (gồm 2 lab)</span>
             </div>
             <div style="margin-top:28px;display:flex;gap:12px;flex-wrap:wrap">
               <a class="btn btn-primary" id="start-btn">Bắt đầu học →</a>
@@ -1866,7 +1866,7 @@
           <!-- Example-data disclaimer for learners -->
           <div class="callout info" style="margin-bottom:32px">
             <div class="callout-title">Tên công cụ và con số trong khoá là ví dụ minh hoạ</div>
-            <p>Khoá này dùng tên các sản phẩm hiện có tính đến <strong>tháng 7/2026</strong>: <strong>ChatGPT</strong>
+            <p>Khoá này dùng tên các sản phẩm hiện có tính đến <strong>tháng 8/2026</strong>: <strong>ChatGPT</strong>
               (Chat/Work/Codex), <strong>Claude</strong> (Chat/Cowork/Claude Code), cùng các app/connector như
               Drive, Slack và Sheets. Tính năng và tên model có thể đổi; vì vậy bài học luôn nêu cả <em>tiêu chí chọn</em>
               chứ không chỉ nêu tên công cụ. Tương tự, mọi tên miền
@@ -1922,7 +1922,8 @@
                   <tr>
                     <td><strong>Voice / Remote</strong></td>
                     <td>Kênh nói chuyện và cầu nối tới một host đã ghép; giúp bắt đầu hoặc điều hướng việc từ xa nhưng
-                      không tạo thêm quyền và không thay môi trường thực thi (Bài 1.4).</td>
+                      không tạo thêm quyền và không thay môi trường thực thi (Bài 1.4). Bên Claude, tên sản phẩm cho
+                      phần "Remote" là <strong>Dispatch</strong> — giao việc từ app điện thoại, máy để bàn chạy.</td>
                   </tr>
                   <tr>
                     <td><strong>Prompt injection</strong></td>
@@ -2261,40 +2262,79 @@
             <p>Vùng xanh (chạy tự do): site công khai, tài khoản demo/staging do IT cấp, thư mục
               <code>03-OUTPUTS</code>, file do chính bạn tạo.</p>
 
-            <p>Ba mức phê duyệt dưới đây là ngôn ngữ chung của khoá; mỗi công cụ có tên nút riêng.</p>
+            <p>Bốn mức phê duyệt dưới đây là ngôn ngữ chung của khoá; mỗi công cụ có tên nút riêng.</p>
             <div class="table-wrap">
               <table>
                 <thead>
                   <tr>
                     <th>Chế độ phê duyệt</th>
                     <th>Cơ chế thực tế</th>
+                    <th>Tên trong công cụ (Claude Code, 08/2026)</th>
                     <th>Dùng khi</th>
                   </tr>
                 </thead>
                 <tbody>
                   <tr>
+                    <td><strong>Plan</strong> (chỉ đọc)</td>
+                    <td>Agent đọc và khảo sát nhưng <strong>không ghi gì</strong>; nó trả về một kế hoạch để bạn duyệt
+                      trước khi có bất kỳ thay đổi nào.</td>
+                    <td><code>plan</code></td>
+                    <td>Việc mới, hệ thống lạ, hoặc khi bạn còn chưa chốt được phạm vi.</td>
+                  </tr>
+                  <tr>
                     <td><strong>Manual</strong></td>
                     <td>Dừng và hỏi trước từng hành động đã xác định.</td>
+                    <td><code>default</code> — hiển thị là "Manual"</td>
                     <td>Lần đầu chạy workflow. Việc có hậu quả thật: tiền, tin nhắn gửi đi, file quan trọng.</td>
                   </tr>
                   <tr>
                     <td><strong>Auto</strong></td>
-                    <td>Tự chạy các hành động đã được phê duyệt trước; vẫn dừng ở checkpoint nhạy cảm do nhóm quy định.</td>
-                    <td>Luồng đã được pilot trên staging, có phép kiểm tự động và không mở rộng phạm vi quyền.</td>
+                    <td>Một <strong>classifier duyệt thay người</strong> ở từng bước; phiên chỉ dừng lại ở nhóm hành
+                      động không hoàn tác được, mang tính phá huỷ, hoặc đi ra ngoài môi trường đã khai báo.</td>
+                    <td><code>auto</code></td>
+                    <td>Luồng đã được pilot, có phép kiểm tự động và có danh sách hành động được phép tự chạy.</td>
                   </tr>
                   <tr>
-                    <td><strong>Skip</strong></td>
+                    <td><strong>Bypass</strong> (Skip)</td>
                     <td>Không dùng checkpoint phê duyệt của khoá học. Các lớp bảo vệ khác phụ thuộc sản phẩm và sandbox.</td>
+                    <td><code>bypassPermissions</code></td>
                     <td>Chỉ trên máy lab/sandbox cách ly, dữ liệu giả. <strong>Không dùng trên máy có dữ liệu
                         thật.</strong></td>
                   </tr>
                 </tbody>
               </table>
             </div>
+            <p>Giữa Manual và Auto còn hai biến thể trung gian trong Claude Code: <code>acceptEdits</code>
+              (tự nhận sửa file trong thư mục làm việc) và <code>dontAsk</code> (chỉ chạy đúng những công cụ đã cho phép
+              trước, còn lại từ chối thẳng thay vì hỏi).</p>
+
+            <div class="callout warn">
+              <div class="callout-title">Auto không phải Skip đổi tên · kiểm tra 21/08/2026</div>
+              <p><strong>Auto chỉ an toàn khi bạn liệt kê được hành động nào tự chạy.</strong> Chưa có danh sách đó thì
+                Auto chỉ là Skip đổi tên — bạn vẫn không biết phiên vừa được phép làm gì. Danh sách đó có chỗ để ghi:
+                <strong>permission rules</strong> nằm trên chế độ, và <strong>deny rule chặn ở mọi chế độ</strong>, kể
+                cả <code>bypassPermissions</code> — đó chính là bản có hiệu lực thi hành của deny-list giấy bạn vừa viết
+                ở đầu bài.</p>
+              <p>Và đây là phần dễ bị bỏ qua: từ <strong>14/08/2026</strong>, <code>auto</code> là chế độ
+                <strong>khởi điểm</strong> cho phiên mới trên Claude Code với gói Pro, Max và Team — không phải Manual.
+                Việc đầu tiên của người vận hành là <strong>kiểm xem mình đang ở mode nào</strong>, đừng giả định
+                Manual. Nguồn: <a href="https://claude.com/blog/auto-mode-default-in-claude-code" target="_blank"
+                  rel="noopener noreferrer">claude.com/blog/auto-mode-default-in-claude-code</a>.</p>
+            </div>
 
             <div class="callout info">
               <div class="callout-title">Việc không bao giờ giao tự động</div>
               <p>Không để agent tự mua hàng, giao dịch, vượt xác thực chống bot hay xoá vĩnh viễn. Tạo tài khoản hoặc gửi ra ngoài phải theo chính sách tổ chức và có người duyệt. Đừng bỏ checkpoint chỉ để giảm số lượt bấm.</p>
+            </div>
+
+            <div class="callout insight">
+              <div class="callout-title">Kỷ luật thực chiến là bất đối xứng, không phải "chặt đều"</div>
+              <p>Đọc bảng trên theo một chiều duy nhất thì dễ kết luận "càng chặt càng tốt" — và đó là cách nhanh nhất
+                để cả team đi vòng qua bảo vệ. Nguyên tắc thực chiến ngược lại: <strong>quyền rộng và tự động cho thao
+                  tác hoàn tác được</strong> (đọc, nháp, ghi vào <code>03-OUTPUTS</code>, sửa file trong repo đã commit),
+                và <strong>cổng cứng không thương lượng cho tập không hoàn tác</strong> — gửi · xoá · publish · thanh
+                toán · ghi prod. Đó đúng là cách chia việc theo khả năng hoàn tác ở Bài 2.3; ranh giới nằm ở chỗ hành
+                động có quay lại được hay không, không nằm ở chỗ bạn thấy lo tới mức nào.</p>
             </div>
 
             <div class="takeaway">
@@ -2409,6 +2449,10 @@
                 giới hạn quyền, giữ cổng phê duyệt cho hành động không hoàn tác.</figcaption>
             </figure>
 
+            <p>Câu ở cuối hình đáng đọc chậm, vì nó còn áp cho cả những prompt trông rất "an toàn": một prompt kiểu
+              <em>"viết plan trước, đừng tự chạy"</em> (Prompt 01 ở Bài 8.1) làm kế hoạch tốt hơn, nhưng nó vẫn chỉ là
+              lời dặn — <strong>lớp khoá thật vẫn là chế độ quyền của công cụ</strong>, không phải câu chữ trong prompt.</p>
+
             <div class="compare">
               <div class="compare-col good"><span class="eyebrow">Kiểm tra trong sản phẩm đang dùng</span>
                 <ul>
@@ -2440,12 +2484,15 @@
             </div>
 
             <div class="callout info">
-              <div class="callout-title">Khuyến nghị của cơ quan an ninh · kiểm tra 25/07/2026</div>
-              <p>CISA cùng các cơ quan an ninh mạng Five Eyes công bố khuyến nghị (05/2026) theo hướng: giai đoạn này chỉ
-                nên giao cho agent những việc <strong>rủi ro thấp, dữ liệu không nhạy cảm</strong>, và cấp quyền theo
-                nguyên tắc least privilege (chỉ đủ quyền để làm đúng việc đang giao). Một sự việc đã được công bố cho thấy
-                rủi ro là có thật: nhóm nghiên cứu của Brave mô tả một trình duyệt agent bị điều khiển bằng văn bản ẩn
-                trong trang web, rồi tự đi đọc mã OTP trong hộp thư của người dùng (Brave, 08/2025).</p>
+              <div class="callout-title">Khuyến nghị của cơ quan an ninh · kiểm tra 21/08/2026</div>
+              <p>Văn bản cần biết tên chính xác để trích đúng: <strong>"Careful Adoption of Agentic Artificial
+                  Intelligence (AI) Services"</strong>, do ASD's ACSC (Úc) chủ trì cùng CISA và các cơ quan an ninh mạng
+                Five Eyes còn lại, công bố <strong>01/05/2026</strong>. Khuyến nghị mở đầu đúng bằng câu người vận hành
+                nên thuộc — nguyên văn: <em>"Begin with agentic AI use cases that are low-risk and non-sensitive"</em>
+                (bắt đầu bằng những ca dùng agent rủi ro thấp và không nhạy cảm) — kèm hướng cấp quyền theo least
+                privilege, chỉ đủ để làm đúng việc đang giao. Một sự việc đã được công bố cho thấy rủi ro là có thật:
+                nhóm nghiên cứu của Brave mô tả một trình duyệt agent bị điều khiển bằng văn bản ẩn trong trang web, rồi
+                tự đi đọc mã OTP trong hộp thư của người dùng (Brave, 08/2025).</p>
               <p>Điều đáng chú ý với người vận hành: khuyến nghị của các cơ quan này trùng với ba lớp phòng thủ bài học
                 vừa nêu — giới hạn nguồn, giới hạn quyền, giữ cổng phê duyệt. Tên cơ quan và nội dung văn bản có thể đổi;
                 kiểm tra lại bản mới nhất trước khi trích vào tài liệu nội bộ.</p>
@@ -2574,11 +2621,15 @@ Khi xong, báo: file/diff/test/log nào để tôi kiểm khi về bàn. Không 
             </div>
 
             <div class="callout info">
-              <div class="callout-title">Nguồn · kiểm tra 28/07/2026</div>
+              <div class="callout-title">Nguồn · kiểm tra 21/08/2026</div>
               <p>Tài liệu chính thức: <a href="https://learn.chatgpt.com/docs/features/voice"
                   target="_blank" rel="noopener noreferrer">ChatGPT Voice</a> và
                 <a href="https://learn.chatgpt.com/docs/remote-connections"
-                  target="_blank" rel="noopener noreferrer">Remote connections</a>. Bài đăng của
+                  target="_blank" rel="noopener noreferrer">Remote connections</a>. Bên Claude, phần "Remote" có tên sản
+                phẩm riêng là <strong>Dispatch</strong> — giao việc từ app điện thoại, máy để bàn nhận và chạy (<a
+                  href="https://support.claude.com/en/articles/13947068-assign-tasks-from-anywhere-in-claude-cowork"
+                  target="_blank" rel="noopener noreferrer">support.claude.com · Assign tasks from anywhere in Claude
+                  Cowork</a>, ra mắt 03/2026 cho Max rồi mở dần xuống Pro). Bài đăng của
                 <a href="https://x.com/AlexFinn/status/2081757675407425682"
                   target="_blank" rel="noopener noreferrer">Alex Finn</a> là tín hiệu UX, không phải đặc tả sản phẩm.
                 Khả dụng còn phụ thuộc gói, rollout và policy của workspace.</p>
@@ -3381,6 +3432,24 @@ Nếu thiếu dữ liệu để đánh giá: HỎI TÔI, đừng đoán.</pre>
                 mức suy luận khi kết quả đo cho thấy lỗi đến từ năng lực suy luận.</strong> ChatGPT và Claude có nút
               điều khiển khác nhau — đừng dùng chung một bảng tên model.</p>
 
+            <h4>Bước (4) còn quyết định một chuyện nữa: ngồi cùng hay giao hẳn</h4>
+            <p>Cùng một việc, cùng một model, nhưng hai cách làm rất khác nhau: <strong>ngồi cùng</strong> (bạn theo
+              từng bước, sửa hướng ngay) hay <strong>giao hẳn</strong> (bạn quay lại khi có kết quả). Ba câu hỏi tách
+              được hai trường hợp đó:</p>
+            <ul>
+              <li><strong>(a) Hoàn tác được không?</strong> Nếu sai thì quay lại được trong bao lâu, bằng cách nào — hay
+                là không quay lại được?</li>
+              <li><strong>(b) Máy kiểm được không?</strong> Có phép kiểm chạy bằng máy (đếm, diff, test) để biết "đạt"
+                hay chưa, hay chỉ có mắt bạn?</li>
+              <li><strong>(c) Đặc tả đã đủ chưa?</strong> Bạn viết được điều kiện đạt ra giấy trước khi chạy, hay chỉ
+                biết khi nhìn thấy kết quả?</li>
+            </ul>
+            <p>Ba câu <strong>"có"</strong> → giao hẳn. Bất kỳ câu <strong>"không"</strong> nào → ngồi cùng. Và chỗ này
+              đáng nói thẳng: khi câu trả lời là "không", thứ đang thiếu thường là <strong>đặc tả</strong>, còn ngồi
+              cùng chính là cách viết nốt phần đặc tả đó bằng cách sửa hướng từng bước. Việc phụ thuộc gu — tone bài
+              viết, cách trình bày slide, "nhìn cho ra chất công ty mình" — <strong>không bao giờ đủ đặc tả</strong>;
+              đừng giao hẳn rồi trách AI đoán sai cái bạn chưa từng viết ra.</p>
+
             <div class="table-wrap">
               <table>
                 <thead>
@@ -3394,14 +3463,14 @@ Nếu thiếu dữ liệu để đánh giá: HỎI TÔI, đừng đoán.</pre>
                 <tbody>
                   <tr>
                     <td><strong>ChatGPT Chat</strong></td>
-                    <td>Instant/Auto; Thinking; Pro</td>
+                    <td>Chọn model + mức reasoning ngay dưới ô soạn</td>
                     <td>Hỏi đáp, phân tích, nghiên cứu hoặc soạn thảo trong cuộc hội thoại.</td>
-                    <td>Bắt đầu bằng Instant/Auto. Chọn Thinking khi bài có nhiều ràng buộc hoặc cần suy luận sâu. Pro
-                      dành cho bài khó nhất và có giới hạn công cụ riêng.</td>
+                    <td>Bắt đầu bằng lựa chọn mặc định. Nâng mức reasoning khi bài có nhiều ràng buộc hoặc cần suy luận
+                      sâu. Tên các nấc đổi theo thời kỳ — kiểm learn.chatgpt.com/docs/models.</td>
                   </tr>
                   <tr>
                     <td><strong>ChatGPT Work</strong></td>
-                    <td>Agent cho việc dài; sản phẩm tự quản lý model</td>
+                    <td>Agent cho việc dài; chọn model ở mức phiên nếu sản phẩm cho</td>
                     <td>Research nhiều nguồn, phân tích file/app, tạo tài liệu, bảng tính, slide, báo cáo hoặc Site hoàn
                       chỉnh.</td>
                     <td>Đừng mất thời gian chọn model trước. Hãy mô tả đầu ra, nguồn được phép dùng, tiêu chí kiểm và
@@ -3409,10 +3478,10 @@ Nếu thiếu dữ liệu để đánh giá: HỎI TÔI, đừng đoán.</pre>
                   </tr>
                   <tr>
                     <td><strong>Claude Chat/Cowork</strong></td>
-                    <td>Sonnet 5 mặc định; Opus 4.8 hoặc Fable 5 cho bài khó hơn</td>
+                    <td>Sonnet 5 · Opus 5 · Fable 5 — mặc định khác nhau theo gói</td>
                     <td>Chat cho trao đổi nhanh; Cowork cho job dài với connector, plugin, file và sản phẩm đầu ra.</td>
-                    <td>Bắt đầu bằng Sonnet. Chỉ nâng lên Opus/Fable khi bài thử cho thấy cần thêm năng lực và phần giá
-                      trị tăng thêm xứng với hạn mức/credit.</td>
+                    <td>Bắt đầu bằng <strong>mặc định của gói bạn dùng</strong> → nâng một nấc nếu bài thử chưa đạt, và
+                      chỉ khi phần giá trị tăng thêm xứng với hạn mức/credit.</td>
                   </tr>
                   <tr>
                     <td><strong>Codex / Claude Code</strong></td>
@@ -3426,10 +3495,17 @@ Nếu thiếu dữ liệu để đánh giá: HỎI TÔI, đừng đoán.</pre>
             </div>
 
             <div class="callout info">
-              <div class="callout-title">Trạng thái sản phẩm · cập nhật 22/07/2026</div>
-              <p><strong>ChatGPT Work</strong> đã thay ChatGPT Agent cho việc dài và sản phẩm hoàn chỉnh; Work dùng
-                model do sản phẩm quản lý. Trong ChatGPT Chat, lựa chọn hiện tại là Instant/Auto, Thinking và Pro.
-                Bên Claude, Sonnet 5 là mặc định phổ biến; Opus 4.8 và Fable 5 phục vụ bài khó hơn.</p>
+              <div class="callout-title">Trạng thái sản phẩm · cập nhật 21/08/2026</div>
+              <p><strong>ChatGPT Work</strong> đã thay ChatGPT Agent cho việc dài và sản phẩm hoàn chỉnh. Trong ChatGPT
+                Chat, bạn chọn <strong>model</strong> và <strong>mức reasoning</strong> ngay dưới ô soạn; tên từng nấc
+                đổi theo thời kỳ nên khoá học không chép tên vào — kiểm
+                <a href="https://learn.chatgpt.com/docs/models" target="_blank" rel="noopener">learn.chatgpt.com/docs/models</a>
+                khi cần tên hiện hành. Bên Claude, dòng model hiện tại là Sonnet 5, Opus 5 (ra mắt 24/07/2026) và
+                Fable 5.</p>
+              <p><strong>Mặc định khác nhau theo gói</strong> — Pro và Team Standard thường mặc định Sonnet 5; Max, Team
+                Premium và API mặc định Opus 5. Hệ quả vận hành: hai người cùng team có thể đang chạy hai model khác
+                nhau — <strong>kiểm trước khi so kết quả</strong>, nếu không bạn đang so hai thứ khác nhau và tưởng là
+                so prompt.</p>
               <p>Đối chiếu: <a href="https://help.openai.com/" target="_blank" rel="noopener">trung tâm trợ giúp
                   OpenAI</a> — tìm bài về ChatGPT Work và bài về bộ chọn model (model picker), và <a
                   href="https://www.anthropic.com/news/claude-sonnet-5" target="_blank" rel="noopener">Claude Sonnet
@@ -3445,11 +3521,15 @@ Nếu thiếu dữ liệu để đánh giá: HỎI TÔI, đừng đoán.</pre>
             </div>
 
             <div class="callout warn">
-              <div class="callout-title">Điểm benchmark không nói thay cho việc dài · kiểm tra 25/07/2026</div>
+              <div class="callout-title">Điểm benchmark không nói thay cho việc dài · kiểm tra 21/08/2026</div>
               <p>Một quan sát đáng nhớ khi đọc bảng xếp hạng: cùng một dòng model đạt khoảng <strong>83%</strong> trên bộ
-                tác vụ máy tính ngắn (OSWorld-Verified) nhưng chỉ hoàn thành khoảng <strong>21%</strong> các workflow dài
-                nhiều giờ trong OSWorld 2.0 (nhóm OSWorld báo cáo, 06/2026). Con số cụ thể sẽ đổi theo phiên bản bộ đo;
-                phần đáng giữ là khoảng cách giữa hai loại tác vụ.</p>
+                tác vụ máy tính ngắn (OSWorld-Verified) nhưng trong OSWorld 2.0 — 108 workflow dài — chỉ
+                <strong>hoàn thành 20,6%</strong> số tác vụ, trong khi điểm cho phần làm được dở dang là
+                <strong>54,8%</strong> (arXiv 2606.29537, 06/2026).</p>
+              <p>Hai con số đó cạnh nhau mới là bài học: <strong>agent tiến bộ thật nhưng không HOÀN THÀNH.</strong> Nó
+                đi được hơn nửa quãng đường (54,8% partial) rồi dừng lại ở đâu đó — và với một job vận hành, "đi được
+                nửa đường" không phải là nửa kết quả, mà là một việc dở dang cần người gỡ. Khoảng cách 54,8% → 20,6%
+                chính là phần bạn phải trả bằng giám sát.</p>
               <p>Với người vận hành, điều này nghĩa là: một demo ngắn chạy đẹp chưa nói được nhiều về một job kéo dài vài
                 giờ. Các kiểu hỏng mà nhóm benchmark ghi nhận trùng với những lỗi khoá này đang dạy — quên ràng buộc đã
                 nêu, đoán thay vì hỏi, bỏ bước verify. Chia việc thành phase nhỏ và giám sát vẫn là phần của bạn, không
@@ -3591,6 +3671,19 @@ Nếu thiếu dữ liệu để đánh giá: HỎI TÔI, đừng đoán.</pre>
                 chạy.</p>
             </div>
 
+            <h4>Trước khi mở luồng thứ hai: một câu hỏi thôi</h4>
+            <p><strong>"Hai luồng này có ghi vào cùng một chỗ không?"</strong> Cùng chỗ — cùng file, cùng bảng, cùng
+              record — thì chạy <strong>tuần tự</strong>, hoặc cho mỗi luồng một bản sao / một vùng riêng rồi gộp lại
+              sau. Khác chỗ thì chạy <strong>song song</strong> thoải mái. Hình 3.2 ở trên là ví dụ đúng: worker 1 đọc,
+              worker 2 ghi vào B, worker 3 gom log — ba vùng ghi khác nhau.</p>
+            <p>Nhưng trần thật không nằm ở chỗ AI mở được bao nhiêu luồng. <strong>Trần thật là băng thông DUYỆT của
+                bạn.</strong> Sáu luồng cùng về đích trong mười phút không nhanh hơn ba luồng, nếu bạn chỉ đọc kịp ba
+              kết quả — phần còn lại nằm chờ, hoặc tệ hơn, được duyệt cho xong. Thêm một ràng buộc kỹ thuật cần biết:
+              các phiên chạy trên cloud <strong>dùng chung một rate limit</strong> với bạn, nên chạy song song tiêu hạn
+              mức theo đúng tỷ lệ số luồng (<a href="https://code.claude.com/docs/en/claude-code-on-the-web"
+                target="_blank" rel="noopener noreferrer">code.claude.com/docs/en/claude-code-on-the-web</a>, kiểm tra
+              21/08/2026).</p>
+
             <div class="prompt-card">
               <div class="prompt-head"><span>Prompt điều phối mẫu · copy</span><button class="copy-btn"
                   onclick="copyCode(this)">Copy</button></div>
@@ -3690,19 +3783,31 @@ Không kết luận "đã hoàn thành" trừ khi pha 3 xuất bảng lệch r�
                     thao tác nhiều bước hoặc tạo artifact, Chat thường đáp ứng trực tiếp hơn.</li>
                   <li><strong>Lỗi 2 · Luôn chọn mức suy luận mạnh nhất.</strong> “Cứ để cao cho chắc” là giả định chưa
                     được đo. So trên cùng bộ bài thử trước khi nâng.</li>
-                  <li><strong>Lỗi 3 · Tách một workstream thành quá nhiều phiên.</strong> Việc liên quan có thể phải nạp
-                    lại cùng nguồn và quyết định. Ngược lại, phiên mới hữu ích khi cần đổi chủ đề, quyền hoặc nguồn.</li>
+                  <li><strong>Lỗi 3 · Để một phiên phình ra vô hạn.</strong> Mỗi lượt hỏi phải gửi lại toàn bộ lịch sử,
+                    nên phiên càng dài thì mỗi câu càng đắt — cùng một câu hỏi ở lượt 60 tốn hơn hẳn ở lượt 5. Đắt nhất
+                    là để một job dài hỏng ở phút 40 rồi chạy lại từ đầu.</li>
                 </ul>
               </div>
               <div class="compare-col good"><span class="eyebrow">Thay thế bằng</span>
                 <ul>
                   <li>Câu hỏi ngắn → Chat. Work/Cowork dành cho job nhiều bước có sản phẩm đầu ra.</li>
                   <li>Bắt đầu bằng Auto/mặc định; chỉ nâng khi bài thử chưa đạt vì thiếu suy luận.</li>
-                  <li>Giữ cùng phiên khi ngữ cảnh còn đúng; tách phiên khi đổi chủ đề, dữ liệu, quyền hoặc cần kiểm tra
-                    độc lập.</li>
+                  <li>Một việc, một phiên: brief đủ → chốt → đóng. Sắp đầy ngữ cảnh thì chủ động nén hoặc mở phiên mới,
+                    đừng để phiên tự phình.</li>
                 </ul>
               </div>
             </div>
+
+            <h4>"Một việc, một phiên" — và ghi chú bàn giao 5 dòng</h4>
+            <p>Quy tắc gọn: <strong>brief đủ → chốt → đóng</strong>. Khi thấy ngữ cảnh sắp đầy, đừng cố nhồi thêm; chủ
+              động nén lại, hoặc mở phiên mới và bắt đầu bằng một ghi chú bàn giao năm dòng — <strong>đang làm gì · đã
+                xong gì · file nào · còn lại gì · điều kiện đạt</strong>. Năm dòng đó thường thay được cả trăm lượt hội
+              thoại cũ.</p>
+            <p>Lý do không chỉ là tiền. Bài 3.2 vừa nói lượt kiểm chứng phải sạch để khỏi mang thiên kiến từ plan và
+              log — thì cũng logic đó áp cho chính lượt đang chạy: <strong>bốn mươi lượt thử-sai nằm trong ngữ cảnh sẽ
+                làm lệch chính agent đang làm việc.</strong> Nó bắt đầu đọc lại những giả định đã bị bác bỏ như thể
+              chúng vẫn còn đúng. Mở phiên mới với đúng file và điều kiện đạt không phải là mất ngữ cảnh — là bỏ đi
+              phần ngữ cảnh đã hỏng.</p>
 
             <div class="callout insight">
               <div class="callout-title">Đo theo một kết quả đạt</div>
@@ -3862,6 +3967,31 @@ Không kết luận "đã hoàn thành" trừ khi pha 3 xuất bảng lệch r�
                   </ul>
                 </div>
               </div>
+            </div>
+
+            <h4>Ba nút bạn phải quen tay</h4>
+            <p>Vòng lặp 6 bước ở trên là phần agent làm. Phần bạn làm gọn hơn nhiều — ba nút, và cả ba đều phải quen tay
+              tới mức bấm không cần nghĩ:</p>
+            <ul>
+              <li><strong>(1) Ngắt.</strong> Thấy sai ở bước 2 thì ngắt ngay, đừng ngồi xem hết 10 bước rồi mới nói. Bảy
+                bước xây trên một bước sai thì cả bảy đều đáng ngờ.</li>
+              <li><strong>(2) Lái lại.</strong> Ngắt xong, nói <strong>một câu</strong> về đúng chỗ sai — "cột trạng thái
+                là cột 4, không phải cột 3". Nếu phải viết lại cả brief mới giải thích được thì đó không còn là lái
+                lại: đó là tín hiệu của nút 3.</li>
+              <li><strong>(3) Vứt đi.</strong> Sửa ba lần vẫn lệch nghĩa là <strong>ngữ cảnh đã hỏng</strong>, không
+                phải câu chữ. Mở phiên mới với đúng file cần dùng và điều kiện đạt, bỏ lại toàn bộ lịch sử tranh cãi.
+                Cảm giác "tiếc công đã giải thích" chính là thứ giữ bạn ở lại một phiên không cứu được.</li>
+            </ul>
+
+            <div class="callout warn">
+              <div class="callout-title">Nút hoàn tác của công cụ có vùng phủ hẹp hơn bạn tưởng · kiểm tra 21/08/2026</div>
+              <p>Trong Claude Code, <code>/rewind</code> (hoặc bấm <code>Esc</code> hai lần khi ô nhập trống) cho phép
+                quay lại checkpoint — giữ 100 checkpoint mỗi phiên và lưu 30 ngày. Nhưng nó <strong>không theo dõi</strong>
+                thay đổi do lệnh bash gây ra, do subagent chạy nền gây ra, hay do bất cứ thứ gì sửa file ngoài phiên
+                (<a href="https://code.claude.com/docs/en/checkpointing" target="_blank"
+                  rel="noopener noreferrer">code.claude.com/docs/en/checkpointing</a>).</p>
+              <p>Nói cách khác, nút hoàn tác của công cụ là tiện lợi, không phải bảo hiểm. Lớp hoàn tác thật vẫn là hai
+                thứ cũ: <strong>vùng ghi hẹp</strong> và <strong>một bản export/commit trước khi chạy</strong>.</p>
             </div>
 
             <div class="takeaway">
@@ -5015,9 +5145,9 @@ AI  → Tổng sau khi loại: 1.284.500.000₫ — khớp dashboard. ĐẠT.</p
 
             <p>Ngành nghiên cứu yếu tố con người gọi đây là <strong>automation complacency</strong> (tự mãn tự động
               hoá) và <strong>vigilance decrement</strong> (suy giảm cảnh giác) — hiện tượng được ghi nhận trong hàng
-              không, y tế và giám sát công nghiệp từ trước khi có AI. Với công cụ AI, một nghiên cứu công bố tại hội
-              nghị CHI 2025 quan sát theo cùng hướng: người dùng càng tin vào công cụ thì công sức bỏ ra để đánh giá
-              phản biện càng giảm. Khoá học không giả định đường cong này có một hình dạng chính xác; điều quan sát được
+              không, y tế và giám sát công nghiệp từ trước khi có AI. Với công cụ AI, nhiều nghiên cứu HCI về
+              automation complacency quan sát theo cùng hướng: người dùng càng tin vào công cụ thì công sức bỏ ra để
+              đánh giá phản biện càng giảm. Khoá học không giả định đường cong này có một hình dạng chính xác; điều quan sát được
               trong thực tế vận hành thì quen thuộc — tuần 1 bạn đọc từng dòng, tuần 4 lướt qua, tuần 12 bấm Approve
               trong lúc đang họp. Đây không phải chuyện kỷ luật cá nhân, và cũng <strong>khó sửa bằng nhắc nhở đơn
                 thuần</strong> — cần <strong>gate cấu trúc</strong>: chỗ mà bấm Approve theo quán tính <em>không đủ</em>
@@ -5114,6 +5244,24 @@ AI  → Tổng sau khi loại: 1.284.500.000₫ — khớp dashboard. ĐẠT.</p
             </div>
             <p>Cần cả hai, không thay thế nhau. Guardrail quá chặt → team đi vòng, tắt bảo vệ. Validation quá lỏng → sai
               lọt xuống hạ nguồn, phát hiện vài tuần sau.</p>
+
+            <div class="callout insight">
+              <div class="callout-title">Phép kiểm phải "lên cấp": lần 3 thì viết thành script</div>
+              <p>Một luồng cùng chạy đi chạy lại thì phép kiểm của nó cũng nên đi lên theo, chứ không đứng yên:</p>
+              <ul style="margin:6px 0 0 18px">
+                <li><strong>Lần 1 — người kiểm.</strong> Bạn tự đọc, tự đếm. Đây là lúc bạn học ra <em>cái gì mới thật
+                    sự là "đạt"</em>.</li>
+                <li><strong>Lần 2 — một luồng AI độc lập.</strong> Chỉ đưa nguồn, đầu ra, field map và tiêu chí; không
+                    đưa plan và log (Bài 3.2).</li>
+                <li><strong>Lần 3 trở đi — viết phép kiểm thành SCRIPT.</strong> Deterministic, chạy 2 giây, không tốn
+                    hạn mức, và <em>không mệt ở tuần 12</em> — đúng cái đường cong bài này đang nói.</li>
+              </ul>
+              <p style="margin:10px 0 0">Lý do phải lên tới bước 3, chứ không dừng ở "cho AI thứ hai đọc lại": <strong>hai
+                  luồng LLM đọc cùng một file không độc lập về mặt thống kê.</strong> Chúng chia nhau cùng kiểu điểm mù,
+                nên hai lần "đạt" không nhân đôi độ tin cậy như bạn tưởng. Cách làm thực tế: nhờ chính AI viết script từ
+                Prompt 04 (Bài 8.1), bạn đọc lại script một lần, rồi đưa nó vào phần <strong>Validation</strong> của
+                <code>SKILL.md</code> để lần sau nó chạy tự động.</p>
+            </div>
 
             <h4>Ngày nâng phiên bản: chạy lại golden set trước khi tin lại như cũ</h4>
             <p>Bốn gate ở trên ngầm giả định một điều: model và sản phẩm hôm nay hành xử giống hôm qua. Giả định đó yếu
@@ -5233,6 +5381,12 @@ AI  → Tổng sau khi loại: 1.284.500.000₫ — khớp dashboard. ĐẠT.</p
                 <li>Thư mục <code>~/AI-Workspace/03-OUTPUTS/</code> đã cấp quyền</li>
                 <li>Chế độ <strong>Manual</strong>. Không hạ xuống Auto trong lab này.</li>
               </ul>
+              <p style="margin:10px 0 0">Nói rõ vì sao bắt Manual, kẻo bạn rút ra bài học sai: lab này chỉ đọc và tải
+                file về <code>03-OUTPUTS</code> — <strong>không có gì nguy hiểm ở đây cả.</strong> Bắt Manual là để bạn
+                <strong>TẬP đọc từng bước</strong> agent định làm, chứ không phải vì việc read-only cần canh gác. Ngoài
+                lab, kỷ luật thực chiến là <strong>bất đối xứng</strong> (Bài 1.2): quyền rộng và tự động cho thao tác
+                hoàn tác được, cổng cứng không thương lượng cho tập không hoàn tác — gửi · xoá · publish · thanh toán ·
+                ghi prod.</p>
             </div>
 
             <div class="callout warn">
@@ -5366,7 +5520,8 @@ Hỏi tôi nếu thiếu fact. Đừng đoán bộ lọc.</pre>
               <span class="eyebrow">Sau lab này bạn có thể</span>
               <ul>
                 <li>Chạy trọn vòng lặp 4 bước trên dữ liệu giả + staging.</li>
-                <li>Áp field map đúng — đặc biệt xử lý dòng gây tranh cãi (dừng hỏi, không tự ánh xạ).</li>
+                <li>Áp field map đúng — đặc biệt xử lý dòng gây tranh cãi (loại theo luật + nêu lên cho người, không tự
+                  ánh xạ).</li>
                 <li>Vận hành verifier độc lập và tự chấm theo rubric 4 mức.</li>
               </ul>
             </div>
@@ -5546,7 +5701,9 @@ Hỏi tôi nếu thiếu fact. Đừng đoán bộ lọc.</pre>
                     <td><code>source</code></td>
                     <td>Có</td>
                     <td>Chỉ nhận: <code>facebook</code>, <code>zalo</code>, <code>website</code>, <code>referral</code>.
-                      Ngoài danh mục/rỗng → <strong>loại</strong>.</td>
+                      So khớp <strong>không phân biệt hoa/thường</strong>; chỉ chuẩn hoá hoa/thường,
+                      <strong>KHÔNG dịch nghĩa</strong> ("Giới thiệu" → <code>referral</code> là dịch nghĩa — ranh giới
+                      đó là chỗ lỗi nấp). Ngoài danh mục/rỗng → <strong>loại</strong>.</td>
                   </tr>
                   <tr>
                     <td><code>ghi_chu</code></td>
@@ -5606,15 +5763,16 @@ Hỏi tôi nếu thiếu fact. Đừng đoán bộ lọc.</pre>
                   <tr>
                     <td><span style="color:var(--accent-2);font-weight:600">Đạt</span></td>
                     <td><code>2</code></td>
-                    <td>Đủ 4 phase, đủ gate, <code>rejected.csv</code> đúng 6 dòng với lý do khớp field map, có
-                      <code>diff.csv</code>, có screenshot trước/sau.</td>
+                    <td>Đủ 4 phase, đủ gate, <code>rejected.csv</code> đúng 7 dòng (6 dòng lỗi rõ + 1005) với lý do
+                      khớp field map, có <code>diff.csv</code>, có screenshot trước/sau.</td>
                   </tr>
                   <tr>
                     <td><span style="color:var(--success);font-weight:600">Xuất sắc</span></td>
                     <td><code>3</code></td>
-                    <td>Đạt + AI <strong>dừng hỏi về dòng 1005</strong> thay vì tự ánh xạ; luồng kiểm chứng thật sự độc
-                      lập; có <code>state.json</code> để resume; bạn tự phát hiện ≥1 lỗi Bài 4.2 khi nó xảy ra
-                      thật.</td>
+                    <td>Đạt + AI xử lý dòng 1005 <strong>đúng luật mà vẫn đẩy được câu hỏi lên cho người</strong>: loại
+                      1005 theo field map, ghi lý do "ngoài danh mục — nghi là referral, cần người xác nhận", và nêu nó
+                      lên như một lỗ hổng của field map; luồng kiểm chứng thật sự độc lập; có <code>state.json</code>
+                      để resume; bạn tự phát hiện ≥1 lỗi Bài 4.2 khi nó xảy ra thật.</td>
                   </tr>
                 </tbody>
               </table>
@@ -5626,20 +5784,27 @@ Hỏi tôi nếu thiếu fact. Đừng đoán bộ lọc.</pre>
                 <li><strong>3 dòng chắc chắn hợp lệ:</strong> 1001, 1002, 1008.</li>
                 <li><strong>6 dòng chắc chắn bị loại:</strong> 1003 (thiếu nguồn), 1004 (email trùng 1002), 1006 (email
                   sai định dạng), 1007 (thiếu SĐT), 1009 (nguồn ngoài danh mục), 1010 (ngày 32/03 không tồn tại).</li>
-                <li><strong>1 dòng gây tranh cãi:</strong> 1005.</li>
+                <li><strong>1 dòng gây tranh cãi:</strong> 1005 — cũng bị loại, nhưng vì một lý do khác hẳn (xem dưới).
+                  Tổng <code>rejected.csv</code>: <strong>7 dòng</strong>.</li>
               </ul>
               <p style="margin:10px 0 0"><strong>Dòng 1005 là bài học chính.</strong> "Giới thiệu" đúng nghĩa là
-                <code>referral</code>, nhưng field map là danh mục đóng và chuỗi không khớp. Đáp án đúng: <strong>AI
-                  phải DỪNG và HỎI</strong>, không được tự ánh xạ. Nếu AI tự dịch "Giới thiệu" → <code>referral</code>
-                mà không hỏi, đó là lỗi 07 (Bài 4.2) ở dạng tinh vi nhất — lần này nó đoán đúng, lần sau nó sẽ
-                đoán sai và không ai biết.</p>
+                <code>referral</code>, nhưng field map là danh mục đóng và chuỗi không khớp — mà field map chỉ cho phép
+                chuẩn hoá hoa/thường, không cho dịch nghĩa. Nên xử lý đúng là: <strong>loại 1005 theo đúng luật</strong>,
+                ghi vào <code>rejected.csv</code> với lý do <em>"ngoài danh mục — nghi là referral, cần người xác
+                  nhận"</em>, và <strong>nêu nó lên như một lỗ hổng của field map</strong> để người sửa danh mục.</p>
+              <p style="margin:10px 0 0">Để ý cấu trúc của lời giải này: <strong>job vẫn chạy, người vẫn được hỏi.</strong>
+                Đây đúng là mẫu ở Bài 2.2 — với job cho phép tách ngoại lệ, thay "dừng cả job" bằng "đưa bản ghi vào
+                <code>rejected.csv</code> kèm lý do và tiếp tục các bản ghi hợp lệ". Dừng cả job vì một dòng là trả giá
+                quá đắt cho một câu hỏi mà bạn có thể trả lời sau; còn nếu AI tự dịch "Giới thiệu" →
+                <code>referral</code> rồi im lặng đi tiếp, đó là lỗi 07 (Bài 4.2) ở dạng tinh vi nhất — lần này nó đoán
+                đúng, lần sau nó sẽ đoán sai và không ai biết.</p>
             </div>
 
             <div class="callout insight">
               <div class="callout-title">Điểm mấu chốt khi chấm</div>
               <p>Con số cuối cùng ít quan trọng hơn <strong>lý do</strong>: bạn phải giải thích được từng dòng, và lý
-                do phải dẫn về field map chứ không phải suy đoán. Migrate đúng 4/10 mà giải thích được cả 10 dòng + dừng
-                hỏi 1005 = Xuất sắc. Migrate 10/10 mà không giải thích được = Rớt.</p>
+                do phải dẫn về field map chứ không phải suy đoán. Migrate đúng 3/10 mà giải thích được cả 10 dòng + nêu
+                1005 lên như lỗ hổng field map = Xuất sắc. Migrate 10/10 mà không giải thích được = Rớt.</p>
             </div>
 
             <div class="takeaway">
@@ -5651,9 +5816,9 @@ Hỏi tôi nếu thiếu fact. Đừng đoán bộ lọc.</pre>
                 </svg>
                 Takeaway
               </span>
-              <p>Dòng gây tranh cãi (1005 "Giới thiệu" → <code>referral</code>) là bài học chính của Lab B — AI phải
-                <span class="hl">dừng hỏi</span>, không tự ánh xạ; migrate đúng 4/10 có giải thích + dừng hỏi = Xuất
-                sắc, migrate 10/10 không giải thích = Rớt.</p>
+              <p>Dòng gây tranh cãi (1005 "Giới thiệu" → <code>referral</code>) là bài học chính của Lab B — AI
+                <span class="hl">loại theo đúng luật và nêu lên như lỗ hổng field map</span>, không tự ánh xạ và cũng
+                không dừng cả job; migrate đúng 3/10 có giải thích = Xuất sắc, migrate 10/10 không giải thích = Rớt.</p>
             </div>
 
             <div class="quiz" data-correct="2">
@@ -5668,7 +5833,7 @@ Hỏi tôi nếu thiếu fact. Đừng đoán bộ lọc.</pre>
                   liệu cố ý có 6 dòng lỗi + 1 dòng tranh cãi; 10/10 nghĩa là AI đã tự bịa để lấp chỗ trống (lỗi
                   07).</span></button>
               <div class="quiz-feedback" role="status"
-                data-explain="C đúng. A/B đều sai theo rubric ghi rõ: 'migrate đủ 10/10 = Rớt, AI đã tự bịa dữ liệu cho 6 dòng lỗi'. Bộ dữ liệu cố ý có 6 dòng chắc chắn bị loại (1003/1004/1006/1007/1009/1010) + 1 dòng tranh cãi (1005). 10/10 không thể đúng nếu tuân field map. Đây là kiểm tra 'sạch hơn nguồn = dấu hiệu tự bịa' (Bài 4.2). Đáp án kỳ vọng: 3 hợp lệ + 6 loại + 1 dừng hỏi. Mức Xuất sắc = dừng hỏi 1005 thay vì tự ánh xạ referral.">
+                data-explain="C đúng. A/B đều sai theo rubric ghi rõ: 'migrate đủ 10/10 = Rớt, AI đã tự bịa dữ liệu cho 6 dòng lỗi'. Bộ dữ liệu cố ý có 6 dòng chắc chắn bị loại (1003/1004/1006/1007/1009/1010) + 1 dòng tranh cãi (1005). 10/10 không thể đúng nếu tuân field map. Đây là kiểm tra 'sạch hơn nguồn = dấu hiệu tự bịa' (Bài 4.2). Đáp án kỳ vọng: 3 dòng hợp lệ + rejected.csv 7 dòng (6 dòng lỗi rõ + 1005). Mức Xuất sắc = loại 1005 đúng luật, ghi lý do 'ngoài danh mục — nghi là referral, cần người xác nhận', và nêu nó lên như lỗ hổng field map — job vẫn chạy, người vẫn được hỏi (Bài 2.2).">
               </div>
             </div>
           </div>
@@ -5839,7 +6004,8 @@ Hỏi tôi nếu thiếu fact. Đừng đoán bộ lọc.</pre>
                   <tr>
                     <td>22</td>
                     <td>Lab B</td>
-                    <td>Dòng 1005 phải dừng hỏi — đúng 4/10 có giải thích &gt; 10/10 không giải thích.</td>
+                    <td>Dòng 1005: loại đúng luật + nêu lỗ hổng field map — 3/10 có giải thích &gt; 10/10 không giải
+                      thích.</td>
                   </tr>
                   <tr>
                     <td>23</td>
@@ -5866,6 +6032,10 @@ Hỏi tôi nếu thiếu fact. Đừng đoán bộ lọc.</pre>
 
 DỪNG sau khi viết plan. Chờ tôi duyệt. Không tự chạy.</pre>
                 </div>
+                <p style="margin:10px 0 0">Đọc kỹ chỗ này: prompt plan-first là <strong>công cụ CHẤT LƯỢNG</strong> — nó
+                  làm ra kế hoạch tốt hơn — <strong>chứ không phải công cụ AN TOÀN</strong>. Câu "không tự chạy" nằm
+                  trong prompt vẫn có thể bị bỏ qua. Cái khoá thật là <strong>chế độ plan / chỉ-đọc của công cụ</strong>
+                  (Bài 1.2), đúng như Module 1 đã nói: prompt là lớp hướng dẫn, không thay thế kiểm soát quyền.</p>
               </div>
             </details>
             <details class="accordion">
@@ -6160,7 +6330,7 @@ Chỉ khi vai 3 xuất bảng lệch rỗng (hoặc mọi dòng lệch đều c�
       { id: 'm5-l5', mod: 5, part: 'Phần V · Hệ thống hoá', title: 'Từ skill cá nhân → gói skill dùng chung cho team', desc: 'SKILL.md + assets (đường dẫn tương đối) + README người chạy; owner + version; chỉ vào thư viện sau khi người khác chạy được.' },
       { id: 'm6-l1', mod: 6, part: 'Phần VI · Khi người duyệt bắt đầu lướt', title: 'Vì sao càng tin càng lười kiểm — 4 gate thay lời nhắc', desc: 'Tuần 1 đọc từng dòng, tuần 12 bấm Approve cho qua; chặn bằng pilot · checksum · dual control · kiểm mẫu.' },
       { id: 'm7-l1', mod: 7, part: 'Phần VII · Thực hành', title: 'Lab A — Mở, lọc, xuất, đặt tên', desc: 'Tự làm ~45\': vòng lặp NHÌN→LÀM→SOI; bẫy số UI ≠ số export.' },
-      { id: 'm7-l2', mod: 7, part: 'Phần VII · Thực hành', title: 'Lab B — Migrate hệ thống A → B (staging)', desc: 'Tự làm ~90\': 10 dòng giả có 6 lỗi + 1 tranh cãi; dòng 1005 phải dừng hỏi.' },
+      { id: 'm7-l2', mod: 7, part: 'Phần VII · Thực hành', title: 'Lab B — Migrate hệ thống A → B (staging)', desc: 'Tự làm ~90\': 10 dòng giả có 6 lỗi + 1 tranh cãi; dòng 1005 loại đúng luật và nêu lên cho người.' },
       { id: 'm8-l1', mod: 8, part: 'Phần VIII · Tổng kết', title: 'Bảng tóm tắt + 6 prompt mẫu + chính sách một trang', desc: '23 ý chính; 6 khung prompt có thể dùng lại; mẫu chính sách một trang.' },
 ];
 
