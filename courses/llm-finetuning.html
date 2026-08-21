@@ -527,6 +527,7 @@ footer.site{border-top:1px solid var(--border);padding:26px 24px;text-align:cent
             <tr><td><b>RLHF / reward model</b></td><td>Pipeline 3 giai đoạn: SFT → reward model học từ preference ranking → vòng RL (PPO) có KL penalty; mạnh nhưng phức tạp và dễ mất ổn định.</td></tr>
             <tr><td><b>DPO</b></td><td>Direct Preference Optimization — đổi biến để bỏ reward model + vòng RL, tối ưu trực tiếp trên cặp (preferred, rejected) bằng classification loss.</td></tr>
             <tr><td><b>GRPO</b></td><td>Variant PPO bỏ critic model: baseline lấy từ thống kê nhóm output cùng câu hỏi — cách DeepSeekMath huấn luyện reasoning tiết kiệm tài nguyên.</td></tr>
+            <tr><td><b>Distillation (teacher/student)</b></td><td>Dùng model lớn (teacher) sinh nhãn cho traffic thật, rồi fine-tune một model nhỏ (student) trên tập nhãn đó để rẻ/nhanh hơn ở cùng mức chất lượng — lý do fine-tune khi chất lượng đã đủ mà chi phí hoặc độ trễ thì không. Chỉ đổi sang student khi nó qua cổng chất lượng đặt trước trên holdout.</td></tr>
             <tr><td><b>Data curation (LIMA)</b></td><td>Nguyên tắc «less is more»: 1.000 ví dụ đa dạng + chất lượng cao thắng hàng chục nghìn ví dụ thô; tăng số lượng ×16 thì chất lượng plateau.</td></tr>
             <tr><td><b>Chat template</b></td><td>Khuôn token hoá hội thoại (control token như <|user|>) mà model đã học; format dữ liệu train lệch template gốc → hiệu năng suy giảm.</td></tr>
             <tr><td><b>Holdout / early stopping</b></td><td>Tập giữ riêng khỏi training để đo trước/sau; dừng train tại điểm validation loss bắt đầu tăng trong khi training loss vẫn giảm.</td></tr>
@@ -610,10 +611,10 @@ footer.site{border-top:1px solid var(--border);padding:26px 24px;text-align:cent
         <text class="dgm-ink2" x="484" y="162" text-anchor="middle" font-size="11" font-family="IBM Plex Mono">nhau</text>
         <defs><marker id="m1l1-ah" markerWidth="9" markerHeight="9" refX="7" refY="4.5" orient="auto"><path d="M0 0 L9 4.5 L0 9 z" fill="var(--accent-2)"/></marker></defs>
       </svg>
-      <figcaption><b>Hình 1.1</b> — Bạn không "leo thang" từ prompt lên fine-tune. Bạn định vị lỗi trên hai trục: thiếu kiến thức thì đi <em>lên</em> (RAG), hành vi lệch thì đi <em>sang phải</em> (fine-tune) — và một hệ production thường ở góc trên-phải, cần cả hai cùng lúc. Nguồn: OpenAI "Optimizing LLM accuracy", truy cập 07/2026.</figcaption>
+      <figcaption><b>Hình 1.1</b> — Bạn không "leo thang" từ prompt lên fine-tune. Bạn định vị lỗi trên hai trục: thiếu kiến thức thì đi <em>lên</em> (RAG), hành vi lệch thì đi <em>sang phải</em> (fine-tune) — và một hệ production thường ở góc trên-phải, cần cả hai cùng lúc. Nguồn: khung hai trục của OpenAI trong tài liệu "Optimizing LLM accuracy / Model optimization" bản 2024–2025; trang gốc đã đổi nội dung sau khi OpenAI wind-down fine-tuning platform (bài 5.2) nên hiện không còn chở khung này — kiểm lại 08/2026.</figcaption>
     </figure>
 
-    <p>Cách nhanh nhất để đặt đúng trục là đọc chính triệu chứng. OpenAI liệt kê rõ, và đây là bản dịch từng dấu hiệu về đúng cột của nó:</p>
+    <p>Cách nhanh nhất để đặt đúng trục là đọc chính triệu chứng. Danh sách dưới đây là các câu <em>verbatim</em> trong tài liệu OpenAI bản 2024–2025, kèm bản dịch về đúng cột của nó. Nói rõ để bạn không hụt hẫng khi tra nguồn: trang OpenAI hiện tại <strong>không còn</strong> danh sách này (nó đã được viết lại quanh evals + prompting + thông báo wind-down), nên đây là khung <em>đã từng được nhà cung cấp phát biểu</em>, giá trị nằm ở chỗ nó phân loại đúng — không phải ở chỗ nó vẫn đang nằm trên web:</p>
 
     <div class="table-wrap">
       <table>
@@ -630,8 +631,9 @@ footer.site{border-top:1px solid var(--border);padding:26px 24px;text-align:cent
     </div>
 
     <div class="callout insight">
-      <div class="callout-title">Vì sao fine-tune không nhồi được kiến thức — Superficial Alignment Hypothesis (LIMA)</div>
-      <p>Paper LIMA phát biểu <strong>alignment</strong> (tức bước fine-tune để model cư xử theo ý người dùng) chỉ dạy <em>cách trình bày</em>, chứ không thêm hiểu biết: <em>"A model's knowledge and capabilities are learnt almost entirely during pretraining, while alignment teaches it which subdistribution of formats should be used when interacting with users."</em> — kiến thức và năng lực gần như học trọn vẹn ở giai đoạn pretraining; alignment chỉ dạy model <em>chọn kiểu định dạng nào</em> khi nói chuyện. Chỗ analogy này gãy nếu bạn nghĩ "fine-tune nhiều hơn = biết nhiều hơn": thêm dữ liệu fine-tune dạy phong cách, không rót thêm dữ kiện. Nguồn: LIMA, 2023.</p>
+      <div class="callout-title">Vì sao đừng dùng fine-tune để nhồi dữ kiện — Superficial Alignment Hypothesis (LIMA)</div>
+      <p>Paper LIMA phát biểu <strong>alignment</strong> (tức bước fine-tune để model cư xử theo ý người dùng) chủ yếu dạy <em>cách trình bày</em>: <em>"A model's knowledge and capabilities are learnt almost entirely during pretraining, while alignment teaches it which subdistribution of formats should be used when interacting with users."</em> — kiến thức và năng lực gần như học trọn vẹn ở giai đoạn pretraining; alignment chỉ dạy model <em>chọn kiểu định dạng nào</em> khi nói chuyện.</p>
+      <p><strong>Phát biểu chính xác của luật này là về hiệu quả, không phải về khả năng.</strong> Trọng số <em>có</em> hấp thụ được thông tin — pretraining chẳng làm gì khác. Vấn đề là với <em>dữ kiện hay đổi</em>, huấn luyện là cách nạp <strong>đắt, giòn và không cập nhật được</strong>: mỗi lần chính sách đổi là một job train mới, bạn không xoá được một dữ kiện đã học, và model vẫn nói ra phiên bản cũ với đúng giọng tự tin đó. RAG sửa bằng một lần ghi vào index. Ngược lại, thứ <em>không</em> đổi hằng tuần — vốn từ vựng và ký pháp của một miền (mã ICD y tế, DSL nội bộ, quy ước đặt tên trong hệ thống của bạn) — thì train vào là hợp lý, và đó đúng là việc của <strong>continued pretraining</strong> ở bài 1.3. Ranh giới cần nhớ không phải "hành vi được, kiến thức không" mà là: <span class="hl">dữ kiện thay đổi → RAG; vốn từ và hành vi ổn định của miền → train</span>. Nguồn: LIMA, 2023.</p>
     </div>
 
     <div>
@@ -649,7 +651,7 @@ footer.site{border-top:1px solid var(--border);padding:26px 24px;text-align:cent
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true" focusable="false"><path d="M12 2v6m0 8v6M4.9 4.9l4.2 4.2m5.8 5.8l4.2 4.2M2 12h6m8 0h6M4.9 19.1l4.2-4.2m5.8-5.8l4.2-4.2"/></svg>
         Takeaway
       </span>
-      <p>Fine-tune dạy model <span class="hl">cách trình bày thứ nó đã biết, không nhồi kiến thức mới</span> — lỗi "thiếu dữ kiện / dữ liệu lỗi thời" giải bằng context (RAG/prompt), lỗi "format/tone/reasoning không nhất quán" mới giải bằng fine-tune; hai trục cộng dồn, không loại trừ nhau.</p>
+      <p>Fine-tune dạy model <span class="hl">cách trình bày thứ nó đã biết</span>, và là cách <span class="hl">đắt-giòn-không-cập-nhật-được</span> để nạp dữ kiện hay đổi — lỗi "thiếu dữ kiện / dữ liệu lỗi thời" giải bằng context (RAG/prompt), lỗi "format/tone/reasoning không nhất quán" mới giải bằng fine-tune; ngoại lệ hợp lệ duy nhất là vốn từ/ký pháp <em>ổn định</em> của một miền (continued pretraining, bài 1.3). Hai trục cộng dồn, không loại trừ nhau.</p>
     </div>
 
     <div class="quiz" data-correct="1">
@@ -744,7 +746,7 @@ footer.site{border-top:1px solid var(--border);padding:26px 24px;text-align:cent
         <text class="dgm-ink2" x="332" y="384" text-anchor="middle" font-size="10" font-family="IBM Plex Mono">có thể cộng dồn cả hai</text>
         <defs><marker id="m1l2-ah" markerWidth="9" markerHeight="9" refX="7" refY="4.5" orient="auto"><path d="M0 0 L9 4.5 L0 9 z" fill="var(--accent-2)"/></marker></defs>
       </svg>
-      <figcaption><b>Hình 1.2</b> — Fine-tune nằm ở <em>cuối</em> cây, không phải đầu. Trước nó là hai cổng rẻ hơn nhiều: có eval chưa, và prompt đã đủ chưa. Nhánh "thiếu kiến thức" đi RAG, nhánh "lệch hành vi" mới tới fine-tune — và hai leaf có thể cộng dồn. Nguồn: OpenAI "Model optimization", truy cập 07/2026.</figcaption>
+      <figcaption><b>Hình 1.2</b> — Fine-tune nằm ở <em>cuối</em> cây, không phải đầu. Trước nó là hai cổng rẻ hơn nhiều: có eval chưa, và prompt đã đủ chưa. Nhánh "thiếu kiến thức" đi RAG, nhánh "lệch hành vi" mới tới fine-tune — và hai leaf có thể cộng dồn. Nguồn: OpenAI "Model optimization", bản 2024–2025 (trang gốc đã đổi sau wind-down; xem ghi chú ở bài 1.1).</figcaption>
     </figure>
 
     <p>Khi đã tới nhánh fine-tune, câu hỏi kế là <em>loại</em> nào. OpenAI gắn mỗi phương pháp với use case cụ thể — đây là mức "biết chọn", chưa phải mức cơ chế (ta mổ sâu ở Phần II–III):</p>
@@ -763,6 +765,12 @@ footer.site{border-top:1px solid var(--border);padding:26px 24px;text-align:cent
     <div class="callout success">
       <div class="callout-title">Khi nào fine-tune thật sự thắng — hai ví dụ của Hamel</div>
       <p>Fine-tune mạnh nhất khi cần model học "syntax, style and rules" của một domain hẹp — không phải để cấp dữ kiện. Hamel dẫn hai case: <strong>Honeycomb</strong> query assistant, nơi fine-tune giúp model học "the syntax and rules of this niche domain-specific language" (cú pháp và luật của một DSL hẹp) tốt hơn chỉ prompt; và <strong>ReChat's Lucy</strong>, nơi fine-tune là thiết yếu để sinh "idiosyncratic format that weaves together structured and unstructured data" (định dạng đặc thù đan xen dữ liệu có cấu trúc và phi cấu trúc). Cả hai đều là bài toán <em>hành vi/format</em>, không phải bài toán kiến thức. Nguồn: Hamel Husain, truy cập 07/2026.</p>
+    </div>
+
+    <div class="callout insight">
+      <div class="callout-title">Nhánh thứ ba của cây: chất lượng đã đủ, nhưng đắt hoặc chậm → distillation</div>
+      <p>Cây trên có hai nhánh vì nó phân loại theo <em>lỗi chất lượng</em>. Nhưng có một lý do chính đáng để fine-tune khi <strong>không</strong> có lỗi chất lượng nào cả: model frontier trả lời đúng, chỉ là quá đắt hoặc quá chậm cho lưu lượng của bạn. Lối ra là <strong>distillation</strong> — dùng model lớn ("teacher") sinh nhãn cho chính traffic của bạn, rồi fine-tune một model nhỏ 4–8B ("student") trên tập nhãn đó, và chỉ đổi sang student khi nó qua được một cổng đặt trước, ví dụ <em>student ≥ ~95% điểm teacher trên holdout</em> (ngưỡng bạn tự chọn theo mức rủi ro, rồi giữ đúng nó).</p>
+      <p><strong>Tính điểm hoà vốn trước khi làm</strong>, bằng ký hiệu chứ đừng bằng con số ai đó nhớ mang máng. Gọi <span class="mono">P</span> = giá $/1M output token của model frontier, <span class="mono">V</span> = số triệu output token mỗi tháng, <span class="mono">T</span> = chi phí một lần cho sinh nhãn + train, <span class="mono">S</span> = chi phí serve student mỗi tháng. Bạn đang trả <span class="mono">P × V</span> mỗi tháng; sau khi distill bạn trả <span class="mono">S</span> mỗi tháng cộng <span class="mono">T</span> trả một lần. Thời gian hoàn vốn là <span class="mono">T / (P × V − S)</span> tháng — và nếu mẫu số ≤ 0 thì dự án không bao giờ hoà vốn. Hệ quả cần nói thẳng: <strong>dưới một mức lưu lượng nào đó, việc đúng đắn là không fine-tune gì cả</strong>. Cắm giá hiện hành của nhà cung cấp bạn đang dùng vào công thức trước khi mở một dự án distillation — đừng cắm giá trong một bài blog.</p>
     </div>
 
     <div class="callout info">
@@ -987,6 +995,7 @@ footer.site{border-top:1px solid var(--border);padding:26px 24px;text-align:cent
     <div class="callout danger">
       <div class="callout-title">Rủi ro thứ hai: catastrophic forgetting</div>
       <p>Full fine-tune một model liên tiếp cho nhiều task (support → tóm tắt hợp đồng → phân loại ticket) thì nó <strong>quên task trước</strong>. Nghiên cứu thực nghiệm trên LLM 1B–7B (arXiv:2308.08747, 2023) cho thấy hiện tượng này "generally observed", và trớ trêu là <strong>quên nặng hơn khi model lớn hơn</strong> trong dải đó, không nhẹ đi. Một bước instruction tuning tổng quát trước khi fine-tune chuyên biệt giúp giảm nhẹ.</p>
+      <p><strong>Ba cần gạt thật sự làm được gì đó</strong>, thay vì chỉ hy vọng: (1) <strong>replay</strong> — trộn vào tập train một lát dữ liệu instruction tổng quát, để model vẫn còn thấy loại việc cũ trong lúc học việc mới; (2) <strong>giữ base đóng băng</strong> — LoRA/PEFT khi phải tune nối tiếp nhiều task, vì trọng số gốc không bị ghi đè và mỗi task là một adapter tháo được, thay vì chồng lên nhau trên cùng một bộ weight; (3) <strong>ghim một regression suite</strong> gồm các năng lực cũ bạn không được phép mất — dựng nó <em>trước</em> khi train, chấm nó sau mỗi lần train, và coi nó là <em>cổng chặn ship</em> chứ không phải một số để tham khảo (checklist bài 7.1). Không có (3) thì bạn không biết mình đã quên gì — chỉ biết điểm task mới đẹp.</p>
     </div>
 
     <div class="callout insight">
@@ -997,7 +1006,7 @@ footer.site{border-top:1px solid var(--border);padding:26px 24px;text-align:cent
     <div>
       <span class="eyebrow" style="display:block;margin-bottom:10px">Áp dụng</span>
       <details class="accordion"><summary><span class="chev">▶</span><span class="accordion-tag">Khi nào full FT vẫn hợp lý</span><span>Bạn có cluster đa-GPU và một task duy nhất, lâu dài</span></summary>
-        <div class="accordion-body">Full fine-tuning có capacity học cao nhất. Nếu bạn có đủ VRAM (nhiều GPU, ZeRO/FSDP shard optimizer states) và chỉ phục vụ <em>một</em> model cho <em>một</em> task ổn định lâu dài, full FT là lựa chọn chất lượng cao nhất. Nhưng nhớ: mỗi biến thể là một bản copy full-size để lưu và serve.</div>
+        <div class="accordion-body">Full fine-tuning cập nhật mọi tham số nên <em>capacity</em> của nó không bị chặn bởi rank — hợp khi bạn có đủ VRAM (nhiều GPU, ZeRO/FSDP shard optimizer states), chỉ phục vụ <em>một</em> model cho <em>một</em> task ổn định lâu dài, và dataset đủ lớn để dùng hết capacity đó. Nhưng đừng đọc thành "full FT = chất lượng cao nhất": Thinking Machines ("LoRA Without Regret", 2025) đo được rằng khi LoRA được gắn lên <strong>mọi lớp linear</strong> (gồm MLP/MoE) và rank đủ so với lượng thông tin trong dataset, nó <em>khớp</em> full FT về loss và kết quả cuối — với RL thì khớp ngay cả ở rank 1, và tốn khoảng 2/3 FLOPs mỗi lượt. Nói cách khác, một khoảng cách chất lượng LoRA-vs-full thường là <strong>dấu hiệu cấu hình sai, không phải trần của LoRA</strong>. Chỗ LoRA thật sự thua là khi dataset vượt capacity của adapter. Và nhớ: mỗi biến thể full FT là một bản copy full-size để lưu và serve.</div>
       </details>
       <details class="accordion"><summary><span class="chev">▶</span><span class="accordion-tag">Dấu hiệu nên chuyển sang PEFT</span><span>GPU vừa túi, nhiều biến thể, sợ forgetting</span></summary>
         <div class="accordion-body">Ba tín hiệu: (1) ước lượng 16 byte/param vượt GPU bạn có; (2) bạn cần nhiều biến thể (mỗi phòng ban/khách một model) — PEFT cho phép nhiều adapter nhẹ trên một base; (3) bạn fine-tune nối tiếp nhiều task và lo catastrophic forgetting — giữ nguyên phần lớn trọng số gốc (đặc trưng của PEFT) thường ít quên hơn.</div>
@@ -1045,7 +1054,7 @@ footer.site{border-top:1px solid var(--border);padding:26px 24px;text-align:cent
       <ul>
         <li>Giải thích cơ chế LoRA: đóng băng W, học cặp ma trận hạng thấp ΔW = B·A.</li>
         <li>Tính mức giảm trainable params bằng công thức r×(d+k) so với d×k.</li>
-        <li>Chọn nấc DoRA (<span class="mono">use_dora=True</span>) trước khi tăng rank khi còn accuracy gap.</li>
+        <li>Chạy đúng thứ tự ba nấc khi còn accuracy gap: target_modules → rank → DoRA.</li>
       </ul>
     </div>
 
@@ -1099,15 +1108,21 @@ footer.site{border-top:1px solid var(--border);padding:26px 24px;text-align:cent
 cfg = LoraConfig(
     r=<span class="tok-s">8</span>,                 <span class="tok-c"># rank — dung lượng của adapter</span>
     lora_alpha=<span class="tok-s">16</span>,        <span class="tok-c"># scale thực = alpha / r</span>
-    target_modules=[<span class="tok-s">"q_proj"</span>, <span class="tok-s">"v_proj"</span>],  <span class="tok-c"># module nào được gắn adapter</span>
+    target_modules=<span class="tok-s">"all-linear"</span>,  <span class="tok-c"># mặc định nên là MỌI lớp linear (attention + MLP), không chỉ q/v</span>
     lora_dropout=<span class="tok-s">0.05</span>,
-    use_dora=<span class="tok-s">False</span>,      <span class="tok-c"># nấc nâng cấp khi còn accuracy gap</span>
+    use_dora=<span class="tok-s">False</span>,      <span class="tok-c"># nấc cuối, chỉ sau khi đã sửa target_modules và rank</span>
 )</pre>
     </div>
 
     <div class="callout insight">
-      <div class="callout-title">Còn accuracy gap? Thử DoRA trước khi tăng rank</div>
-      <p>Đôi khi LoRA vẫn kém full fine-tuning một khoảng ("accuracy gap") ở domain khó (pháp lý, y tế). <strong>DoRA</strong> tách trọng số thành hai thành phần — <em>magnitude</em> (độ lớn) và <em>direction</em> (hướng), để LoRA lo phần hướng — nhằm "enhance both the learning capacity and training stability of LoRA" mà không thêm chi phí lúc inference. Bật bằng <span class="mono">use_dora=True</span>. Đây là nấc thu hẹp gap nên thử <em>trước</em> khi tăng rank (tốn thêm compute) hay quay lại full fine-tuning. Lưu ý: DoRA nặng hơn LoRA lúc train, nên merge weight khi serve.</p>
+      <div class="callout-title">Còn accuracy gap? Chạy đúng thứ tự ba nấc</div>
+      <p>Đôi khi LoRA vẫn kém full fine-tuning một khoảng ("accuracy gap") ở domain khó (pháp lý, y tế). Trước khi kết luận "LoRA không đủ", hãy loại trừ cấu hình sai theo đúng thứ tự này — theo đo đạc của Thinking Machines, "LoRA Without Regret" (2025):</p>
+      <ul>
+        <li><strong>Nấc 1 — mình có đang gắn adapter mỗi lớp attention thôi không?</strong> Đây là nguyên nhân phổ biến nhất và cũng rẻ nhất để sửa: nhóm này đo được "attention-only LoRA significantly underperforms MLP-only LoRA" ở cùng số tham số. Gắn <em>mọi</em> lớp linear; với model MoE thì các lớp expert/MLP là phần quan trọng nhất, bỏ chúng là bỏ đúng chỗ có capacity.</li>
+        <li><strong>Nấc 2 — rank có tương xứng với lượng thông tin trong dataset không?</strong> LoRA khớp full FT khi capacity của adapter còn chứa nổi dataset, và tụt lại khi dataset vượt qua ngưỡng đó. Vậy hãy tăng rank <em>theo cỡ và độ đa dạng dữ liệu</em>, không tăng theo cảm giác.</li>
+        <li><strong>Nấc 3 — DoRA.</strong> DoRA tách trọng số thành <em>magnitude</em> (độ lớn) và <em>direction</em> (hướng) để LoRA lo phần hướng, nhằm "enhance both the learning capacity and training stability of LoRA" mà không thêm chi phí lúc inference (<span class="mono">use_dora=True</span>). Nó đáng thử, nhưng <em>sau</em> hai nấc trên — vì nó không cứu được một adapter gắn sai chỗ. DoRA nặng hơn LoRA lúc train, nên merge weight khi serve.</li>
+      </ul>
+      <p><strong>Hai cái bẫy hyperparameter đi kèm.</strong> (a) <em>Learning rate của LoRA không phải learning rate của full FT</em> — nhóm này đo được LR tối ưu của LoRA nhất quán cao hơn khoảng <strong>10×</strong> so với full FT, ở cả supervised lẫn RL và không phụ thuộc cỡ model; bê nguyên LR full-FT sang là tự tạo ra một "accuracy gap" giả. (b) <em>LoRA nhạy với batch lớn hơn full FT</em>, và khoảng cách đó không đóng lại bằng cách tăng rank — nếu bạn đang chạy batch rất lớn, hãy nghi ngờ batch trước khi nghi ngờ phương pháp.</p>
     </div>
 
     <div class="takeaway">
@@ -1115,16 +1130,16 @@ cfg = LoraConfig(
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true" focusable="false"><path d="M12 2v6m0 8v6M4.9 4.9l4.2 4.2m5.8 5.8l4.2 4.2M2 12h6m8 0h6M4.9 19.1l4.2-4.2m5.8-5.8l4.2-4.2"/></svg>
         Takeaway
       </span>
-      <p>LoRA đóng băng W và chỉ học <span class="hl">ΔW = B·A hạng thấp</span> — giảm trainable params tới <span class="hl">10.000×</span> và GPU memory 3× so với GPT-3 175B + Adam, chất lượng "on-par or better"; r/alpha/target_modules là hyperparameter thật, và DoRA là nấc thử trước khi tăng rank.</p>
+      <p>LoRA đóng băng W và chỉ học <span class="hl">ΔW = B·A hạng thấp</span> — giảm trainable params tới <span class="hl">10.000×</span> và GPU memory 3× so với GPT-3 175B + Adam, chất lượng "on-par or better". r/alpha/target_modules là hyperparameter thật: mặc định gắn adapter lên <span class="hl">mọi lớp linear (attention + MLP/MoE)</span>, còn gap thì đi theo thứ tự target_modules → rank → DoRA, và nhớ LR tối ưu của LoRA cao hơn full FT khoảng 10×.</p>
     </div>
 
     <div class="quiz" data-correct="0">
       <span class="eyebrow">Kiểm tra nhanh</span>
-      <p class="quiz-q">Fine-tune LoRA cho một domain pháp lý xong, accuracy vẫn kém full fine-tuning một khoảng nhỏ. Nước đi hợp lý <em>đầu tiên</em> theo tinh thần DoRA paper / PEFT là gì?</p>
-      <button class="quiz-opt" onclick="quizPick(this,0)"><span class="quiz-letter">A</span><span>Bật <span class="mono">use_dora=True</span> (tách magnitude/direction) — nấc thu hẹp accuracy gap trước khi tốn thêm compute.</span></button>
-      <button class="quiz-opt" onclick="quizPick(this,1)"><span class="quiz-letter">B</span><span>Tăng ngay rank r lên gấp 8 lần, vì rank càng cao thì chất lượng luôn càng tốt.</span></button>
+      <p class="quiz-q">Fine-tune LoRA cho một domain pháp lý xong, accuracy vẫn kém full fine-tuning một khoảng nhỏ. Config đang là <span class="mono">target_modules=["q_proj","v_proj"]</span>. Nước đi hợp lý <em>đầu tiên</em> là gì?</p>
+      <button class="quiz-opt" onclick="quizPick(this,0)"><span class="quiz-letter">A</span><span>Gắn adapter lên mọi lớp linear (thêm MLP/MoE, không chỉ attention) và kiểm lại learning rate — nguyên nhân phổ biến nhất của gap là cấu hình, không phải trần của LoRA.</span></button>
+      <button class="quiz-opt" onclick="quizPick(this,1)"><span class="quiz-letter">B</span><span>Bật ngay <span class="mono">use_dora=True</span>, vì DoRA là nấc thu hẹp gap rẻ nhất nên phải thử trước tiên.</span></button>
       <button class="quiz-opt" onclick="quizPick(this,2)"><span class="quiz-letter">C</span><span>Bỏ LoRA, quay lại full fine-tuning ngay — gap nghĩa là PEFT không hợp.</span></button>
-      <div class="quiz-feedback" role="status" data-explain="B sai vì rank cao hơn không đảm bảo tốt hơn, chỉ chắc chắn tốn thêm compute và bộ nhớ. C sai vì một gap nhỏ chưa biện minh cho việc trả lại toàn bộ cái giá 16 byte/param của full FT. Đúng là A: DoRA được thiết kế đúng để thu hẹp gap này với overhead thấp, nên là nấc thử đầu tiên."></div>
+      <div class="quiz-feedback" role="status" data-explain="A đúng: adapter chỉ nằm trên q/v là ca kinh điển — 'attention-only LoRA significantly underperforms MLP-only LoRA' ở cùng số tham số, và LR tối ưu của LoRA cao hơn full FT ~10× nên bê LR full-FT sang cũng tạo ra gap giả. B đúng công cụ nhưng sai thứ tự: DoRA không cứu được một adapter gắn thiếu lớp, nó là nấc 3 sau target_modules và rank. C sai vì một gap nhỏ chưa biện minh cho việc trả lại toàn bộ cái giá 16 byte/param của full FT — và gap này nhiều khả năng biến mất sau khi sửa config."></div>
     </div>
   </div>
   <div class="lesson-nav" data-navfor="m2-l2"></div>
@@ -1191,7 +1206,7 @@ cfg = LoraConfig(
       <figcaption><b>Hình 2.3</b> — Base 65B ở 4-bit chiếm phần lớn cột nhưng <b>đóng băng</b>; chỉ adapter 16-bit nhỏ được train. Đối chiếu bài 2.1: full FT ~16 byte/param, còn 4-bit ≈ <b>0,5 byte/param</b> — chênh 32 lần chỉ riêng ở trọng số nền. Nguồn: Dettmers et al., QLoRA, 2023 (Figure 2).</figcaption>
     </figure>
 
-    <p><strong>Kết quả có số:</strong> QLoRA "reduces memory usage enough to finetune a 65B parameter model on a single 48GB GPU while <strong>preserving full 16-bit finetuning task performance</strong>" — tức nén để vừa GPU nhưng <em>không</em> mất chất lượng so với fine-tune 16-bit đầy đủ. Model Guanaco (tune bằng QLoRA) đạt <strong>"99,3% mức của ChatGPT"</strong> trên Vicuna benchmark, chỉ tốn <strong>24 giờ trên một GPU</strong>. Đọc bằng lời: một chiếc GPU đơn, một ngày, ra một model gần ngang ChatGPT ở benchmark đó.</p>
+    <p><strong>Kết quả có số — và số này có ngày tháng.</strong> Con số "65B trên một GPU 48GB" là <em>phép đo năm 2023 trên LLaMA-65B</em>, hãy đọc nó như một <strong>mốc lịch sử</strong> đánh dấu lúc fine-tuning model lớn rời khỏi cluster, chứ không phải một quy tắc còn nguyên giá trị cho mọi kiến trúc 2026 (model MoE, context dài hơn, tokenizer khác đều làm lệch con số). Nguyên văn: QLoRA "reduces memory usage enough to finetune a 65B parameter model on a single 48GB GPU while <strong>preserving full 16-bit finetuning task performance</strong>" — tức nén để vừa GPU nhưng <em>không</em> mất chất lượng so với fine-tune 16-bit đầy đủ. Model Guanaco (tune bằng QLoRA) đạt <strong>"99,3% mức của ChatGPT"</strong> trên Vicuna benchmark, chỉ tốn <strong>24 giờ trên một GPU</strong>. Đọc bằng lời: một chiếc GPU đơn, một ngày, ra một model gần ngang ChatGPT ở benchmark đó.</p>
 
     <div class="callout warn">
       <div class="callout-title">Bảng VRAM Unsloth — claim của vendor, chưa đo độc lập</div>
@@ -1225,7 +1240,7 @@ cfg = LoraConfig(
         <div class="accordion-body">Theo bảng Unsloth (claim vendor): trên một GPU 24GB (RTX 4090), QLoRA 4-bit chạy được tới cỡ ~14B (8.5GB) và còn dư cho tới quãng ~27B; nhưng LoRA 16-bit chỉ tới ~8B (22GB). Chính khoảng cách này là lý do QLoRA thành lựa chọn mặc định cho team không có cluster đa-GPU. Vẫn phải tự benchmark theo độ dài context và batch thật.</div>
       </details>
       <details class="accordion"><summary><span class="chev">▶</span><span class="accordion-tag">Đánh đổi cần biết</span><span>Rẻ bộ nhớ, nhưng có cái giá</span></summary>
-        <div class="accordion-body">QLoRA đánh đổi: nén 4-bit và paged optimizers có thể làm train chậm hơn và thêm một chút phức tạp; base bị đóng băng ở 4-bit nên nếu task đòi thay đổi sâu ở chính trọng số nền, QLoRA không phải công cụ cho việc đó. Với đại đa số nhu cầu đổi format/giọng/tuân chỉ dẫn, đánh đổi này rất đáng — nhưng hãy đo, đừng tin con số vendor một cách mặc định.</div>
+        <div class="accordion-body">QLoRA đánh đổi: nén 4-bit và paged optimizers có thể làm train chậm hơn và thêm một chút phức tạp; base bị đóng băng ở 4-bit nên nếu task đòi thay đổi sâu ở chính trọng số nền, QLoRA không phải công cụ cho việc đó. Với đại đa số nhu cầu đổi format/giọng/tuân chỉ dẫn, đánh đổi này rất đáng — nhưng hãy đo, đừng tin con số vendor một cách mặc định. Và đặt câu hỏi cho <em>năm 2026</em>, không cho năm 2023: câu hỏi không còn là "có nhét vừa cái GPU trên bàn không" mà là <strong>"phương pháp nào tốt nhất cho số GPU-giờ mình thật sự thuê được"</strong>. Thuê một card lớn theo giờ rồi chạy LoRA bf16 thường thắng QLoRA trên card để bàn ở cả throughput lẫn chất lượng, và tổng hoá đơn có khi còn rẻ hơn vì job xong sớm hơn nhiều. QLoRA vẫn đúng khi phần cứng là ràng buộc cứng — on-prem, dữ liệu không được rời máy, hoặc đơn giản là không có ngân sách cloud.</div>
       </details>
     </div>
 
@@ -1234,7 +1249,7 @@ cfg = LoraConfig(
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true" focusable="false"><path d="M12 2v6m0 8v6M4.9 4.9l4.2 4.2m5.8 5.8l4.2 4.2M2 12h6m8 0h6M4.9 19.1l4.2-4.2m5.8-5.8l4.2-4.2"/></svg>
         Takeaway
       </span>
-      <p>QLoRA = <span class="hl">base 4-bit NF4 đóng băng + adapter LoRA 16-bit + double quantization + paged optimizers</span> — đưa 65B vào một GPU 48GB "preserving full 16-bit finetuning task performance" (Guanaco đạt <span class="hl">99,3% mức ChatGPT sau 24h/1 GPU</span>); bảng VRAM Unsloth là claim của vendor, phải tự benchmark.</p>
+      <p>QLoRA = <span class="hl">base 4-bit NF4 đóng băng + adapter LoRA 16-bit + double quantization + paged optimizers</span> — đưa 65B vào một GPU 48GB "preserving full 16-bit finetuning task performance" (Guanaco đạt <span class="hl">99,3% mức ChatGPT sau 24h/1 GPU</span>, đo trên LLaMA-65B năm 2023 — mốc lịch sử, không phải hằng số 2026). Bảng VRAM Unsloth là claim của vendor, phải tự benchmark; và câu hỏi 2026 là <span class="hl">khớp phương pháp với số GPU-giờ bạn thuê được</span>, không phải với cái card đang có trên bàn.</p>
     </div>
 
     <div class="quiz" data-correct="1">
@@ -1255,7 +1270,7 @@ cfg = LoraConfig(
       <header class="module-header" data-module="3">
         <span class="eyebrow">Module 03 · Phần III · Preference tuning</span>
         <h2>Preference tuning: RLHF, DPO, GRPO</h2>
-        <p>Muốn model đúng giọng, đúng ưu tiên — đó là preference tuning. Hai bài này cho bạn hiểu RLHF/PPO đủ sâu để biết vì sao nó khó vận hành, rồi hai lối tắt đã thay đổi cuộc chơi: DPO biến RL thành classification loss, GRPO bỏ critic model bằng thống kê nhóm.</p>
+        <p>Muốn model đúng giọng, đúng ưu tiên — đó là preference tuning. Hai bài này cho bạn hiểu RLHF/PPO đủ sâu để biết vì sao nó khó vận hành, rồi hai lối tắt đã thay đổi cuộc chơi: DPO biến RL thành classification loss, GRPO bỏ critic model bằng thống kê nhóm. Nói trước đường đi để bạn đọc cho đúng trọng tâm: với đại đa số team, con đường thực tế là <strong>preference tuning mà không cần một đội RL</strong> — tức họ DPO. Phần RLHF/PPO/GRPO ở đây là <em>tài liệu tham khảo</em> để bạn hiểu cơ chế và đọc được paper, không phải lộ trình mặc định; nó chỉ thành việc phải làm nếu tổ chức bạn thật sự vận hành vòng RL.</p>
       </header>
 <article class="lesson" id="m3-l1" data-lesson>
   <div class="lesson-head">
@@ -1424,9 +1439,10 @@ cfg = LoraConfig(
       <figcaption><b>Hình 3.2</b> — DPO xoá đúng hai bộ phận nặng nhất của RLHF: reward model riêng và vòng RL. Cùng một mục tiêu preference, nhưng còn lại một vòng train duy nhất trên cặp (preferred, rejected) — vận hành như SFT chứ không như một hệ RL.</figcaption>
     </figure>
 
-    <div class="callout success">
-      <div class="callout-title">Con số — DPO vs PPO trên summarization (Rafailov et al. 2023)</div>
-      <p>Trên tác vụ tóm tắt, "DPO has a win rate of approximately 61% at a temperature of 0.0, exceeding the performance of PPO at 57%." Đọc bằng lời: <em>cùng một tác vụ, DPO thắng ~61% so với 57% của PPO — vừa đơn giản hơn về hạ tầng vừa không thua về chất</em>. Và trên tập lệch phân phối (CNN/DailyMail, out-of-distribution), DPO vẫn dẫn với win rate <strong>0,36</strong> so với <strong>0,26</strong> của PPO ở temperature 0.</p>
+    <div class="callout warn">
+      <div class="callout-title">Con số 61% vs 57% — và vì sao đừng chọn DPO vì nó</div>
+      <p>Con số hay được trích: trên tác vụ tóm tắt, "DPO has a win rate of approximately 61% at a temperature of 0.0, exceeding the performance of PPO at 57%" (thêm 0,36 vs 0,26 trên CNN/DailyMail, out-of-distribution). Bây giờ áp đúng kỷ luật mà khoá này đòi ở mọi chỗ khác — <em>hỏi nguồn</em>: đây là <strong>một tác vụ, trong chính paper của nhóm tác giả DPO</strong>, với một baseline PPO do họ tự cấu hình. Đó là bằng chứng yếu cho một kết luận tổng quát, đúng loại bằng chứng bạn sẽ bác nếu một vendor đưa ra.</p>
+      <p>Và nó đã bị phản bác: Xu et al., <em>"Is DPO Superior to PPO for LLM Alignment? A Comprehensive Study"</em> (ICML 2024, arXiv 2404.10719) tìm ra <strong>"PPO is able to surpass other alignment methods in all cases"</strong> khi PPO được tune tử tế, và chỉ ra các giới hạn nền tảng của DPO. Kết luận trung thực: <strong>chênh lệch 4 điểm đó không phải bằng chứng bền</strong>, nó đo cấu hình chứ không đo phương pháp. Lý do thật để chọn DPO là lý do <em>tổ chức</em>, và nó đủ mạnh để đứng một mình: DPO <span class="hl">xoá reward model và vòng RL khỏi sơ đồ vận hành của bạn</span> — một vòng train như SFT, ít bộ phận động, ít người phải biết RL, ít thứ hỏng lúc 2 giờ sáng. Nếu bạn <em>có</em> đội chạy được RL và tune được PPO, thì lựa chọn quay về đo đạc trên chính tác vụ của bạn.</p>
     </div>
 
     <div class="concept">
@@ -1468,6 +1484,12 @@ cfg = LoraConfig(
     <div class="callout warn">
       <div class="callout-title">Trung thực về số liệu (DeepSeekMath 7B, Shao et al. 2024)</div>
       <p>Sau vòng RL bằng GRPO, DeepSeekMath 7B tăng điểm từ bản Instruct: <strong>GSM8K 82,9% → 88,2%</strong> và <strong>MATH 46,8% → 51,7%</strong>; mức 51,7% MATH được paper mô tả là "approaching the performance level of Gemini-Ultra and GPT-4". Nhưng đây là số <em>trước/sau khi áp GRPO</em> — <strong>không phải</strong> "GRPO thắng PPO bao nhiêu điểm". Paper DeepSeekMath không đưa ra một so sánh đối đầu GRPO vs PPO trên cùng một run. Nếu ai nói với bạn con số kiểu "GRPO hơn PPO X điểm", hãy hỏi nguồn — rất có thể đó là số bịa.</p>
+      <p>Áp đúng kỷ luật đó cho cả đoạn kế bên dưới: các so sánh mà paper GSPO đưa ra cũng là <strong>đo đạc nội bộ của chính nhóm đề xuất phương pháp</strong> (Qwen/Alibaba), chưa có bên thứ ba lặp lại. Đọc chúng như một giả thuyết có lý do kỹ thuật rõ ràng, không như một kết quả đã được kiểm chứng độc lập.</p>
+    </div>
+
+    <div class="callout insight">
+      <div class="callout-title">GRPO không phải điểm dừng: GSPO và chỗ GRPO gãy ở quy mô lớn</div>
+      <p>GRPO tính tỉ lệ importance ratio ở mức <strong>từng token</strong>. Ở quy mô nhỏ thì ổn, nhưng phương sai của các tỉ lệ đó cộng dồn dọc chuỗi, và trên các run dài, model lớn — <em>nặng nhất với kiến trúc MoE</em>, nơi mỗi bước cập nhật có thể làm đổi hẳn expert nào được định tuyến — nó có thể đẩy quá trình train vào mất ổn định rồi sụp hẳn. <strong>GSPO</strong> (Group Sequence Policy Optimization, Qwen, arXiv 2507.18071) sửa bằng cách chuyển đơn vị tính tỉ lệ và clipping từ token lên <strong>cả chuỗi</strong> — khớp với chỗ reward vốn dĩ được chấm, tức trên nguyên câu trả lời. Nhóm tác giả cho biết nó "notably stabilizes Mixture-of-Experts (MoE) RL training" và đã góp phần vào các model Qwen3. Ý nghĩa thực dụng cho bạn: nếu team bạn chạy RL và gặp cảnh loss đang đẹp rồi đột ngột sụp trên một model MoE, đây là chỗ nên đọc — chứ không phải tăng thêm data.</p>
     </div>
 
     <div class="callout insight">
@@ -1493,7 +1515,7 @@ cfg = LoraConfig(
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true" focusable="false"><path d="M12 2v6m0 8v6M4.9 4.9l4.2 4.2m5.8 5.8l4.2 4.2M2 12h6m8 0h6M4.9 19.1l4.2-4.2m5.8-5.8l4.2-4.2"/></svg>
         Takeaway
       </span>
-      <p>DPO và GRPO <span class="hl">cắt đúng phần nặng của RLHF bằng toán</span>: DPO biến bài toán thành một classification loss trên cặp (preferred, rejected) — bỏ reward model và vòng RL, thắng 61% so 57% của PPO trên summarization; GRPO bỏ critic bằng baseline thống kê nhóm. Chọn theo hạ tầng và loại tín hiệu team có, không theo trend.</p>
+      <p>DPO và GRPO <span class="hl">cắt đúng phần nặng của RLHF bằng toán</span>: DPO biến bài toán thành một classification loss trên cặp (preferred, rejected) — bỏ reward model và vòng RL; GRPO bỏ critic bằng baseline thống kê nhóm. Chọn DPO vì nó <span class="hl">xoá reward model và vòng RL khỏi sơ đồ tổ chức</span>, đừng chọn vì bảng 61% vs 57% (một tác vụ, paper của chính tác giả DPO — Xu et al. ICML 2024 cho thấy PPO tune kỹ có thể vượt). Chọn theo hạ tầng và loại tín hiệu team có, không theo trend.</p>
     </div>
 
     <div class="quiz" data-correct="0">
@@ -1609,6 +1631,19 @@ cfg = LoraConfig(
     <div class="callout info">
       <div class="callout-title">Con số thực dụng của OpenAI (docs, truy cập 07/2026)</div>
       <p>Tối thiểu để job chạy: <strong>10</strong> ví dụ. Bắt đầu thấy cải thiện rõ từ <strong>50–100</strong> ví dụ; OpenAI khuyến nghị <em>"starting with 50 well-crafted demonstrations and evaluating the results"</em> — bắt đầu với 50 ví dụ làm kỹ rồi đánh giá. Và nếu 50 ví dụ tốt vẫn không cải thiện, lời khuyên là <em>"rethink your task or prompt before adding training data"</em> — xem lại task/prompt, đừng cứ đổ thêm data. Kỷ luật tách tập: chính nhóm LIMA cũng giữ riêng một <strong>dev set 50</strong> ví dụ, tách khỏi cả training lẫn 300 test prompt.</p>
+    </div>
+
+    <div class="callout insight">
+      <div class="callout-title">Sinh dữ liệu tổng hợp mà không tự lừa mình</div>
+      <p>Khi không đủ ví dụ thật, cách phổ biến là nhờ một model mạnh sinh thêm. Việc đó dùng được, nhưng "sinh xong đem train" là công thức tạo ra một tập trông to mà nghèo. Đường đi tối thiểu có năm chặng: <strong>sinh → khử trùng lặp → lọc bằng judge → người đọc một mẫu → đo độ đa dạng</strong>.</p>
+      <ul>
+        <li><strong>Khử trùng lặp</strong> cả trùng khít lẫn gần-trùng (paraphrase chỉ đổi vài từ). Đây là chặng quan trọng nhất, vì model sinh dữ liệu có xu hướng lặp lại chính nó.</li>
+        <li><strong>Lọc bằng judge</strong> để bỏ cặp sai/lạc format — nhưng chỉ tin judge sau khi đã đo nó (xem bài 4.3).</li>
+        <li><strong>Người đọc một mẫu</strong> vài chục cặp lấy ngẫu nhiên. Không thay được, và luôn phát hiện ra thứ không lọc tự động nào bắt được.</li>
+        <li><strong>Đo độ đa dạng theo một bảng phân loại kiểu prompt viết ra giấy</strong> (loại câu hỏi, độ dài, độ khó, ngôn ngữ, kênh…), rồi đếm số ví dụ mỗi ô. "Cảm giác đa dạng" không phải phép đo; một tập phủ 3/12 ô là một tập hẹp dù có bao nhiêu dòng.</li>
+      </ul>
+      <p>Bài học LIMA không đổi khi dữ liệu là tổng hợp, nếu không muốn nói là gắt hơn: <strong>1.000 ví dụ đúc từ cùng một khuôn còn tệ hơn 300 ví dụ thật đa dạng</strong>. Và một cổng nữa trước khi bắt đầu: <strong>đọc điều khoản của model teacher</strong> — nhiều nhà cung cấp hạn chế việc dùng output để huấn luyện model cạnh tranh. Đây là câu hỏi pháp lý phải hỏi <em>trước</em> khi sinh, không phải ở vòng review (cùng tinh thần bài 5.3).</p>
+      <p><strong>Cổng dữ liệu cá nhân, chạy trên tập đã curate — không phải trên đống thô.</strong> Rà và loại PII, rồi <em>lấy mẫu kiểm tra tái định danh</em>: đọc vài chục ví dụ đã scrub xem có ghép lại nhận ra người thật không (một ca hiếm + một mốc thời gian là đủ để lộ). Biết dữ liệu được train ở <strong>vùng nào</strong>, vì đó thường là điều khoản hợp đồng chứ không phải chi tiết kỹ thuật. Và nhớ một tính chất riêng của fine-tune: <strong>trọng số coi như không xoá được từng phần</strong> — không có lệnh "xoá khách hàng này khỏi model", chỉ có train lại từ đầu. Nên phạm vi đồng ý bạn xin của người dùng phải phủ cả việc <em>huấn luyện</em>, không chỉ việc lưu trữ. Kiểm văn bản pháp luật dữ liệu cá nhân hiện hành với pháp chế trước khi curate, đừng sau.</p>
     </div>
 
     <div class="takeaway">
@@ -1841,6 +1876,14 @@ cfg = LoraConfig(
       </table>
     </div>
 
+    <div class="callout insight">
+      <div class="callout-title">Bốn nguyên tắc làm eval — chỗ phần lớn team làm sai</div>
+      <p><strong>1 · Holdout phải đủ lớn để phân biệt được cái bạn cần phân biệt.</strong> Trực giác cỡ mẫu: sai số của một tỉ lệ co lại theo <em>căn bậc hai</em> của số ví dụ, nên muốn chia đôi độ rộng khoảng tin cậy bạn phải nhân bốn cỡ holdout. Hệ quả rất thực tế: vài chục ví dụ chỉ đủ thấy chênh lệch <em>rất lớn</em>; muốn tự tin về mức chênh vài điểm phần trăm, bạn cần hàng trăm ví dụ trở lên. Nếu holdout nhỏ, hãy thừa nhận nó chỉ bắt được lỗi to.</p>
+      <p><strong>2 · Báo cáo chênh lệch kèm khoảng, không kèm dấu chấm.</strong> "72% → 94%" là một câu chuyện; "+22 điểm, khoảng ±6 trên holdout 150 ví dụ" là một kết quả. Không có khoảng thì không ai — kể cả bạn — phân biệt được cải thiện thật với nhiễu lấy mẫu, và đây đúng là chỗ một con số đẹp bắt đầu nói dối.</p>
+      <p><strong>3 · Chấm nhị phân theo từng lỗi có tên, đừng chấm cảm tính 1–5.</strong> Mỗi dòng eval là một câu hỏi trả lời được bằng có/không về <em>một</em> khuyết tật cụ thể: "có thiếu field <span class="mono">ticket_id</span> không?", "có hứa hoàn tiền khi chính sách không cho không?", "có bịa số hiệu điều khoản không?". Điểm "chất lượng tổng thể: 3,5/5" không nói cho bạn biết phải sửa gì, còn "12% rớt ở lỗi thiếu field" thì có — và nó cũng ổn định giữa những người chấm khác nhau.</p>
+      <p><strong>4 · LLM-judge chỉ dùng sau khi đã đo chính judge đó.</strong> Trước khi để một model chấm hàng nghìn output, hãy nhãn tay một tập con rồi đo mức <em>đồng thuận judge ↔ người</em> trên chính tập con đó. Đồng thuận thấp thì con số judge sinh ra không phải phép đo, nó là ý kiến của một model khác — và bạn vừa thay eval bằng một model chưa được eval. Cuối cùng, khép vòng: mỗi lần eval, đọc các ca <em>trượt</em>, gom chúng thành lô curate tiếp theo. Đó là cách error analysis biến eval từ một cái cổng thành một cỗ máy sinh dữ liệu (bài 4.1).</p>
+    </div>
+
     <div class="takeaway">
       <span class="eyebrow">
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true" focusable="false"><path d="M12 2v6m0 8v6M4.9 4.9l4.2 4.2m5.8 5.8l4.2 4.2M2 12h6m8 0h6M4.9 19.1l4.2-4.2m5.8-5.8l4.2-4.2"/></svg>
@@ -2042,21 +2085,21 @@ cfg = LoraConfig(
     </figure>
 
     <div class="callout danger">
-      <div class="callout-title">Fine-tune Claude? Trạng thái thực 07/2026</div>
-      <p>Glossary chính thức của Claude Platform Docs viết thẳng: <em>"The Claude API does not currently offer fine-tuning, but ask your Anthropic contact if you are interested in exploring this option."</em> Đừng dạy nhầm là "Anthropic đã mở fine-tuning API". Ngoại lệ duy nhất tồn tại: fine-tune <strong>Claude Haiku qua Amazon Bedrock</strong> (không phải Claude API trực tiếp), và bản fine-tune đó phải host bằng <strong>Provisioned Throughput</strong> — tức trả phí cố định theo giờ cho năng lực dành riêng, không theo token. Với hầu hết use-case, prompt engineering + RAG + tool use trên Claude thực tế hơn là cố fine-tune. [nguồn: Anthropic Glossary + Cookbook, truy cập 07/2026]</p>
+      <div class="callout-title">Fine-tune Claude? Trạng thái thực 08/2026 — đường Bedrock đã đóng</div>
+      <p>Glossary chính thức của Claude Platform Docs viết thẳng: <em>"The Claude API does not currently offer fine-tuning, but ask your Anthropic contact if you are interested in exploring this option."</em> Đừng dạy nhầm là "Anthropic đã mở fine-tuning API". Có một ngoại lệ <em>lịch sử</em> hay bị trích lại: fine-tuning từng GA cho <strong>đúng một model — Claude 3 Haiku</strong> (<span class="mono">claude-3-haiku-20240307</span>) qua Amazon Bedrock, host bằng Provisioned Throughput. Nhưng model đó đã <strong>retire trên Claude API ngày 20/04/2026</strong>, còn trên Bedrock nó ở trạng thái <em>legacy</em>: không nhận khách mới, không nhận job fine-tune mới, không mua thêm Provisioned Throughput, và EOL hoàn toàn 10/09/2026. Nói cách khác, tính tới 08/2026 <strong>không còn đường fine-tune Claude nào mở cho khách mới</strong> — đó chính là lý do dòng "KHÔNG có Claude" ở bảng dưới là bản tóm tắt đúng hiện trạng, không mâu thuẫn với đoạn này. Với hầu hết use-case, prompt engineering + RAG + tool use trên Claude thực tế hơn là cố fine-tune. [nguồn: Anthropic Glossary + Model deprecations — platform.claude.com/docs/en/about-claude/model-deprecations; AWS Bedrock model lifecycle docs, truy cập 08/2026]</p>
     </div>
 
-    <p>Vậy bức tranh managed fine-tuning, tính đến 07/2026, chia làm ba nhóm: <strong>đang khai tử</strong> (OpenAI), <strong>không có FT công khai</strong> (Anthropic/Claude, trừ Haiku qua Bedrock), và <strong>còn phục vụ</strong> (Vertex, Bedrock, Together, Fireworks):</p>
+    <p>Vậy bức tranh managed fine-tuning, tính đến 07/2026, chia làm ba nhóm: <strong>đang khai tử</strong> (OpenAI), <strong>không có FT công khai</strong> (Anthropic/Claude — đường Claude 3 Haiku qua Bedrock đã đóng với khách mới, xem callout trên), và <strong>còn phục vụ</strong> (Vertex, Bedrock, Together, Fireworks). Cột trạng thái dưới đây chốt ở 07/2026 trừ dòng Anthropic đã cập nhật 08/2026; giá và trạng thái managed đổi nhanh, kiểm docs chính thức trước khi quyết:</p>
 
     <div class="table-wrap">
       <table>
         <thead><tr><th>Nền tảng</th><th>Trạng thái FT (07/2026)</th><th>Model / lưu ý</th></tr></thead>
         <tbody>
           <tr><td><b>OpenAI</b></td><td>🛑 Đang wind-down</td><td>Không nhận user mới; chốt tạo job mới 06/01/2027. RFT trên <span class="mono">o4-mini</span> giá <b>"$100.00 / hour"</b>.</td></tr>
-          <tr><td><b>Anthropic / Claude</b></td><td>🔒 Không có public FT API</td><td>"does not currently offer fine-tuning"; chỉ Haiku qua Bedrock + Provisioned Throughput, hoặc enterprise contact.</td></tr>
+          <tr><td><b>Anthropic / Claude</b></td><td>🔒 Không có public FT API</td><td>"does not currently offer fine-tuning"; đường Claude 3 Haiku qua Bedrock là legacy — đóng với khách mới, EOL 10/09/2026. Còn lại là enterprise contact.</td></tr>
           <tr><td><b>Google Vertex AI</b></td><td>✅ Managed (Gemini)</td><td>Fully-managed, JSONL có nhãn; Google khuyến nghị khởi điểm ~100 example.</td></tr>
           <tr><td><b>AWS Bedrock</b></td><td>✅ Có giới hạn model</td><td>FT tập trung Titan / Nova / một số Llama; <b>KHÔNG có Claude</b>; RFT <span class="mono">qwen3-32b</span> &amp; <span class="mono">gpt-oss-20b</span> (từ 02/2026). <em>Độ tin cậy trung bình — tự kiểm tra console AWS.</em></td></tr>
-          <tr><td><b>Together AI</b></td><td>✅ Mở (open-weight)</td><td>Fine-tune cả model 100B+ (DeepSeek-V3, Qwen3-235B). Giá <b>"$0.48–$8.00 per 1M tokens"</b>, model chuyên biệt tới <b>"$100/1M tokens"</b>, min <b>$4.00/job</b>.</td></tr>
+          <tr><td><b>Together AI</b></td><td>✅ Mở (open-weight)</td><td>Fine-tune cả model 100B+ (các dòng lớn của Llama/DeepSeek/Qwen — kiểm danh sách hiện hành). Giá <b>"$0.48–$8.00 per 1M tokens"</b>, model chuyên biệt tới <b>"$100/1M tokens"</b>; có phí tối thiểu theo job — <em>kiểm bảng giá hiện hành, các nguồn không thống nhất về mức này</em>.</td></tr>
           <tr><td><b>Fireworks AI</b></td><td>✅ Mở (LoRA/QLoRA)</td><td>Giá $/1M training token (≤16B): LoRA SFT <b>$0.50</b>, LoRA DPO <b>$1.00</b>, Full SFT <b>$1.00</b>, Full DPO <b>$2.00</b>; bậc &gt;300B lên tới <b>$40.00</b>.</td></tr>
         </tbody>
       </table>
@@ -2155,6 +2198,11 @@ cfg = LoraConfig(
     <div class="callout warn">
       <div class="callout-title">Hai điều khoản Llama dễ bị bỏ sót</div>
       <p><strong>(1) Ngưỡng 700M MAU:</strong> <em>"If, on the … version release date, the monthly active users … is greater than 700 million monthly active users in the preceding calendar month, you must request a license from Meta, which Meta may grant … in its sole discretion, and you are not authorized to exercise any of the rights under this Agreement unless or until Meta … grants you such rights."</em> — chặn <em>mọi</em> quyền, không riêng inference. <strong>(2) Đặt tên (Section 1.b.i):</strong> bất kỳ model nào train/fine-tune từ vật liệu Llama đều phải đặt tên bắt đầu bằng "Llama". Cả hai giữ nguyên trong Llama 4. [nguồn: Llama 3.1/4 Community License, truy cập 07/2026]</p>
+    </div>
+
+    <div class="callout insight">
+      <div class="callout-title">Đừng chuyển từ "đọc theo version" sang "đọc theo vendor"</div>
+      <p>Bài này dễ để lại một kết luận sai: "Meta = license ràng buộc, Qwen = sạch". Chính Meta phá quy tắc đó — <strong>Muse Glimmer</strong> (30B, phát hành 10/08/2026, weights ở repo Hugging Face <span class="mono">meta-models/Muse-Glimmer-30B</span>) ra thẳng dưới <strong>Apache 2.0</strong>, không phải Llama Community License, nên không kéo theo ngưỡng 700M MAU lẫn ràng buộc đặt tên. Cùng một hãng, hai chế độ pháp lý khác nhau. Quy tắc bền là quy tắc hẹp hơn: <strong>đọc license theo TỪNG model bạn định tải, không theo tên vendor và cũng không theo model trước đó của họ</strong> — và lấy nó từ model card / file LICENSE của đúng repo đó, không từ một bài blog tóm tắt. [nguồn: model card Hugging Face + thông báo Meta, truy cập 08/2026]</p>
     </div>
 
     <div class="callout info">
@@ -2398,7 +2446,7 @@ cfg = LoraConfig(
         <text class="dgm-ink" x="76" y="341" font-size="11.5" font-weight="700">8 · Quantize + multi-LoRA serve (N tenant trên 1 base)</text>
         <text class="dgm-ink2" x="500" y="341" font-size="9.5" font-family="IBM Plex Mono" text-anchor="end">bài 6.1</text>
       </svg>
-      <figcaption><b>Hình 6.3</b> — Toàn khoá là <em>một</em> pipeline quyết định, không phải chín chủ đề rời. Fine-tune (bước 4) đứng sau eval (1) và phân loại trục lỗi (2) — bạn chỉ chạm GPU khi đã biết đo cải thiện bằng gì và chắc lỗi thuộc trục hành vi. Mỗi ô trỏ về đúng bài dạy nó.</figcaption>
+      <figcaption><b>Hình 6.3</b> — Toàn khoá là <em>một</em> pipeline quyết định, không phải mười sáu chủ đề rời. Fine-tune (bước 4) đứng sau eval (1) và phân loại trục lỗi (2) — bạn chỉ chạm GPU khi đã biết đo cải thiện bằng gì và chắc lỗi thuộc trục hành vi. Mỗi ô trỏ về đúng bài dạy nó.</figcaption>
     </figure>
 
     <div class="concept">
@@ -2420,6 +2468,13 @@ cfg = LoraConfig(
           <tr><td>Quantize + serve</td><td>Deploy N base model = N GPU thay vì 1 base + N adapter</td><td>Bài 6.1</td></tr>
         </tbody>
       </table>
+    </div>
+
+    <div class="callout warn">
+      <div class="callout-title">Đường thoát: pipeline này cần một điều kiện dừng, viết ra từ bước 1</div>
+      <p>Tám bước trên nói cho bạn cách <em>đi tiếp</em>. Thứ chúng không tự có là quyền <em>dừng lại</em> — và một dự án fine-tune không có điều kiện dừng thì sẽ tự gia hạn mãi, vì lúc nào cũng còn một epoch nữa, một batch dữ liệu nữa để thử.</p>
+      <p><strong>Ở bước 1, cùng lúc với việc dựng eval, hãy đăng ký trước ngưỡng thành công</strong> — bằng số, viết vào đề xuất, trước khi thấy bất kỳ kết quả nào: <em>chỉ ship nếu holdout cải thiện ≥ N điểm <strong>VÀ</strong> regression suite của các năng lực cũ không tụt</em>. Hai vế, nối bằng VÀ. Chọn N trước khi đo là điều duy nhất ngăn được việc N lặng lẽ hạ xuống cho vừa con số bạn nhận được.</p>
+      <p><strong>Rồi ở bước 7 (eval), quyết định ba đường — có tên, không mập mờ:</strong> <strong>ship</strong> nếu qua cả hai vế; <strong>lặp một vòng nữa</strong> nếu suýt đạt và bạn biết cụ thể sẽ sửa gì (thường là dữ liệu, xem error analysis ở bài 4.3), với một số vòng tối đa đã ấn định trước; hoặc <strong>bỏ và quay về prompt + RAG</strong> nếu không. Đường thứ ba là một kết quả hợp lệ, không phải một thất bại: bạn vừa mua được câu trả lời "fine-tune không giải bài này" với giá một dự án nhỏ, và tránh trả giá một hệ production phải nuôi mãi. Ghi trước rằng nó tồn tại, để lúc cần rẽ vào không ai phải bảo vệ danh dự của mình.</p>
     </div>
 
     <div class="callout success">
@@ -2537,10 +2592,10 @@ cfg = LoraConfig(
           <tr><td><strong>1.2</strong></td><td>Thứ tự đúng: eval → prompt → (RAG nếu thiếu kiến thức / fine-tune nếu lệch hành vi hoặc cần model nhỏ-rẻ-nhanh) — "impossible to fine-tune effectively without an eval system": không eval thì không biết fine-tune có cải thiện gì.</td></tr>
           <tr><td><strong>1.3</strong></td><td>Bốn giai đoạn — pretraining, continued pretraining, SFT, preference tuning — sửa bốn thứ khác nhau và bổ sung nhau; "continued pretraining toàn wiki" chỉ để thêm dữ kiện cập nhật thường là nhầm công cụ, RAG rẻ hơn rất nhiều.</td></tr>
           <tr><td><strong>2.1</strong></td><td>Full fine-tuning tốn ~16 byte mỗi tham số (trọng số + gradient + optimizer Adam), không phải 2 — đó là lý do PEFT tồn tại, và vì sao fine-tune 175B "prohibitively expensive".</td></tr>
-          <tr><td><strong>2.2</strong></td><td>LoRA đóng băng W, chỉ học ΔW = B·A hạng thấp — giảm trainable params tới 10.000× và GPU memory 3× (so GPT-3 175B + Adam), chất lượng "on-par or better"; DoRA là nấc thử trước khi tăng rank.</td></tr>
+          <tr><td><strong>2.2</strong></td><td>LoRA đóng băng W, chỉ học ΔW = B·A hạng thấp — giảm trainable params tới 10.000× và GPU memory 3× (so GPT-3 175B + Adam), chất lượng "on-par or better" khi gắn adapter lên mọi lớp linear (attention + MLP/MoE) — gap thường là cấu hình sai, thứ tự sửa là target_modules → rank → DoRA, và LR của LoRA cao hơn full FT ~10×.</td></tr>
           <tr><td><strong>2.3</strong></td><td>QLoRA = base 4-bit NF4 đóng băng + adapter 16-bit + double quantization + paged optimizers — đưa 65B vào một GPU 48GB "preserving full 16-bit finetuning task performance"; bảng VRAM Unsloth là claim của vendor, phải tự benchmark.</td></tr>
           <tr><td><strong>3.1</strong></td><td>RLHF dựng ba bộ phận chạy song song — SFT, reward model, vòng PPO có KL penalty — nên "complex and often unstable" và đắt; đừng chọn vì nghe tên, hỏi trước nhóm có kham nổi vòng RL không.</td></tr>
-          <tr><td><strong>3.2</strong></td><td>DPO và GRPO cắt phần nặng của RLHF bằng toán: DPO biến thành classification loss trên cặp (preferred, rejected), thắng 61% so 57% của PPO trên summarization; GRPO bỏ critic bằng group baseline. Chọn theo hạ tầng, không theo trend.</td></tr>
+          <tr><td><strong>3.2</strong></td><td>DPO và GRPO cắt phần nặng của RLHF bằng toán: DPO biến thành classification loss trên cặp (preferred, rejected); GRPO bỏ critic bằng group baseline. Lý do chọn DPO là nó xoá reward model + vòng RL khỏi sơ đồ tổ chức — không phải bảng 61% vs 57% (một tác vụ, paper của chính tác giả DPO; Xu et al. ICML 2024: PPO tune kỹ có thể vượt). Chọn theo hạ tầng, không theo trend.</td></tr>
           <tr><td><strong>4.1</strong></td><td>Với SFT/alignment, đa dạng + chất lượng thắng số lượng thô — 1.000 ví dụ curate kỹ (LIMA) vượt cả đống dữ liệu thô; 50 ví dụ tốt không cải thiện thì "xem lại task/prompt" chứ đừng đổ thêm data.</td></tr>
           <tr><td><strong>4.2</strong></td><td>Dataset SFT là JSONL theo chat-completions schema, và model open-weight phải áp đúng chat template gốc bằng tokenizer của nó — template lệch gây "performance degradation" ngay cả khi train tiếp; build data train luôn add_generation_prompt=False.</td></tr>
           <tr><td><strong>4.3</strong></td><td>Đo model sau fine-tune bằng đủ ba lớp (holdout trước/sau · loss-curve bắt overfit · test thủ công), và cảnh giác ba cách điểm số lừa — contamination, shortcut learning, catastrophic forgetting; một con số eval đẹp chưa phải bằng chứng.</td></tr>
@@ -2555,13 +2610,14 @@ cfg = LoraConfig(
 
     <span class="eyebrow" style="display:block;margin-top:6px">Checklist · trước khi bấm nút fine-tune</span>
     <ol class="steps">
-      <li><h4>Có eval chưa?</h4><p>Dựng thước đo cải thiện <em>trước</em> — không có eval thì không cách nào biết fine-tune có tác dụng gì. Đây là điều kiện tiên quyết, không phải bước làm sau (1.2).</p></li>
+      <li><h4>Có eval chưa — và có ngưỡng dừng chưa?</h4><p>Dựng thước đo cải thiện <em>trước</em> — không có eval thì không cách nào biết fine-tune có tác dụng gì. Cùng lúc, đăng ký trước bằng số: chỉ ship nếu holdout tăng ≥ N điểm VÀ regression suite năng lực cũ không tụt; và ghi sẵn đường bỏ cuộc — quay về prompt + RAG nếu sau số vòng lặp đã ấn định vẫn không đạt (1.2 / 6.2).</p></li>
       <li><h4>Lỗi thuộc trục nào?</h4><p>Phân loại theo hai trục: thiếu dữ kiện / lỗi thời (trục context) hay lệch format/tone/reasoning (trục hành vi). Nếu là trục context thì <strong>dừng lại</strong> — fine-tune không nhồi được kiến thức mới (1.1).</p></li>
       <li><h4>Đã thử prompt/RAG chưa?</h4><p>Trước khi cam kết fine-tune, thử prompt engineering, và RAG nếu lỗi thuộc trục kiến thức — chúng rẻ hơn nhiều và thường đủ (1.2 / 1.3).</p></li>
       <li><h4>License model đọc chưa?</h4><p>Đọc license trước benchmark, và đọc theo version: Llama gắn 700M MAU + bắt đặt tên "Llama"; Gemma 4 mới Apache 2.0; Qwen3 Apache toàn dòng — câu hỏi pháp lý đi trước (5.3).</p></li>
       <li><h4>Method khớp GPU budget chưa?</h4><p>Chọn phương pháp theo VRAM: full FT ~16 byte/param là quá đắt; LoRA giảm memory 3×; QLoRA đưa cả 65B vào 1 GPU 48GB. Không cần cluster để bắt đầu (2.1 / 2.2 / 2.3).</p></li>
       <li><h4>Data curate + template đúng chưa?</h4><p>Curate ~1.000 ví dụ chất (LIMA thắng đống log thô), đóng gói JSONL chat-schema, và áp <em>đúng</em> chat template gốc bằng tokenizer của model — template lệch làm model tệ đi (4.1 / 4.2).</p></li>
-      <li><h4>Đã tách holdout chưa?</h4><p>Cắt một holdout set ra <em>trước</em> khi train và không cho nó lọt vào training data — đây là hàng rào chống contamination và là thước đo trước/sau (4.3).</p></li>
+      <li><h4>Cổng dữ liệu cá nhân đã qua chưa?</h4><p>Trên tập <em>đã curate</em>: scrub PII rồi lấy mẫu kiểm tra tái định danh; biết dữ liệu train ở vùng nào; và nhớ trọng số coi như không xoá được từng phần, nên phạm vi đồng ý phải phủ cả việc huấn luyện. Kiểm văn bản pháp luật dữ liệu cá nhân hiện hành với pháp chế — trước khi train, không phải sau (4.1).</p></li>
+      <li><h4>Đã tách holdout + ghim regression suite chưa?</h4><p>Cắt một holdout set ra <em>trước</em> khi train và không cho nó lọt vào training data — hàng rào chống contamination và là thước đo trước/sau. Đồng thời ghim một regression suite các năng lực cũ không được phép mất, cũng <em>trước</em> khi train, và coi nó là cổng chặn ship chứ không phải số tham khảo (4.3 / 2.1).</p></li>
       <li><h4>Eval ba lớp sau khi train</h4><p>Chấm bằng đủ ba lớp — holdout so trước/sau, loss-curve bắt overfit, test thủ công — và cảnh giác ba cách điểm số lừa: contamination, shortcut learning, catastrophic forgetting (4.3).</p></li>
       <li><h4>Kế hoạch serving + kế hoạch B</h4><p>Quantize (GGUF cho CPU/edge, AWQ/GPTQ cho GPU) và multi-LoRA serve N tenant trên 1 base. Nếu định dùng managed, nhớ nó là dependency có vòng đời — luôn có kế hoạch B (6.1 / 5.2).</p></li>
     </ol>
