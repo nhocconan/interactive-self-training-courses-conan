@@ -352,7 +352,7 @@ code{font-family:var(--font-mono);font-size:.86em;background:var(--surface-2);
   background:var(--surface-2);border-bottom:1px solid var(--border);
   font-family:var(--font-mono);font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--ink-2)}
 .copy-btn{font-family:var(--font-mono);font-size:10.5px;letter-spacing:.08em;text-transform:uppercase;
-  background:var(--surface);border:1px solid var(--border);border-radius:7px;padding:4px 10px;cursor:pointer;color:var(--ink-2);transition:all .15s}
+  background:var(--surface);border:1px solid var(--border);border-radius:7px;padding:4px 10px;min-height:44px;min-width:44px;cursor:pointer;color:var(--ink-2);transition:all .15s}
 .copy-btn:hover{background:var(--accent);color:#fff;border-color:var(--accent)}
 .copy-btn.copied{background:var(--success);color:#fff;border-color:var(--success)}
 .prompt-card pre,.code-card pre{margin:0;padding:16px;overflow-x:auto;
@@ -524,7 +524,7 @@ footer.site{border-top:1px solid var(--border);padding:26px 24px;text-align:cent
           <tbody>
             <tr><td><b>DSS / IDSS</b></td><td>Decision Support System — hệ hỗ trợ ra quyết định; chữ I là Intelligent (có tri thức + suy luận AI).</td></tr>
             <tr><td><b>OLTP / OLAP</b></td><td>Xử lý giao dịch hằng ngày (ghi) vs xử lý phân tích trực tuyến (đọc, tổng hợp nhiều chiều).</td></tr>
-            <tr><td><b>Data Warehouse</b></td><td>Kho dữ liệu phân tích: subject-oriented, integrated, time-variant, non-updatable (Inmon).</td></tr>
+            <tr><td><b>Data Warehouse</b></td><td>Kho dữ liệu phân tích: subject-oriented, integrated, time-variant, non-volatile (Inmon).</td></tr>
             <tr><td><b>ETL</b></td><td>Extract–Transform–Load: trích xuất, làm sạch/biến đổi, nạp vào kho.</td></tr>
             <tr><td><b>Fact / Dimension</b></td><td>Bảng sự kiện chứa số đo vs bảng chiều mô tả ngữ cảnh (sản phẩm, ngày, cửa hàng).</td></tr>
             <tr><td><b>Star schema</b></td><td>Thiết kế 1 bảng fact ở giữa nối các bảng dimension xung quanh.</td></tr>
@@ -576,25 +576,25 @@ footer.site{border-top:1px solid var(--border);padding:26px 24px;text-align:cent
       </ul>
     </div>
 
-    <p>Sáng thứ Hai, chủ một shop mỹ phẩm mở bảng số liệu của tuần trước. Trong nửa tiếng, họ phải chốt bốn việc: giảm giá dòng serum nào hay giữ giá? Đặt thêm 2.000 mặt nạ dưỡng da khi tồn kho còn 300 hay chờ? Tuần này đẩy <strong>KOC</strong> (Key Opinion Consumer — người tiêu dùng có ảnh hưởng, thường livestream bán hàng) nào? Có nên mở gian trên một sàn mới? Mỗi lựa chọn ăn thẳng vào doanh thu và tồn kho tháng sau — và không ô nào ghi sẵn "đáp án đúng".</p>
+    <p>Sáng thứ Hai, chủ một shop mỹ phẩm mở bảng số liệu của tuần trước. Trong nửa tiếng, họ phải chốt bốn việc: giảm giá dòng serum nào hay giữ giá? Đặt thêm 2.000 mặt nạ dưỡng da khi tồn kho còn 300 hay chờ? Tuần này đẩy <strong>KOC</strong> (Key Opinion Consumer: người tiêu dùng có ảnh hưởng, thường livestream bán hàng) nào? Có nên mở gian trên một sàn mới? Mỗi lựa chọn ăn thẳng vào doanh thu và tồn kho tháng sau — và không ô nào ghi sẵn "đáp án đúng".</p>
 
     <p>Cảm giác "quá nhiều thứ phải cân, không đủ đầu để nhớ hết" đó chính là điểm khởi đầu của lý thuyết quyết định. Trước khi nói về công cụ, hãy gọi tên đúng cái ta đang làm.</p>
 
     <div class="concept">
       <span class="eyebrow">Khái niệm</span>
       <h4>Một quyết định gồm những gì</h4>
-      <p>Theo Sànchez-Marrè (<em>Intelligent Decision Support Systems</em>, Springer 2022, §2.1), một <strong>quyết định</strong> (decision) là sự phán định của một tác nhân sau khi cân nhắc một tình huống có nhiều <strong>phương án</strong> (alternatives — các nước đi có thể chọn). Mỗi phương án dẫn tới một <strong>hệ quả</strong> (consequence/outcome), và hệ quả lại phụ thuộc vào <strong>trạng thái của thế giới</strong> (states of the world — những điều ngoài tầm kiểm soát và chưa biết lúc quyết: cầu thị trường, phản ứng đối thủ, mùa vụ). Người ra quyết định gọi là <strong>decisor</strong>. Lý thuyết giả định tập phương án đã <em>đóng</em> (biết trước) và <em>loại trừ lẫn nhau</em> (chỉ một cái thật sự xảy ra).</p>
+      <p>Theo Sànchez-Marrè (<em>Intelligent Decision Support Systems</em>, Springer 2022, §2.1), một <strong>quyết định</strong> (decision) là sự phán định của một tác nhân sau khi cân nhắc một tình huống có nhiều <strong>phương án</strong> (alternatives: các nước đi có thể chọn). Mỗi phương án dẫn tới một <strong>hệ quả</strong> (consequence/outcome), và hệ quả lại phụ thuộc vào <strong>trạng thái của thế giới</strong> (states of the world, tức những điều ngoài tầm kiểm soát và chưa biết lúc quyết: cầu thị trường, phản ứng đối thủ, mùa vụ). Người ra quyết định gọi là <strong>decisor</strong>. Lý thuyết giả định tập phương án đã <em>đóng</em> (biết trước) và <em>loại trừ lẫn nhau</em> (chỉ một cái thật sự xảy ra).</p>
     </div>
 
     <div class="callout insight">
       <div class="callout-title">Mô hình ghi nhớ</div>
-      <p>Độ khó của một quyết định tăng theo hai thứ (§1.2): số đặc trưng mô tả bài toán và số phương án. Khi cả hai vượt ngưỡng "nhớ nổi trong đầu", vấn đề không phải thiếu ý chí — mà là thiếu công cụ.</p>
+      <p>Độ khó của một quyết định tăng theo hai thứ (§1.2): số đặc trưng mô tả bài toán và số phương án. Khi cả hai vượt ngưỡng "nhớ nổi trong đầu", vấn đề là thiếu công cụ, không phải thiếu ý chí.</p>
     </div>
 
     <p>Không phải quyết định nào cũng như nhau. Hai cách phân loại kinh điển giúp ta xếp chúng lên một tấm bản đồ:</p>
     <ul>
-      <li><strong>Simon (1960) — theo mức "lập trình được":</strong> <em>có cấu trúc</em> (structured — lặp lại, có quy trình rõ), <em>bán cấu trúc</em> (semi-structured — có phần rõ, có phần phải phán đoán), <em>không cấu trúc</em> (unstructured — mới, hệ trọng, không có công thức sẵn).</li>
-      <li><strong>Anthony (1965) — theo cấp tổ chức:</strong> <em>vận hành</em> (operational — việc hằng ngày), <em>chiến thuật</em> (tactical — ví dụ tung sản phẩm mới và đặt giá), <em>chiến lược</em> (strategic — hiếm, rất phức tạp, ví dụ mở rộng ra nước ngoài).</li>
+      <li><strong>Simon (1960), theo mức "lập trình được":</strong> <em>có cấu trúc</em> (structured: lặp lại, có quy trình rõ), <em>bán cấu trúc</em> (semi-structured: có phần rõ, có phần phải phán đoán), <em>không cấu trúc</em> (unstructured: mới, hệ trọng, không có công thức sẵn).</li>
+      <li><strong>Anthony (1965), theo cấp tổ chức:</strong> <em>vận hành</em> (operational: việc hằng ngày), <em>chiến thuật</em> (tactical: ví dụ tung sản phẩm mới và đặt giá), <em>chiến lược</em> (strategic: hiếm, rất phức tạp, ví dụ mở rộng ra nước ngoài).</li>
     </ul>
 
     <figure class="figure">
@@ -649,7 +649,7 @@ footer.site{border-top:1px solid var(--border);padding:26px 24px;text-align:cent
       <figcaption><b>Hình 1.1</b> — Cùng là "quyết định", nhưng ô đặt-thêm-khi-tồn-kho-thấp (dưới trái) chạy được bằng một quy tắc; còn hai cột phải — bán và không cấu trúc — là <b>vùng cần công cụ hỗ trợ</b>. Bài toán "tuần này đẩy lever nào" của hệ ví dụ nằm đúng ô ★.</figcaption>
     </figure>
 
-    <p>Sách còn chồng thêm một chiều nữa: mức <strong>bất định</strong> của hệ. Cột càng sang phải thì bối cảnh càng biến động, thông tin càng khó lấy, tiêu chí càng mờ. Đó là lý do một hệ hỗ trợ quyết định thông minh — <strong>IDSS</strong> (Intelligent Decision Support System — DSS có thêm mô hình/suy luận từ trí tuệ nhân tạo) — được nhắm vào vùng bán và không cấu trúc, chứ không phải để tự động hoá việc đặt-thêm-hàng đơn giản.</p>
+    <p>Sách còn chồng thêm một chiều nữa: mức <strong>bất định</strong> của hệ. Cột càng sang phải thì bối cảnh càng biến động, thông tin càng khó lấy, tiêu chí càng mờ. Đó là lý do <strong>IDSS</strong> (Intelligent Decision Support System: hệ hỗ trợ quyết định thông minh, tức DSS có thêm mô hình/suy luận từ trí tuệ nhân tạo) được nhắm vào vùng bán và không cấu trúc, chứ không phải để tự động hoá việc đặt-thêm-hàng đơn giản.</p>
 
     <div class="callout info">
       <div class="callout-title">Soi vào hệ ví dụ</div>
@@ -699,7 +699,7 @@ footer.site{border-top:1px solid var(--border);padding:26px 24px;text-align:cent
       <ul>
         <li>Phân biệt ba tình huống: chắc chắn, rủi ro, và bất định.</li>
         <li>Tính giá trị kỳ vọng cho một quyết định có xác suất.</li>
-        <li>Chọn tiêu chí maximin / maximax / Hurwicz / minimax-regret khi thiếu xác suất — và thấy mỗi tiêu chí chọn một phương án khác nhau.</li>
+        <li>Chọn tiêu chí maximin / maximax / Hurwicz / minimax-regret khi thiếu xác suất, và thấy mỗi tiêu chí chọn một phương án khác nhau.</li>
       </ul>
     </div>
 
@@ -710,14 +710,14 @@ footer.site{border-top:1px solid var(--border);padding:26px 24px;text-align:cent
       <h4>Ba mức không-biết-trước</h4>
       <p>Knight (1921) và Luce &amp; Raiffa (1957) chia tình huống quyết định làm ba (§2.4):</p>
       <ul>
-        <li><strong>Chắc chắn</strong> (certainty) — trạng thái xác định, biết chắc hệ quả.</li>
-        <li><strong>Rủi ro</strong> (risk) — trạng thái ngẫu nhiên <em>nhưng</em> biết xác suất từng khả năng.</li>
-        <li><strong>Bất định</strong> (uncertainty/ignorance) — trạng thái ngẫu nhiên và <em>không</em> biết xác suất.</li>
+        <li><strong>Chắc chắn</strong> (certainty): trạng thái xác định, biết chắc hệ quả.</li>
+        <li><strong>Rủi ro</strong> (risk): trạng thái ngẫu nhiên <em>nhưng</em> biết xác suất từng khả năng.</li>
+        <li><strong>Bất định</strong> (uncertainty/ignorance): trạng thái ngẫu nhiên và <em>không</em> biết xác suất.</li>
       </ul>
       <p>Công cụ nền là <strong>ma trận quyết định</strong> (decision matrix): hàng = phương án, cột = trạng thái thế giới, mỗi ô = hệ quả tương ứng.</p>
     </div>
 
-    <p><strong>Dưới rủi ro</strong>, khi đã biết xác suất, ta dùng <strong>giá trị kỳ vọng</strong> (expected value/utility) — công thức von Neumann &amp; Morgenstern: <span class="mono">EU = Σ pₖ · u(Oₖ)</span> (tổng của xác suất nhân hệ quả). Ví dụ có thật trong sách (§2.4, Hình 2.5): có nên nối chuông báo trộm trước cuối tuần? Tiền điện chuông 5€; nếu bị trộm mà không chuông, mất 50.000€; xác suất có trộm là 0,3.</p>
+    <p><strong>Dưới rủi ro</strong>, khi đã biết xác suất, ta dùng <strong>giá trị kỳ vọng</strong> (expected value/utility) theo công thức von Neumann &amp; Morgenstern: <span class="mono">EU = Σ pₖ · u(Oₖ)</span> (tổng của xác suất nhân hệ quả). Ví dụ có thật trong sách (§2.4, Hình 2.5): có nên nối chuông báo trộm trước cuối tuần? Tiền điện chuông 5€; nếu bị trộm mà không chuông, mất 50.000€; xác suất có trộm là 0,3.</p>
 
     <div class="callout success">
       <div class="callout-title">Kỳ vọng, tính bằng số thật</div>
@@ -740,10 +740,10 @@ footer.site{border-top:1px solid var(--border);padding:26px 24px;text-align:cent
 
     <p>Không có xác suất, ta chọn bằng một <em>tiêu chí</em>. Bốn tiêu chí kinh điển (§2.4.1):</p>
     <ul>
-      <li><strong>Maximin</strong> (Wald) — tối đa hoá giá trị <em>tối thiểu</em>, kiểu bi quan. Min mỗi hàng {10, 6, −8, −20} → cao nhất là 10 → chọn <strong>a1</strong>.</li>
-      <li><strong>Maximax</strong> — tối đa hoá giá trị <em>tối đa</em>, kiểu lạc quan hoàn toàn. Max mỗi hàng {12, 25, 40, 34} → cao nhất là 40 → chọn <strong>a3</strong>.</li>
-      <li><strong>Hurwicz</strong> (1951) — <span class="mono">α·max + (1−α)·min</span>, với α là độ lạc quan (0 = maximin, 1 = maximax). Một núm xoay khẩu vị rủi ro.</li>
-      <li><strong>Minimax regret</strong> (Savage 1951) — với mỗi cột tính <em>hối tiếc</em> = (giá trị tốt nhất cột − giá trị thực); chọn phương án có hối-tiếc-lớn-nhất nhỏ nhất. Hối tiếc lớn nhất mỗi hàng {28, 15, 18, 30} → nhỏ nhất là 15 → chọn <strong>a2</strong>.</li>
+      <li><strong>Maximin</strong> (Wald): tối đa hoá giá trị <em>tối thiểu</em>, kiểu bi quan. Min mỗi hàng {10, 6, −8, −20} → cao nhất là 10 → chọn <strong>a1</strong>.</li>
+      <li><strong>Maximax</strong>: tối đa hoá giá trị <em>tối đa</em>, kiểu lạc quan hoàn toàn. Max mỗi hàng {12, 25, 40, 34} → cao nhất là 40 → chọn <strong>a3</strong>.</li>
+      <li><strong>Hurwicz</strong> (1951): <span class="mono">α·max + (1−α)·min</span>, với α là độ lạc quan (0 = maximin, 1 = maximax). Một núm xoay khẩu vị rủi ro.</li>
+      <li><strong>Minimax regret</strong> (Savage 1951): với mỗi cột tính <em>hối tiếc</em> = (giá trị tốt nhất cột − giá trị thực); chọn phương án có hối-tiếc-lớn-nhất nhỏ nhất. Hối tiếc lớn nhất mỗi hàng {28, 15, 18, 30} → nhỏ nhất là 15 → chọn <strong>a2</strong>.</li>
     </ul>
 
     <figure class="figure">
@@ -781,7 +781,7 @@ footer.site{border-top:1px solid var(--border);padding:26px 24px;text-align:cent
       <figcaption><b>Hình 1.2</b> — Cùng một bảng số, ba tiêu chí chọn ba phương án khác nhau: <b>a1</b> (maximin), <b>a3</b> (maximax), <b>a2</b> (minimax regret, và cả Hurwicz cân bằng). <b>Quy tắc quyết định — không chỉ dữ liệu — mới định ra lựa chọn.</b></figcaption>
     </figure>
 
-    <p>Còn một mặc định lương thiện khi thiếu prior: <strong>nguyên tắc lý-do-không-đủ</strong> (Laplace/Bernoulli) — gán mỗi trạng thái xác suất bằng nhau (ở đây 1/3) rồi tính kỳ vọng: {11,3 · 17,0 · 16,0 · 6,0} → <strong>a2</strong>. Điểm mấu chốt: bạn <em>gán đều và ghi rõ đó là giả định</em>, chứ không bịa ra một con số 70% cho ra kết quả đẹp.</p>
+    <p>Còn một mặc định lương thiện khi thiếu prior: <strong>nguyên tắc lý-do-không-đủ</strong> (Laplace/Bernoulli): gán mỗi trạng thái xác suất bằng nhau (ở đây 1/3) rồi tính kỳ vọng: {11,3 · 17,0 · 16,0 · 6,0} → <strong>a2</strong>. Điểm mấu chốt: bạn <em>gán đều và ghi rõ đó là giả định</em>, chứ không bịa ra một con số 70% cho ra kết quả đẹp.</p>
 
     <div class="callout danger">
       <div class="callout-title">Bẫy "chỉ nhìn kịch bản tốt nhất"</div>
@@ -798,7 +798,7 @@ footer.site{border-top:1px solid var(--border);padding:26px 24px;text-align:cent
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><path d="M12 2v6m0 8v6M4.9 4.9l4.2 4.2m5.8 5.8l4.2 4.2M2 12h6m8 0h6M4.9 19.1l4.2-4.2m5.8-5.8l4.2-4.2"/></svg>
         Điều cần nhớ
       </span>
-      <p>Trước khi so số, hãy hỏi mình đang ở mức nào — <span class="hl">chắc chắn, rủi ro, hay bất định — vì mỗi mức có một quy tắc riêng, và không có xác suất thì đừng bịa ra một cái</span>.</p>
+      <p>Trước khi so số, hãy hỏi mình đang ở mức nào: <span class="hl">chắc chắn, rủi ro, hay bất định — vì mỗi mức có một quy tắc riêng, và không có xác suất thì đừng bịa ra một cái</span>.</p>
     </div>
 
     <div class="quiz" data-correct="2">
@@ -845,12 +845,12 @@ footer.site{border-top:1px solid var(--border);padding:26px 24px;text-align:cent
     <div class="concept">
       <span class="eyebrow">Khái niệm</span>
       <h4>Mô hình Simon (1960)</h4>
-      <p>Ba pha (§2.3.2): <strong>Intelligence</strong> (trinh sát — phát hiện và nhận diện vấn đề), <strong>Design</strong> (thiết kế — dựng các phương án), <strong>Choice</strong> (chọn — đánh giá rồi chọn phương án tối ưu). Sách lưu ý một điều dễ bất ngờ: lãnh đạo dành <em>phần lớn</em> thời gian ở Intelligence và Design, nhưng lý thuyết quyết định lại dồn vào Choice (vì đó là pha mô hình hoá toán được và phức tạp nhất). Trong thực hành, một vòng đầy đủ nối thêm <strong>Implementation</strong> (thực thi) và <strong>Learning</strong> (đo lường rồi học) — vòng lại nuôi pha trinh sát kỳ sau.</p>
+      <p>Ba pha (§2.3.2): <strong>Intelligence</strong> (trinh sát: phát hiện và nhận diện vấn đề), <strong>Design</strong> (thiết kế: dựng các phương án), <strong>Choice</strong> (chọn: đánh giá rồi chọn phương án tối ưu). Sách lưu ý một điều dễ bất ngờ: lãnh đạo dành <em>phần lớn</em> thời gian ở Intelligence và Design, nhưng lý thuyết quyết định lại dồn vào Choice (vì đó là pha mô hình hoá toán được và phức tạp nhất). Trong thực hành, một vòng đầy đủ nối thêm <strong>Implementation</strong> (thực thi) và <strong>Learning</strong> (đo lường rồi học); vòng này lại nuôi pha trinh sát kỳ sau.</p>
     </div>
 
     <div class="callout insight">
       <div class="callout-title">Đúng đắn ≠ hợp lý, cho tới khi đo</div>
-      <p>Sách (§2.1) chỉ ra: bạn chỉ biết một quyết định <em>hợp lý</em> (rational — chọn đúng theo thông tin lúc đó) có phải là quyết định <em>đúng</em> (right — hệ quả thực tế tốt nhất) hay không <strong>sau khi</strong> hệ quả xảy ra. Vì thế bước đo không phải xa xỉ — nó là cách duy nhất để học.</p>
+      <p>Sách (§2.1) chỉ ra: bạn chỉ biết một quyết định <em>hợp lý</em> (rational: chọn đúng theo thông tin lúc đó) có phải là quyết định <em>đúng</em> (right: hệ quả thực tế tốt nhất) hay không <strong>sau khi</strong> hệ quả xảy ra. Vì thế bước đo là cách duy nhất để học, không phải một thứ xa xỉ.</p>
     </div>
 
     <figure class="figure">
@@ -938,7 +938,7 @@ footer.site{border-top:1px solid var(--border);padding:26px 24px;text-align:cent
     <div class="concept">
       <span class="eyebrow">Khái niệm</span>
       <h4>Vì sao quyết định lớn cần duyệt nhóm</h4>
-      <p>Quyết định hệ trọng thường chạm nhiều mục tiêu xung đột: bộ hàng muốn xả sâu, tài chính giữ biên, thương hiệu giữ hình ảnh. Khi mục tiêu xung đột (§2.5), ta gộp sở thích cá nhân thành sở thích tập thể qua <strong>hàm phúc lợi xã hội</strong> (Social Welfare Function) hoặc <strong>đồng thuận</strong> (consensus). Hai cảnh báo lý thuyết: <strong>nghịch lý Condorcet</strong> — sở thích tập thể có thể vòng (A hơn B, B hơn C, nhưng C lại hơn A) dù mỗi cá nhân không vòng; và <strong>định lý bất khả Arrow</strong> (1951) — với từ 3 phương án trở lên, không hàm gộp nào thoả cùng lúc mọi tiêu chí công bằng. Trường hợp "quản lý quyết sau khi hỏi ý nhóm" (leaded group) thì gần như quyết định cá nhân.</p>
+      <p>Quyết định hệ trọng thường chạm nhiều mục tiêu xung đột: bộ hàng muốn xả sâu, tài chính giữ biên, thương hiệu giữ hình ảnh. Khi mục tiêu xung đột (§2.5), ta gộp sở thích cá nhân thành sở thích tập thể qua <strong>hàm phúc lợi xã hội</strong> (Social Welfare Function) hoặc <strong>đồng thuận</strong> (consensus). Hai cảnh báo lý thuyết: <strong>nghịch lý Condorcet</strong>: sở thích tập thể có thể vòng (A hơn B, B hơn C, nhưng C lại hơn A) dù mỗi cá nhân không vòng; và <strong>định lý bất khả Arrow</strong> (1951): với từ 3 phương án trở lên, không hàm gộp nào thoả cùng lúc mọi tiêu chí công bằng. Trường hợp "quản lý quyết sau khi hỏi ý nhóm" (leaded group) thì gần như quyết định cá nhân.</p>
     </div>
 
     <div class="callout info">
@@ -1000,13 +1000,13 @@ footer.site{border-top:1px solid var(--border);padding:26px 24px;text-align:cent
       </ul>
     </div>
 
-    <p>Chủ một shop mỹ phẩm mở app bán hàng: mỗi giây có đơn Shopee mới, một livestream TikTok vừa chốt đơn, kho trừ tồn. Cuối quý, chị muốn hỏi một câu tưởng đơn giản: <em>“Quý này creator nào kéo doanh thu nhiều nhất, so với quý trước?”</em> Chạy thẳng câu truy vấn đó trên cơ sở dữ liệu bán hàng thì app khựng lại vì nó đang bận ghi đơn — mà số vẫn không gom được, vì Shopee ghi tiền một kiểu, TikTok ghi ngày một kiểu. Đúng như câu nói kinh điển: <strong>“Tổ chức hiện đại đang chết chìm trong dữ liệu nhưng đói thông tin.”</strong></p>
+    <p>Chủ một shop mỹ phẩm mở app bán hàng: mỗi giây có đơn Shopee mới, một livestream TikTok vừa chốt đơn, kho trừ tồn. Cuối quý, chị muốn hỏi một câu tưởng đơn giản: <em>“Quý này creator nào kéo doanh thu nhiều nhất, so với quý trước?”</em> Chạy thẳng câu truy vấn đó trên cơ sở dữ liệu bán hàng thì app khựng lại vì nó đang bận ghi đơn — mà số vẫn không gom được, vì Shopee ghi tiền một kiểu, TikTok ghi ngày một kiểu. Shop đang chết chìm trong dữ liệu mà vẫn đói thông tin.</p>
 
     <div class="concept">
       <span class="eyebrow">Khái niệm nền</span>
       <h4>Data Warehouse (kho dữ liệu)</h4>
-      <p><strong>Data Warehouse</strong> — <em>kho dữ liệu</em> — theo định nghĩa của W. H. Inmon là “một tập dữ liệu <strong>hướng-chủ-đề (subject-oriented)</strong>, <strong>tích-hợp (integrated)</strong>, <strong>biến-thiên-theo-thời-gian (time-variant)</strong>, <strong>không-cập-nhật (non-updatable)</strong>, phục vụ quá trình ra quyết định của lãnh đạo”. Nó gom và làm nhất quán dữ liệu từ nhiều nguồn trong và ngoài, rồi sắp lại thành dạng có nghĩa để quyết định.</p>
-      <p>Hai kiểu xử lý khác nhau tận gốc: <strong>OLTP (Online Transaction Processing — xử lý giao dịch trực tuyến)</strong> ghi/sửa/xoá từng giao dịch, giữ giá trị hiện tại, tối ưu để ghi thật nhanh. Còn <strong>OLAP / xử lý thông tin</strong> là phân tích dữ liệu để ra quyết định: đọc nhiều, tổng hợp, nhìn theo lịch sử.</p>
+      <p><strong>Data Warehouse</strong> (<em>kho dữ liệu</em>) theo định nghĩa của W. H. Inmon là “một tập dữ liệu <strong>hướng-chủ-đề (subject-oriented)</strong>, <strong>tích-hợp (integrated)</strong>, <strong>biến-thiên-theo-thời-gian (time-variant)</strong>, <strong>không biến động (non-volatile)</strong>, phục vụ quá trình ra quyết định của lãnh đạo”. Nó gom và làm nhất quán dữ liệu từ nhiều nguồn trong và ngoài, rồi sắp lại thành dạng có nghĩa để quyết định.</p>
+      <p>Hai kiểu xử lý khác nhau tận gốc: <strong>OLTP (Online Transaction Processing: xử lý giao dịch trực tuyến)</strong> ghi/sửa/xoá từng giao dịch, giữ giá trị hiện tại, tối ưu để ghi thật nhanh. Còn <strong>OLAP / xử lý thông tin</strong> là phân tích dữ liệu để ra quyết định: đọc nhiều, tổng hợp, nhìn theo lịch sử.</p>
     </div>
 
     <figure class="figure">
@@ -1025,7 +1025,7 @@ footer.site{border-top:1px solid var(--border);padding:26px 24px;text-align:cent
         <text class="dgm-ink2" x="471" y="92" text-anchor="middle" font-size="11.5">◆ hướng-chủ-đề (subject-oriented)</text>
         <text class="dgm-ink2" x="471" y="114" text-anchor="middle" font-size="11.5">◆ tích-hợp (integrated)</text>
         <text class="dgm-ink2" x="471" y="136" text-anchor="middle" font-size="11.5">◆ biến-thiên-thời-gian (time-variant)</text>
-        <text class="dgm-ink2" x="471" y="158" text-anchor="middle" font-size="11.5">◆ chỉ-đọc (non-updatable)</text>
+        <text class="dgm-ink2" x="471" y="158" text-anchor="middle" font-size="11.5">◆ không biến động (non-volatile)</text>
         <text class="dgm-ink2" x="471" y="186" text-anchor="middle" font-size="10" font-family="IBM Plex Mono">lịch sử 5–10 năm · refresh định kỳ</text>
         <path class="dgm-flow" d="M606 123 H660" stroke-width="2" marker-end="url(#m2l1-ah)"/>
         <rect class="dgm-box" x="660" y="98" width="104" height="50" rx="10"/><text class="dgm-ink" x="712" y="120" text-anchor="middle" font-size="12" font-weight="700">Ra quyết</text><text class="dgm-ink" x="712" y="137" text-anchor="middle" font-size="12" font-weight="700">định</text>
@@ -1049,27 +1049,27 @@ footer.site{border-top:1px solid var(--border);padding:26px 24px;text-align:cent
 
     <p>Bốn tính chất Inmon, đọc bằng ví dụ commerce:</p>
     <ul>
-      <li><strong>Hướng-chủ-đề:</strong> tổ chức quanh <em>sản phẩm, khách hàng, doanh số</em> — không quanh việc ghi đơn; bỏ mọi cột không giúp quyết định.</li>
+      <li><strong>Hướng-chủ-đề:</strong> tổ chức quanh <em>sản phẩm, khách hàng, doanh số</em>, không quanh việc ghi đơn; bỏ mọi cột không giúp quyết định.</li>
       <li><strong>Tích-hợp:</strong> gộp Shopee + TikTok + Lazada về chung quy ước tên, định dạng, mã hoá (ví dụ đơn vị tiền, cách ghi ngày) — “khi dữ liệu vào kho, nó được chuyển đổi”.</li>
       <li><strong>Biến-thiên-thời-gian:</strong> mọi khoá đều gắn yếu tố thời gian, giữ 5–10 năm để xem xu hướng — ngược với CSDL vận hành chỉ giữ giá trị hiện tại.</li>
-      <li><strong>Không-cập-nhật:</strong> chỉ-đọc, chỉ hai thao tác — nạp ban đầu và truy cập; không cần cơ chế giao dịch/khôi phục/đồng thời.</li>
+      <li><strong>Không-cập-nhật:</strong> chỉ-đọc, chỉ hai thao tác là nạp ban đầu và truy cập; không cần cơ chế giao dịch/khôi phục/đồng thời.</li>
     </ul>
 
     <div class="callout info"><div class="callout-title">Cầu nối 2026: “không-cập-nhật” là ý định thiết kế, không phải giới hạn kỹ thuật</div><p>Bốn tính chất trên là <em>chủ đích thiết kế</em> Inmon đặt ra năm 1992, khi kho thật sự không có cách sửa an toàn. Kho hiện đại dựng trên <strong>open table format</strong> (Apache Iceberg, Delta Lake) thì <em>có</em> giao dịch ACID, có <span class="mono">MERGE</span>, có time travel và xoá theo dòng (row-level delete). Nghĩa là ngày nay bạn <strong>chọn</strong> append-only vì nó giữ được lịch sử và dễ đối soát — chứ không phải vì hệ không cho sửa. Và bạn <strong>phải</strong> xoá được khi luật yêu cầu: xem phần bảo vệ dữ liệu cá nhân ở bài 2.3.</p></div>
 
-    <div class="callout insight"><div class="callout-title">Mô hình tư duy</div><p>Hệ vận hành là <em>cái quầy thu ngân</em> — phải nhanh, phục vụ từng khách. Data Warehouse là <em>phòng phân tích</em> phía sau — nơi gom hoá đơn nhiều năm để tìm ra “bán gì chạy vào quý nào”. Nhét việc phân tích lên quầy thu ngân thì cả hai cùng chậm.</p></div>
+    <div class="callout insight"><div class="callout-title">Mô hình tư duy</div><p>Hệ vận hành là <em>cái quầy thu ngân</em> — phải nhanh, phục vụ từng khách. Data Warehouse là <em>phòng phân tích</em> phía sau, nơi gom hoá đơn nhiều năm để tìm ra “bán gì chạy vào quý nào”. Nhét việc phân tích lên quầy thu ngân thì cả hai cùng chậm.</p></div>
 
     <span class="eyebrow" style="display:block">Ba lý do tách hệ vận hành và hệ thông tin</span>
     <ol class="steps">
       <li><h4>Gom về một chỗ</h4><p>Data Warehouse tập trung dữ liệu vốn rải rác khắp các hệ vận hành, làm nó sẵn sàng cho hỗ trợ quyết định.</p></li>
       <li><h4>Tăng chất lượng &amp; nhất quán</h4><p>Một kho thiết kế tốt “thêm giá trị” cho dữ liệu bằng cách chuẩn hoá, làm sạch, thống nhất.</p></li>
-      <li><h4>Hết tranh chấp tài nguyên</h4><p>Kho riêng loại bỏ cảnh báo cáo phân tích giành CPU với việc ghi đơn — app không còn khựng khi sếp mở dashboard.</p></li>
+      <li><h4>Hết tranh chấp tài nguyên</h4><p>Kho riêng loại bỏ cảnh báo cáo phân tích giành CPU với việc ghi đơn: app không còn khựng khi sếp mở dashboard.</p></li>
     </ol>
 
     <div>
       <span class="eyebrow" style="display:block;margin-bottom:10px">Áp dụng</span>
       <details class="accordion"><summary><span class="chev">▶</span><span class="accordion-tag">Chủ shop</span><span>Báo cáo quý không làm app đơ</span></summary>
-        <div class="accordion-body">Thay vì truy vấn 12 tháng thẳng trên app bán hàng, chị đọc một kho phân tích tách riêng đã gom cả ba sàn về chung định dạng — số ra nhất quán và app vẫn mượt.</div>
+        <div class="accordion-body">Thay vì truy vấn 12 tháng thẳng trên app bán hàng, chị đọc một kho phân tích tách riêng đã gom cả ba sàn về chung định dạng: số ra nhất quán và app vẫn mượt.</div>
       </details>
       <details class="accordion"><summary><span class="chev">▶</span><span class="accordion-tag">Kỹ sư dữ liệu (hệ ví dụ)</span><span>Dashboard không đọc CSDL đơn hàng trực tiếp</span></summary>
         <div class="accordion-body">Trong hệ ví dụ, dữ liệu tác nghiệp được tách khỏi kho phân tích: các lớp <span class="mono">bronze → silver → gold</span> chính là một Data Warehouse; dashboard chỉ đọc lớp gold đã tổng hợp, không đọc bảng đơn hàng thô. Toàn bộ đường thời gian chạy theo giờ Việt Nam (ICT, UTC+7) từ đầu đến cuối.</div>
@@ -1081,13 +1081,13 @@ footer.site{border-top:1px solid var(--border);padding:26px 24px;text-align:cent
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><path d="M12 2v6m0 8v6M4.9 4.9l4.2 4.2m5.8 5.8l4.2 4.2M2 12h6m8 0h6M4.9 19.1l4.2-4.2m5.8-5.8l4.2-4.2"/></svg>
         Takeaway
       </span>
-      <p>Hệ vận hành (OLTP) sinh ra để <span class="hl">ghi giao dịch thật nhanh</span>; muốn phân tích để ra quyết định, bạn cần một kho tách riêng — Data Warehouse — nơi dữ liệu được gom theo chủ đề, <span class="hl">thống nhất, giữ lịch sử và chỉ-đọc</span>.</p>
+      <p>Hệ vận hành (OLTP) sinh ra để <span class="hl">ghi giao dịch thật nhanh</span>; muốn phân tích để ra quyết định, bạn cần một kho tách riêng (Data Warehouse), nơi dữ liệu được gom theo chủ đề, <span class="hl">thống nhất, giữ lịch sử và chỉ-đọc</span>.</p>
     </div>
 
     <div class="quiz" data-correct="0">
       <span class="eyebrow">Kiểm tra nhanh</span>
       <p class="quiz-q">App bán hàng chậm hẳn mỗi lần sếp mở báo cáo doanh thu 12 tháng. Cách xử lý đúng theo tinh thần Data Warehouse là gì?</p>
-      <button class="quiz-opt" onclick="quizPick(this,0)"><span class="quiz-letter">A</span><span>Tách một kho phân tích riêng, gom &amp; làm sạch dữ liệu, refresh định kỳ — để báo cáo không tranh tài nguyên với việc ghi đơn.</span></button>
+      <button class="quiz-opt" onclick="quizPick(this,0)"><span class="quiz-letter">A</span><span>Tách một kho phân tích riêng, gom &amp; làm sạch dữ liệu, refresh định kỳ, để báo cáo không tranh tài nguyên với việc ghi đơn.</span></button>
       <button class="quiz-opt" onclick="quizPick(this,1)"><span class="quiz-letter">B</span><span>Thêm index cho database bán hàng để câu báo cáo chạy nhanh hơn ngay trên đó.</span></button>
       <button class="quiz-opt" onclick="quizPick(this,2)"><span class="quiz-letter">C</span><span>Chỉ cho chạy báo cáo lúc nửa đêm khi ít đơn.</span></button>
       <button class="quiz-opt" onclick="quizPick(this,3)"><span class="quiz-letter">D</span><span>Xoá bớt dữ liệu cũ để bảng nhẹ hơn.</span></button>
@@ -1128,12 +1128,12 @@ footer.site{border-top:1px solid var(--border);padding:26px 24px;text-align:cent
     <div class="concept">
       <span class="eyebrow">Khái niệm nền</span>
       <h4>Các kiến trúc DW — mọi kiến trúc đều có ETL</h4>
-      <p>Từ đơn giản đến phức tạp, mọi kiến trúc đều xoay quanh <strong>ETL</strong> (extraction, transformation, loading — trích xuất, biến đổi, nạp):</p>
+      <p>Từ đơn giản đến phức tạp, mọi kiến trúc đều xoay quanh <strong>ETL</strong> (extraction, transformation, loading: trích xuất, biến đổi, nạp):</p>
       <ul>
         <li><strong>Two-level (hai tầng):</strong> nguồn → khu <strong>staging</strong> (làm sạch, chuẩn hoá) → một kho dùng chung toàn công ty → công cụ đầu cuối. Vì trích xuất định kỳ nên kho không hoàn toàn hiện tại.</li>
         <li><strong>Independent data mart:</strong> mỗi phòng ban một mini-kho riêng, ETL riêng → truy cập phức tạp, số dễ lệch (chính là cảnh họp cãi nhau).</li>
         <li><strong>Dependent data mart + ODS:</strong> một kho doanh nghiệp (EDW) làm nguồn chung; data mart nạp từ EDW; <strong>ODS (Operational Data Store)</strong> cung cấp dữ liệu hiện-thời. Một ETL duy nhất, truy cập đơn giản.</li>
-        <li><strong>Logical data mart + kho near-real-time:</strong> data mart chỉ là view logic (không phải DB tách); kho nhận feed <em>near-real-time</em> để phản ứng gần tức thì. Sách gọi kiểu này là <em>“@ctive DW”</em> — cái tên của thập niên 2000; ngày nay ta gọi thẳng nó là <strong>streaming ingestion</strong> / <strong>CDC</strong> (change data capture), và nó không còn là một loại kho riêng mà chỉ là một lựa chọn về độ tươi (xem bảng ngay dưới).</li>
+        <li><strong>Logical data mart + kho near-real-time:</strong> data mart chỉ là view logic (không phải DB tách); kho nhận feed <em>near-real-time</em> để phản ứng gần tức thì. Sách gọi kiểu này là <em>“@ctive DW”</em>, cái tên của thập niên 2000; ngày nay ta gọi thẳng nó là <strong>streaming ingestion</strong> / <strong>CDC</strong> (change data capture), và nó không còn là một loại kho riêng mà chỉ là một lựa chọn về độ tươi (xem bảng ngay dưới).</li>
         <li><strong>3-tier (ba tầng):</strong> Bottom = tầng DW; Middle = tầng OLAP (tổng hợp vào cube đa chiều cho query nhanh); Top = công cụ đầu cuối.</li>
       </ul>
     </div>
@@ -1155,7 +1155,7 @@ footer.site{border-top:1px solid var(--border);padding:26px 24px;text-align:cent
       </table>
     </div>
 
-    <div class="callout insight"><div class="callout-title">Nguyên tắc chọn</div><p>Chọn độ tươi <strong>từ quyết định</strong>, không từ công cụ. Đặt câu hỏi ngược lưới Simon/Anthony ở bài 1.1: <em>“nếu số này cũ hơn một ngày thì quyết định có đổi không?”</em> Nếu không đổi — batch là câu trả lời đúng, và mọi đồng chi thêm cho streaming là tiền mua một thứ không ai dùng. Chỉ quyết định ở tầng kiểm soát vận hành mới thật sự trả tiền cho độ trễ tính bằng giây.</p></div>
+    <div class="callout insight"><div class="callout-title">Nguyên tắc chọn</div><p>Chọn độ tươi <strong>từ quyết định</strong>, không từ công cụ. Đặt câu hỏi ngược lưới Simon/Anthony ở bài 1.1: <em>“nếu số này cũ hơn một ngày thì quyết định có đổi không?”</em> Nếu không đổi thì batch là câu trả lời đúng, và mọi đồng chi thêm cho streaming là tiền mua một thứ không ai dùng. Chỉ quyết định ở tầng kiểm soát vận hành mới thật sự trả tiền cho độ trễ tính bằng giây.</p></div>
 
     <div class="compare">
       <div class="compare-col bad"><span class="eyebrow">Independent data mart</span><ul><li>ETL riêng cho từng phòng ban</li><li>Ba bản “doanh thu tháng 5” lệch nhau</li><li>Truy cập chồng chéo, khó đối chiếu</li></ul></div>
@@ -1226,7 +1226,7 @@ footer.site{border-top:1px solid var(--border);padding:26px 24px;text-align:cent
       <figcaption><b>Hình 2.2</b> — Ba tầng của Data Warehouse = ba lớp <b>bronze → silver → gold</b> trong hệ ví dụ: mỗi tầng một trách nhiệm, và dashboard (top) chỉ đọc gold (middle), không bao giờ đọc thẳng dữ liệu thô ở bronze.</figcaption>
     </figure>
 
-    <p>Ánh xạ chi tiết vào hệ ví dụ: <span class="mono">bronze</span> = bảng <span class="mono">raw_events</span> lưu nguyên văn thứ nguồn trả về (đúng tầng staging); <span class="mono">silver</span> = các bảng chuẩn hoá như <span class="mono">orders</span> do <em>promoters</em> tạo ra (dữ liệu đã đối soát); <span class="mono">gold</span> = các rollup <span class="mono">agg_*</span> đã tổng hợp sẵn cộng một <strong>Cube semantic layer</strong> (đúng tầng OLAP); trên cùng là dashboard và Data Assistant. Dashboard đọc gold — top tier đọc middle tier — đúng nguyên tắc “mỗi tầng một việc”.</p>
+    <p>Ánh xạ chi tiết vào hệ ví dụ: <span class="mono">bronze</span> = bảng <span class="mono">raw_events</span> lưu nguyên văn thứ nguồn trả về (đúng tầng staging); <span class="mono">silver</span> = các bảng chuẩn hoá như <span class="mono">orders</span> do <em>promoters</em> tạo ra (dữ liệu đã đối soát); <span class="mono">gold</span> = các rollup <span class="mono">agg_*</span> đã tổng hợp sẵn cộng một <strong>Cube semantic layer</strong> (đúng tầng OLAP); trên cùng là dashboard và Data Assistant. Dashboard đọc gold: top tier đọc middle tier, đúng nguyên tắc “mỗi tầng một việc”.</p>
 
     <div class="callout insight"><div class="callout-title">Mô hình tư duy</div><p>Ba tầng = ba trách nhiệm. Đừng để công cụ đầu cuối thò tay xuống đọc dữ liệu thô — đó là con đường nhanh nhất tới ba con số “doanh thu tháng 5” khác nhau.</p></div>
 
@@ -1236,7 +1236,7 @@ footer.site{border-top:1px solid var(--border);padding:26px 24px;text-align:cent
         <div class="accordion-body">Yêu cầu mọi báo cáo phòng ban dựng trên cùng một kho đã đối soát (kiểu dependent mart), thay vì mỗi bên tự export. Cãi nhau “tin con số nào” biến mất.</div>
       </details>
       <details class="accordion"><summary><span class="chev">▶</span><span class="accordion-tag">Kỹ sư dữ liệu (hệ ví dụ)</span><span>Gold + Cube phục vụ cả người lẫn AI</span></summary>
-        <div class="accordion-body">Lớp gold là các rollup <span class="mono">agg_*</span> theo org/creator/ngày; Cube semantic layer phơi bày measures/dimensions để AI Data Assistant hiểu số giống hệt dashboard — một định nghĩa cho mọi công cụ.</div>
+        <div class="accordion-body">Lớp gold là các rollup <span class="mono">agg_*</span> theo org/creator/ngày; Cube semantic layer phơi bày measures/dimensions để AI Data Assistant hiểu số giống hệt dashboard: một định nghĩa cho mọi công cụ.</div>
       </details>
     </div>
 
@@ -1245,16 +1245,16 @@ footer.site{border-top:1px solid var(--border);padding:26px 24px;text-align:cent
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><path d="M12 2v6m0 8v6M4.9 4.9l4.2 4.2m5.8 5.8l4.2 4.2M2 12h6m8 0h6M4.9 19.1l4.2-4.2m5.8-5.8l4.2-4.2"/></svg>
         Takeaway
       </span>
-      <p>Kiến trúc 3-tier — <span class="hl">kho nền → tầng OLAP tổng hợp → công cụ đầu cuối</span> — chính là ba lớp bronze → silver → gold: mỗi lớp một trách nhiệm, và <span class="hl">dashboard chỉ đọc lớp trên cùng</span>.</p>
+      <p>Kiến trúc 3-tier (<span class="hl">kho nền → tầng OLAP tổng hợp → công cụ đầu cuối</span>) chính là ba lớp bronze → silver → gold: mỗi lớp một trách nhiệm, và <span class="hl">dashboard chỉ đọc lớp trên cùng</span>.</p>
     </div>
 
     <div class="quiz" data-correct="1">
       <span class="eyebrow">Kiểm tra nhanh</span>
       <p class="quiz-q">Marketing, kho và tài chính mỗi bên tự kéo dữ liệu về file riêng, ra ba con “doanh thu tháng 5” khác nhau. Đây là triệu chứng của kiến trúc nào, và sửa bằng gì?</p>
-      <button class="quiz-opt" onclick="quizPick(this,0)"><span class="quiz-letter">A</span><span>Kiến trúc two-level thiếu RAM — nâng cấp máy chủ là xong.</span></button>
-      <button class="quiz-opt" onclick="quizPick(this,1)"><span class="quiz-letter">B</span><span>Independent data mart (mỗi bên một ETL) — sửa bằng một kho chung/EDW để mọi báo cáo dựng trên cùng dữ liệu đã đối soát.</span></button>
-      <button class="quiz-opt" onclick="quizPick(this,2)"><span class="quiz-letter">C</span><span>Kiến trúc 3-tier dư thừa — bỏ tầng OLAP đi cho gọn.</span></button>
-      <button class="quiz-opt" onclick="quizPick(this,3)"><span class="quiz-letter">D</span><span>Feed near-real-time cập nhật quá nhanh gây lệch — giãn tần suất lại là xong.</span></button>
+      <button class="quiz-opt" onclick="quizPick(this,0)"><span class="quiz-letter">A</span><span>Kiến trúc two-level thiếu RAM; nâng cấp máy chủ là xong.</span></button>
+      <button class="quiz-opt" onclick="quizPick(this,1)"><span class="quiz-letter">B</span><span>Independent data mart (mỗi bên một ETL): sửa bằng một kho chung/EDW để mọi báo cáo dựng trên cùng dữ liệu đã đối soát.</span></button>
+      <button class="quiz-opt" onclick="quizPick(this,2)"><span class="quiz-letter">C</span><span>Kiến trúc 3-tier dư thừa; bỏ tầng OLAP đi cho gọn.</span></button>
+      <button class="quiz-opt" onclick="quizPick(this,3)"><span class="quiz-letter">D</span><span>Feed near-real-time cập nhật quá nhanh gây lệch; giãn tần suất lại là xong.</span></button>
       <div class="quiz-feedback" role="status" data-explain="Ba con số lệch nhau là dấu hiệu điển hình của independent data mart — nhiều ETL độc lập; lời giải là một nguồn chung (dependent mart trên EDW) để mọi báo cáo cùng một sự thật."></div>
     </div>
   </div>
@@ -1286,7 +1286,7 @@ footer.site{border-top:1px solid var(--border);padding:26px 24px;text-align:cent
       </ul>
     </div>
 
-    <p>File Shopee tải về có cột tiền ghi <span class="mono">"1.234.000₫"</span> (chuỗi có ký hiệu), ngày ghi <span class="mono">"05/06/2026"</span>; file TikTok cùng ngày đó lại ghi <span class="mono">"2026-06-05"</span>; có dòng trùng, có ô trống. Nạp thẳng vào kho thì số cộng ra sai — mà không ai biết là sai. Cần một dây chuyền làm sạch và biến đổi có kỷ luật: đó là ETL, và bước cuối cùng — đối soát — mới là thứ bắt được con số sai.</p>
+    <p>File Shopee tải về có cột tiền ghi <span class="mono">"1.234.000₫"</span> (chuỗi có ký hiệu), ngày ghi <span class="mono">"05/06/2026"</span>; file TikTok cùng ngày đó lại ghi <span class="mono">"2026-06-05"</span>; có dòng trùng, có ô trống. Nạp thẳng vào kho thì số cộng ra sai mà không ai biết là sai. Cần một dây chuyền làm sạch và biến đổi có kỷ luật: đó là ETL, và bước cuối cùng của nó (đối soát) mới là thứ bắt được con số sai.</p>
 
     <div class="concept">
       <span class="eyebrow">Khái niệm nền</span>
@@ -1294,9 +1294,9 @@ footer.site{border-top:1px solid var(--border);padding:26px 24px;text-align:cent
       <p><strong>Data reconciliation</strong> (đối soát dữ liệu) là quá trình đưa dữ liệu từ hệ vận hành vào kho qua <strong>ETL</strong>, gồm 4 bước:</p>
       <ol>
         <li><strong>Capture (extract):</strong> chụp một tập con của nguồn. <em>Static extract</em> = ảnh chụp tại một thời điểm; <em>incremental extract</em> = chỉ lấy phần thay đổi kể từ lần chụp trước.</li>
-        <li><strong>Scrub (làm sạch):</strong> sửa lỗi — sai chính tả, ngày sai, dùng sai trường, thiếu, trùng, không nhất quán; kèm decode, reformat, gắn timestamp, sinh khoá, gộp, ghi log lỗi.</li>
+        <li><strong>Scrub (làm sạch):</strong> sửa các lỗi sai chính tả, ngày sai, dùng sai trường, thiếu, trùng, không nhất quán; kèm decode, reformat, gắn timestamp, sinh khoá, gộp, ghi log lỗi.</li>
         <li><strong>Transform (biến đổi):</strong> đổi định dạng nguồn sang định dạng kho. <em>Record-level</em>: selection (phân mảnh), joining (gộp), aggregation (tóm tắt), normalization. <em>Field-level</em>: single-field (1→1 qua công thức hoặc tra bảng), multi-field (nhiều→1 hoặc 1→nhiều).</li>
-        <li><strong>Load &amp; index:</strong> đưa vào kho, rồi làm cho nó đọc nhanh — <em>tạo index</em> nếu là kho on-prem, hoặc <em>partition + clustering</em> nếu là kho cloud dạng cột: Snowflake và BigQuery không có index do người dùng quản, chúng cắt bớt dữ liệu phải quét bằng metadata của micro-partition, còn <span class="mono">CLUSTER BY</span> chỉ là một gợi ý sắp xếp. <em>Refresh mode</em> = ghi đè hàng loạt định kỳ; <em>update mode</em> = chỉ ghi phần thay đổi.</li>
+        <li><strong>Load &amp; index:</strong> đưa vào kho, rồi làm cho nó đọc nhanh bằng <em>tạo index</em> nếu là kho on-prem, hoặc <em>partition + clustering</em> nếu là kho cloud dạng cột: Snowflake và BigQuery không có index do người dùng quản, chúng cắt bớt dữ liệu phải quét bằng metadata của micro-partition, còn <span class="mono">CLUSTER BY</span> chỉ là một gợi ý sắp xếp. <em>Refresh mode</em> = ghi đè hàng loạt định kỳ; <em>update mode</em> = chỉ ghi phần thay đổi.</li>
       </ol>
     </div>
 
@@ -1340,22 +1340,22 @@ footer.site{border-top:1px solid var(--border);padding:26px 24px;text-align:cent
 
     <div class="callout info">
       <div class="callout-title">Cầu nối 2026: ETL đã đảo thành ELT, và bronze/silver/gold có tên riêng</div>
-      <p>Khi compute trên cloud rẻ và co giãn được, người ta thôi biến đổi dữ liệu <em>trước</em> khi nạp: nạp thô vào kho trước, biến đổi sau, ngay bên trong kho bằng SQL có version (công cụ phổ biến nhất là <strong>dbt</strong>) — tức <strong>ELT</strong>, mặc định của 2026. Ba lớp <span class="mono">bronze → silver → gold</span> mà bài này đang dạy chính là <strong>kiến trúc medallion</strong>, chỉ là ta chưa gọi tên nó: bronze lưu-nguyên-văn rồi để promoter làm sạch lên silver đã <em>là</em> ELT rồi. Nền lưu trữ bên dưới thường là một <strong>open table format</strong> — Iceberg (đang thành chuẩn trao đổi de-facto) hoặc Delta Lake — thêm ACID, time travel và xoá theo dòng lên trên các file Parquet. Bốn bước capture → scrub → transform → load vẫn đúng nguyên làm mô hình tư duy; thứ đổi chỉ là <em>thứ tự</em> hai chữ cái cuối và <em>nơi</em> việc biến đổi diễn ra.</p>
+      <p>Khi compute trên cloud rẻ và co giãn được, người ta thôi biến đổi dữ liệu <em>trước</em> khi nạp: nạp thô vào kho trước, biến đổi sau, ngay bên trong kho bằng SQL có version (công cụ phổ biến nhất là <strong>dbt</strong>). Đó là <strong>ELT</strong>, mặc định của 2026. Ba lớp <span class="mono">bronze → silver → gold</span> mà bài này đang dạy chính là <strong>kiến trúc medallion</strong>, chỉ là ta chưa gọi tên nó: bronze lưu-nguyên-văn rồi để promoter làm sạch lên silver đã <em>là</em> ELT rồi. Nền lưu trữ bên dưới thường là một <strong>open table format</strong>, Iceberg (đang thành chuẩn trao đổi de-facto) hoặc Delta Lake, thêm ACID, time travel và xoá theo dòng lên trên các file Parquet. Bốn bước capture → scrub → transform → load vẫn đúng nguyên làm mô hình tư duy; thứ đổi chỉ là <em>thứ tự</em> hai chữ cái cuối và <em>nơi</em> việc biến đổi diễn ra.</p>
     </div>
 
     <div class="callout danger">
       <div class="callout-title">“Lưu nguyên văn” gặp luật: PDPL Việt Nam có hiệu lực 01/01/2026</div>
-      <p><strong>Luật Bảo vệ dữ liệu cá nhân số 91/2025/QH15</strong> (Quốc hội thông qua 26/6/2025) cùng <strong>Nghị định 356/2025/NĐ-CP</strong> (ban hành 31/12/2025, thay Nghị định 13/2023/NĐ-CP) cùng có hiệu lực từ <strong>01/01/2026</strong>. Điều đó buộc phải đọc lại khẩu hiệu “lưu nguyên văn, che khi hiển thị”: <em>che lúc hiển thị không phải là bảo vệ dữ liệu</em> — dữ liệu vẫn nằm nguyên trong bronze. Ba thứ phải có kèm theo: (1) một <strong>retention window</strong> tường minh cho mỗi loại dữ liệu, hết hạn là hết, không giữ “vì biết đâu cần”; (2) một <strong>đường xoá</strong> (erasure path) chạy được tới tận bronze và mọi bản sao hạ nguồn — đây đúng là chỗ ACID + row-level delete của open table format kiếm sống; (3) một <strong>danh mục cấm</strong> những thứ không bao giờ được rơi vào bronze ngay từ bước capture (số CCCD, dữ liệu sinh trắc, thông tin sức khoẻ, số thẻ thanh toán) — thứ chưa từng vào kho là thứ không cần xoá.</p>
+      <p><strong>Luật Bảo vệ dữ liệu cá nhân số 91/2025/QH15</strong> (Quốc hội thông qua 26/6/2025) cùng <strong>Nghị định 356/2025/NĐ-CP</strong> (ban hành 31/12/2025, thay Nghị định 13/2023/NĐ-CP) cùng có hiệu lực từ <strong>01/01/2026</strong>. Điều đó buộc phải đọc lại khẩu hiệu “lưu nguyên văn, che khi hiển thị”: <em>che lúc hiển thị không phải là bảo vệ dữ liệu</em>; dữ liệu vẫn nằm nguyên trong bronze. Ba thứ phải có kèm theo: (1) một <strong>retention window</strong> tường minh cho mỗi loại dữ liệu, hết hạn là hết, không giữ “vì biết đâu cần”; (2) một <strong>đường xoá</strong> (erasure path) chạy được tới tận bronze và mọi bản sao hạ nguồn, đúng chỗ ACID + row-level delete của open table format kiếm sống; (3) một <strong>danh mục cấm</strong> những thứ không bao giờ được rơi vào bronze ngay từ bước capture (số CCCD, dữ liệu sinh trắc, thông tin sức khoẻ, số thẻ thanh toán) — thứ chưa từng vào kho là thứ không cần xoá.</p>
     </div>
 
-    <p>Nhưng “sau ETL data đã sạch” là một lời hứa, không phải bằng chứng. Hệ ví dụ biến nó thành bằng chứng bằng <strong>đối soát tự động</strong>: cổng <span class="mono">verify:data</span> khẳng định <em>headline == SUM(các dòng bảng hiển thị)</em>, <em>rolling == period</em>, và <em>không cộng trùng khi merge</em>. Điểm mấu chốt: giá trị KỲ VỌNG neo vào một <strong>mốc-thật bên ngoài</strong> (một con số NMV theo kỳ đã được khách xác nhận bằng văn bản, rồi đóng băng lại làm mốc) — không bao giờ neo vào một lần tính lại bằng chính đoạn code đó. Và một nguyên tắc vàng: <em>“một chênh lệch KHÔNG mặc định là bug”</em> — phải xác nhận ngữ nghĩa với ground truth trước khi “sửa” bất kỳ con số nào.</p>
+    <p>Nhưng “sau ETL data đã sạch” là một lời hứa, không phải bằng chứng. Hệ ví dụ biến nó thành bằng chứng bằng <strong>đối soát tự động</strong>: cổng <span class="mono">verify:data</span> khẳng định <em>headline == SUM(các dòng bảng hiển thị)</em>, <em>rolling == period</em>, và <em>không cộng trùng khi merge</em>. Điểm mấu chốt: giá trị KỲ VỌNG neo vào một <strong>mốc-thật bên ngoài</strong> (một con số NMV theo kỳ đã được khách xác nhận bằng văn bản, rồi đóng băng lại làm mốc) — không bao giờ neo vào một lần tính lại bằng chính đoạn code đó. Và một nguyên tắc vàng: <em>“một chênh lệch KHÔNG mặc định là bug”</em>; phải xác nhận ngữ nghĩa với ground truth trước khi “sửa” bất kỳ con số nào.</p>
 
     <div class="callout danger"><div class="callout-title">Bẫy kinh điển: rò mép tháng (boundary leak)</div><p>Nếu bước Transform trộn mốc thời gian UTC vào đường ngày, nửa đêm giờ Việt Nam (00:00 ICT = 17:00 UTC hôm trước) sẽ kéo một ngày của tháng sau lọt vào tháng này — báo cáo lệch đúng 1 ngày ở mép tháng. Cách chặn: mọi mốc ngày dùng chung một helper giờ Việt Nam (ICT, UTC+7).</p></div>
 
     <div>
       <span class="eyebrow" style="display:block;margin-bottom:10px">Áp dụng</span>
       <details class="accordion"><summary><span class="chev">▶</span><span class="accordion-tag">Chủ shop</span><span>Đối chiếu số dashboard với file khách gửi</span></summary>
-        <div class="accordion-body">Khi số trên hệ khác với export của khách, đừng vội sửa. Xác nhận cách khách định nghĩa (tính theo ngày đặt hay ngày giao?) — chênh lệch có thể do ngữ nghĩa, không phải lỗi hệ.</div>
+        <div class="accordion-body">Khi số trên hệ khác với export của khách, đừng vội sửa. Xác nhận cách khách định nghĩa (tính theo ngày đặt hay ngày giao?): chênh lệch có thể do ngữ nghĩa, không phải lỗi hệ.</div>
       </details>
       <details class="accordion"><summary><span class="chev">▶</span><span class="accordion-tag">Kỹ sư dữ liệu (hệ ví dụ)</span><span>Mapping là DATA, đối soát là code</span></summary>
         <div class="accordion-body">Thay vì viết <span class="mono">if (source === 'shopee')</span> rải khắp nơi, biến đổi được khai báo thành template có version (bất biến khi đang active). Mỗi bề mặt có số đều có một assertion trong tầng đối soát dữ liệu.</div>
@@ -1367,7 +1367,7 @@ footer.site{border-top:1px solid var(--border);padding:26px 24px;text-align:cent
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><path d="M12 2v6m0 8v6M4.9 4.9l4.2 4.2m5.8 5.8l4.2 4.2M2 12h6m8 0h6M4.9 19.1l4.2-4.2m5.8-5.8l4.2-4.2"/></svg>
         Takeaway
       </span>
-      <p>ETL là bốn bước <span class="hl">capture → scrub → transform → load</span>; nhưng bước hay bị quên — <span class="hl">đối soát tự động số sau ETL với một mốc-thật bên ngoài</span> — mới là thứ bắt được con số sai.</p>
+      <p>ETL là bốn bước <span class="hl">capture → scrub → transform → load</span>; nhưng bước hay bị quên, <span class="hl">đối soát tự động số sau ETL với một mốc-thật bên ngoài</span>, mới là thứ bắt được con số sai.</p>
     </div>
 
     <div class="quiz" data-correct="2">
@@ -1423,7 +1423,7 @@ footer.site{border-top:1px solid var(--border);padding:26px 24px;text-align:cent
       <h4>Star schema (mô hình sao / dimensional model)</h4>
       <p><strong>Star schema</strong> là thiết kế tách <em>dữ liệu chiều</em> (mô tả cách người ta thường tổng hợp) ra khỏi <em>dữ liệu fact/sự kiện</em>. Nó gồm đúng hai loại bảng:</p>
       <ul>
-        <li><strong>Fact table (bảng sự kiện):</strong> chứa dữ liệu định lượng — <em>measures</em> như số lượng, doanh thu — cùng các khoá ngoại trỏ tới dimension.</li>
+        <li><strong>Fact table (bảng sự kiện):</strong> chứa dữ liệu định lượng (<em>measures</em> như số lượng, doanh thu) cùng các khoá ngoại trỏ tới dimension.</li>
         <li><strong>Dimension table (bảng chiều):</strong> mô tả về chủ thể nghiệp vụ (sản phẩm, ngày, cửa hàng); được <em>denormalize</em> để truy vấn nhanh; quan hệ 1:N với fact.</li>
       </ul>
       <p>Hình sao vì một fact ở giữa, các dimension toả ra xung quanh. Tuyệt cho truy vấn ad-hoc, nhưng dở cho xử lý giao dịch — nên nó sống ở kho, không ở app.</p>
@@ -1480,7 +1480,7 @@ footer.site{border-top:1px solid var(--border);padding:26px 24px;text-align:cent
       <p><strong>Grain (độ hạt)</strong> là câu hỏi “một dòng trong fact table nghĩa là gì?”. <em>Transactional grain</em> = mịn nhất (một dòng cho một dòng-đơn); <em>aggregated grain</em> = tóm tắt hơn (một dòng cho một sản phẩm/cửa hàng/ngày). Đánh đổi cốt lõi: grain càng mịn thì <strong>phân tích giỏ hàng (market basket)</strong> càng tốt, nhưng cần nhiều dimension hơn và fact table nhiều dòng hơn.</p>
     </div>
 
-    <div class="callout info"><div class="callout-title">Ước lượng kích thước fact table</div><p>Nhân số giá trị có thể có của mỗi dimension. Ví dụ trong sách: <strong>100 sản phẩm × 4 quý × 3 cửa hàng = 1.200 dòng</strong>. Cùng cấu hình nhưng cho 5 năm: 100 × 4 × 5 × 3 = <strong>6.000 dòng</strong>. Cũng cần quyết <em>duration</em> — kho giữ bao lâu (ví dụ 13 tháng, hay 5 quý).</p></div>
+    <div class="callout info"><div class="callout-title">Ước lượng kích thước fact table</div><p>Nhân số giá trị có thể có của mỗi dimension. Ví dụ trong sách: <strong>100 sản phẩm × 4 quý × 3 cửa hàng = 1.200 dòng</strong>. Cùng cấu hình nhưng cho 5 năm: 100 × 4 × 5 × 3 = <strong>6.000 dòng</strong>. Cũng cần quyết <em>duration</em>: kho giữ bao lâu (ví dụ 13 tháng, hay 5 quý).</p></div>
 
     <div class="callout info">
       <div class="callout-title">Cầu nối 2026: tiền không nằm ở ổ đĩa nữa, nó nằm ở mỗi lần quét</div>
@@ -1490,17 +1490,17 @@ footer.site{border-top:1px solid var(--border);padding:26px 24px;text-align:cent
 
     <p>Vài chi tiết thiết kế then chốt:</p>
     <ul>
-      <li><strong>Surrogate key (khoá đại diện):</strong> khoá dimension nên là số vô nghĩa, không gắn nghiệp vụ — vì khoá nghiệp vụ có thể đổi theo thời gian, và để nhất quán độ dài/định dạng.</li>
+      <li><strong>Surrogate key (khoá đại diện):</strong> khoá dimension nên là số vô nghĩa, không gắn nghiệp vụ, vì khoá nghiệp vụ có thể đổi theo thời gian, và để nhất quán độ dài/định dạng.</li>
       <li><strong>Date dimension:</strong> fact luôn chứa dữ liệu theo kỳ → bảng ngày (day, week, month, quarter, year) là dimension quan trọng bậc nhất.</li>
-      <li><strong>Factless fact table:</strong> fact không có measure, chỉ có khoá ngoại — để <em>track events</em> (buổi live nào có creator nào) hoặc <em>coverage</em> (liệt kê tập khả năng có thể xảy ra) dù chưa phát sinh doanh số.</li>
-      <li><strong>Snowflake schema:</strong> normalize dimension thành nhiều bảng con — tiết kiệm chút storage và dễ cập nhật, nhưng khó duyệt và chậm hơn vì thêm JOIN. Một sự đánh đổi, không phải nâng cấp mặc định.</li>
+      <li><strong>Factless fact table:</strong> fact không có measure, chỉ có khoá ngoại: để <em>track events</em> (buổi live nào có creator nào) hoặc <em>coverage</em> (liệt kê tập khả năng có thể xảy ra) dù chưa phát sinh doanh số.</li>
+      <li><strong>Snowflake schema:</strong> normalize dimension thành nhiều bảng con, tiết kiệm chút storage và dễ cập nhật, nhưng khó duyệt và chậm hơn vì thêm JOIN. Một sự đánh đổi, không phải nâng cấp mặc định.</li>
     </ul>
 
     <div class="concept">
       <span class="eyebrow">Ý niệm quyết định</span>
       <h4>SCD — dimension thay đổi chậm (slowly changing dimension)</h4>
-      <p>Lý do <em>số một</em> khiến surrogate key tồn tại nằm ở đây. Thuộc tính dimension có đổi theo thời gian, và bạn có ba cách xử lý (Kimball, <span class="mono">kimballgroup.com</span> — chuyên đề SCD): <strong>Type 1</strong> = ghi đè giá trị cũ, đơn giản nhất, và mất sạch lịch sử. <strong>Type 2</strong> = mở một <em>dòng mới</em> cho phiên bản mới, mỗi dòng một surrogate key riêng cộng <span class="mono">effective_from</span> / <span class="mono">effective_to</span> / <span class="mono">is_current</span> — khoá nghiệp vụ giữ nguyên, nên fact cũ vẫn trỏ đúng phiên bản tại thời điểm nó xảy ra. <strong>Type 3</strong> = giữ thêm một cột “giá trị trước đó”, chỉ nhớ được một bước lùi.</p>
-      <p>Vì sao phải quan tâm: một creator lên tier Gold vào tháng 5 — nếu dimension là Type 1, toàn bộ doanh thu tháng 1–4 của họ đột nhiên được báo cáo là Gold, và bảng so-sánh-theo-tier của bạn vừa nói dối. Type 2 giữ đúng câu “họ là Silver hồi tháng 3”.</p>
+      <p>Lý do <em>số một</em> khiến surrogate key tồn tại nằm ở đây. Thuộc tính dimension có đổi theo thời gian, và bạn có ba cách xử lý (Kimball, <span class="mono">kimballgroup.com</span>, chuyên đề SCD): <strong>Type 1</strong> = ghi đè giá trị cũ, đơn giản nhất, và mất sạch lịch sử. <strong>Type 2</strong> = mở một <em>dòng mới</em> cho phiên bản mới, mỗi dòng một surrogate key riêng cộng <span class="mono">effective_from</span> / <span class="mono">effective_to</span> / <span class="mono">is_current</span> — khoá nghiệp vụ giữ nguyên, nên fact cũ vẫn trỏ đúng phiên bản tại thời điểm nó xảy ra. <strong>Type 3</strong> = giữ thêm một cột “giá trị trước đó”, chỉ nhớ được một bước lùi.</p>
+      <p>Vì sao phải quan tâm: một creator lên tier Gold vào tháng 5. Nếu dimension là Type 1, toàn bộ doanh thu tháng 1–4 của họ đột nhiên được báo cáo là Gold, và bảng so-sánh-theo-tier của bạn vừa nói dối. Type 2 giữ đúng câu “họ là Silver hồi tháng 3”.</p>
     </div>
 
     <div>
@@ -1518,16 +1518,16 @@ footer.site{border-top:1px solid var(--border);padding:26px 24px;text-align:cent
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><path d="M12 2v6m0 8v6M4.9 4.9l4.2 4.2m5.8 5.8l4.2 4.2M2 12h6m8 0h6M4.9 19.1l4.2-4.2m5.8-5.8l4.2-4.2"/></svg>
         Takeaway
       </span>
-      <p>Star schema tách <span class="hl">bảng fact (đo lường + khoá ngoại)</span> khỏi <span class="hl">bảng dimension (mô tả)</span>; và grain — mức chi tiết một dòng fact — quyết định đồng thời khả năng phân tích lẫn kích thước bảng.</p>
+      <p>Star schema tách <span class="hl">bảng fact (đo lường + khoá ngoại)</span> khỏi <span class="hl">bảng dimension (mô tả)</span>; và grain (mức chi tiết một dòng fact) quyết định đồng thời khả năng phân tích lẫn kích thước bảng.</p>
     </div>
 
     <div class="quiz" data-correct="2">
       <span class="eyebrow">Kiểm tra nhanh</span>
       <p class="quiz-q">Bạn muốn sau này phân tích được giỏ hàng chi tiết (sản phẩm nào hay mua kèm nhau). Nên chọn grain nào cho fact table bán hàng, và cái giá là gì?</p>
-      <button class="quiz-opt" onclick="quizPick(this,0)"><span class="quiz-letter">A</span><span>Aggregated theo tháng — nhẹ, mà vẫn phân tích giỏ hàng thoải mái.</span></button>
+      <button class="quiz-opt" onclick="quizPick(this,0)"><span class="quiz-letter">A</span><span>Aggregated theo tháng: nhẹ, mà vẫn phân tích giỏ hàng thoải mái.</span></button>
       <button class="quiz-opt" onclick="quizPick(this,1)"><span class="quiz-letter">B</span><span>Chỉ lưu tổng doanh thu mỗi ngày cho gọn.</span></button>
-      <button class="quiz-opt" onclick="quizPick(this,2)"><span class="quiz-letter">C</span><span>Transactional grain (một dòng cho một dòng-đơn) — phân tích giỏ hàng tốt nhất, đổi lại fact table nhiều dòng và nhiều dimension hơn.</span></button>
-      <button class="quiz-opt" onclick="quizPick(this,3)"><span class="quiz-letter">D</span><span>Snowflake hoá mọi dimension — tự khắc phân tích được giỏ hàng.</span></button>
+      <button class="quiz-opt" onclick="quizPick(this,2)"><span class="quiz-letter">C</span><span>Transactional grain (một dòng cho một dòng-đơn): phân tích giỏ hàng tốt nhất, đổi lại fact table nhiều dòng và nhiều dimension hơn.</span></button>
+      <button class="quiz-opt" onclick="quizPick(this,3)"><span class="quiz-letter">D</span><span>Snowflake hoá mọi dimension; tự khắc phân tích được giỏ hàng.</span></button>
       <div class="quiz-feedback" role="status" data-explain="Grain càng mịn (transactional) thì market-basket càng tốt, nhưng phải trả giá bằng số dòng và số dimension lớn hơn — aggregated theo tháng đã đánh mất chi tiết dòng-đơn để phân tích giỏ hàng."></div>
     </div>
   </div>
@@ -1564,7 +1564,7 @@ footer.site{border-top:1px solid var(--border);padding:26px 24px;text-align:cent
     <div class="concept">
       <span class="eyebrow">Khái niệm nền</span>
       <h4>DF model (Dimensional Fact Model)</h4>
-      <p><strong>Fact scheme</strong> là một cây: gốc là <em>fact</em>; mỗi đỉnh gắn trực tiếp gốc là một <em>dimension</em>; cây con dưới mỗi dimension là một <em>hierarchy</em> (phân cấp tổng hợp). Ở bước <em>requirement specification</em>, ta chọn fact từ <strong>sự kiện nghiệp vụ</strong> — entity/relationship được cập nhật thường xuyên là ứng viên fact tốt.</p>
+      <p><strong>Fact scheme</strong> là một cây: gốc là <em>fact</em>; mỗi đỉnh gắn trực tiếp gốc là một <em>dimension</em>; cây con dưới mỗi dimension là một <em>hierarchy</em> (phân cấp tổng hợp). Ở bước <em>requirement specification</em>, ta chọn fact từ <strong>sự kiện nghiệp vụ</strong>: entity/relationship được cập nhật thường xuyên là ứng viên fact tốt.</p>
     </div>
 
     <ol class="steps">
@@ -1588,8 +1588,8 @@ footer.site{border-top:1px solid var(--border);padding:26px 24px;text-align:cent
 
     <p><strong>Attribute tree:</strong> gốc là identifier của entity fact F; với mỗi đỉnh, thuộc tính ở đó “xác định hàm” các con của nó. Chỉ quan hệ <em>x-to-one</em> mới chèn được vào cây; quan hệ x-to-many thì không. Sau khi dựng, ta tỉa:</p>
     <ul>
-      <li><strong>Prune (cắt tỉa):</strong> bỏ hẳn một cây con không cần cho kho — ví dụ bỏ nhánh <span class="mono">city + state</span>.</li>
-      <li><strong>Graft (ghép):</strong> đỉnh trung gian vô nghĩa nhưng con của nó có ích — bỏ đỉnh đó, kéo các con lên cha. Ví dụ ghép <span class="mono">ticket number</span>: mất mức tổng hợp “theo hoá đơn”, nhưng giữ lại <span class="mono">date</span> và <span class="mono">store</span> để chúng thành dimension.</li>
+      <li><strong>Prune (cắt tỉa):</strong> bỏ hẳn một cây con không cần cho kho, ví dụ bỏ nhánh <span class="mono">city + state</span>.</li>
+      <li><strong>Graft (ghép):</strong> đỉnh trung gian vô nghĩa nhưng con của nó có ích; bỏ đỉnh đó, kéo các con lên cha. Ví dụ ghép <span class="mono">ticket number</span>: mất mức tổng hợp “theo hoá đơn”, nhưng giữ lại <span class="mono">date</span> và <span class="mono">store</span> để chúng thành dimension.</li>
     </ul>
 
     <figure class="figure">
@@ -1629,12 +1629,12 @@ footer.site{border-top:1px solid var(--border);padding:26px 24px;text-align:cent
     <div class="concept">
       <span class="eyebrow">Ý niệm dễ sai</span>
       <h4>Additivity — số nào cộng được theo chiều nào?</h4>
-      <p><strong>Additive:</strong> cộng được theo mọi hierarchy (số đơn, doanh thu). <strong>Semi-additive:</strong> không cộng được theo <em>một</em> chiều — kinh điển là <strong>tồn kho không cộng theo thời gian</strong> (tồn cuối tháng 1 + cuối tháng 2 không có nghĩa gì), nhưng cộng theo cửa hàng thì được. <strong>Non-additive:</strong> không cộng theo bất kỳ chiều nào (đơn giá trung bình, tỉ lệ).</p>
+      <p><strong>Additive:</strong> cộng được theo mọi hierarchy (số đơn, doanh thu). <strong>Semi-additive:</strong> không cộng được theo <em>một</em> chiều; kinh điển là <strong>tồn kho không cộng theo thời gian</strong> (tồn cuối tháng 1 + cuối tháng 2 không có nghĩa gì), nhưng cộng theo cửa hàng thì được. <strong>Non-additive:</strong> không cộng theo bất kỳ chiều nào (đơn giá trung bình, tỉ lệ).</p>
     </div>
 
     <div class="callout insight"><div class="callout-title">Glossary — một con số, một công thức</div><p>Bước cuối gắn mỗi fact attribute với một biểu thức: <span class="mono">quantity sold = SUM(SALE.qty)</span>; <span class="mono">total revenue (doanh thu) = SUM(SALE.qty × SALE.unitPrice)</span>; <span class="mono">number of customers = COUNT(SALE)</span>. Glossary chính là hợp đồng: một định nghĩa duy nhất cho mỗi số.</p></div>
 
-    <p><strong>Ánh xạ hệ ví dụ.</strong> Cái glossary “một con số = một công thức” chính là luật của hệ ví dụ: <em>ONE definition per metric behind ONE helper</em> — ví dụ phép merge dữ liệu creator chỉ tồn tại đúng một lần trong một helper SQL duy nhất, mọi bề mặt đều gọi lại nó, không ai chép công thức đi nơi khác. Grain của các rollup <span class="mono">agg_*</span> là ICT-day. Còn luật “headline == SUM(các dòng)” chính là một bài kiểm additivity chạy tự động.</p>
+    <p><strong>Ánh xạ hệ ví dụ.</strong> Cái glossary “một con số = một công thức” chính là luật của hệ ví dụ: <em>ONE definition per metric behind ONE helper</em>; ví dụ phép merge dữ liệu creator chỉ tồn tại đúng một lần trong một helper SQL duy nhất, mọi bề mặt đều gọi lại nó, không ai chép công thức đi nơi khác. Grain của các rollup <span class="mono">agg_*</span> là ICT-day. Còn luật “headline == SUM(các dòng)” chính là một bài kiểm additivity chạy tự động.</p>
 
     <div>
       <span class="eyebrow" style="display:block;margin-bottom:10px">Áp dụng</span>
@@ -1657,8 +1657,8 @@ footer.site{border-top:1px solid var(--border);padding:26px 24px;text-align:cent
     <div class="quiz" data-correct="0">
       <span class="eyebrow">Kiểm tra nhanh</span>
       <p class="quiz-q">Bạn cần báo cáo “tồn kho theo tháng”. Đồng nghiệp cộng tồn cuối mỗi ngày lại thành “tồn tháng”. Sai ở đâu?</p>
-      <button class="quiz-opt" onclick="quizPick(this,0)"><span class="quiz-letter">A</span><span>Tồn kho là semi-additive: cộng được theo cửa hàng/sản phẩm nhưng KHÔNG cộng theo thời gian — theo tháng phải lấy ảnh chụp cuối kỳ hoặc trung bình.</span></button>
-      <button class="quiz-opt" onclick="quizPick(this,1)"><span class="quiz-letter">B</span><span>Không sai — cộng hết các ngày lại là ra tồn tháng.</span></button>
+      <button class="quiz-opt" onclick="quizPick(this,0)"><span class="quiz-letter">A</span><span>Tồn kho là semi-additive: cộng được theo cửa hàng/sản phẩm nhưng KHÔNG cộng theo thời gian; theo tháng phải lấy ảnh chụp cuối kỳ hoặc trung bình.</span></button>
+      <button class="quiz-opt" onclick="quizPick(this,1)"><span class="quiz-letter">B</span><span>Không sai: cộng hết các ngày lại là ra tồn tháng.</span></button>
       <button class="quiz-opt" onclick="quizPick(this,2)"><span class="quiz-letter">C</span><span>Sai vì chưa snowflake hoá dimension thời gian.</span></button>
       <button class="quiz-opt" onclick="quizPick(this,3)"><span class="quiz-letter">D</span><span>Sai vì bảng tồn kho thiếu surrogate key.</span></button>
       <div class="quiz-feedback" role="status" data-explain="Đây là bẫy additivity: tồn kho không cộng được theo chiều thời gian (semi-additive) — cộng 30 ảnh chụp cuối ngày cho ra con số vô nghĩa; theo tháng dùng giá trị cuối kỳ hoặc bình quân."></div>
@@ -1697,7 +1697,7 @@ footer.site{border-top:1px solid var(--border);padding:26px 24px;text-align:cent
     <div class="concept">
       <span class="eyebrow">Khái niệm nền</span>
       <h4>OLAP &amp; data cube</h4>
-      <p><strong>OLAP (Online Analytical Processing — xử lý phân tích trực tuyến)</strong> là bộ công cụ đồ hoạ cho cái nhìn <em>đa chiều (multidimensional)</em>, phân tích bằng thao tác cửa sổ đơn giản. Dữ liệu được nhìn như một <strong>data cube (khối dữ liệu)</strong>: các dimension (item, time, location) làm cạnh khối, measures (dollars_sold) nằm trong các ô.</p>
+      <p><strong>OLAP (Online Analytical Processing: xử lý phân tích trực tuyến)</strong> là bộ công cụ đồ hoạ cho cái nhìn <em>đa chiều (multidimensional)</em>, phân tích bằng thao tác cửa sổ đơn giản. Dữ liệu được nhìn như một <strong>data cube (khối dữ liệu)</strong>: các dimension (item, time, location) làm cạnh khối, measures (dollars_sold) nằm trong các ô.</p>
     </div>
 
     <figure class="figure">
@@ -1737,7 +1737,7 @@ footer.site{border-top:1px solid var(--border);padding:26px 24px;text-align:cent
       </table>
     </div>
 
-    <p><strong>ROLAP vs MOLAP.</strong> <em>ROLAP</em> coi kho là CSDL quan hệ (star schema) và truy vấn thẳng trên bảng — linh hoạt, hợp dữ liệu lớn. <em>MOLAP</em> nạp dữ liệu vào một mảng đa chiều (cube) tính sẵn — truy vấn cực nhanh, nhưng phải dựng trước. Đánh đổi này vẫn sống nguyên vẹn, chỉ cái tên là cũ: ngày nay nó là <strong>materialized view / pre-aggregation</strong> (Druid, Pinot, AtScale) đối lại tính-lúc-query.</p>
+    <p><strong>ROLAP vs MOLAP.</strong> <em>ROLAP</em> coi kho là CSDL quan hệ (star schema) và truy vấn thẳng trên bảng: linh hoạt, hợp dữ liệu lớn. <em>MOLAP</em> nạp dữ liệu vào một mảng đa chiều (cube) tính sẵn: truy vấn cực nhanh, nhưng phải dựng trước. Đánh đổi này vẫn sống nguyên vẹn, chỉ cái tên là cũ: ngày nay nó là <strong>materialized view / pre-aggregation</strong> (Druid, Pinot, AtScale) đối lại tính-lúc-query.</p>
 
     <p><strong>Còn SQL thì sao?</strong> Câu “SQL không phải ngôn ngữ phân tích” đúng với SQL của thập niên 1990, và đã hết đúng từ lâu. <strong>SQL:1999</strong> thêm <span class="mono">ROLLUP</span>, <span class="mono">CUBE</span>, <span class="mono">GROUPING SETS</span>; <strong>SQL:2003</strong> thêm <em>window function</em> (<span class="mono">OVER</span>, <span class="mono">PARTITION BY</span>, các hàm xếp hạng và trượt) — đúng những thứ mà OLAP cần. Với chuẩn mới nhất là <strong>SQL:2023</strong>, SQL hiện đại <em>chính là</em> ngôn ngữ phân tích chủ lực của kho: roll-up, drill-down, so sánh kỳ-trên-kỳ đều viết thẳng được, và đó cũng là lý do lớp biến đổi trong ELT (dbt) chọn SQL chứ không chọn thứ khác.</p>
 
@@ -1747,14 +1747,14 @@ footer.site{border-top:1px solid var(--border);padding:26px 24px;text-align:cent
       <p>Tầng <strong>metadata</strong> là “tấm bản đồ khai báo” của kho: nó xác định subjects, chỉ ra đâu là <em>dimension</em> đâu là <em>fact</em>, luật dẫn xuất từ kho/ODS, báo cáo &amp; truy vấn có sẵn, kỹ thuật phân tích (drill-down), và ai chịu trách nhiệm cho từng phần.</p>
     </div>
 
-    <p><strong>Ánh xạ hệ ví dụ.</strong> <em>Cube semantic layer</em> chính là tầng metadata sống trong hệ ví dụ: schema của nó được <strong>sinh ra từ code</strong> (generated, không sửa tay) — một định nghĩa measures/dimensions dùng chung cho mọi công cụ. Nhờ đó <strong>Data Assistant</strong> (AI) đọc thẳng measures/dimensions từ Cube và hiểu “doanh thu”, “creator” giống hệt dashboard — nó giải thích &amp; điều phối, chứ không tự bịa số. Xa hơn, <em>signal registry</em> (bảng <span class="mono">signals</span> + <span class="mono">signal_values</span>) là một data catalog cho <em>tín hiệu quyết định</em>: mỗi signal có tên/đơn vị/grain/tier/version, để một “biên nhận” quyết định có thể tái lập từ giá trị đã lưu.</p>
+    <p><strong>Ánh xạ hệ ví dụ.</strong> <em>Cube semantic layer</em> chính là tầng metadata sống trong hệ ví dụ: schema của nó được <strong>sinh ra từ code</strong> (generated, không sửa tay): một định nghĩa measures/dimensions dùng chung cho mọi công cụ. Nhờ đó <strong>Data Assistant</strong> (AI) đọc thẳng measures/dimensions từ Cube và hiểu “doanh thu”, “creator” giống hệt dashboard — nó giải thích &amp; điều phối, chứ không tự bịa số. Xa hơn, <em>signal registry</em> (bảng <span class="mono">signals</span> + <span class="mono">signal_values</span>) là một data catalog cho <em>tín hiệu quyết định</em>: mỗi signal có tên/đơn vị/grain/tier/version, để một “biên nhận” quyết định có thể tái lập từ giá trị đã lưu.</p>
 
-    <div class="callout insight"><div class="callout-title">Mô hình tư duy</div><p>Semantic layer là bản đồ khai báo <strong>một lần</strong>. Đổi định nghĩa một measure ở đó, mọi công cụ — báo cáo, biểu đồ, kể cả AI — cập nhật theo. Đó là cách bạn tránh mười phiên bản “doanh thu” trôi nổi.</p></div>
+    <div class="callout insight"><div class="callout-title">Mô hình tư duy</div><p>Semantic layer là bản đồ khai báo <strong>một lần</strong>. Đổi định nghĩa một measure ở đó, mọi công cụ (báo cáo, biểu đồ, kể cả AI) cập nhật theo. Đó là cách bạn tránh mười phiên bản “doanh thu” trôi nổi.</p></div>
 
     <div class="callout warn">
       <div class="callout-title">Nếu KHÔNG có semantic layer: metric drift</div>
-      <p>Hỏng theo kiểu này có tên riêng — <strong>metric drift</strong>: cùng một câu hỏi, chạy lại lần sau, hoặc do người khác hỏi, hoặc do một AI agent hỏi, lại sinh ra SQL khác và <em>ra số khác</em> — chỉ vì “doanh thu” chưa được định nghĩa ở một chỗ duy nhất có người chịu trách nhiệm (governance). Với text-to-SQL, phần lớn lỗi không phải lỗi cú pháp — câu SQL chạy ngon lành và trả về một con số trông rất hợp lý — mà là <strong>lỗi ngữ nghĩa</strong>: sai bộ lọc, sai mẫu số, sai cách khử trùng lặp, sai định nghĩa “khách hàng hoạt động”. Loại lỗi này im lặng, nên nó nguy hiểm hơn hẳn lỗi làm câu truy vấn gãy.</p>
-      <p>Thuốc chữa không phải là mô hình mạnh hơn, mà là <em>đừng bắt mô hình đoán định nghĩa</em>: cho agent truy cập semantic layer đã có governance — ngày nay thường qua <strong>MCP</strong> — để nó gọi tên measure có sẵn thay vì tự viết lại phép tính. Một phép đo cụ thể: <a href="https://docs.getdbt.com/blog/semantic-layer-vs-text-to-sql-2026">benchmark dbt Labs 04/2026</a> cho thấy khi có semantic layer làm nền, độ chính xác trả lời tăng từ <strong>90,0% lên 98,2%</strong> (Claude Sonnet 4.6) và từ <strong>84,1% lên 100%</strong> (GPT-5.3-Codex) — trên bộ 11 câu hỏi ACME Insurance, mỗi câu chạy 20 lần. Đó cũng đúng là điều Cube semantic layer đang làm trong hệ ví dụ.</p>
+      <p>Hỏng theo kiểu này có tên riêng: <strong>metric drift</strong>. Cùng một câu hỏi, chạy lại lần sau, hoặc do người khác hỏi, hoặc do một AI agent hỏi, lại sinh ra SQL khác và <em>ra số khác</em>, chỉ vì “doanh thu” chưa được định nghĩa ở một chỗ duy nhất có người chịu trách nhiệm (governance). Với text-to-SQL, phần lớn lỗi là <strong>lỗi ngữ nghĩa</strong> chứ không phải lỗi cú pháp: câu SQL chạy ngon lành và trả về một con số trông rất hợp lý, nhưng sai bộ lọc, sai mẫu số, sai cách khử trùng lặp, sai định nghĩa “khách hàng hoạt động”. Loại lỗi này im lặng, nên nó nguy hiểm hơn hẳn lỗi làm câu truy vấn gãy.</p>
+      <p>Thuốc chữa là <em>đừng bắt mô hình đoán định nghĩa</em>, chứ không phải một mô hình lớn hơn: cho agent truy cập semantic layer đã có governance (ngày nay thường qua <strong>MCP</strong>) để nó gọi tên measure có sẵn thay vì tự viết lại phép tính. Một phép đo cụ thể: <a href="https://docs.getdbt.com/blog/semantic-layer-vs-text-to-sql-2026">benchmark dbt Labs 04/2026</a> cho thấy khi có semantic layer làm nền, độ chính xác trả lời tăng từ <strong>90,0% lên 98,2%</strong> (Claude Sonnet 4.6) và từ <strong>84,1% lên 100%</strong> (GPT-5.3-Codex), trên bộ 11 câu hỏi ACME Insurance, mỗi câu chạy 20 lần. Đó cũng đúng là điều Cube semantic layer đang làm trong hệ ví dụ.</p>
     </div>
 
     <div>
@@ -1772,7 +1772,7 @@ footer.site{border-top:1px solid var(--border);padding:26px 24px;text-align:cent
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><path d="M12 2v6m0 8v6M4.9 4.9l4.2 4.2m5.8 5.8l4.2 4.2M2 12h6m8 0h6M4.9 19.1l4.2-4.2m5.8-5.8l4.2-4.2"/></svg>
         Takeaway
       </span>
-      <p>OLAP cho bạn xoay khối dữ liệu — <span class="hl">roll-up, drill-down, slice &amp; dice</span> — còn metadata/semantic layer là tấm bản đồ khai báo measures &amp; dimensions <span class="hl">một lần cho mọi công cụ (kể cả AI)</span>.</p>
+      <p>OLAP cho bạn xoay khối dữ liệu (<span class="hl">roll-up, drill-down, slice &amp; dice</span>); còn metadata/semantic layer là tấm bản đồ khai báo measures &amp; dimensions <span class="hl">một lần cho mọi công cụ (kể cả AI)</span>.</p>
     </div>
 
     <div class="quiz" data-correct="1">
@@ -1794,7 +1794,7 @@ footer.site{border-top:1px solid var(--border);padding:26px 24px;text-align:cent
       <header class="module-header" data-module="4">
         <span class="eyebrow">Module 04 · Phần III · Từ DSS đến IDSS</span>
         <h2>Kiến trúc hệ hỗ trợ quyết định</h2>
-        <p>Từ dữ liệu sang hệ hỗ trợ quyết định: dòng tiến hoá MIS→DSS→IDSS, các thành phần của một IDSS, và trái tim của nhánh model-driven — expert system với luật, suy diễn và giải thích.</p>
+        <p>Từ dữ liệu sang hệ hỗ trợ quyết định: dòng tiến hoá MIS→DSS→IDSS, các thành phần của một IDSS, và expert system — nhánh model-driven với luật, suy diễn và giải thích.</p>
       </header>
 <article class="lesson" id="m4-l1" data-lesson>
   <div class="lesson-head">
@@ -1821,12 +1821,12 @@ footer.site{border-top:1px solid var(--border);padding:26px 24px;text-align:cent
       </ul>
     </div>
 
-    <p>Cùng một câu hỏi — <strong>"tuần này nên làm gì cho shop?"</strong> — một chủ shop mỹ phẩm đã đi qua ba thế hệ công cụ. Năm 2008: một bảng Excel cộng doanh thu rồi tự tay quyết. Vài năm sau: thêm một mô hình tối ưu tồn kho cho phép thử "nếu nhập thêm 200 hộp thì lời/lỗ ra sao". Nay: một hệ mỗi tuần tự chấm điểm tín hiệu, gợi ý nên đẩy combo hay đặt thêm hàng, rồi <strong>đo kết quả để lần sau gợi ý tốt hơn</strong>. Ba công cụ ấy không ngẫu nhiên — chúng là ba nấc của một dòng tiến hoá có tên.</p>
+    <p>Với cùng một câu hỏi <strong>"tuần này nên làm gì cho shop?"</strong>, một chủ shop mỹ phẩm đã đi qua ba thế hệ công cụ. Năm 2008: một bảng Excel cộng doanh thu rồi tự tay quyết. Vài năm sau: thêm một mô hình tối ưu tồn kho cho phép thử "nếu nhập thêm 200 hộp thì lời/lỗ ra sao". Nay: một hệ mỗi tuần tự chấm điểm tín hiệu, gợi ý nên đẩy combo hay đặt thêm hàng, rồi <strong>đo kết quả để lần sau gợi ý tốt hơn</strong>. Ba công cụ ấy không ngẫu nhiên — chúng là ba nấc của một dòng tiến hoá có tên.</p>
 
     <div class="concept">
       <span class="eyebrow">Khái niệm</span>
       <h4>MIS là cái ô, DSS/IDSS là nhánh dưới nó</h4>
-      <p><strong>MIS</strong> (Management Information Systems — hệ thống thông tin quản lý) là thuật ngữ ô che cho <em>mọi</em> hệ máy tính xoay quanh quản lý dữ liệu/thông tin. TPS, DSS và IDSS đều là MIS. Định nghĩa DSS của giáo trình: <em>"một hệ giúp một hay nhiều người ra quyết định trong một miền cụ thể, chọn ở mỗi thời điểm phương án tốt nhất trong tập phương án — thường mâu thuẫn nhau."</em> Điểm cốt: <strong>quyết định do người đưa ra</strong>, máy chỉ hỗ trợ.</p>
+      <p><strong>MIS</strong> (Management Information Systems: hệ thống thông tin quản lý) là thuật ngữ ô che cho <em>mọi</em> hệ máy tính xoay quanh quản lý dữ liệu/thông tin. TPS, DSS và IDSS đều là MIS. Định nghĩa DSS của giáo trình: <em>"một hệ giúp một hay nhiều người ra quyết định trong một miền cụ thể, chọn ở mỗi thời điểm phương án tốt nhất trong tập phương án — thường mâu thuẫn nhau."</em> Điểm cốt: <strong>quyết định do người đưa ra</strong>, máy chỉ hỗ trợ.</p>
     </div>
 
     <figure class="figure">
@@ -1868,7 +1868,7 @@ footer.site{border-top:1px solid var(--border);padding:26px 24px;text-align:cent
       <figcaption><b>Hình 4.1</b> — Năm mốc chính. <b>TPS</b> xử lý giao dịch theo lô (không tương tác); <b>DSS</b> ra đời khi microprocessor cho máy tương tác; <b>ADSS</b> thêm mô hình vận trù + phân tích "nếu-thì"; <b>IDSS</b> thêm mô hình từ AI (phần lớn học từ dữ liệu).</figcaption>
     </figure>
 
-    <p>Bên trong, một <strong>DSS cổ điển</strong> có ba khối: <em>database</em> (dữ liệu), <em>model base</em> (kho mô hình) và <em>user interface</em> (giao diện). <strong>IDSS</strong> (Intelligent DSS — DSS thông minh) không đập bỏ ba khối đó; nó chỉ thêm đúng hai thứ: <strong>ít nhất một mô hình đến từ lĩnh vực AI</strong>, và khả năng <strong>học từ các quyết định trong quá khứ</strong>. Định nghĩa của giáo trình gói gọn trong ba động từ nhận thức mà hệ phải làm được: <em>analytical</em> (chẩn đoán trạng thái), <em>synthetic</em> (sinh phương án), <em>prognosis</em> (dự báo hậu quả).</p>
+    <p>Bên trong, một <strong>DSS cổ điển</strong> có ba khối: <em>database</em> (dữ liệu), <em>model base</em> (kho mô hình) và <em>user interface</em> (giao diện). <strong>IDSS</strong> (Intelligent DSS: DSS thông minh) không đập bỏ ba khối đó; nó chỉ thêm đúng hai thứ: <strong>ít nhất một mô hình đến từ lĩnh vực AI</strong>, và khả năng <strong>học từ các quyết định trong quá khứ</strong>. Định nghĩa của giáo trình gói gọn trong ba động từ nhận thức mà hệ phải làm được: <em>analytical</em> (chẩn đoán trạng thái), <em>synthetic</em> (sinh phương án), <em>prognosis</em> (dự báo hậu quả).</p>
 
     <div class="compare">
       <div class="compare-col good">
@@ -1901,10 +1901,10 @@ footer.site{border-top:1px solid var(--border);padding:26px 24px;text-align:cent
     <div class="quiz" data-correct="0">
       <span class="eyebrow">Kiểm tra nhanh</span>
       <p class="quiz-q">Một hệ mỗi tuần chấm điểm các tín hiệu số (đơn giảm, tồn kho cao, KOC tăng), suy ra lever nên chạy, rồi đo kết quả tuần sau để chỉnh lần gợi ý tới. Theo dòng tiến hoá, hệ này thuộc nấc nào?</p>
-      <button class="quiz-opt" onclick="quizPick(this,0)"><span class="quiz-letter">A</span><span>Intelligent DSS — có mô hình suy luận kiểu AI và biết học từ quyết định cũ.</span></button>
-      <button class="quiz-opt" onclick="quizPick(this,1)"><span class="quiz-letter">B</span><span>Transaction Processing System — vì nó xử lý dữ liệu đơn hàng.</span></button>
-      <button class="quiz-opt" onclick="quizPick(this,2)"><span class="quiz-letter">C</span><span>Early DSS trên bảng tính — vì cốt lõi là cộng trừ số liệu.</span></button>
-      <button class="quiz-opt" onclick="quizPick(this,3)"><span class="quiz-letter">D</span><span>Advanced DSS — vì nó có phân tích "what-if".</span></button>
+      <button class="quiz-opt" onclick="quizPick(this,0)"><span class="quiz-letter">A</span><span>Intelligent DSS: có mô hình suy luận kiểu AI và biết học từ quyết định cũ.</span></button>
+      <button class="quiz-opt" onclick="quizPick(this,1)"><span class="quiz-letter">B</span><span>Transaction Processing System, vì nó xử lý dữ liệu đơn hàng.</span></button>
+      <button class="quiz-opt" onclick="quizPick(this,2)"><span class="quiz-letter">C</span><span>Early DSS trên bảng tính, vì cốt lõi là cộng trừ số liệu.</span></button>
+      <button class="quiz-opt" onclick="quizPick(this,3)"><span class="quiz-letter">D</span><span>Advanced DSS, vì nó có phân tích "what-if".</span></button>
       <div class="quiz-feedback" role="status" data-explain="IDSS khác DSS/ADSS đúng ở hai điểm: ít nhất một mô hình đến từ AI, và hệ học từ quyết định quá khứ. 'What-if' và bảng tính đã có sẵn từ ADSS/Early DSS — chúng không đủ để gọi là 'thông minh'."></div>
     </div>
   </div>
@@ -1936,12 +1936,12 @@ footer.site{border-top:1px solid var(--border);padding:26px 24px;text-align:cent
       </ul>
     </div>
 
-    <p>Bạn đã có dashboard đẹp, có luật gợi ý, có giao diện xếp hạng lever. Câu hỏi thật sự: <strong>"hệ của tôi đã đủ là IDSS chưa, hay mới là một cái dashboard sang trọng?"</strong> Cách trả lời không phải cảm tính — mà là đặt hệ cạnh bản kiến trúc chuẩn rồi soi từng tầng xem có đủ không.</p>
+    <p>Bạn đã có dashboard đẹp, có luật gợi ý, có giao diện xếp hạng lever. Câu hỏi thật sự: <strong>"hệ của tôi đã đủ là IDSS chưa, hay mới là một cái dashboard sang trọng?"</strong> Cách trả lời là đặt hệ cạnh bản kiến trúc chuẩn rồi soi từng tầng xem có đủ không.</p>
 
     <div class="concept">
       <span class="eyebrow">Khái niệm</span>
       <h4>6 thành phần + 4 thách thức mở</h4>
-      <p>Mọi IDSS chia sẻ sáu thành phần (Fig 4.10): (1) <strong>AI techniques</strong> — bắt buộc, đây chính là chữ "intelligent"; (2) <strong>Statistical/Numerical</strong>; (3) <strong>Decision-Analysis/First-Principles</strong>; (4) <strong>Ontological</strong> — <em>ontology</em> là mô tả các đặc trưng/quan hệ quan trọng của miền; (5) <strong>Economical Cost</strong>; (6) <strong>Complementary</strong> (vd GIS). Phủ lên trên là bốn <strong>thách thức mở</strong>: quản lý bất định, suy luận thời gian, suy luận không gian, và <strong>đánh giá IDSS</strong> (chưa có chuẩn thống nhất).</p>
+      <p>Mọi IDSS chia sẻ sáu thành phần (Fig 4.10): (1) <strong>AI techniques</strong>: bắt buộc, đây chính là chữ "intelligent"; (2) <strong>Statistical/Numerical</strong>; (3) <strong>Decision-Analysis/First-Principles</strong>; (4) <strong>Ontological</strong>: <em>ontology</em> là mô tả các đặc trưng/quan hệ quan trọng của miền; (5) <strong>Economical Cost</strong>; (6) <strong>Complementary</strong> (vd GIS). Phủ lên trên là bốn <strong>thách thức mở</strong>: quản lý bất định, suy luận thời gian, suy luận không gian, và <strong>đánh giá IDSS</strong> (chưa có chuẩn thống nhất).</p>
     </div>
 
     <div class="callout warn"><div class="callout-title">Bẫy số 1 khi làm IDSS</div><p>Giáo trình nói thẳng: <strong>nhiều IDSS thất bại vì không định nghĩa rõ mục tiêu</strong>. Danh sách yêu cầu §4.5 mở đầu bằng "định nghĩa rõ mục tiêu hệ", rồi mới tới nhận diện loại quyết định, kiểm kê dữ-liệu-vs-tri-thức, ranh giới tổ chức, và hồ sơ người dùng.</p></div>
@@ -2048,10 +2048,10 @@ footer.site{border-top:1px solid var(--border);padding:26px 24px;text-align:cent
     <div class="quiz" data-correct="2">
       <span class="eyebrow">Kiểm tra nhanh</span>
       <p class="quiz-q">Một đội map dashboard thương mại của họ vào Fig 4.12: có ingest, có rollups, có rule engine, có giao diện xếp hạng lever. Nhưng sau khi chủ shop bấm "chạy", <em>không có gì đo lại kết quả</em>. Tầng nào đang thiếu, và vì sao nó quan trọng nhất?</p>
-      <button class="quiz-opt" onclick="quizPick(this,0)"><span class="quiz-letter">A</span><span>Tầng ontology — thiếu mô tả miền nên hệ không hiểu dữ liệu.</span></button>
-      <button class="quiz-opt" onclick="quizPick(this,1)"><span class="quiz-letter">B</span><span>Tầng giao diện — cần trực quan hơn cho người dùng.</span></button>
-      <button class="quiz-opt" onclick="quizPick(this,2)"><span class="quiz-letter">C</span><span>Tầng actuation + feedback (đo lường → học lại) — thiếu nó thì hệ không thể "học từ quyết định cũ", đúng điều định nghĩa IDSS đòi hỏi.</span></button>
-      <button class="quiz-opt" onclick="quizPick(this,3)"><span class="quiz-letter">D</span><span>Tầng thống kê/tối ưu — cần thêm mô hình dự báo.</span></button>
+      <button class="quiz-opt" onclick="quizPick(this,0)"><span class="quiz-letter">A</span><span>Tầng ontology: thiếu mô tả miền nên hệ không hiểu dữ liệu.</span></button>
+      <button class="quiz-opt" onclick="quizPick(this,1)"><span class="quiz-letter">B</span><span>Tầng giao diện: cần trực quan hơn cho người dùng.</span></button>
+      <button class="quiz-opt" onclick="quizPick(this,2)"><span class="quiz-letter">C</span><span>Tầng actuation + feedback (đo lường → học lại): thiếu nó thì hệ không thể "học từ quyết định cũ", đúng điều định nghĩa IDSS đòi hỏi.</span></button>
+      <button class="quiz-opt" onclick="quizPick(this,3)"><span class="quiz-letter">D</span><span>Tầng thống kê/tối ưu: cần thêm mô hình dự báo.</span></button>
       <div class="quiz-feedback" role="status" data-explain="Vòng actuation+feedback là tầng đa số hệ bỏ quên; nó biến dashboard thành IDSS biết học. Trong hệ ví dụ đó là vòng đời proposed→approved→executed→measured→confirmed cộng đo lường trên orders thật."></div>
     </div>
   </div>
@@ -2083,7 +2083,7 @@ footer.site{border-top:1px solid var(--border);padding:26px 24px;text-align:cent
       </ul>
     </div>
 
-    <p>Một chuyên gia bán mỹ phẩm có sẵn "luật trong đầu": <em>nếu đơn tuần giảm sâu mà tồn kho còn nhiều thì đừng nhập thêm — đẩy combo</em>. Làm sao biến hàng chục luật như vậy thành một hệ chạy được? Và khi <strong>ba luật cùng khớp một tình huống</strong>, hệ chọn luật nào để hành động? Đó là bài toán trung tâm của <strong>expert system</strong> — trái tim của nhánh model-driven.</p>
+    <p>Một chuyên gia bán mỹ phẩm có sẵn "luật trong đầu": <em>nếu đơn tuần giảm sâu mà tồn kho còn nhiều thì đừng nhập thêm — đẩy combo</em>. Làm sao biến hàng chục luật như vậy thành một hệ chạy được? Và khi <strong>ba luật cùng khớp một tình huống</strong>, hệ chọn luật nào để hành động? Đó là bài toán trung tâm của <strong>expert system</strong>, nhánh model-driven của IDSS.</p>
 
     <div class="concept">
       <span class="eyebrow">Khái niệm</span>
@@ -2126,9 +2126,9 @@ footer.site{border-top:1px solid var(--border);padding:26px 24px;text-align:cent
       <figcaption><b>Hình 4.3</b> — Chu trình <b>match–select–act</b>. <b>Detection</b> gom mọi luật khớp thành <em>conflict set</em> (thuật toán Rete chỉ tính lại phần vừa đổi). <b>Selection</b> chọn đúng một luật. <b>Application</b> bắn luật rồi lặp — cho tới khi conflict set rỗng, đạt goal, hoặc gặp exception.</figcaption>
     </figure>
 
-    <p>Hai chiều suy diễn: <strong>forward chaining</strong> (suy diễn tiến, <em>data-driven</em>) dựa trên <em>modus ponens</em> (<code>A→B, A ⊢ B</code>) — đi từ bằng chứng chạy tới kết luận; vì không hướng đích nên <strong>chọn luật càng then chốt</strong>. <strong>Backward chaining</strong> (suy diễn lùi, <em>goal-driven</em>) dùng <em>modus tollens</em>, duyệt một đồ thị AND/OR từ giả thuyết truy ngược về bằng chứng — chỉ chạm tri thức cần thiết, nhưng đòi phải có đích rõ ràng.</p>
+    <p>Hai chiều suy diễn: <strong>forward chaining</strong> (suy diễn tiến, <em>data-driven</em>) dựa trên <em>modus ponens</em> (<code>A→B, A ⊢ B</code>): đi từ bằng chứng chạy tới kết luận; vì không hướng đích nên <strong>chọn luật càng then chốt</strong>. <strong>Backward chaining</strong> (suy diễn lùi, <em>goal-driven</em>) dùng <em>modus tollens</em>, duyệt một đồ thị AND/OR từ giả thuyết truy ngược về bằng chứng — chỉ chạm tri thức cần thiết, nhưng đòi phải có đích rõ ràng.</p>
 
-    <div class="callout danger"><div class="callout-title">Vì sao chọn luật là mấu chốt</div><p>Cùng một bài, giáo trình đo được: forward mất <strong>50 bước</strong> với chiến lược "luật đầu danh sách" nhưng chỉ <strong>3 bước</strong> với "luật cụ thể nhất"; backward là <strong>13 bước vs 1 bước</strong>. Số lượng luật không đổi — <em>chiến lược chọn luật</em> đổi tất cả.</p></div>
+    <div class="callout danger"><div class="callout-title">Vì sao chọn luật là mấu chốt</div><p>Cùng một bài, giáo trình đo được: forward mất <strong>50 bước</strong> với chiến lược "luật đầu danh sách" nhưng chỉ <strong>3 bước</strong> với "luật cụ thể nhất"; backward là <strong>13 bước vs 1 bước</strong>. Số lượng luật không đổi; <em>chiến lược chọn luật</em> đổi tất cả.</p></div>
 
     <div class="table-wrap"><table>
       <thead><tr><th>Chiến lược chọn luật</th><th>Chọn theo</th></tr></thead>
@@ -2139,9 +2139,9 @@ footer.site{border-top:1px solid var(--border);padding:26px 24px;text-align:cent
         <tr><td>Utility / Ordering / Randomness / Information</td><td>Bộ đếm dùng · thứ tự · ngẫu nhiên · nhiều kết luận nhất</td></tr>
       </tbody>
     </table></div>
-    <p style="font-size:14px;color:var(--ink-2)">Thường vài tiêu chí được <em>xếp thứ tự</em> để phá hoà; một luật không bắn hai lần trên cùng một phép gán. <strong>Explanation module</strong> lo phần tin cậy: giải thích <em>How?</em> (chuỗi luật đã chạy) và <em>Why?</em> (vì sao đuổi theo đích đó), ở hai lớp — <em>visualization</em> (vết) và <em>justification</em> (lý do chiến lược).</p>
+    <p style="font-size:14px;color:var(--ink-2)">Thường vài tiêu chí được <em>xếp thứ tự</em> để phá hoà; một luật không bắn hai lần trên cùng một phép gán. <strong>Explanation module</strong> lo phần tin cậy: giải thích <em>How?</em> (chuỗi luật đã chạy) và <em>Why?</em> (vì sao đuổi theo đích đó), ở hai lớp: <em>visualization</em> (vết) và <em>justification</em> (lý do chiến lược).</p>
 
-    <div class="callout insight"><div class="callout-title">Ánh xạ hệ ví dụ</div><p>Rule DSL của hệ ví dụ là một <em>production system thế hệ 2</em>: predicate <strong>số học</strong> trên signal có tên, không khớp ngữ nghĩa/LLM. <strong>Receipt</strong> = explanation module (mỗi điều kiện + giá trị thực vs ngưỡng + pass/fail = giải thích <em>How?</em> ở lớp visualization). <strong>3-state logic</strong>: thiếu signal → luật <em>không</em> khớp (không bịa) — đúng nguyên tắc "premise chưa thoả ⇒ luật không vào conflict set". Khi nhiều playbook cùng khớp một (brand, tuần), specificity/recency/certainty là tie-break nên nêu rõ trong receipt.</p></div>
+    <div class="callout insight"><div class="callout-title">Ánh xạ hệ ví dụ</div><p>Rule DSL của hệ ví dụ là một <em>production system thế hệ 2</em>: predicate <strong>số học</strong> trên signal có tên, không khớp ngữ nghĩa/LLM. <strong>Receipt</strong> = explanation module (mỗi điều kiện + giá trị thực vs ngưỡng + pass/fail = giải thích <em>How?</em> ở lớp visualization). <strong>3-state logic</strong>: thiếu signal → luật <em>không</em> khớp (không bịa), đúng nguyên tắc "premise chưa thoả ⇒ luật không vào conflict set". Khi nhiều playbook cùng khớp một (brand, tuần), specificity/recency/certainty là tie-break nên nêu rõ trong receipt.</p></div>
 
     <div class="takeaway">
       <span class="eyebrow">
@@ -2189,7 +2189,7 @@ footer.site{border-top:1px solid var(--border);padding:26px 24px;text-align:cent
       </ul>
     </div>
 
-    <p>Bạn ngồi với chuyên gia merchandising đúng hai giờ, ghi ra các luật, code xong, ship. Tuần sau một <strong>verdict sai</strong> xuất hiện trên production. Sai ở đâu trong quy trình? Câu trả lời không phải "code ẩu" — mà là <strong>đã bỏ một bước</strong>. <strong>Knowledge engineering</strong> (kỹ thuật mã hoá tri thức) là một quy trình có tên, không phải "hỏi rồi gõ phím".</p>
+    <p>Bạn ngồi với chuyên gia merchandising đúng hai giờ, ghi ra các luật, code xong, ship. Tuần sau một <strong>verdict sai</strong> xuất hiện trên production. Sai ở đâu trong quy trình? Câu trả lời là <strong>đã bỏ một bước</strong>, không phải "code ẩu". <strong>Knowledge engineering</strong> (kỹ thuật mã hoá tri thức) là một quy trình có tên, không phải "hỏi rồi gõ phím".</p>
 
     <div class="concept">
       <span class="eyebrow">Khái niệm</span>
@@ -2263,12 +2263,12 @@ footer.site{border-top:1px solid var(--border);padding:26px 24px;text-align:cent
         <span class="eyebrow">KE có Test</span>
         <ul>
           <li>Validate trên ca chuyên gia: Correctness · Completeness · Credibility.</li>
-          <li>Sai thì Refinement quay lại Implementation — có địa chỉ để sửa.</li>
+          <li>Sai thì Refinement quay lại Implementation: có địa chỉ để sửa.</li>
         </ul>
       </div>
     </div>
 
-    <div class="callout warn"><div class="callout-title">Bằng chứng: cây Địa Trung Hải (95%)</div><p>Hệ nhận diện cây của giáo trình đạt <strong>95% trên ~40 ca chuyên gia</strong> — chỉ nhầm đúng <strong>hai loài Sabus</strong> vì <em>hai luật phân biệt của chúng bị hoán chỗ</em>. Đây là lỗi <strong>nội dung</strong>, không phải lỗi cú pháp; chỉ có bước Test bắt được. Nó là bản sinh đôi thực vật của kỷ luật <code>verify:data</code> đối soát với oracle — và của quy tắc "discrepancy không mặc định là bug: xác nhận ngữ nghĩa với ground truth trước khi sửa số".</p></div>
+    <div class="callout warn"><div class="callout-title">Bằng chứng: cây Địa Trung Hải (95%)</div><p>Hệ nhận diện cây của giáo trình đạt <strong>95% trên ~40 ca chuyên gia</strong>, chỉ nhầm đúng <strong>hai loài Sabus</strong> vì <em>hai luật phân biệt của chúng bị hoán chỗ</em>. Đây là lỗi <strong>nội dung</strong>, không phải lỗi cú pháp; chỉ có bước Test bắt được. Nó là bản sinh đôi thực vật của kỷ luật <code>verify:data</code> đối soát với oracle — và của quy tắc "discrepancy không mặc định là bug: xác nhận ngữ nghĩa với ground truth trước khi sửa số".</p></div>
 
     <div class="callout insight"><div class="callout-title">Ánh xạ hệ ví dụ — đường mã hoá 5 chặng</div><p>Chuyên gia → <strong>Rule DSL</strong> (viết luật số học) → <strong>bind registry</strong> (mỗi bullet <em>whenToUse</em> gắn một predicate máy kiểm được) → <strong>engine</strong> (chạy match–select–act, phát receipt) → <strong><code>verify:data</code></strong> (Test, đối soát với oracle). Playbook là <em>versioned + bất biến</em>: sửa = tạo bản N+1 + lưu trữ bản cũ, đúng tinh thần "mỗi lần đổi luật là một vòng Refinement/Redesign có dấu vết".</p></div>
 
@@ -2322,17 +2322,17 @@ footer.site{border-top:1px solid var(--border);padding:26px 24px;text-align:cent
       <ul>
         <li>Gọi tên 5 pha của quy trình KDD và biết Data Mining chỉ là một pha nhỏ.</li>
         <li>Chọn đúng kỹ thuật tiền xử lý cho từng loại lỗi: cực trị, sai, thiếu.</li>
-        <li>Giải thích vì sao phần lớn công sức nằm ở làm sạch dữ liệu — và chính nó quyết định con số đúng.</li>
+        <li>Giải thích vì sao phần lớn công sức nằm ở làm sạch dữ liệu, và chính nó quyết định con số đúng.</li>
       </ul>
     </div>
 
-    <p>Một sáng, báo cáo <strong>NMV</strong> (net merchandise value — doanh thu thuần sau giảm giá) tháng của một shop mỹ phẩm nhảy vọt gần gấp đôi. Không phải bán chạy: một file Shopee bị giải mã nhầm — công cụ đọc trúng <em>sheet pivot</em> ở đầu file thay vì sheet dữ liệu, nhân đôi vài trăm dòng. Nếu con số đó chạy thẳng lên KPI headline, cả quyết định tuần dựa trên nó đều sai. Đây là bài học kinh điển của mọi hệ quyết định dựa-trên-dữ-liệu: <strong>rác vào, rác ra</strong> ("garbage in, garbage out") — hay như sách nói, "dữ liệu chất lượng kém → mô hình học ra tồi".</p>
+    <p>Một sáng, báo cáo <strong>NMV</strong> (net merchandise value: doanh thu thuần sau giảm giá) tháng của một shop mỹ phẩm nhảy vọt gần gấp đôi. Không phải bán chạy: một file Shopee bị giải mã nhầm — công cụ đọc trúng <em>sheet pivot</em> ở đầu file thay vì sheet dữ liệu, nhân đôi vài trăm dòng. Nếu con số đó chạy thẳng lên KPI headline, cả quyết định tuần dựa trên nó đều sai. Đây là bài học kinh điển của mọi hệ quyết định dựa-trên-dữ-liệu: <strong>rác vào, rác ra</strong> ("garbage in, garbage out"), hay như sách nói, "dữ liệu chất lượng kém → mô hình học ra tồi".</p>
 
     <div class="concept">
       <span class="eyebrow">Khái niệm lõi</span>
       <h4>KDD — Knowledge Discovery from Databases</h4>
-      <p><strong>KDD</strong> (khám phá tri thức từ cơ sở dữ liệu, Fayyad 1996) = "quá trình tìm ra các mẫu hình <em>hợp lệ, mới, hữu ích, dễ hiểu</em> từ dữ liệu". Nó là một <strong>quy trình nhiều bước</strong>, không phải một thuật toán. Năm pha: <span class="mono">Chọn dữ liệu → Tiền xử lý → Biến đổi → Khai phá (Data Mining) → Hậu xử lý</span>. <strong>Data Mining chỉ là bước thứ tư</strong> — phần chạy thuật toán. Điều gây bất ngờ cho người mới: pha <em>tiền xử lý</em> mới là pha ngốn thời gian, còn khai phá + hậu xử lý chiếm phần nhỏ.</p>
-      <p>Con số hay được trích là “80%”, nhưng nó dao động <strong>khoảng 45–80% tuỳ cách đếm và tuỳ khảo sát</strong>: khảo sát CrowdFlower 2016 ra 60% cho riêng việc làm sạch &amp; tổ chức dữ liệu, lên tới ~80% nếu tính cả thu thập và gán nhãn; khảo sát Anaconda 2020 hỏi cách khác (nạp + làm sạch) và ra 45%. Biên độ rộng như vậy không phá luận điểm của bài — dù đếm kiểu nào, tiền xử lý vẫn là <em>pha tốn công nhất</em>, và vẫn là nơi con số sai lọt vào.</p>
+      <p><strong>KDD</strong> (khám phá tri thức từ cơ sở dữ liệu, Fayyad 1996) = "quá trình tìm ra các mẫu hình <em>hợp lệ, mới, hữu ích, dễ hiểu</em> từ dữ liệu". Nó là một <strong>quy trình nhiều bước</strong>, không phải một thuật toán. Năm pha: <span class="mono">Chọn dữ liệu → Tiền xử lý → Biến đổi → Khai phá (Data Mining) → Hậu xử lý</span>. <strong>Data Mining chỉ là bước thứ tư</strong>, phần chạy thuật toán. Điều gây bất ngờ cho người mới: pha <em>tiền xử lý</em> mới là pha ngốn thời gian, còn khai phá + hậu xử lý chiếm phần nhỏ.</p>
+      <p>Con số hay được trích là “80%”, nhưng nó dao động <strong>khoảng 45–80% tuỳ cách đếm và tuỳ khảo sát</strong>: khảo sát CrowdFlower 2016 ra 60% cho riêng việc làm sạch &amp; tổ chức dữ liệu, lên tới ~80% nếu tính cả thu thập và gán nhãn; khảo sát Anaconda 2020 hỏi cách khác (nạp + làm sạch) và ra 45%. Biên độ rộng như vậy không phá luận điểm của bài: dù đếm kiểu nào, tiền xử lý vẫn là <em>pha tốn công nhất</em>, và vẫn là nơi con số sai lọt vào.</p>
     </div>
 
     <figure class="figure">
@@ -2387,7 +2387,7 @@ footer.site{border-top:1px solid var(--border);padding:26px 24px;text-align:cent
 
     <p>Tiền xử lý gồm nhiều kỷ luật nhỏ. Ba nhóm hay gặp nhất khi ingest dữ liệu sàn:</p>
     <ul>
-      <li><strong>Phát hiện cực trị (outlier).</strong> Định nghĩa toán học của Tukey trên <strong>IQR</strong> (khoảng tứ phân vị = Q3 − Q1): giá trị nằm ngoài <span class="mono">Q1 − k·IQR</span> hoặc <span class="mono">Q3 + k·IQR</span> là đáng ngờ — <strong>k=1.5</strong> là cực trị nhẹ, <strong>k=3</strong> là cực trị mạnh. Vẽ bằng box plot.</li>
+      <li><strong>Phát hiện cực trị (outlier).</strong> Định nghĩa toán học của Tukey trên <strong>IQR</strong> (khoảng tứ phân vị = Q3 − Q1): giá trị nằm ngoài <span class="mono">Q1 − k·IQR</span> hoặc <span class="mono">Q3 + k·IQR</span> là đáng ngờ: <strong>k=1.5</strong> là cực trị nhẹ, <strong>k=3</strong> là cực trị mạnh. Vẽ bằng box plot.</li>
       <li><strong>Phát hiện lỗi (error).</strong> Dùng <em>quan hệ giữa các biến</em>: một giá trị có thể hợp lệ một mình nhưng bất khả thi khi so với biến khác. Ví dụ bất biến nghiệp vụ <span class="mono">NMV ≤ GMV</span>, hay net-sau-giảm-giá ≤ gross. Vi phạm = lỗi cột tiền (đúng cái bẫy Shopee cột NMV viết hoa).</li>
       <li><strong>Quản lý thiếu (missing).</strong> Phân biệt thiếu <em>ngẫu nhiên</em> (sync lỗi tạm thời → nội suy từ các ngày ICT lân cận bằng trung bình cửa sổ, hoặc <strong>k-NN imputation</strong> lấy trung bình của k quan sát giống nhất) và thiếu <em>không-áp-dụng</em> (sàn không báo trường đó → thêm một hạng "unknown", không bịa số 0).</li>
     </ul>
@@ -2395,7 +2395,7 @@ footer.site{border-top:1px solid var(--border);padding:26px 24px;text-align:cent
     <div class="callout warn">
       <div class="callout-title">Gắn cờ mà không ai đọc cờ cũng tệ như xoá</div>
       <p>Chính sách quản lý cực trị/lỗi chỉ có ba lựa chọn: <strong>Xoá cả dòng · Sửa về giá trị đúng · Thay bằng missing</strong> — không bao giờ tự động chôn.</p>
-      <p>Chuyện ozone Nam Cực hay được kể sai, và bản đúng còn dạy được nhiều hơn. Phần mềm xử lý dữ liệu vệ tinh Nimbus-7 của NASA <strong>không xoá</strong> các giá trị ozone thấp bất thường: nó <em>gắn cờ</em> những trị dưới ngưỡng (khoảng 180 DU) là đáng ngờ, để chờ người duyệt — và dữ liệu vẫn được giữ lại, vẫn được báo cáo. Chỗ nghẽn nằm ở bước sau: các trị bị gắn cờ mâu thuẫn với số đo Dobson từ mặt đất (khoảng 300 DU), nên đội xử lý cho rằng cảm biến hỏng, và những lá cờ đó nằm đó chờ suốt nhiều năm cho tới khi Farman công bố năm 1985. Bài học không phải "đừng xoá outlier" mà là: <strong>gắn cờ rồi không ai đọc cờ thì cũng tệ ngang xoá</strong> — một hàng chờ duyệt mà không có người duyệt chỉ là thùng rác mọc chậm hơn.</p>
+      <p>Chuyện ozone Nam Cực hay được kể sai, và bản đúng còn dạy được nhiều hơn. Phần mềm xử lý dữ liệu vệ tinh Nimbus-7 của NASA <strong>không xoá</strong> các giá trị ozone thấp bất thường: nó <em>gắn cờ</em> những trị dưới ngưỡng (khoảng 180 DU) là đáng ngờ, để chờ người duyệt, và dữ liệu vẫn được giữ lại, vẫn được báo cáo. Chỗ nghẽn nằm ở bước sau: các trị bị gắn cờ mâu thuẫn với số đo Dobson từ mặt đất (khoảng 300 DU), nhưng chính số Dobson của giai đoạn đó lại sai và chưa hiệu chỉnh được, nên không ai xác nhận được lá cờ nào cả, và chúng nằm chờ nhiều tháng cho tới khi số Dobson đã sửa về cuối 1984, ngay trước khi Farman công bố năm 1985 (theo trưởng nhóm xử lý ozone của NASA, R. McPeters). Bài học không phải "đừng xoá outlier" mà là: <strong>gắn cờ rồi không ai đọc cờ thì cũng tệ ngang xoá</strong> — một hàng chờ duyệt mà không có người duyệt chỉ là thùng rác mọc chậm hơn.</p>
       <p>Đây đúng là chỗ kỷ luật <span class="mono">verify:data</span> của bài 2.3 gắn vào: mỗi lá cờ phải có người xử lý và một mốc-thật bên ngoài để đối chiếu, chứ không chỉ có một cái cờ. Và luật của hệ ví dụ vẫn nguyên: <strong>một con số sai còn tệ hơn một ô trống</strong> → thiếu tin cậy thì render "—" + <span class="mono">mode</span>, đừng bịa.</p>
     </div>
 
@@ -2420,10 +2420,10 @@ footer.site{border-top:1px solid var(--border);padding:26px 24px;text-align:cent
     <div>
       <span class="eyebrow" style="display:block;margin-bottom:10px">Vận dụng</span>
       <details class="accordion"><summary><span class="chev">▶</span><span class="accordion-tag">Chọn đặc trưng</span><span>Filter · Wrapper · Embedded — khác nhau ở đâu?</span></summary>
-        <div class="accordion-body"><strong>Filter</strong> chấm điểm biến chỉ bằng dữ liệu huấn luyện (MI, Information Gain, RELIEF-F) — rẻ, không nhìn mô hình. <strong>Wrapper</strong> lặp có phản hồi từ một mô hình ML (tiến: thêm dần; lùi: bỏ dần) — chính xác hơn nhưng đắt. <strong>Embedded</strong> chọn đặc trưng ngay bên trong quá trình huấn luyện (cây quyết định tự bỏ biến không dùng). Mẹo thực chiến: khi tín hiệu trải rộng hoặc lớp mất cân bằng, <em>trọng số hoá</em> đặc trưng (w∈[0,1]) thường tốt hơn chọn cứng.</div>
+        <div class="accordion-body"><strong>Filter</strong> chấm điểm biến chỉ bằng dữ liệu huấn luyện (MI, Information Gain, RELIEF-F): rẻ, không nhìn mô hình. <strong>Wrapper</strong> lặp có phản hồi từ một mô hình ML (tiến: thêm dần; lùi: bỏ dần), chính xác hơn nhưng đắt. <strong>Embedded</strong> chọn đặc trưng ngay bên trong quá trình huấn luyện (cây quyết định tự bỏ biến không dùng). Mẹo thực chiến: khi tín hiệu trải rộng hoặc lớp mất cân bằng, <em>trọng số hoá</em> đặc trưng (w∈[0,1]) thường tốt hơn chọn cứng.</div>
       </details>
       <details class="accordion"><summary><span class="chev">▶</span><span class="accordion-tag">hệ ví dụ</span><span>Meta-data + đối soát oracle</span></summary>
-        <div class="accordion-body">Trong hệ ví dụ, <span class="mono">mapping transforms</span> là DATA có version: mặc định <em>strip currency</em>, parse ngày <span class="mono">YYYY-MM-DD</span>. Meta-data "đơn vị đo" và "khoảng hợp lệ" chính là guard bắt lỗi VND-integer, cột % ngoài [0,100]. Cuối cùng <span class="mono">verify:data</span> là "sample error được tự động hoá": headline == SUM(dòng), rolling == period — và giá trị kỳ vọng neo vào một <em>oracle ngoài</em> đã được khách xác nhận (một con số NMV theo kỳ, đóng băng lại), không phải một lần suy diễn lại chính code.</div>
+        <div class="accordion-body">Trong hệ ví dụ, <span class="mono">mapping transforms</span> là DATA có version: mặc định <em>strip currency</em>, parse ngày <span class="mono">YYYY-MM-DD</span>. Meta-data "đơn vị đo" và "khoảng hợp lệ" chính là guard bắt lỗi VND-integer, cột % ngoài [0,100]. Cuối cùng <span class="mono">verify:data</span> là "sample error được tự động hoá": headline == SUM(dòng), rolling == period, và giá trị kỳ vọng neo vào một <em>oracle ngoài</em> đã được khách xác nhận (một con số NMV theo kỳ, đóng băng lại), không phải một lần suy diễn lại chính code.</div>
       </details>
     </div>
 
@@ -2432,7 +2432,7 @@ footer.site{border-top:1px solid var(--border);padding:26px 24px;text-align:cent
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true" focusable="false"><path d="M12 2v6m0 8v6M4.9 4.9l4.2 4.2m5.8 5.8l4.2 4.2M2 12h6m8 0h6M4.9 19.1l4.2-4.2m5.8-5.8l4.2-4.2"/></svg>
         Takeaway
       </span>
-      <p>Tiền xử lý — không phải thuật toán — quyết định con số đúng: <span class="hl">phần lớn công sức (khoảng 45–80% tuỳ khảo sát) nằm ở làm sạch dữ liệu</span>, và một giá trị sai còn tệ hơn một ô trống.</p>
+      <p>Tiền xử lý, không phải thuật toán, quyết định con số đúng: <span class="hl">phần lớn công sức (khoảng 45–80% tuỳ khảo sát) nằm ở làm sạch dữ liệu</span>, và một giá trị sai còn tệ hơn một ô trống.</p>
     </div>
 
     <div class="quiz" data-correct="2">
@@ -2440,7 +2440,7 @@ footer.site{border-top:1px solid var(--border);padding:26px 24px;text-align:cent
       <p class="quiz-q">NMV tháng 4 của một shop nhảy gấp đôi sau khi import một file Shopee mới; điều tra thấy một sheet pivot bị giải mã nhầm, nhân đôi vài dòng. Theo kỷ luật KDD, việc đúng nhất là gì?</p>
       <button class="quiz-opt" onclick="quizPick(this,0)"><span class="quiz-letter">A</span><span>Giữ nguyên con số vì "dữ liệu là dữ liệu".</span></button>
       <button class="quiz-opt" onclick="quizPick(this,1)"><span class="quiz-letter">B</span><span>Lặng lẽ xoá các dòng nghi ngờ cho tới khi KPI về mức cũ.</span></button>
-      <button class="quiz-opt" onclick="quizPick(this,2)"><span class="quiz-letter">C</span><span>Phát hiện cực trị bằng ngưỡng Tukey/kiểm tra chéo (NMV ≤ GMV), rồi Xoá/Sửa/Thay-bằng-missing một cách minh bạch — không tự bịa số.</span></button>
+      <button class="quiz-opt" onclick="quizPick(this,2)"><span class="quiz-letter">C</span><span>Phát hiện cực trị bằng ngưỡng Tukey/kiểm tra chéo (NMV ≤ GMV), rồi Xoá/Sửa/Thay-bằng-missing một cách minh bạch, không tự bịa số.</span></button>
       <button class="quiz-opt" onclick="quizPick(this,3)"><span class="quiz-letter">D</span><span>Nhân KPI với 0,5 cho "khớp cảm giác".</span></button>
       <div class="quiz-feedback" role="status" data-explain="Quản lý cực trị/lỗi chỉ có Xoá / Sửa / Thay-bằng-missing một cách công khai — và phải có người thật sự xử lý cái cờ đã gắn (bài học ozone Nam Cực); xoá lặng lẽ, gắn cờ rồi bỏ đó, hay bịa số đều sai. Một con số sai còn tệ hơn một ô trống."></div>
     </div>
@@ -2470,11 +2470,11 @@ footer.site{border-top:1px solid var(--border);padding:26px 24px;text-align:cent
       <ul>
         <li>Định tuyến một bài toán commerce vào đúng họ mô hình (mô tả / liên kết / phân loại / dự báo).</li>
         <li>Dùng holdout + k-fold cross-validation và đọc confusion matrix để bắt overfitting.</li>
-        <li>Giải thích vì sao độ chính xác tổng thể "nói dối" khi lớp mất cân bằng — và dùng BER thay thế.</li>
+        <li>Giải thích vì sao độ chính xác tổng thể "nói dối" khi lớp mất cân bằng, và dùng BER thay thế.</li>
       </ul>
     </div>
 
-    <p>Một mô hình chấm "livestream này có đạt chuẩn không" báo cáo <strong>độ chính xác 88%</strong> — nghe tuyệt vời, ai cũng gật đầu duyệt. Nhưng livestream đạt chuẩn là <em>thiểu số</em>; mô hình gần như luôn đoán "không đạt" và vẫn đúng 88% vì đa số thật sự không đạt. Nó bỏ sót <strong>85% ca đạt chuẩn</strong> — đúng những ca ta cần tìm. Con số đẹp che giấu một mô hình vô dụng. Đây là bẫy chọn-và-đánh-giá mô hình quan trọng nhất chương này.</p>
+    <p>Một mô hình chấm "livestream này có đạt chuẩn không" báo cáo <strong>độ chính xác 88%</strong>: nghe tuyệt vời, ai cũng gật đầu duyệt. Nhưng livestream đạt chuẩn là <em>thiểu số</em>; mô hình gần như luôn đoán "không đạt" và vẫn đúng 88% vì đa số thật sự không đạt. Nó bỏ sót <strong>85% ca đạt chuẩn</strong> — đúng những ca ta cần tìm. Con số đẹp che giấu một mô hình vô dụng. Đây là bẫy chọn-và-đánh-giá mô hình quan trọng nhất chương này.</p>
 
     <div class="concept">
       <span class="eyebrow">Khái niệm lõi</span>
@@ -2529,11 +2529,11 @@ footer.site{border-top:1px solid var(--border);padding:26px 24px;text-align:cent
       <p><strong>Overfitting</strong> (quá khớp) = giỏi trên dữ liệu huấn luyện, dở khi tổng quát hoá; <strong>underfitting</strong> = quá đơn giản, dở cả trên train. Vì vậy chia dữ liệu <strong>train 60–80% / validation 10–20% / test 10–20%</strong>. <strong>Holdout</strong> = một lát cắt duy nhất. <strong>k-fold cross-validation</strong> = chia k phần, mỗi phần làm validation một lần, <em>trung bình k lỗi</em> (thường k=10); ít dữ liệu thì dùng leave-one-out. Luôn ưu tiên chia <strong>stratified</strong> (giữ tỉ lệ lớp).</p>
     </div>
 
-    <p>Công cụ đọc kết quả phân loại là <strong>confusion matrix</strong>: TP (đúng-dương), TN (đúng-âm), FP (báo nhầm dương — lỗi loại I), FN (bỏ sót — lỗi loại II). Từ đó: <span class="mono">Accuracy=(TP+TN)/N</span>, <span class="mono">Recall=TP/(TP+FN)</span>, <span class="mono">Precision=TP/(TP+FP)</span>, và <span class="mono">F1</span> = trung bình điều hoà của precision &amp; recall.</p>
+    <p>Công cụ đọc kết quả phân loại là <strong>confusion matrix</strong>: TP (đúng-dương), TN (đúng-âm), FP (báo nhầm dương: lỗi loại I), FN (bỏ sót: lỗi loại II). Từ đó: <span class="mono">Accuracy=(TP+TN)/N</span>, <span class="mono">Recall=TP/(TP+FN)</span>, <span class="mono">Precision=TP/(TP+FP)</span>, và <span class="mono">F1</span> = trung bình điều hoà của precision &amp; recall.</p>
 
     <div class="callout danger">
       <div class="callout-title">Bài học SECOM — độ chính xác 88% che giấu 15% phát hiện lỗi</div>
-      <p>SECOM (kiểm tra chất lượng bán dẫn): 1.567 mẫu, lớp "fail" chỉ <strong>6,6%</strong> — bài toán <em>mất cân bằng lớp</em>. Cây CART đạt accuracy tổng đẹp nhưng độ chính xác đúng cái lớp ta quan tâm thì thảm hại. Nên sách đưa ra <strong>Balanced Error Rate</strong> <span class="mono">BER = (FPR + FNR)/2</span> — trung bình sai của cả hai lớp, trung thực hơn nhiều.</p>
+      <p>SECOM (kiểm tra chất lượng bán dẫn): 1.567 mẫu, lớp "fail" chỉ <strong>6,6%</strong> — bài toán <em>mất cân bằng lớp</em>. Cây CART đạt accuracy tổng đẹp nhưng độ chính xác đúng cái lớp ta quan tâm thì thảm hại. Nên sách đưa ra <strong>Balanced Error Rate</strong> <span class="mono">BER = (FPR + FNR)/2</span>: trung bình sai của cả hai lớp, trung thực hơn nhiều.</p>
     </div>
 
     <figure class="figure">
@@ -2552,7 +2552,7 @@ footer.site{border-top:1px solid var(--border);padding:26px 24px;text-align:cent
 
     <div class="callout insight">
       <div class="callout-title">Bản đồ sang hệ ví dụ</div>
-      <p>Trong hệ ví dụ, mỗi quyết định được đo gắn một <em>experiment</em> <span class="mono">pre_post</span>: đối chứng = baseline off-campaign đọc từ <strong>orders thật</strong>, và được gán nhãn trung thực là <em>lower bound</em> — <strong>chưa</strong> phải randomized holdout. Đây là kỷ luật "tương quan mạnh chưa phải nhân quả": một confounder (ví dụ mùa vụ) có thể giả tạo tương quan, nên con số phải khung hoá khiêm tốn, và LLM copilot <em>không bao giờ tự ước lượng số</em>. Dữ liệu commerce vốn mất cân bằng (ít khách sộp, ít đơn hoàn) → luôn đo bằng BER / độ chính xác từng lớp, không dùng accuracy mặc định.</p>
+      <p>Trong hệ ví dụ, mỗi quyết định được đo gắn một <em>experiment</em> <span class="mono">pre_post</span>: đối chứng = baseline off-campaign đọc từ <strong>orders thật</strong>, và được gán nhãn trung thực là <em>lower bound</em>: <strong>chưa</strong> phải randomized holdout. Đây là kỷ luật "tương quan mạnh chưa phải nhân quả": một confounder (ví dụ mùa vụ) có thể giả tạo tương quan, nên con số phải khung hoá khiêm tốn, và LLM copilot <em>không bao giờ tự ước lượng số</em>. Dữ liệu commerce vốn mất cân bằng (ít khách sộp, ít đơn hoàn) → luôn đo bằng BER / độ chính xác từng lớp, không dùng accuracy mặc định.</p>
     </div>
 
     <div class="takeaway">
@@ -2567,7 +2567,7 @@ footer.site{border-top:1px solid var(--border);padding:26px 24px;text-align:cent
       <span class="eyebrow">Kiểm tra nhanh</span>
       <p class="quiz-q">Mô hình gắn cờ "đơn có nguy cơ hoàn trả cao". Đơn rủi ro chỉ chiếm 5% tổng. Mô hình đạt accuracy 95%. Đội vận hành nên tin điều gì?</p>
       <button class="quiz-opt" onclick="quizPick(this,0)"><span class="quiz-letter">A</span><span>95% có thể chỉ là đoán "không rủi ro" cho mọi đơn; hãy xem độ chính xác lớp "rủi ro" và BER trước khi tin.</span></button>
-      <button class="quiz-opt" onclick="quizPick(this,1)"><span class="quiz-letter">B</span><span>Tuyệt vời, 95% là mô hình tốt — triển khai ngay.</span></button>
+      <button class="quiz-opt" onclick="quizPick(this,1)"><span class="quiz-letter">B</span><span>Tuyệt vời, 95% là mô hình tốt; triển khai ngay.</span></button>
       <button class="quiz-opt" onclick="quizPick(this,2)"><span class="quiz-letter">C</span><span>Chỉnh ngưỡng để accuracy lên 99% cho chắc.</span></button>
       <button class="quiz-opt" onclick="quizPick(this,3)"><span class="quiz-letter">D</span><span>Bỏ luôn nhãn rủi ro vì nó hiếm.</span></button>
       <div class="quiz-feedback" role="status" data-explain="Với lớp hiếm, accuracy tổng bị lớp đa số thống trị (SECOM: 88% giấu 15% phát hiện fail). Chỉ độ chính xác từng lớp và BER = (FPR+FNR)/2 mới trung thực."></div>
@@ -2602,20 +2602,20 @@ footer.site{border-top:1px solid var(--border);padding:26px 24px;text-align:cent
       </ul>
     </div>
 
-    <p>Engine thấy ba tín hiệu cùng chỉ về một khuyến nghị "nên đẩy KOC tuần này": tương quan KOC ↔ off-take là <strong>+0,51</strong> nhưng chỉ có 6 tuần dữ liệu; một tín hiệu social; một tín hiệu combo. Mỗi cái đều mờ. Cộng trung bình thì mất thông tin; nhân lên thì lố tay. Làm sao <em>gộp bất định một cách có kỷ luật</em> — và khi nào thì nên thẳng thắn nói "chưa đủ chắc"?</p>
+    <p>Engine thấy ba tín hiệu cùng chỉ về một khuyến nghị "nên đẩy KOC tuần này": tương quan KOC ↔ off-take là <strong>+0,51</strong> nhưng chỉ có 6 tuần dữ liệu; một tín hiệu social; một tín hiệu combo. Mỗi cái đều mờ. Cộng trung bình thì mất thông tin; nhân lên thì lố tay. Làm sao <em>gộp bất định một cách có kỷ luật</em>, và khi nào thì nên thẳng thắn nói "chưa đủ chắc"?</p>
 
     <div class="concept">
       <span class="eyebrow">Khái niệm lõi</span>
       <h4>Ba dạng "không chắc" — đừng trộn lẫn</h4>
-      <p><strong>Uncertainty</strong> (bất định): không kiểm chứng được đúng/sai — "mai trời mưa" (giá trị sắc nhưng chưa biết). <strong>Imprecision/vagueness</strong> (mơ hồ): không chốt được giá trị — "Sharon còn trẻ". <strong>Incompleteness</strong> (khuyết): giá trị đơn giản là thiếu — "tuổi Ramon không rõ". Một mô hình bất định phải làm hai việc: <em>biểu diễn</em> mức bất định trên từng dữ kiện/luật, và <em>truyền</em> nó qua suy luận ("approximate reasoning").</p>
+      <p><strong>Uncertainty</strong> (bất định): không kiểm chứng được đúng/sai, như "mai trời mưa" (giá trị sắc nhưng chưa biết). <strong>Imprecision/vagueness</strong> (mơ hồ): không chốt được giá trị, như "Sharon còn trẻ". <strong>Incompleteness</strong> (khuyết): giá trị đơn giản là thiếu, như "tuổi Ramon không rõ". Một mô hình bất định phải làm hai việc: <em>biểu diễn</em> mức bất định trên từng dữ kiện/luật, và <em>truyền</em> nó qua suy luận ("approximate reasoning").</p>
     </div>
 
-    <p><strong>Công cụ 1 — Certainty Factor (CF), từ hệ chuyên gia MYCIN (1975).</strong> Mỗi luật mang một CF ∈ <span class="mono">[−1, +1]</span>: &gt;0 = bằng chứng ủng hộ, &lt;0 = phản bác, và <strong>CF=0 = "không biết"</strong> (trạng thái do-not-know: không chắc, mà cũng không phải là chắc-chắn-sai). Quy tắc kết hợp gọn và không phụ thuộc thứ tự:</p>
+    <p><strong>Công cụ 1: Certainty Factor (CF), từ hệ chuyên gia MYCIN (1975).</strong> Mỗi luật mang một CF ∈ <span class="mono">[−1, +1]</span>: &gt;0 = bằng chứng ủng hộ, &lt;0 = phản bác, và <strong>CF=0 = "không biết"</strong> (trạng thái do-not-know: không chắc, mà cũng không phải là chắc-chắn-sai). Quy tắc kết hợp gọn và không phụ thuộc thứ tự:</p>
     <ul>
       <li><strong>AND</strong> trong tiền đề = <span class="mono">min</span> (mắt xích yếu nhất).</li>
       <li><strong>OR</strong> trong tiền đề = <span class="mono">max</span> (người ủng hộ mạnh nhất).</li>
       <li><strong>Chuỗi</strong> <span class="mono">e→h</span>: <span class="mono">CF(h) = CF(luật) · max{0, CF(e)}</span> — bằng chứng âm/yếu bị kẹp ở 0, không kích hoạt luật; niềm tin <em>giảm dần</em> khi đi xa nguồn.</li>
-      <li><strong>Đồng-kết luận</strong> (hai luật cùng ra h, cả hai dương): <span class="mono">CF₁ + CF₂·(1 − CF₁)</span> — hai tín hiệu yếu-nhưng-đồng-thuận củng cố nhau nhưng <strong>bão hoà dưới 1</strong>.</li>
+      <li><strong>Đồng-kết luận</strong> (hai luật cùng ra h, cả hai dương): <span class="mono">CF₁ + CF₂·(1 − CF₁)</span>: hai tín hiệu yếu-nhưng-đồng-thuận củng cố nhau nhưng <strong>bão hoà dưới 1</strong>.</li>
     </ul>
 
     <figure class="figure">
@@ -2647,7 +2647,7 @@ footer.site{border-top:1px solid var(--border);padding:26px 24px;text-align:cent
       <figcaption><b>Hình 5.3</b> — Truyền CF qua chuỗi luật (ví dụ thật trong sách): hai chuỗi cùng kết luận G gộp lại thành <b>0,24318 ≈ 0,24</b> — "hơi chắc một chút", <b>lớn hơn từng cái nhưng vẫn dưới 1</b>. Đây chính là công thức nên mượn để gộp nhiều tín hiệu yếu đồng thuận.</figcaption>
     </figure>
 
-    <p><strong>Công cụ 2 — Bayesian network (Pearl 1988).</strong> Một <strong>DAG</strong> (đồ thị có hướng, không chu trình) của các biến ngẫu nhiên + các bảng xác suất điều kiện <strong>CPT</strong>. Cạnh <span class="mono">X→Y</span> = "X là nguyên nhân trực tiếp của Y"; <em>thiếu cạnh = độc lập có điều kiện</em>. Phân rã theo cha thay một bảng xác suất khổng lồ bằng các CPT nhỏ mỗi node. Hiện tượng đắt giá nhất là <strong>"explaining away"</strong>: khi hai nguyên nhân cùng gây một kết quả, biết một nguyên nhân đã xảy ra sẽ <em>hạ</em> niềm tin rằng nguyên nhân kia gây ra cùng kết quả đó.</p>
+    <p><strong>Công cụ 2: Bayesian network (Pearl 1988).</strong> Một <strong>DAG</strong> (đồ thị có hướng, không chu trình) của các biến ngẫu nhiên + các bảng xác suất điều kiện <strong>CPT</strong>. Cạnh <span class="mono">X→Y</span> = "X là nguyên nhân trực tiếp của Y"; <em>thiếu cạnh = độc lập có điều kiện</em>. Phân rã theo cha thay một bảng xác suất khổng lồ bằng các CPT nhỏ mỗi node. Hiện tượng đắt giá nhất là <strong>"explaining away"</strong>: khi hai nguyên nhân cùng gây một kết quả, biết một nguyên nhân đã xảy ra sẽ <em>hạ</em> niềm tin rằng nguyên nhân kia gây ra cùng kết quả đó.</p>
 
     <figure class="figure">
       <svg viewBox="0 0 720 360" role="img" aria-label="Mạng Bayes Khu vườn: node R là Mưa với xác suất Có 0,2, node S là Vòi tưới với xác suất Có 0,1; cả hai là cha của node G Vườn ướt; R còn là cha của node N Vườn hàng xóm ướt. CPT của N cho R: nếu Mưa thì N Có bằng 1,0, nếu không Mưa thì N Có bằng 0,2. CPT của G cho R và S: có Mưa thì 1, chỉ Vòi tưới thì 0,9, không cả hai thì 0. Quan sát Vườn ướt, xác suất do Mưa 0,7353 lớn hơn do Vòi tưới 0,3382">
@@ -2698,11 +2698,11 @@ footer.site{border-top:1px solid var(--border);padding:26px 24px;text-align:cent
       <figcaption><b>Hình 5.4 (sơ đồ chữ ký)</b> — Mạng Bayes "Khu vườn": R và S là hai nguyên nhân của G (common effect). Quan sát <b>vườn ướt (G=Có)</b>, tính ngược: <b>p(Mưa | ướt) = 0,7353</b> lớn hơn hẳn <b>p(Vòi tưới | ướt) = 0,3382</b> → Mưa là lời giải thích khả dĩ hơn. Đó là "explaining away" bằng số.</figcaption>
     </figure>
 
-    <p><strong>Công cụ 3 — Fuzzy (Zadeh 1965).</strong> Mô hình hoá sự mơ hồ, không phải ngẫu nhiên. Tập "cứng" (crisp) tạo <em>vách đá</em> phi lý: nếu "mát" = [15, 20]°C thì 15° là mát (1) nhưng 14,9° hoàn toàn không mát (0) — vô lý cho khoảng cách 0,1°. Tập <strong>fuzzy</strong> gán mức thành viên <span class="mono">μ ∈ [0,1]</span> làm mượt biên. Dùng fuzzy khi nguồn mờ là "không có tiêu chí thành viên sắc bén", chứ không phải khi có biến ngẫu nhiên.</p>
+    <p><strong>Công cụ 3: Fuzzy (Zadeh 1965).</strong> Mô hình hoá sự mơ hồ, không phải ngẫu nhiên. Tập "cứng" (crisp) tạo <em>vách đá</em> phi lý: nếu "mát" = [15, 20]°C thì 15° là mát (1) nhưng 14,9° hoàn toàn không mát (0) — vô lý cho khoảng cách 0,1°. Tập <strong>fuzzy</strong> gán mức thành viên <span class="mono">μ ∈ [0,1]</span> làm mượt biên. Dùng fuzzy khi nguồn mờ là "không có tiêu chí thành viên sắc bén", chứ không phải khi có biến ngẫu nhiên.</p>
 
     <div class="callout insight">
       <div class="callout-title">Bản đồ sang hệ ví dụ — abstain là chuẩn sách, không phải mẹo</div>
-      <p>Công thức niềm tin của hệ ví dụ <span class="mono">confidence = |r|·k/(k+3)</span> là một bộ <em>damping theo cỡ mẫu</em> (shrinkage, tiên nghiệm ~3 mẫu) — đúng tinh thần CF: giảm niềm tin khi ít dữ liệu. Với KOC ở đầu bài (|r|=0,51): 6 tuần → 0,51·6/9 ≈ <strong>0,34</strong>; đủ 20 tuần → 0,51·20/23 ≈ <strong>0,44</strong>. Các cổng: <span class="mono">|corr| &lt; 0,30 → mode no_reliable_signal</span> (render "—"); <span class="mono">&lt; 20 tuần → mode learning</span>; trần đáp ứng giảm giá 18%. <strong>CF=0 "không biết"</strong> và các <span class="mono">mode</span> discriminator là <em>cùng một trạng thái nhận thức</em> — hiển thị "—" + mode là được lý thuyết bảo chứng. (Ngưỡng 0,30 cứng chính là "vách đá crisp" mà góc nhìn fuzzy phê phán — nhưng hệ ví dụ dùng cổng cứng này.)</p>
+      <p>Công thức niềm tin của hệ ví dụ <span class="mono">confidence = |r|·k/(k+3)</span> là một bộ <em>damping theo cỡ mẫu</em> (shrinkage, tiên nghiệm ~3 mẫu), đúng tinh thần CF: giảm niềm tin khi ít dữ liệu. Với KOC ở đầu bài (|r|=0,51): 6 tuần → 0,51·6/9 ≈ <strong>0,34</strong>; đủ 20 tuần → 0,51·20/23 ≈ <strong>0,44</strong>. Các cổng: <span class="mono">|corr| &lt; 0,30 → mode no_reliable_signal</span> (render "—"); <span class="mono">&lt; 20 tuần → mode learning</span>; trần đáp ứng giảm giá 18%. <strong>CF=0 "không biết"</strong> và các <span class="mono">mode</span> discriminator là <em>cùng một trạng thái nhận thức</em>; hiển thị "—" + mode là được lý thuyết bảo chứng. (Ngưỡng 0,30 cứng chính là "vách đá crisp" mà góc nhìn fuzzy phê phán, nhưng hệ ví dụ dùng cổng cứng này.)</p>
     </div>
 
     <div class="takeaway">
@@ -2752,12 +2752,12 @@ footer.site{border-top:1px solid var(--border);padding:26px 24px;text-align:cent
       </ul>
     </div>
 
-    <p>Một shop mỹ phẩm mới mở muốn gợi ý "combo nên bán tuần này". Nhưng shop mới, ít lịch sử mua-cùng-nhau — ma trận thưa (<strong>sparse</strong>) và thiếu điểm khởi đầu (<strong>cold-start</strong>). Nếu chỉ gợi ý theo "cái đang hot" thì luôn ra vài SKU phổ biến (<strong>popularity bias</strong>) và chôn vùi sản phẩm mới đáng lên. Làm sao gợi ý tử tế khi dữ liệu 1p mỏng?</p>
+    <p>Một shop mỹ phẩm mới mở muốn gợi ý "combo nên bán tuần này". Nhưng shop mới, ít lịch sử mua-cùng-nhau: ma trận thưa (<strong>sparse</strong>) và thiếu điểm khởi đầu (<strong>cold-start</strong>). Nếu chỉ gợi ý theo "cái đang hot" thì luôn ra vài SKU phổ biến (<strong>popularity bias</strong>) và chôn vùi sản phẩm mới đáng lên. Làm sao gợi ý tử tế khi dữ liệu 1p mỏng?</p>
 
     <div class="concept">
       <span class="eyebrow">Khái niệm lõi</span>
       <h4>Recommender System = một IDSS chuyên gợi ý items</h4>
-      <p>Cho tập user <span class="mono">U</span>, tập item <span class="mono">I</span>, và hàm lợi ích <span class="mono">R: U×I → ℝ</span> được xấp xỉ bằng <strong>rating</strong> người dùng gán. Các rating xếp thành <strong>ma trận user-item</strong> cực kỳ <em>thưa</em> (đa số ô rỗng). Hai mục tiêu: dự đoán rating cho một item (<span class="mono">i_max = argmax R̂</span>) hoặc <strong>top-N</strong> (chọn N item điểm cao nhất). Phản hồi <em>tường minh</em> (chấm sao, xếp hạng) hay <em>ngầm</em> (lượt xem, thời gian xem, lịch sử mua — thuộc diện pháp luật bảo vệ dữ liệu cá nhân quản lý: GDPR ở châu Âu, và ở Việt Nam là Luật 91/2025/QH15 có hiệu lực 01/01/2026, xem bài 2.3).</p>
+      <p>Cho tập user <span class="mono">U</span>, tập item <span class="mono">I</span>, và hàm lợi ích <span class="mono">R: U×I → ℝ</span> được xấp xỉ bằng <strong>rating</strong> người dùng gán. Các rating xếp thành <strong>ma trận user-item</strong> cực kỳ <em>thưa</em> (đa số ô rỗng). Hai mục tiêu: dự đoán rating cho một item (<span class="mono">i_max = argmax R̂</span>) hoặc <strong>top-N</strong> (chọn N item điểm cao nhất). Phản hồi <em>tường minh</em> (chấm sao, xếp hạng) hay <em>ngầm</em> (lượt xem, thời gian xem, lịch sử mua, thuộc diện pháp luật bảo vệ dữ liệu cá nhân quản lý: GDPR ở châu Âu, và ở Việt Nam là Luật 91/2025/QH15 có hiệu lực 01/01/2026, xem bài 2.3).</p>
     </div>
 
     <figure class="figure">
@@ -2775,7 +2775,7 @@ footer.site{border-top:1px solid var(--border);padding:26px 24px;text-align:cent
       <figcaption><b>Bảng 5.3</b> — Bốn họ recommender. Quan sát then chốt: <b>lõi của mọi kỹ thuật là đánh giá độ tương đồng</b> — nên mọi RS đều có thể quy về một bài toán Case-Based Reasoning.</figcaption>
     </figure>
 
-    <p>Trong <strong>collaborative filtering</strong>, độ giống hai user tính bằng cosine hoặc tương quan Pearson trên hai vector rating; rating dự đoán của một item là <strong>trung bình có trọng số theo độ giống</strong> — một <em>giá trị kỳ vọng có trọng số</em>: <span class="mono">aggreg = (1/|U_MS|)·Σ sim(u_a,u_p)·r_{u_p,i}</span>. Đây là công thức đằng sau ý tưởng "mua X cũng mua Y" của các hệ gợi ý thương mại điện tử.</p>
+    <p>Trong <strong>collaborative filtering</strong>, độ giống hai user tính bằng cosine hoặc tương quan Pearson trên hai vector rating; rating dự đoán của một item là <strong>trung bình có trọng số theo độ giống</strong>, một <em>giá trị kỳ vọng có trọng số</em>: <span class="mono">aggreg = (1/|U_MS|)·Σ sim(u_a,u_p)·r_{u_p,i}</span>. Đây là công thức đằng sau ý tưởng "mua X cũng mua Y" của các hệ gợi ý thương mại điện tử.</p>
 
     <figure class="figure">
       <svg viewBox="0 0 760 170" role="img" aria-label="Sơ đồ đường ống combo của hệ ví dụ như một knowledge-based recommender: từ thị trường bên thứ ba lấy các combo doanh thu cao suy từ tiêu đề SKU, đối chiếu với catalog own-fit của shop bằng selectOwnComboSuggestions, xếp hạng theo doanh thu thị trường, rồi trả về top-N gợi ý nâng AOV">
@@ -2813,7 +2813,7 @@ footer.site{border-top:1px solid var(--border);padding:26px 24px;text-align:cent
 
     <div class="callout insight">
       <div class="callout-title">Bản đồ sang hệ ví dụ — cold-start có sẵn playbook</div>
-      <p>Shop mới, lịch sử 1p mỏng = đúng bài toán <strong>cold-start</strong>. Câu trả lời của sách: <em>hybrid + knowledge-based fallback</em> — dựa vào tri thức thị trường (3rd) cho tới khi đủ episode 1p tích luỹ, đúng tinh thần <span class="mono">mode='learning'</span> khi &lt; 20 tuần. Metric đề xuất cho combo surface: <strong>precision</strong> (combo có được operator adopt không?) cộng <strong>diversity/novelty</strong> để không chôn SKU mới — phản chiếu spine MI "trending ≠ biggest" và chống popularity-bias.</p>
+      <p>Shop mới, lịch sử 1p mỏng = đúng bài toán <strong>cold-start</strong>. Câu trả lời của sách: <em>hybrid + knowledge-based fallback</em>, dựa vào tri thức thị trường (3rd) cho tới khi đủ episode 1p tích luỹ, đúng tinh thần <span class="mono">mode='learning'</span> khi &lt; 20 tuần. Metric đề xuất cho combo surface: <strong>precision</strong> (combo có được operator adopt không?) cộng <strong>diversity/novelty</strong> để không chôn SKU mới — phản chiếu spine MI "trending ≠ biggest" và chống popularity-bias.</p>
     </div>
 
     <div class="takeaway">
@@ -2829,7 +2829,7 @@ footer.site{border-top:1px solid var(--border);padding:26px 24px;text-align:cent
       <p class="quiz-q">Một shop mới, ít dữ liệu mua-cùng-nhau, muốn gợi ý combo tuần này. Cách nào đúng tinh thần recommender systems?</p>
       <button class="quiz-opt" onclick="quizPick(this,0)"><span class="quiz-letter">A</span><span>Chạy collaborative filtering thuần trên lịch sử 1p mỏng.</span></button>
       <button class="quiz-opt" onclick="quizPick(this,1)"><span class="quiz-letter">B</span><span>Luôn gợi ý SKU đang hot nhất cho chắc ăn.</span></button>
-      <button class="quiz-opt" onclick="quizPick(this,2)"><span class="quiz-letter">C</span><span>Dựa vào tri thức thị trường (knowledge-based) đối chiếu catalog own-fit, và chấm điểm bằng cả diversity/novelty — không chỉ precision.</span></button>
+      <button class="quiz-opt" onclick="quizPick(this,2)"><span class="quiz-letter">C</span><span>Dựa vào tri thức thị trường (knowledge-based) đối chiếu catalog own-fit, và chấm điểm bằng cả diversity/novelty, không chỉ precision.</span></button>
       <button class="quiz-opt" onclick="quizPick(this,3)"><span class="quiz-letter">D</span><span>Chỉ tối ưu precision, bỏ qua độ đa dạng.</span></button>
       <div class="quiz-feedback" role="status" data-explain="Cold-start → hybrid/knowledge-based fallback (đúng combo suggestion của hệ ví dụ). Chỉ đuổi theo cái hot gây popularity-bias; chỉ tối ưu precision gây overspecialization — nên thêm diversity/novelty."></div>
     </div>
@@ -2872,16 +2872,16 @@ footer.site{border-top:1px solid var(--border);padding:26px 24px;text-align:cent
       <ul>
         <li>Kể tên các pha xây một IDSS và hai tài liệu bàn giao: IDSS-RSD và IDSS-DD.</li>
         <li>Giải thích vì sao vòng "Wrong IDSS development" quay lại bước sai thay vì vá tại chỗ.</li>
-        <li>Đọc dòng thời gian L0→L5 của hệ ví dụ và chỉ ra "ranh giới trung thực" — chỗ một kỹ sư nên dừng.</li>
+        <li>Đọc dòng thời gian L0→L5 của hệ ví dụ và chỉ ra "ranh giới trung thực": chỗ một kỹ sư nên dừng.</li>
       </ul>
     </div>
 
-    <p>Bạn có một bảng số đẹp và một ý tưởng: "để AI đề xuất khuyến mãi mỗi tuần". Cám dỗ lớn nhất là mở editor viết code luôn. Ba tháng sau hệ chạy được — nhưng khi chủ shop hỏi <em>"rốt cuộc hệ này giải bài toán gì?"</em> thì không ai trả lời gọn được. Giáo trình IDSS nói thẳng: rất nhiều dự án IDSS thất bại vì <strong>mục tiêu (objectives) không được định nghĩa rõ ngay từ đầu</strong> (§4.5) — không phải vì thiếu thuật toán.</p>
+    <p>Bạn có một bảng số đẹp và một ý tưởng: "để AI đề xuất khuyến mãi mỗi tuần". Cám dỗ lớn nhất là mở editor viết code luôn. Ba tháng sau hệ chạy được — nhưng khi chủ shop hỏi <em>"rốt cuộc hệ này giải bài toán gì?"</em> thì không ai trả lời gọn được. Giáo trình IDSS nói thẳng: rất nhiều dự án IDSS thất bại vì <strong>mục tiêu (objectives) không được định nghĩa rõ ngay từ đầu</strong> (§4.5), không phải vì thiếu thuật toán.</p>
 
     <div class="concept">
       <span class="eyebrow">Khái niệm</span>
       <h4>Xây IDSS là một vòng có kỷ luật, không phải hackathon</h4>
-      <p>Quy trình đi qua 7 pha: phân tích miền → thu thập dữ liệu &amp; tri thức → chọn mô hình → cài đặt → tích hợp → <strong>đánh giá</strong> → áp dụng. Hai tài liệu neo cả vòng: <strong>IDSS-RSD</strong> (<em>Requirements Specification Document</em> — tài liệu chốt yêu cầu: hệ PHẢI làm gì) sinh ra ở pha phân tích, và <strong>IDSS-DD</strong> (<em>Design Document</em> — tài liệu thiết kế: hệ được dựng THẾ NÀO) sinh ra ở pha thiết kế/tích hợp.</p>
+      <p>Quy trình đi qua 7 pha: phân tích miền → thu thập dữ liệu &amp; tri thức → chọn mô hình → cài đặt → tích hợp → <strong>đánh giá</strong> → áp dụng. Hai tài liệu neo cả vòng: <strong>IDSS-RSD</strong> (<em>Requirements Specification Document</em>, tài liệu chốt yêu cầu: hệ PHẢI làm gì) sinh ra ở pha phân tích, và <strong>IDSS-DD</strong> (<em>Design Document</em>, tài liệu thiết kế: hệ được dựng THẾ NÀO) sinh ra ở pha thiết kế/tích hợp.</p>
     </div>
 
     <figure class="figure">
@@ -2916,9 +2916,9 @@ footer.site{border-top:1px solid var(--border);padding:26px 24px;text-align:cent
       <figcaption><b>Hình 6.1</b> — Đánh giá là <b>cổng</b>, không phải bước cuối cho vui: hỏng thì mũi tên quay về <b>bước đã sai</b> (dữ liệu? mô hình? tích hợp?), chứ không vá ở ngọn.</figcaption>
     </figure>
 
-    <div class="callout insight"><div class="callout-title">Mô hình tư duy</div><p>"Đánh giá hỏng thì sửa ở NGUỒN." Số sai ở dashboard hiếm khi là lỗi ở dashboard — nó thường là lỗi ở pha dữ liệu hoặc chọn mô hình phía trước. Vòng lặp buộc bạn truy ngược, không dán băng dính.</p></div>
+    <div class="callout insight"><div class="callout-title">Mô hình tư duy</div><p>"Đánh giá hỏng thì sửa ở NGUỒN." Số sai ở dashboard hiếm khi là lỗi ở dashboard; nó thường là lỗi ở pha dữ liệu hoặc chọn mô hình phía trước. Vòng lặp buộc bạn truy ngược, không dán băng dính.</p></div>
 
-    <p>Ví dụ đầu tay của sách chạy đúng vòng này: <strong>INTERBOOK</strong>, một nhà bán sách online châu Âu, muốn biết <em>ai</em> là khách trung thành và dự đoán khách mới có thành trung thành không. Pha dữ liệu gộp ≈<strong>1.820 khách</strong> + 3.570 đơn thành một dòng mỗi khách. Pha mô hình chạy phân cụm (clustering) ra 2 nhóm — <strong>721 "trung thành" / 1.099 "thỉnh thoảng"</strong> — rồi <em>đối chiếu chéo</em> với luật chuyên gia (#đơn &gt; 2, tổng chi &gt; €700, &gt; 5 sản phẩm ở đơn đầu). Hai đường độc lập KHỚP nhau — đó là cách xác nhận, không phải tự tin. Pha dự báo so hai mô hình phân loại khách mới:</p>
+    <p>Ví dụ đầu tay của sách chạy đúng vòng này: <strong>INTERBOOK</strong>, một nhà bán sách online châu Âu, muốn biết <em>ai</em> là khách trung thành và dự đoán khách mới có thành trung thành không. Pha dữ liệu gộp ≈<strong>1.820 khách</strong> + 3.570 đơn thành một dòng mỗi khách. Pha mô hình chạy phân cụm (clustering) ra 2 nhóm (<strong>721 "trung thành" / 1.099 "thỉnh thoảng"</strong>) rồi <em>đối chiếu chéo</em> với luật chuyên gia (#đơn &gt; 2, tổng chi &gt; €700, &gt; 5 sản phẩm ở đơn đầu). Hai đường độc lập KHỚP nhau — đó là cách xác nhận, không phải tự tin. Pha dự báo so hai mô hình phân loại khách mới:</p>
 
     <div class="table-wrap">
       <table>
@@ -2929,7 +2929,7 @@ footer.site{border-top:1px solid var(--border);padding:26px 24px;text-align:cent
         </tbody>
       </table>
     </div>
-    <p>C4.5 nhỉnh hơn trên tập test (0,746 &gt; 0,728) — nhưng bài học lớn hơn con số là: <strong>clustering (data-driven) khớp với luật chuyên gia (model-driven)</strong>. Đây chính là tinh thần "đối chiếu với sự thật bên ngoài, đừng tự suy lại".</p>
+    <p>C4.5 nhỉnh hơn trên tập test (0,746 &gt; 0,728), nhưng bài học lớn hơn con số là: <strong>clustering (data-driven) khớp với luật chuyên gia (model-driven)</strong>. Đây chính là tinh thần "đối chiếu với sự thật bên ngoài, đừng tự suy lại".</p>
 
     <p>Case study minh hoạ đi qua vòng đó, nhưng cần tách <strong>evidence maturity</strong> khỏi quyền hành động. L1–L2 là nền rule/signal đã chứng minh; L3 pre/post và L4 policy/OPE chỉ là prototype; L5 mới là monitoring foundation. “Có feedback” không tự đồng nghĩa self-improving.</p>
 
@@ -3024,12 +3024,12 @@ footer.site{border-top:1px solid var(--border);padding:26px 24px;text-align:cent
       </ul>
     </div>
 
-    <p>Hệ "chạy được" — không lỗi 500, dashboard lên số. Nhưng số tháng lệch một ngày ở mép tháng; hoặc chủ shop nhìn đề xuất rồi… không dùng, vì không tin. <strong>"Chạy được" ≠ "đúng" ≠ "giúp ích"</strong> là ba chuyện khác nhau. Sách IDSS thừa nhận thẳng: đến nay vẫn <em>chưa có một protocol chuẩn</em> để đánh giá một IDSS — đó là một trong bốn thách thức mở của ngành.</p>
+    <p>Hệ "chạy được": không lỗi 500, dashboard lên số. Nhưng số tháng lệch một ngày ở mép tháng; hoặc chủ shop nhìn đề xuất rồi… không dùng, vì không tin. <strong>"Chạy được" ≠ "đúng" ≠ "giúp ích"</strong> là ba chuyện khác nhau. Sách IDSS thừa nhận thẳng: đến nay vẫn <em>chưa có một protocol chuẩn</em> để đánh giá một IDSS — đó là một trong bốn thách thức mở của ngành.</p>
 
     <div class="concept">
       <span class="eyebrow">Khái niệm</span>
       <h4>Verification vs Validation (theo IEEE)</h4>
-      <p><strong>Verification</strong> = <em>"is the system built in a correct way?"</em> — mỗi pha có làm đúng không, số có <strong>tái lập</strong> không. Cách làm: <em>static testing</em> (soi tài liệu) cho pha yêu cầu/thiết kế; <em>dynamic testing</em> (chạy test case) cho pha cài đặt. <strong>Validation</strong> = <em>"is the correct system built?"</em> — hệ có giải đúng bài toán mà stakeholder cần không. Cách làm: <strong>external validation</strong> = <em>acceptance test</em> do stakeholder chạy tại cơ sở của họ.</p>
+      <p><strong>Verification</strong> = <em>"is the system built in a correct way?"</em>: mỗi pha có làm đúng không, số có <strong>tái lập</strong> không. Cách làm: <em>static testing</em> (soi tài liệu) cho pha yêu cầu/thiết kế; <em>dynamic testing</em> (chạy test case) cho pha cài đặt. <strong>Validation</strong> = <em>"is the correct system built?"</em>: hệ có giải đúng bài toán mà stakeholder cần không. Cách làm: <strong>external validation</strong> = <em>acceptance test</em> do stakeholder chạy tại cơ sở của họ.</p>
     </div>
 
     <figure class="figure">
@@ -3057,7 +3057,7 @@ footer.site{border-top:1px solid var(--border);padding:26px 24px;text-align:cent
       <figcaption><b>Hình 6.3</b> — Verification hỏi "dựng đúng cách chưa" (số tái lập), Validation hỏi "dựng đúng thứ chưa" (owner tin &amp; dùng). Hai câu hỏi, hai cách kiểm.</figcaption>
     </figure>
 
-    <p>Cách sách kiểm Validation là <strong>chấm theo kịch bản</strong> (acceptance testing): định nghĩa các kịch bản đại diện — cả tình huống <em>thường</em> lẫn <em>cực đoan</em> — chạy hệ, rồi chấm kết quả trên 6 tiêu chí: <strong>đúng</strong> (correctness), <strong>đủ phương án</strong> (completeness), <strong>xếp đúng thứ tự</strong> theo độ tin (ordering), <strong>bền với dữ liệu nhiễu/thiếu</strong> (robustness), <strong>kịp giờ</strong> (time efficiency), và <strong>giải thích được</strong> (explanations). Một đề xuất "đúng" nhưng không giải thích được thì owner vẫn không dùng.</p>
+    <p>Cách sách kiểm Validation là <strong>chấm theo kịch bản</strong> (acceptance testing): định nghĩa các kịch bản đại diện (cả tình huống <em>thường</em> lẫn <em>cực đoan</em>), chạy hệ, rồi chấm kết quả trên 6 tiêu chí: <strong>đúng</strong> (correctness), <strong>đủ phương án</strong> (completeness), <strong>xếp đúng thứ tự</strong> theo độ tin (ordering), <strong>bền với dữ liệu nhiễu/thiếu</strong> (robustness), <strong>kịp giờ</strong> (time efficiency), và <strong>giải thích được</strong> (explanations). Một đề xuất "đúng" nhưng không giải thích được thì owner vẫn không dùng.</p>
 
     <p>Một hệ production cần dựng từng tầng đánh giá cụ thể. Bảng dưới dùng case study để minh hoạ cơ chế; số demo không phải bằng chứng production learning:</p>
 
@@ -3091,9 +3091,9 @@ footer.site{border-top:1px solid var(--border);padding:26px 24px;text-align:cent
       <p class="quiz-q">Số NMV tháng của một brand trên hệ lệch so với file export mà khách gửi. Bước đúng ĐẦU TIÊN là gì?</p>
       <button class="quiz-opt" onclick="quizPick(this,0)"><span class="quiz-letter">A</span><span>Sửa công thức NMV cho khớp file export ngay lập tức.</span></button>
       <button class="quiz-opt" onclick="quizPick(this,1)"><span class="quiz-letter">B</span><span>Xác nhận ngữ nghĩa (kỳ, cột, cutoff) với ground-truth ngoài trước; neo số kỳ vọng vào oracle rồi mới kết luận đúng/sai.</span></button>
-      <button class="quiz-opt" onclick="quizPick(this,2)"><span class="quiz-letter">C</span><span>Bỏ qua vì hệ không báo lỗi — "chạy được" là đủ.</span></button>
+      <button class="quiz-opt" onclick="quizPick(this,2)"><span class="quiz-letter">C</span><span>Bỏ qua vì hệ không báo lỗi; "chạy được" là đủ.</span></button>
       <button class="quiz-opt" onclick="quizPick(this,3)"><span class="quiz-letter">D</span><span>Đổi số kỳ vọng trong verify:data thành số hệ đang trả để test xanh.</span></button>
-      <div class="quiz-feedback" role="status" data-explain="§55 — một discrepancy không mặc định là bug. Xác nhận ngữ nghĩa với ground-truth NGOÀI trước; nếu 'sửa' vội có thể sửa số đúng thành sai. verify:data neo vào oracle, không vào re-derivation."></div>
+      <div class="quiz-feedback" role="status" data-explain="Một discrepancy không mặc định là bug. Xác nhận ngữ nghĩa với ground-truth NGOÀI trước; nếu 'sửa' vội có thể sửa số đúng thành sai. verify:data neo vào oracle, không vào re-derivation."></div>
     </div>
   </div>
   <div class="lesson-nav" data-navfor="m6-l2"></div>
@@ -3121,16 +3121,16 @@ footer.site{border-top:1px solid var(--border);padding:26px 24px;text-align:cent
       <ul>
         <li>Giải thích vì sao quyết định cuối do CON NGƯỜI (owner) duyệt, không phải hệ tự bấm.</li>
         <li>Kể tên các guardrail chặn rủi ro trước khi một quyết định được kích hoạt.</li>
-        <li>Phân biệt vai trò LLM copilot (giải thích) với lớp toán (ra số) — và vì sao abstain &gt; fabricate.</li>
+        <li>Phân biệt vai trò LLM copilot (giải thích) với lớp toán (ra số), và vì sao abstain &gt; fabricate.</li>
       </ul>
     </div>
 
-    <p>Hệ đề xuất: <em>"giảm giá 40% toàn shop tuần này"</em>. Nếu sai, ai chịu trách nhiệm? Nếu tín hiệu chỉ dựa trên 4 tuần dữ liệu mỏng thì sao? Một hệ ra quyết định tốt <strong>không tự bấm nút</strong> — nó đặt con người ở cổng. Giáo trình IDSS nói rõ nguyên tắc: <em>"decisions made by humans"</em> — DSS HỖ TRỢ chứ không THAY người ra quyết định; hệ tự-động-hoàn-toàn là một lớp riêng, tách bạch và gắn nhãn.</p>
+    <p>Hệ đề xuất: <em>"giảm giá 40% toàn shop tuần này"</em>. Nếu sai, ai chịu trách nhiệm? Nếu tín hiệu chỉ dựa trên 4 tuần dữ liệu mỏng thì sao? Một hệ ra quyết định tốt <strong>không tự bấm nút</strong>: nó đặt con người ở cổng. Giáo trình IDSS nói rõ nguyên tắc: <em>"decisions made by humans"</em> — DSS HỖ TRỢ chứ không THAY người ra quyết định; hệ tự-động-hoàn-toàn là một lớp riêng, tách bạch và gắn nhãn.</p>
 
     <div class="concept">
       <span class="eyebrow">Khái niệm</span>
       <h4>Human-in-the-loop = con người ở trong vòng lặp</h4>
-      <p>Owner duyệt trước khi kích hoạt vừa là <strong>quyết định nhóm</strong> (nhiều mắt nhìn, trách nhiệm chung) vừa là <strong>điểm gán trách nhiệm</strong> rõ ràng. Quanh cổng người là các <strong>guardrail</strong> — luật chặn cứng — và một nhánh <strong>abstain</strong>: khi tín hiệu quá yếu, hệ thà nói "—" còn hơn phán một con số.</p>
+      <p>Owner duyệt trước khi kích hoạt vừa là <strong>quyết định nhóm</strong> (nhiều mắt nhìn, trách nhiệm chung) vừa là <strong>điểm gán trách nhiệm</strong> rõ ràng. Quanh cổng người là các <strong>guardrail</strong> (luật chặn cứng) và một nhánh <strong>abstain</strong>: khi tín hiệu quá yếu, hệ thà nói "—" còn hơn phán một con số.</p>
     </div>
 
     <figure class="figure">
@@ -3195,23 +3195,23 @@ footer.site{border-top:1px solid var(--border);padding:26px 24px;text-align:cent
     <div class="concept">
       <span class="eyebrow">Một tầng sâu hơn</span>
       <h4>Guardrail ở tầng dữ liệu — luật hệ ép ngay trong kho</h4>
-      <p>Bảng trên là guardrail ở tầng quyết định. Cùng một nước đi — biến lời dặn miệng thành luật hệ ép — phải chạy thêm một tầng bên dưới, ngay trong kho, bằng bốn control mà <em>hệ thống tự cưỡng chế</em> chứ không trông vào kỷ luật của người viết truy vấn:</p>
+      <p>Bảng trên là guardrail ở tầng quyết định. Cùng một nước đi (biến lời dặn miệng thành luật hệ ép) phải chạy thêm một tầng bên dưới, ngay trong kho, bằng bốn control mà <em>hệ thống tự cưỡng chế</em> chứ không trông vào kỷ luật của người viết truy vấn:</p>
       <ul>
-        <li><strong>Row-level security theo tổ chức.</strong> Với hệ nhiều brand, một chính sách gắn trên bảng lọc dòng theo org của người đang hỏi — để không ai phải nhớ thêm <span class="mono">WHERE org_id = …</span>, và quên một lần cũng không thành rò dữ liệu chéo brand.</li>
+        <li><strong>Row-level security theo tổ chức.</strong> Với hệ nhiều brand, một chính sách gắn trên bảng lọc dòng theo org của người đang hỏi, để không ai phải nhớ thêm <span class="mono">WHERE org_id = …</span>, và quên một lần cũng không thành rò dữ liệu chéo brand.</li>
         <li><strong>Masking policy là OBJECT của kho, không phải chuyện render-time.</strong> Che ở tầng giao diện chỉ giấu dữ liệu khỏi một màn hình; một câu truy vấn, một export, một notebook là qua mặt được. Policy gắn trên cột thì mọi đường đọc đều bị che như nhau.</li>
         <li><strong>Retention + job xoá có đường xoá tài liệu hoá.</strong> Mỗi loại dữ liệu một hạn giữ, một job chạy theo lịch để thực thi, và một quy trình xoá theo yêu cầu chủ thể dữ liệu — chạy được tới tận bronze và mọi bản sao hạ nguồn (đúng nghĩa vụ của Luật 91/2025/QH15 ở bài 2.3).</li>
         <li><strong>Column-level lineage.</strong> Để câu hỏi “ai đã đổi định nghĩa doanh thu, đổi lúc nào, và những báo cáo nào ăn theo?” có một câu trả lời tra được, thay vì một cuộc họp.</li>
       </ul>
     </div>
 
-    <div class="callout insight"><div class="callout-title">abstain &gt; fabricate</div><p>Render "—" + một nhãn <em>mode</em> là <strong>lựa chọn thiết kế</strong>, không phải thiếu sót. Một con số bịa TỆ HƠN không có số — vì owner sẽ hành động theo nó. Đây cũng là lý do LLM copilot không bao giờ ra số: nó giỏi ngôn ngữ, không phải oracle. Nó giải thích "vì sao playbook này khớp", còn con số thì lớp toán chịu trách nhiệm.</p></div>
+    <div class="callout insight"><div class="callout-title">abstain &gt; fabricate</div><p>Render "—" + một nhãn <em>mode</em> là <strong>lựa chọn thiết kế</strong>, không phải thiếu sót. Một con số bịa TỆ HƠN không có số, vì owner sẽ hành động theo nó. Đây cũng là lý do LLM copilot không bao giờ ra số: nó giỏi ngôn ngữ, không phải oracle. Nó giải thích "vì sao playbook này khớp", còn con số thì lớp toán chịu trách nhiệm.</p></div>
 
     <div class="takeaway">
       <span class="eyebrow">
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true" focusable="false"><path d="M12 2v6m0 8v6M4.9 4.9l4.2 4.2m5.8 5.8l4.2 4.2M2 12h6m8 0h6M4.9 19.1l4.2-4.2m5.8-5.8l4.2-4.2"/></svg>
         Điều cần nhớ
       </span>
-      <p>Một IDSS trưởng thành đặt <span class="hl">con người ở cổng và thà nói "—" còn hơn bịa một con số</span> — guardrail + owner duyệt + audit log là phần "hệ hỗ trợ", không phải "hệ thay người".</p>
+      <p>Một IDSS trưởng thành đặt <span class="hl">con người ở cổng và thà nói "—" còn hơn bịa một con số</span>: guardrail + owner duyệt + audit log là phần "hệ hỗ trợ", không phải "hệ thay người".</p>
     </div>
 
     <div class="quiz" data-correct="1">
@@ -3262,7 +3262,7 @@ footer.site{border-top:1px solid var(--border);padding:26px 24px;text-align:cent
     <p>Bạn đã đi hết năm phần: hiểu <strong>quyết định</strong> là gì, dựng <strong>kho dữ liệu</strong> cho số tin được, lắp <strong>kiến trúc DSS/IDSS</strong>, đo và nói thật về <strong>độ bất định</strong>, rồi nhìn một hệ <strong>vận hành thật</strong> với con người ở cổng. Trang này là bản đồ mang đi.</p>
 
     <figure class="figure">
-      <svg viewBox="0 0 660 120" role="img" aria-label="Hành trình khoá học: 5 phần nối tiếp từ Quyết định (L1) đến Vận hành IDSS (L5)">
+      <svg viewBox="0 0 660 120" role="img" aria-label="Sơ đồ khoá học: 5 phần nối tiếp từ Quyết định (L1) đến Vận hành IDSS (L5)">
         <rect class="dgm-box" x="8" y="34" width="116" height="52" rx="10"/>
         <text class="dgm-ink" x="66" y="56" text-anchor="middle" font-size="12" font-weight="700">Quyết định</text>
         <text class="dgm-ink2" x="66" y="74" text-anchor="middle" font-size="10" font-family="IBM Plex Mono">Phần I · L1</text>
@@ -3284,7 +3284,7 @@ footer.site{border-top:1px solid var(--border);padding:26px 24px;text-align:cent
         <text class="dgm-ink2" x="594" y="74" text-anchor="middle" font-size="10" font-family="IBM Plex Mono">Phần V · L5</text>
         <defs><marker id="m7l1-ah" markerWidth="9" markerHeight="9" refX="7" refY="4.5" orient="auto"><path d="M0 0 L9 4.5 L0 9 z" fill="var(--accent-2)"/></marker></defs>
       </svg>
-      <figcaption><b>Hình 7.1</b> — Hành trình của khoá: số tin được (Phần I–II) đứng trước mô hình (Phần III–IV), và mọi thứ chỉ có nghĩa khi vận hành thật với con người ở cổng (Phần V).</figcaption>
+      <figcaption><b>Hình 7.1</b> — Sơ đồ khoá: số tin được (Phần I–II) đứng trước mô hình (Phần III–IV), và mọi thứ chỉ có nghĩa khi vận hành thật với con người ở cổng (Phần V).</figcaption>
     </figure>
 
     <div class="table-wrap"><table>
@@ -3293,7 +3293,7 @@ footer.site{border-top:1px solid var(--border);padding:26px 24px;text-align:cent
         <tr><td>1.1</td><td>Quyết định trong thương mại</td><td>Phương án × trạng thái thế giới × hệ quả; càng phi cấu trúc càng cần công cụ.</td></tr>
         <tr><td>1.2</td><td>Quyết định khi không chắc chắn</td><td>Xác định mức trước: chắc chắn / rủi ro / bất định — mỗi mức một quy tắc so sánh riêng.</td></tr>
         <tr><td>1.3</td><td>Quy trình ra quyết định</td><td>Quyết định là vòng: trinh sát → thiết kế → chọn → thực thi → ĐO.</td></tr>
-        <tr><td>2.1</td><td>OLTP vs OLAP</td><td>Hệ vận hành ghi nhanh; phân tích cần kho riêng (Inmon: subject-oriented, integrated, time-variant, non-updatable).</td></tr>
+        <tr><td>2.1</td><td>OLTP vs OLAP</td><td>Hệ vận hành ghi nhanh; phân tích cần kho riêng (Inmon: subject-oriented, integrated, time-variant, non-volatile).</td></tr>
         <tr><td>2.2</td><td>Kiến trúc Data Warehouse</td><td>3-tier = bronze → silver → gold; dashboard chỉ đọc lớp trên cùng.</td></tr>
         <tr><td>2.3</td><td>ETL &amp; đối soát</td><td>Capture → scrub → transform → load, và đối soát tự động với mốc-thật bên ngoài.</td></tr>
         <tr><td>3.1</td><td>Star schema</td><td>Fact (số đo) tách khỏi dimension (mô tả); grain quyết định cả khả năng phân tích lẫn kích thước.</td></tr>
@@ -3365,7 +3365,7 @@ footer.site{border-top:1px solid var(--border);padding:26px 24px;text-align:cent
       <div class="complete">
         <div class="complete-badge">✓</div>
         <h2>Hoàn thành khoá học</h2>
-        <p>Bạn đã đi từ lý thuyết quyết định → Data Warehouse → kiến trúc DSS/IDSS → độ bất định → vận hành một hệ ví dụ. Việc đáng làm trong 24 giờ tới: mở trang Hệ thống marketing trên org demo, lần theo MỘT quyết định từ biên nhận (vì sao chọn) tới kết quả đo trên đơn thật. Muốn học sâu vòng học rule → causal → bandit, tiếp tục với khoá <a href="decision-intelligence-agentic-systems.html">«Agentic Decision Systems · Self-improving có kiểm soát»</a>.</p>
+        <p>Bạn đã đi từ lý thuyết quyết định → Data Warehouse → kiến trúc DSS/IDSS → độ bất định → vận hành một hệ ví dụ. Việc đáng làm trong 24 giờ tới: mở dashboard marketing của chính bạn (hoặc một môi trường demo), lần theo MỘT quyết định từ biên nhận (vì sao chọn) tới kết quả đo trên đơn thật. Muốn học sâu vòng học rule → causal → bandit, tiếp tục với khoá <a href="decision-intelligence-agentic-systems.html">«Agentic Decision Systems · Self-improving có kiểm soát»</a>.</p>
         <div style="margin-top:26px"><a class="btn btn-primary" href="#overview">Về trang đầu</a></div>
       </div>
     </section>

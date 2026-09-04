@@ -352,7 +352,7 @@ code{font-family:var(--font-mono);font-size:.86em;background:var(--surface-2);
   background:var(--surface-2);border-bottom:1px solid var(--border);
   font-family:var(--font-mono);font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--ink-2)}
 .copy-btn{font-family:var(--font-mono);font-size:10.5px;letter-spacing:.08em;text-transform:uppercase;
-  background:var(--surface);border:1px solid var(--border);border-radius:7px;padding:4px 10px;cursor:pointer;color:var(--ink-2);transition:all .15s}
+  background:var(--surface);border:1px solid var(--border);border-radius:7px;padding:4px 10px;min-height:44px;min-width:44px;cursor:pointer;color:var(--ink-2);transition:all .15s}
 .copy-btn:hover{background:var(--accent);color:#fff;border-color:var(--accent)}
 .copy-btn.copied{background:var(--success);color:#fff;border-color:var(--success)}
 .prompt-card pre,.code-card pre{margin:0;padding:16px;overflow-x:auto;
@@ -496,7 +496,7 @@ footer.site{border-top:1px solid var(--border);padding:26px 24px;text-align:cent
         <div class="hero-inner">
           <span class="hero-kicker">Khoá học tương tác · AI Engineering · 2026</span>
           <h1><span class="grad-text">Agent Reliability & Evaluation</span> — đo agent có đáng tin trước khi ship</h1>
-          <p class="hero-sub">Cho team đang định nghĩa, build hoặc vận hành một sản phẩm AI và cần bằng chứng nó không âm thầm hỏng. Ba trụ: <strong>eval</strong> (định nghĩa «tốt»), <strong>observability</strong> (bắt thực tế), <strong>gate</strong> (chặn regression) — outcome vs trajectory, LLM-as-judge và bias của nó, pass@k vs pass^k, tracing OpenTelemetry GenAI, eval-driven CI gate, guardrails, shadow→canary rollout. Ví dụ dùng agent, nhưng eval set và outcome check nên có từ trước khi automation.</p>
+          <p class="hero-sub">Cho team đang định nghĩa, build hoặc vận hành một sản phẩm AI và cần bằng chứng nó không âm thầm hỏng. Ba trụ: <strong>eval</strong> (định nghĩa «tốt»), <strong>observability</strong> (bắt thực tế), <strong>gate</strong> (chặn regression). Bên trong: outcome vs trajectory, LLM-as-judge và bias của nó, pass@k vs pass^k, tracing OpenTelemetry GenAI, eval-driven CI gate, guardrails, shadow→canary rollout. Ví dụ dùng agent, nhưng eval set và outcome check nên có từ trước khi automation.</p>
           <div class="hero-meta">
             <span class="chip">📶 L1 → L5</span>
             <span class="chip">🧩 19 bài</span>
@@ -542,7 +542,7 @@ footer.site{border-top:1px solid var(--border);padding:26px 24px;text-align:cent
       <header class="module-header" data-module="1">
         <span class="eyebrow">Module 01 · Phần I · Nền tảng</span>
         <h2>Nền tảng độ tin cậy</h2>
-        <p>Trước khi đo bất cứ gì, phải hiểu vì sao hệ dùng model hỏng khác phần mềm thường và «đáng tin» thật ra nghĩa là gì. Ba bài này cho ngôn ngữ nền — phi tất định, outcome vs trajectory, và bản đồ ba trụ eval·observability·gate. Có thể đọc phần nền ngay lúc chốt brief; các phần tracing/rollout hữu ích hơn khi đã có prototype hoặc production traffic.</p>
+        <p>Trước khi đo bất cứ gì, phải hiểu vì sao hệ dùng model hỏng khác phần mềm thường và «đáng tin» thật ra nghĩa là gì. Ba bài này cho ngôn ngữ nền: phi tất định, outcome vs trajectory, và bản đồ ba trụ eval·observability·gate. Có thể đọc phần nền ngay lúc chốt brief; các phần tracing/rollout hữu ích hơn khi đã có prototype hoặc production traffic.</p>
       </header>
 <article class="lesson" id="m1-l1" data-lesson>
   <div class="lesson-head">
@@ -569,15 +569,15 @@ footer.site{border-top:1px solid var(--border);padding:26px 24px;text-align:cent
       </ul>
     </div>
 
-    <p>Bạn ship một agent hỗ trợ khách hàng. CI xanh, mọi unit test pass. Sáng hôm sau, một user báo: "con bot bảo đã hủy đơn của tôi nhưng đơn vẫn còn." Bạn chạy lại đúng câu hỏi đó trên máy mình — agent làm <em>đúng</em>. Chạy lần nữa — nó gọi thêm một tool khác, rẽ một nhánh khác, và lần này lại đúng. Bạn không tài nào tái hiện được lỗi. Test của bạn vẫn xanh, mà user vẫn gặp lỗi.</p>
+    <p>Bạn ship một agent hỗ trợ khách hàng. CI xanh, mọi unit test pass. Sáng hôm sau, một user báo: "con bot bảo đã hủy đơn của tôi nhưng đơn vẫn còn." Bạn chạy lại đúng câu hỏi đó trên máy mình: agent làm <em>đúng</em>. Chạy lần nữa, nó gọi thêm một tool khác, rẽ một nhánh khác, và lần này lại đúng. Bạn không tài nào tái hiện được lỗi. Test của bạn vẫn xanh, mà user vẫn gặp lỗi.</p>
 
     <div class="concept">
       <span class="eyebrow">Khái niệm</span>
-      <h4>Non-determinism — phi tất định</h4>
-      <p><strong>Phi tất định</strong> nghĩa là cùng một input có thể tạo ra <em>call graph</em> (chuỗi lời gọi model và tool) khác nhau giữa hai lần chạy. Phần mềm thường giả định ngược lại: cùng input → cùng đường code → cùng output, nên test cắm một input và so đúng một output kỳ vọng là đủ. Agent phá vỡ giả định đó — model lấy mẫu (sampling) khác nhau, chọn tool khác, retry khác, nên "chạy một lần thấy đúng" không chứng minh được điều gì về lần sau.</p>
+      <h4>Non-determinism (phi tất định)</h4>
+      <p><strong>Phi tất định</strong> nghĩa là cùng một input có thể tạo ra <em>call graph</em> (chuỗi lời gọi model và tool) khác nhau giữa hai lần chạy. Phần mềm thường giả định ngược lại: cùng input → cùng đường code → cùng output, nên test cắm một input và so đúng một output kỳ vọng là đủ. Agent phá vỡ giả định đó: model lấy mẫu (sampling) khác nhau, chọn tool khác, retry khác, nên "chạy một lần thấy đúng" không chứng minh được điều gì về lần sau.</p>
     </div>
 
-    <p>Vì đường đi thay đổi, hai từ khóa sẽ theo bạn suốt khóa học. <strong>Trajectory</strong> là bản ghi đầy đủ một lần chạy: mọi output, mọi tool call, mọi bước suy luận và kết quả trung gian. <strong>Harness</strong> là bộ khung bao quanh model — orchestration, retry, validation, observability — cái thật sự sinh ra độ tin cậy (ta sẽ mổ ở Phần VI). Còn ngay bây giờ, hãy thấy vì sao công cụ giám sát cũ bó tay.</p>
+    <p>Vì đường đi thay đổi, hai từ khóa sẽ theo bạn suốt khóa học. <strong>Trajectory</strong> là bản ghi đầy đủ một lần chạy: mọi output, mọi tool call, mọi bước suy luận và kết quả trung gian. <strong>Harness</strong> là bộ khung bao quanh model (orchestration, retry, validation, observability), và chính nó sinh ra độ tin cậy (ta sẽ mổ ở Phần VI). Còn ngay bây giờ, hãy thấy vì sao công cụ giám sát cũ bó tay.</p>
 
     <figure class="figure">
       <svg viewBox="0 0 680 240" role="img" aria-label="So sánh hai cách nhìn cùng một lần chạy agent mất 45 giây: APM truyền thống chỉ thấy một thanh mờ, observability cho agent tách thành các span con">
@@ -607,24 +607,24 @@ footer.site{border-top:1px solid var(--border);padding:26px 24px;text-align:cent
 
     <div class="callout insight">
       <div class="callout-title">Mô hình tư duy</div>
-      <p>Test phần mềm thường giống chấm một phép tính: một đề, một đáp án. Đánh giá agent giống chấm một bài luận nhiều bước — cùng đề, học sinh có thể đi nhiều lối, và bạn phải xem cả quá trình lẫn kết quả cuối. Chỗ analogy gãy: bài luận do người viết một lần, còn agent viết lại "bài" mỗi lần chạy.</p>
+      <p>Test phần mềm thường giống chấm một phép tính: một đề, một đáp án. Đánh giá agent giống chấm một bài luận nhiều bước: cùng đề, học sinh có thể đi nhiều lối, và bạn phải xem cả quá trình lẫn kết quả cuối. Chỗ analogy gãy: bài luận do người viết một lần, còn agent viết lại "bài" mỗi lần chạy.</p>
     </div>
 
     <p>Đây là vài failure mode đặc thù mà Anthropic quan sát được trên agent thật, không cái nào hiện ra trong một dòng "HTTP 200":</p>
     <ul>
-      <li><strong>Over-ambition / cạn context</strong> — agent cố one-shot một task lớn rồi hết context giữa chừng.</li>
-      <li><strong>Premature completion</strong> — một instance sau thấy tiến độ dở dang, tuyên bố "xong" mà chưa kiểm.</li>
-      <li><strong>Excessive sub-agent spawning</strong> — có lúc agent "tạo 50 subagent cho một truy vấn đơn giản".</li>
-      <li><strong>Endless search</strong> — agent "lùng web không ngừng cho nguồn không tồn tại".</li>
+      <li><strong>Over-ambition / cạn context</strong>: agent cố one-shot một task lớn rồi hết context giữa chừng.</li>
+      <li><strong>Premature completion</strong>: một instance sau thấy tiến độ dở dang, tuyên bố "xong" mà chưa kiểm.</li>
+      <li><strong>Excessive sub-agent spawning</strong>: có lúc agent "tạo 50 subagent cho một truy vấn đơn giản".</li>
+      <li><strong>Endless search</strong>: agent "lùng web không ngừng cho nguồn không tồn tại".</li>
     </ul>
 
     <div>
       <span class="eyebrow" style="display:block;margin-bottom:10px">Áp dụng</span>
       <details class="accordion"><summary><span class="chev">▶</span><span class="accordion-tag">Backend</span><span>API agent gọi payment</span></summary>
-        <div class="accordion-body">Một agent hoàn tiền chạy hai lần cho cùng ticket có thể gọi <code>refund()</code> một lần, hoặc gọi <code>lookup()</code> → <code>refund()</code> → <code>notify()</code>. Cùng ý định, khác trajectory — nên "đã test happy path" không đảm bảo nhánh dài không gọi refund hai lần.</div>
+        <div class="accordion-body">Một agent hoàn tiền chạy hai lần cho cùng ticket có thể gọi <code>refund()</code> một lần, hoặc gọi <code>lookup()</code> → <code>refund()</code> → <code>notify()</code>. Cùng ý định, khác trajectory, nên "đã test happy path" không đảm bảo nhánh dài không gọi refund hai lần.</div>
       </details>
       <details class="accordion"><summary><span class="chev">▶</span><span class="accordion-tag">Data</span><span>Agent viết SQL</span></summary>
-        <div class="accordion-body">Agent text-to-SQL có thể sinh câu query đúng ở lần 1, hoặc thử 3 lần rồi mới ra. Nếu không có trần retry, một câu hỏi mơ hồ khiến nó lặp vô hạn — một failure mode mà assert "kết quả đúng" trên happy path không bao giờ chạm tới.</div>
+        <div class="accordion-body">Agent text-to-SQL có thể sinh câu query đúng ở lần 1, hoặc thử 3 lần rồi mới ra. Nếu không có trần retry, một câu hỏi mơ hồ khiến nó lặp vô hạn, một failure mode mà assert "kết quả đúng" trên happy path không bao giờ chạm tới.</div>
       </details>
     </div>
 
@@ -633,13 +633,13 @@ footer.site{border-top:1px solid var(--border);padding:26px 24px;text-align:cent
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true" focusable="false"><path d="M12 2v6m0 8v6M4.9 4.9l4.2 4.2m5.8 5.8l4.2 4.2M2 12h6m8 0h6M4.9 19.1l4.2-4.2m5.8-5.8l4.2-4.2"/></svg>
         Takeaway
       </span>
-      <p>Agent phi tất định: cùng input có thể ra <span class="hl">đường đi khác nhau mỗi lần chạy</span> — nên một test pass/fail cố định "xanh một lần" không chứng minh agent đáng tin, và log phẳng giấu đúng cái chi tiết bạn cần để gỡ.</p>
+      <p>Agent phi tất định: cùng input có thể ra <span class="hl">đường đi khác nhau mỗi lần chạy</span>. Một test pass/fail cố định "xanh một lần" không chứng minh agent đáng tin, và log phẳng giấu đúng cái chi tiết bạn cần để gỡ.</p>
     </div>
 
     <div class="quiz" data-correct="2">
       <span class="eyebrow">Kiểm tra nhanh</span>
       <p class="quiz-q">Agent của bạn pass 100% unit test trong CI, nhưng user vẫn báo lỗi không tái hiện được. Kết luận đúng nhất là gì?</p>
-      <button class="quiz-opt" onclick="quizPick(this,0)"><span class="quiz-letter">A</span><span>Unit test bị hỏng — cần viết lại toàn bộ cho đúng.</span></button>
+      <button class="quiz-opt" onclick="quizPick(this,0)"><span class="quiz-letter">A</span><span>Unit test bị hỏng: cần viết lại toàn bộ cho đúng.</span></button>
       <button class="quiz-opt" onclick="quizPick(this,1)"><span class="quiz-letter">B</span><span>Đây là lỗi hạ tầng ngẫu nhiên, không liên quan tới agent.</span></button>
       <button class="quiz-opt" onclick="quizPick(this,2)"><span class="quiz-letter">C</span><span>Test cố định chỉ phủ một trajectory; agent phi tất định đi nhiều nhánh, nên cần đo cả những đường đi test không chạm tới.</span></button>
       <div class="quiz-feedback" role="status" data-explain="C đúng: bản chất phi tất định khiến 'xanh một lần' không phủ hết đường đi thật. A sai vì test không hỏng — chúng chỉ phủ thiếu. B sai vì lỗi tái diễn theo nhánh cụ thể, không phải nhiễu hạ tầng ngẫu nhiên."></div>
@@ -673,13 +673,13 @@ footer.site{border-top:1px solid var(--border);padding:26px 24px;text-align:cent
       </ul>
     </div>
 
-    <p>Một agent đặt vé máy bay kết thúc phiên bằng câu: "Đã đặt vé cho bạn! Mã đặt chỗ sẽ gửi qua email." Nghe hoàn hảo. Nhưng khi bạn mở bảng SQL của hệ đặt chỗ, không có <em>reservation</em> nào được tạo. Agent tự tin tường thuật thành công, trong khi trạng thái thật của hệ thống nói thất bại.</p>
+    <p>Một agent đặt vé máy bay kết thúc phiên bằng câu: "Đã đặt vé cho bạn! Mã đặt chỗ sẽ gửi qua email." Nghe như đã xong. Nhưng khi bạn mở bảng SQL của hệ đặt chỗ, không có <em>reservation</em> nào được tạo. Agent tự tin tường thuật thành công, trong khi trạng thái thật của hệ thống nói thất bại.</p>
 
     <div class="concept">
       <span class="eyebrow">Khái niệm</span>
       <h4>Outcome vs trajectory</h4>
       <p>Anthropic tách hai thứ, và đây là phân biệt trung tâm của đánh giá agent:</p>
-      <p><strong>Trajectory</strong> = "bản ghi đầy đủ của một lần thử: outputs, tool calls, reasoning, kết quả trung gian, và mọi tương tác khác." <strong>Outcome</strong> = "trạng thái cuối trong môi trường ở cuối lần thử" — ví dụ: có tồn tại row reservation trong DB hay không. Transcript là <em>lời agent kể</em>; outcome là <em>bằng chứng trong thế giới</em>.</p>
+      <p><strong>Trajectory</strong> = "bản ghi đầy đủ của một lần thử: outputs, tool calls, reasoning, kết quả trung gian, và mọi tương tác khác." <strong>Outcome</strong> = "trạng thái cuối trong môi trường ở cuối lần thử", ví dụ có tồn tại row reservation trong DB hay không. Transcript là <em>lời agent kể</em>; outcome là <em>bằng chứng trong thế giới</em>.</p>
     </div>
 
     <figure class="figure">
@@ -721,7 +721,7 @@ footer.site{border-top:1px solid var(--border);padding:26px 24px;text-align:cent
 
     <div class="callout warn">
       <div class="callout-title">Reliability ≠ accuracy</div>
-      <p><strong>Accuracy</strong> = câu trả lời có đúng không (một lần). <strong>Reliability</strong> = có đúng <em>nhất quán qua nhiều lần chạy</em> không. Một agent accuracy cao mà reliability thấp là agent "đôi khi đúng" — và user gặp cái "đôi khi" đó. Ta sẽ định lượng khoảng cách này ở bài 3.3 (pass@k vs pass^k).</p>
+      <p><strong>Accuracy</strong> = câu trả lời có đúng không (một lần). <strong>Reliability</strong> = có đúng <em>nhất quán qua nhiều lần chạy</em> không. Một agent accuracy cao mà reliability thấp là agent "đôi khi đúng", và user gặp cái "đôi khi" đó. Ta sẽ định lượng khoảng cách này ở bài 3.3 (pass@k vs pass^k).</p>
     </div>
 
     <div class="takeaway">
@@ -729,15 +729,15 @@ footer.site{border-top:1px solid var(--border);padding:26px 24px;text-align:cent
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true" focusable="false"><path d="M12 2v6m0 8v6M4.9 4.9l4.2 4.2m5.8 5.8l4.2 4.2M2 12h6m8 0h6M4.9 19.1l4.2-4.2m5.8-5.8l4.2-4.2"/></svg>
         Takeaway
       </span>
-      <p>Transcript có thể nói dối — chỉ <span class="hl">trạng thái môi trường (outcome)</span> mới chứng minh việc đã thật sự xảy ra. Kiểm cả outcome lẫn trajectory; đừng bao giờ chấm agent chỉ bằng câu cuối nó tự nói.</p>
+      <p>Transcript có thể nói dối: chỉ <span class="hl">trạng thái môi trường (outcome)</span> mới chứng minh việc đã thật sự xảy ra. Kiểm cả outcome lẫn trajectory; đừng bao giờ chấm agent chỉ bằng câu cuối nó tự nói.</p>
     </div>
 
     <div class="quiz" data-correct="0">
       <span class="eyebrow">Kiểm tra nhanh</span>
       <p class="quiz-q">Eval CI của bạn kiểm agent hoàn tiền bằng cách grep transcript tìm "đã hoàn tiền thành công". Rủi ro lớn nhất là gì?</p>
-      <button class="quiz-opt" onclick="quizPick(this,0)"><span class="quiz-letter">A</span><span>Agent có thể tường thuật thành công dù không có giao dịch hoàn tiền nào trong hệ thanh toán — build xanh giả. Cần thêm outcome check query trạng thái thật.</span></button>
+      <button class="quiz-opt" onclick="quizPick(this,0)"><span class="quiz-letter">A</span><span>Agent có thể tường thuật thành công dù không có giao dịch hoàn tiền nào trong hệ thanh toán: build xanh giả. Cần thêm outcome check query trạng thái thật.</span></button>
       <button class="quiz-opt" onclick="quizPick(this,1)"><span class="quiz-letter">B</span><span>Grep quá chậm, nên thay bằng regex biên dịch sẵn để tăng tốc CI.</span></button>
-      <button class="quiz-opt" onclick="quizPick(this,2)"><span class="quiz-letter">C</span><span>Không có rủi ro — nếu transcript nói thành công thì giao dịch chắc chắn đã xảy ra.</span></button>
+      <button class="quiz-opt" onclick="quizPick(this,2)"><span class="quiz-letter">C</span><span>Không có rủi ro: nếu transcript nói thành công thì giao dịch chắc chắn đã xảy ra.</span></button>
       <div class="quiz-feedback" role="status" data-explain="A đúng: đây chính là bẫy transcript-nói-dối — outcome (trạng thái hệ thanh toán) mới là bằng chứng. B lạc đề (tốc độ không phải vấn đề). C là chính niềm tin sai mà bài này cảnh báo."></div>
     </div>
   </div>
@@ -774,7 +774,7 @@ footer.site{border-top:1px solid var(--border);padding:26px 24px;text-align:cent
     <div class="concept">
       <span class="eyebrow">Khái niệm</span>
       <h4>Ba trụ nối thành một flywheel</h4>
-      <p><strong>Eval</strong> định nghĩa "tốt" nghĩa là gì (một bài kiểm: cho input, áp logic chấm lên output). <strong>Observability</strong> bắt được những gì thật sự xảy ra trên production (trace mọi lần chạy). <strong>Guardrail / gate</strong> chặn regression trước khi tới user. Ba cái không rời: trace lỗi từ production quay lại làm giàu bộ eval, bộ eval nuôi gate, gate bảo vệ những gì observability đo được — một vòng tự nuôi.</p>
+      <p><strong>Eval</strong> định nghĩa "tốt" nghĩa là gì (một bài kiểm: cho input, áp logic chấm lên output). <strong>Observability</strong> bắt được những gì thật sự xảy ra trên production (trace mọi lần chạy). <strong>Guardrail / gate</strong> chặn regression trước khi tới user. Ba cái không rời: trace lỗi từ production quay lại làm giàu bộ eval, bộ eval nuôi gate, gate bảo vệ những gì observability đo được, và vòng đó tự nuôi chính nó.</p>
     </div>
 
     <figure class="figure">
@@ -825,15 +825,15 @@ footer.site{border-top:1px solid var(--border);padding:26px 24px;text-align:cent
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true" focusable="false"><path d="M12 2v6m0 8v6M4.9 4.9l4.2 4.2m5.8 5.8l4.2 4.2M2 12h6m8 0h6M4.9 19.1l4.2-4.2m5.8-5.8l4.2-4.2"/></svg>
         Takeaway
       </span>
-      <p>Độ tin cậy agent là một <span class="hl">flywheel ba trụ</span>: eval định nghĩa "tốt", observability bắt thực tế, gate chặn regression — và trace lỗi quay lại nuôi eval. Bỏ một mắt xích thì vòng đứng.</p>
+      <p>Độ tin cậy agent là một <span class="hl">flywheel ba trụ</span>: eval định nghĩa "tốt", observability bắt thực tế, gate chặn regression, và trace lỗi quay lại nuôi eval. Bỏ một mắt xích thì vòng đứng.</p>
     </div>
 
     <div class="quiz" data-correct="1">
       <span class="eyebrow">Kiểm tra nhanh</span>
       <p class="quiz-q">Một nhóm viết bộ eval rất kỹ lúc launch rồi không đụng tới nữa, cũng không trace production. Vài tháng sau eval vẫn 95% pass nhưng user than phiền tăng. Mắt xích nào của flywheel bị đứt?</p>
-      <button class="quiz-opt" onclick="quizPick(this,0)"><span class="quiz-letter">A</span><span>Gate — họ cần thêm nhiều blocking gate hơn nữa.</span></button>
-      <button class="quiz-opt" onclick="quizPick(this,1)"><span class="quiz-letter">B</span><span>Observability — không trace production nên lỗi thật không bao giờ quay lại làm giàu bộ eval, khiến eval "đóng băng" lệch khỏi thực tế.</span></button>
-      <button class="quiz-opt" onclick="quizPick(this,2)"><span class="quiz-letter">C</span><span>Eval — bộ eval ban đầu chắc chắn viết sai từ đầu.</span></button>
+      <button class="quiz-opt" onclick="quizPick(this,0)"><span class="quiz-letter">A</span><span>Gate: họ cần thêm nhiều blocking gate hơn nữa.</span></button>
+      <button class="quiz-opt" onclick="quizPick(this,1)"><span class="quiz-letter">B</span><span>Observability: không trace production nên lỗi thật không bao giờ quay lại làm giàu bộ eval, khiến eval "đóng băng" lệch khỏi thực tế.</span></button>
+      <button class="quiz-opt" onclick="quizPick(this,2)"><span class="quiz-letter">C</span><span>Eval: bộ eval ban đầu chắc chắn viết sai từ đầu.</span></button>
       <div class="quiz-feedback" role="status" data-explain="B đúng: thiếu observability thì vòng không khép — lỗi production không thành case eval mới, nên eval cũ lệch dần. A không giải quyết gốc (gate chỉ bảo vệ cái eval đã lỗi thời). C sai: eval có thể tốt lúc đầu nhưng lệch vì không được nuôi."></div>
     </div>
   </div>
@@ -873,17 +873,17 @@ footer.site{border-top:1px solid var(--border);padding:26px 24px;text-align:cent
       </ul>
     </div>
 
-    <p>Sếp hỏi "agent đã đủ tốt để ship chưa?", nên bạn dựng dashboard: BERTScore, ROUGE, cosine similarity — bốn số, đều xanh. Nhưng khi user báo lỗi, bạn nhìn dashboard và không biết chỉ ra chỗ nào. Các metric đo "văn bản có giống tham chiếu không", còn cái bạn cần biết là "agent gọi sai tool ở bước nào". Bạn đo nhầm thứ.</p>
+    <p>Sếp hỏi "agent đã đủ tốt để ship chưa?", nên bạn dựng dashboard: BERTScore, ROUGE, cosine similarity. Bốn số, đều xanh. Nhưng khi user báo lỗi, bạn nhìn dashboard và không biết chỉ ra chỗ nào. Các metric đo "văn bản có giống tham chiếu không", còn cái bạn cần biết là "agent gọi sai tool ở bước nào". Bạn đo nhầm thứ.</p>
 
     <div class="callout danger">
       <div class="callout-title">Metric chung chung tạo tự tin giả</div>
-      <p>Hamel Husain nói thẳng: "metric chung như BERTScore, ROUGE, cosine similarity không hữu ích để đánh giá output LLM trong đa số ứng dụng." Tệ nhất là chúng "tạo ảo giác về sự tự tin không có cơ sở." Đừng bắt đầu từ metric đóng hộp — bắt đầu từ lỗi thật.</p>
+      <p>Hamel Husain nói thẳng: "metric chung như BERTScore, ROUGE, cosine similarity không hữu ích để đánh giá output LLM trong đa số ứng dụng." Tệ nhất là chúng "tạo ảo giác về sự tự tin không có cơ sở." Bắt đầu từ lỗi thật, không phải từ metric đóng hộp.</p>
     </div>
 
     <div class="concept">
       <span class="eyebrow">Khái niệm</span>
       <h4>Error analysis: derive eval từ lỗi quan sát được</h4>
-      <p>Trước khi viết bất kỳ rubric nào, làm <strong>error analysis</strong> trên trace thật (Hamel): (1) dựng dataset trace thật; (2) <strong>open coding</strong> — chuyên gia ghi chú tự do "chỗ này sai gì"; (3) <strong>axial coding</strong> — gom các ghi chú thành một taxonomy failure; (4) lặp tới <strong>saturation</strong> — "khoảng 20 trace mà không lộ category mới nào". Anthropic bổ sung điểm khởi đầu thực dụng: "bắt đầu 20–50 task đơn giản rút từ lỗi thật", đừng chờ hàng trăm task.</p>
+      <p>Trước khi viết bất kỳ rubric nào, làm <strong>error analysis</strong> trên trace thật (Hamel): (1) dựng dataset trace thật; (2) <strong>open coding</strong>: chuyên gia ghi chú tự do "chỗ này sai gì"; (3) <strong>axial coding</strong>: gom các ghi chú thành một taxonomy failure; (4) lặp tới <strong>saturation</strong>: "khoảng 20 trace mà không lộ category mới nào". Anthropic bổ sung điểm khởi đầu thực dụng: "bắt đầu 20–50 task đơn giản rút từ lỗi thật", đừng chờ hàng trăm task.</p>
     </div>
 
     <figure class="figure">
@@ -916,7 +916,7 @@ footer.site{border-top:1px solid var(--border);padding:26px 24px;text-align:cent
 
     <div class="callout info">
       <div class="callout-title">Nhắc lại bài 1.2</div>
-      <p>Task tốt phải kiểm được: Anthropic đặt tiêu chuẩn "hai chuyên gia độc lập cho cùng verdict pass/fail". Và nhớ bài 1.2 — mỗi task nên có cả một <strong>outcome check</strong> (query trạng thái thật), không chỉ đọc câu cuối agent nói.</p>
+      <p>Task tốt phải kiểm được: Anthropic đặt tiêu chuẩn "hai chuyên gia độc lập cho cùng verdict pass/fail". Và nhớ bài 1.2: mỗi task nên có cả một <strong>outcome check</strong> (query trạng thái thật), không chỉ đọc câu cuối agent nói.</p>
     </div>
 
     <div>
@@ -934,7 +934,7 @@ footer.site{border-top:1px solid var(--border);padding:26px 24px;text-align:cent
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true" focusable="false"><path d="M12 2v6m0 8v6M4.9 4.9l4.2 4.2m5.8 5.8l4.2 4.2M2 12h6m8 0h6M4.9 19.1l4.2-4.2m5.8-5.8l4.2-4.2"/></svg>
         Takeaway
       </span>
-      <p>Đừng bịa rubric từ đầu — <span class="hl">derive eval từ lỗi thật</span>: 20–50 task rút từ trace lỗi, open→axial coding tới saturation. Metric đóng hộp như ROUGE/cosine tạo tự tin giả, không nhắm được failure mode của bạn.</p>
+      <p>Đừng bịa rubric từ đầu. <span class="hl">Derive eval từ lỗi thật</span>: 20–50 task rút từ trace lỗi, open→axial coding tới saturation. Metric đóng hộp như ROUGE/cosine tạo tự tin giả, không nhắm được failure mode của bạn.</p>
     </div>
 
     <div class="quiz" data-correct="1">
@@ -974,12 +974,12 @@ footer.site{border-top:1px solid var(--border);padding:26px 24px;text-align:cent
       </ul>
     </div>
 
-    <p>Bộ eval của bạn báo "70% pass". Tốt hơn tuần trước. Nhưng khi sếp hỏi "30% fail hỏng ở đâu?", bạn im lặng — con số tổng nói <em>rằng</em> nó hỏng, không nói <em>ở đâu</em>. Bạn không sửa được cái mình không định vị được.</p>
+    <p>Bộ eval của bạn báo "70% pass". Tốt hơn tuần trước. Nhưng khi sếp hỏi "30% fail hỏng ở đâu?", bạn im lặng: con số tổng nói <em>rằng</em> nó hỏng, không nói <em>ở đâu</em>. Bạn không sửa được cái mình không định vị được.</p>
 
     <div class="concept">
       <span class="eyebrow">Khái niệm</span>
       <h4>Hai tầng: end-to-end + step-level</h4>
-      <p>Hamel chia đánh giá agent thành hai tầng: <strong>(1) end-to-end</strong> — coi agent như hộp đen, pass/fail nhị phân trên việc "mục tiêu user có đạt không"; <strong>(2) step-level diagnostics</strong> — chấm từng thành phần: chọn đúng tool? trích đúng tham số? xử lý lỗi? giữ được context qua các lượt? hiệu quả? Tầng 1 nói <em>rằng</em> nó hỏng; tầng 2 nói <em>ở đâu</em> và <em>vì sao</em> — cái bạn thật sự sửa.</p>
+      <p>Hamel chia đánh giá agent thành hai tầng: <strong>(1) end-to-end</strong>: coi agent như hộp đen, pass/fail nhị phân trên việc "mục tiêu user có đạt không"; <strong>(2) step-level diagnostics</strong>, chấm từng thành phần: chọn đúng tool? trích đúng tham số? xử lý lỗi? giữ được context qua các lượt? hiệu quả? Tầng 1 nói <em>rằng</em> nó hỏng; tầng 2 nói <em>ở đâu</em> và <em>vì sao</em>, cái bạn thật sự sửa.</p>
     </div>
 
     <figure class="figure">
@@ -1024,14 +1024,14 @@ footer.site{border-top:1px solid var(--border);padding:26px 24px;text-align:cent
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true" focusable="false"><path d="M12 2v6m0 8v6M4.9 4.9l4.2 4.2m5.8 5.8l4.2 4.2M2 12h6m8 0h6M4.9 19.1l4.2-4.2m5.8-5.8l4.2-4.2"/></svg>
         Takeaway
       </span>
-      <p>Pass/fail tổng chỉ nói <em>rằng</em> agent hỏng; <span class="hl">step-level + transition matrix</span> nói <em>ở đâu</em> và <em>vì sao</em> — cái bạn thật sự sửa. Và annotate lỗi đầu tiên trước, vì lỗi sau thường là cascade.</p>
+      <p>Pass/fail tổng chỉ nói <em>rằng</em> agent hỏng; <span class="hl">step-level + transition matrix</span> nói <em>ở đâu</em> và <em>vì sao</em>, cái bạn thật sự sửa. Và annotate lỗi đầu tiên trước, vì lỗi sau thường là cascade.</p>
     </div>
 
     <div class="quiz" data-correct="2">
       <span class="eyebrow">Kiểm tra nhanh</span>
       <p class="quiz-q">Eval báo agent research 65% pass end-to-end. Bạn muốn biết nên sửa gì trước. Việc hữu ích nhất là gì?</p>
       <button class="quiz-opt" onclick="quizPick(this,0)"><span class="quiz-letter">A</span><span>Nâng tỷ lệ pass mục tiêu lên 90% rồi chạy lại toàn bộ.</span></button>
-      <button class="quiz-opt" onclick="quizPick(this,1)"><span class="quiz-letter">B</span><span>Đổi model sang bản mạnh hơn — điểm thấp chắc do năng lực model.</span></button>
+      <button class="quiz-opt" onclick="quizPick(this,1)"><span class="quiz-letter">B</span><span>Đổi model sang bản mạnh hơn: điểm thấp chắc do năng lực model.</span></button>
       <button class="quiz-opt" onclick="quizPick(this,2)"><span class="quiz-letter">C</span><span>Chấm step-level và dựng transition matrix để tìm bước nào là hotspot lỗi, annotate lỗi đầu tiên mỗi trace.</span></button>
       <div class="quiz-feedback" role="status" data-explain="C đúng: step-level + transition matrix định vị chỗ hỏng — điều con số tổng không cho. A chỉ đổi ngưỡng, không định vị. B là kết luận vội khi chưa biết hỏng ở đâu (có thể chỉ là một tool description tệ)."></div>
     </div>
@@ -1058,18 +1058,18 @@ footer.site{border-top:1px solid var(--border);padding:26px 24px;text-align:cent
     <div class="objectives">
       <span class="eyebrow">Sau bài này bạn có thể</span>
       <ul>
-        <li>Xếp ba họ grader: code-based, model-based, human — và khi nào dùng cái nào.</li>
+        <li>Xếp ba họ grader: code-based, model-based, human, và khi nào dùng cái nào.</li>
         <li>Chọn code verifier cho check khách quan trước khi động tới LLM judge.</li>
         <li>Dùng đúng loại grader cho tool-call: khớp tên + so khớp tham số kiểu mờ.</li>
       </ul>
     </div>
 
-    <p>Bạn cần kiểm "agent có gọi đúng tool <code>book_flight</code> không". Bạn với tay lấy LLM judge — vừa tốn tiền mỗi lần chạy, vừa non-deterministic (bài 1.1), trong khi một câu <code>assert tool_called == "book_flight"</code> là đủ, chạy tức thì, và luôn cho cùng kết quả. Bạn dùng búa tạ cho một cái đinh.</p>
+    <p>Bạn cần kiểm "agent có gọi đúng tool <code>book_flight</code> không". Bạn với tay lấy LLM judge: vừa tốn tiền mỗi lần chạy, vừa non-deterministic (bài 1.1), trong khi một câu <code>assert tool_called == "book_flight"</code> là đủ, chạy tức thì, và luôn cho cùng kết quả. Bạn dùng búa tạ cho một cái đinh.</p>
 
     <div class="concept">
       <span class="eyebrow">Khái niệm</span>
       <h4>Ba họ grader (Anthropic + OpenAI)</h4>
-      <p><strong>Code-based / programmatic</strong>: string match, test nhị phân, static analysis, outcome verification (query DB), tool-call verification. Nhanh, khách quan, nhưng giòn với biến thể hợp lệ mà người thiết kế không lường. <strong>Model-based (LLM-as-judge)</strong>: chấm theo rubric, so sánh pairwise. Bắt nuance nhưng non-deterministic và tốn tiền. <strong>Human</strong>: chuẩn vàng nhưng chậm/đắt — dùng để <em>calibrate</em> hai loại kia.</p>
+      <p><strong>Code-based / programmatic</strong>: string match, test nhị phân, static analysis, outcome verification (query DB), tool-call verification. Nhanh, khách quan, nhưng giòn với biến thể hợp lệ mà người thiết kế không lường. <strong>Model-based (LLM-as-judge)</strong>: chấm theo rubric, so sánh pairwise. Bắt nuance nhưng non-deterministic và tốn tiền. <strong>Human</strong>: chuẩn vàng nhưng chậm/đắt, dùng để <em>calibrate</em> hai loại kia.</p>
     </div>
 
     <figure class="figure">
@@ -1094,18 +1094,18 @@ footer.site{border-top:1px solid var(--border);padding:26px 24px;text-align:cent
     </figure>
 
     <div class="callout warn">
-      <div class="callout-title">Code grader không "miễn nhiễm bias" — nó có bias riêng</div>
-      <p>Tất định và rẻ thì đúng. Nhưng một code grader chỉ chấp nhận <em>hình dạng câu trả lời mà tác giả của nó tưởng tượng ra</em>. Một lời giải hợp lệ nhưng khác dạng sẽ bị đánh fail — lặng lẽ, không exception, không cảnh báo — và bạn ngồi sửa model cho một thứ không hỏng. Đó là false negative có hệ thống, đúng nghĩa một bias; chỉ là bias của người viết grader thay vì của model. Bạn sẽ gặp lại chính chuyện này ở bài 3.3: điểm CORE-Bench của Opus 4.5 nhảy từ 42% lên 95% chỉ vì sửa một grader cứng nhắc.</p>
-      <p>Nên code grader cũng phải được kiểm lại. Tối thiểu: đọc transcript những ca nó đánh fail, xem có ca nào bị oan. Tốt hơn: đối chiếu một lát cắt với nhãn người — đúng cái kỷ luật calibrate mà bạn áp cho judge.</p>
+      <div class="callout-title">Code grader có bias riêng</div>
+      <p>Tất định và rẻ thì đúng. Nhưng một code grader chỉ chấp nhận <em>hình dạng câu trả lời mà tác giả của nó tưởng tượng ra</em>. Một lời giải hợp lệ nhưng khác dạng sẽ bị đánh fail lặng lẽ: không exception, không cảnh báo, và bạn ngồi sửa model cho một thứ không hỏng. Đó là false negative có hệ thống, đúng nghĩa một bias; chỉ là bias của người viết grader thay vì của model. Bạn sẽ gặp lại chính chuyện này ở bài 3.3: điểm CORE-Bench của Opus 4.5 nhảy từ 42% lên 95% chỉ vì sửa một grader cứng nhắc.</p>
+      <p>Nên code grader cũng phải được kiểm lại. Tối thiểu: đọc transcript những ca nó đánh fail, xem có ca nào bị oan. Tốt hơn: đối chiếu một lát cắt với nhãn người, đúng cái kỷ luật calibrate mà bạn áp cho judge.</p>
     </div>
 
     <div class="callout info">
       <div class="callout-title">Tool-call: dùng đúng loại grader</div>
-      <p>OpenAI khuyên: với tool call, ghép một grader trên <code>function.name</code> (khớp chính xác) với một grader <code>text_similarity</code> (KHÔNG phải <code>string_check</code>) trên <code>function.arguments</code> — "vì tham số dễ có biến thể nhỏ" làm khớp chuỗi tuyệt đối gãy oan. Đây là ví dụ điển hình "grader cứng nhưng không giòn quá mức".</p>
+      <p>OpenAI khuyên: với tool call, ghép một grader trên <code>function.name</code> (khớp chính xác) với một grader <code>text_similarity</code> (KHÔNG phải <code>string_check</code>) trên <code>function.arguments</code>, "vì tham số dễ có biến thể nhỏ" làm khớp chuỗi tuyệt đối gãy oan. Đây là ví dụ điển hình "grader cứng nhưng không giòn quá mức".</p>
     </div>
 
     <div>
-      <span class="eyebrow" style="display:block;margin-bottom:10px">Áp dụng — loại grader của OpenAI</span>
+      <span class="eyebrow" style="display:block;margin-bottom:10px">Áp dụng: loại grader của OpenAI</span>
       <div class="table-wrap">
         <table>
           <thead><tr><th>Grader</th><th>Làm gì</th><th>Dùng khi</th></tr></thead>
@@ -1121,7 +1121,7 @@ footer.site{border-top:1px solid var(--border);padding:26px 24px;text-align:cent
 
     <div class="callout info">
       <div class="callout-title">Nhắc lại bài 1.2</div>
-      <p>Outcome verification — query DB xem row có tồn tại — chính là một <strong>code-based grader</strong>. Cái outcome check bạn gặp ở bài 1.2 thuộc về họ grader cứng này: rẻ, tất định, và là bằng chứng thật.</p>
+      <p>Outcome verification (query DB xem row có tồn tại) chính là một <strong>code-based grader</strong>. Cái outcome check bạn gặp ở bài 1.2 thuộc về họ grader cứng này: rẻ, tất định, và là bằng chứng thật.</p>
     </div>
 
     <div class="takeaway">
@@ -1129,14 +1129,14 @@ footer.site{border-top:1px solid var(--border);padding:26px 24px;text-align:cent
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true" focusable="false"><path d="M12 2v6m0 8v6M4.9 4.9l4.2 4.2m5.8 5.8l4.2 4.2M2 12h6m8 0h6M4.9 19.1l4.2-4.2m5.8-5.8l4.2-4.2"/></svg>
         Takeaway
       </span>
-      <p>Check được bằng code thì <span class="hl">đừng dùng LLM judge</span> — code-based grader rẻ và tất định. Nhưng nó có bias riêng: chỉ nhận đúng hình dạng đáp án tác giả nghĩ ra, nên cũng phải đối chiếu với nhãn người. Dành judge cho nuance thật sự, và dùng human để calibrate cả hai.</p>
+      <p>Check được bằng code thì <span class="hl">đừng dùng LLM judge</span>: code-based grader rẻ và tất định. Nhưng nó có bias riêng: chỉ nhận đúng hình dạng đáp án tác giả nghĩ ra, nên cũng phải đối chiếu với nhãn người. Dành judge cho nuance thật sự, và dùng human để calibrate cả hai.</p>
     </div>
 
     <div class="quiz" data-correct="1">
       <span class="eyebrow">Kiểm tra nhanh</span>
       <p class="quiz-q">Bạn cần kiểm agent gọi đúng tool <code>issue_refund</code> với đúng <code>order_id</code>. Cách chấm hợp lý nhất?</p>
-      <button class="quiz-opt" onclick="quizPick(this,0)"><span class="quiz-letter">A</span><span>Một LLM judge đọc cả transcript và tự quyết định đúng/sai — linh hoạt nhất.</span></button>
-      <button class="quiz-opt" onclick="quizPick(this,1)"><span class="quiz-letter">B</span><span><code>string_check</code> trên tên tool (khớp chính xác) + <code>text_similarity</code> trên arguments, và một outcome check query hệ thanh toán — toàn bộ là grader cứng.</span></button>
+      <button class="quiz-opt" onclick="quizPick(this,0)"><span class="quiz-letter">A</span><span>Một LLM judge đọc cả transcript và tự quyết định đúng/sai, linh hoạt nhất.</span></button>
+      <button class="quiz-opt" onclick="quizPick(this,1)"><span class="quiz-letter">B</span><span><code>string_check</code> trên tên tool (khớp chính xác) + <code>text_similarity</code> trên arguments, và một outcome check query hệ thanh toán: toàn bộ là grader cứng.</span></button>
       <button class="quiz-opt" onclick="quizPick(this,2)"><span class="quiz-letter">C</span><span><code>string_check</code> khớp tuyệt đối cả arguments để chắc chắn không sai một ký tự.</span></button>
       <div class="quiz-feedback" role="status" data-explain="B đúng: check khách quan này dùng grader cứng — rẻ, tất định; và arguments dùng text_similarity vì có biến thể nhỏ. A lãng phí (LLM judge non-deterministic cho việc code làm được). C giòn quá — khớp tuyệt đối arguments sẽ fail oan khi có biến thể nhỏ."></div>
     </div>
@@ -1150,7 +1150,7 @@ footer.site{border-top:1px solid var(--border);padding:26px 24px;text-align:cent
       <header class="module-header" data-module="3">
         <span class="eyebrow">Module 03 · Phần III · LLM-judge & chỉ số tin cậy</span>
         <h2>LLM-judge & chỉ số tin cậy</h2>
-        <p>Có việc cần đánh giá bằng phán đoán, không code nào bắt được — đó là lúc dùng LLM-as-judge. Nhưng judge không phải trọng tài trung lập: nó có bias đo được. Ba bài này cho bạn rubric tách chiều, cách trị position/verbosity/self-preference bias, và cặp chỉ số pass@k vs pass^k phân biệt «có thể làm được» với «đáng tin mọi lần».</p>
+        <p>Có việc cần đánh giá bằng phán đoán, không code nào bắt được: đó là lúc dùng LLM-as-judge. Nhưng judge không phải trọng tài trung lập: nó có bias đo được. Ba bài này cho bạn rubric tách chiều, cách trị position/verbosity/self-preference bias, và cặp chỉ số pass@k vs pass^k phân biệt «có thể làm được» với «đáng tin mọi lần».</p>
       </header>
 <article class="lesson" id="m3-l1" data-lesson>
   <div class="lesson-head">
@@ -1181,8 +1181,8 @@ footer.site{border-top:1px solid var(--border);padding:26px 24px;text-align:cent
 
     <div class="concept">
       <span class="eyebrow">Khái niệm</span>
-      <h4>LLM-as-judge — và cách làm nó đáng tin</h4>
-      <p><strong>LLM-as-judge</strong> dùng một LLM chấm output theo rubric — bắt được nuance code bỏ lỡ, nhưng non-deterministic và tốn tiền, nên chỉ đáng tin khi làm đúng ba việc (Anthropic): (1) <strong>rubric rõ, tách chiều</strong> — "chấm mỗi chiều bằng một LLM-judge riêng biệt thay vì dùng một judge chấm tất cả"; (2) cho judge <strong>đường thoát</strong> — "cho phép trả 'Unknown' khi không đủ thông tin" để giảm verdict bịa; (3) <strong>calibrate với chuyên gia người</strong> (bài 3.2). Chấm <strong>pointwise</strong> = cho điểm một output; <strong>pairwise</strong> = so hai output chọn cái tốt hơn.</p>
+      <h4>LLM-as-judge và cách làm nó đáng tin</h4>
+      <p><strong>LLM-as-judge</strong> dùng một LLM chấm output theo rubric: bắt được nuance code bỏ lỡ, nhưng non-deterministic và tốn tiền, nên chỉ đáng tin khi làm đúng ba việc (Anthropic): (1) <strong>rubric rõ, tách chiều</strong> ("chấm mỗi chiều bằng một LLM-judge riêng biệt thay vì dùng một judge chấm tất cả"); (2) cho judge một <strong>đường thoát</strong>, tức "cho phép trả 'Unknown' khi không đủ thông tin", để giảm verdict bịa; (3) <strong>calibrate với chuyên gia người</strong> (bài 3.2). Chấm <strong>pointwise</strong> = cho điểm một output; <strong>pairwise</strong> = so hai output chọn cái tốt hơn.</p>
     </div>
 
     <figure class="figure">
@@ -1209,7 +1209,7 @@ footer.site{border-top:1px solid var(--border);padding:26px 24px;text-align:cent
 
     <div class="callout insight">
       <div class="callout-title">Mô hình tư duy</div>
-      <p>Một judge ôm mọi tiêu chí giống một giám khảo chấm "màn trình diễn nói chung" — bạn không biết trừ điểm vì hát, vũ đạo hay trang phục. Tách thành các giám khảo chuyên môn thì mỗi điểm chỉ về một thứ. Chỗ analogy gãy: giám khảo người mệt mỏi, còn judge LLM có bias hệ thống đo được (bài 3.2) mà người không có theo cách đó.</p>
+      <p>Một judge ôm mọi tiêu chí giống một giám khảo chấm "màn trình diễn nói chung": bạn không biết trừ điểm vì hát, vũ đạo hay trang phục. Tách thành các giám khảo chuyên môn thì mỗi điểm chỉ về một thứ. Chỗ analogy gãy: giám khảo người mệt mỏi, còn judge LLM có bias hệ thống đo được (bài 3.2) mà người không có theo cách đó.</p>
     </div>
 
     <div class="callout info">
@@ -1262,12 +1262,12 @@ footer.site{border-top:1px solid var(--border);padding:26px 24px;text-align:cent
       </ul>
     </div>
 
-    <p>Bạn dùng judge chọn giữa hai câu trả lời A và B. Đổi thứ tự trình bày — cùng nội dung, chỉ hoán vị — judge đổi luôn kết luận. Rồi bạn thấy một câu ngắn gọn đúng lại thua một câu dài lê thê chỉ vì dài. Judge của bạn không phải trọng tài; nó có thiên lệch hệ thống, đo được.</p>
+    <p>Bạn dùng judge chọn giữa hai câu trả lời A và B. Đổi thứ tự trình bày (cùng nội dung, chỉ hoán vị) và judge đổi luôn kết luận. Rồi bạn thấy một câu ngắn gọn đúng lại thua một câu dài lê thê chỉ vì dài. Judge của bạn không phải trọng tài; nó có thiên lệch hệ thống, đo được.</p>
 
     <div class="concept">
       <span class="eyebrow">Khái niệm</span>
       <h4>Ba bias đo được (MT-Bench, Zheng et al. 2023)</h4>
-      <p><strong>Position bias</strong>: verdict đổi theo câu nào hiện trước, độc lập chất lượng. <strong>Verbosity bias</strong>: judge thiên vị câu dài hơn "dù không rõ ràng, chất lượng hay chính xác hơn". <strong>Self-enhancement (self-preference) bias</strong>: judge thiên vị output do chính nó hoặc model cùng họ sinh ra — cách trị là chọn judge <em>khác họ model</em> với model đang bị chấm, hoặc đo thẳng độ lệch bằng hai judge chéo họ; và tuyệt đối đừng dùng judge cùng họ để so pairwise output nhà mình với output đối thủ. Các con số (đều từ MT-Bench): position-bias consistency của một judge chỉ <strong>65%</strong> với GPT-4 (nghĩa là ~30% vẫn theo vị trí đầu) — nhưng lên <strong>98.8%</strong> khi hai câu chênh nhau rõ về chất lượng (bias chủ yếu quan trọng ở các ca sát nút).</p>
+      <p><strong>Position bias</strong>: verdict đổi theo câu nào hiện trước, độc lập chất lượng. <strong>Verbosity bias</strong>: judge thiên vị câu dài hơn "dù không rõ ràng, chất lượng hay chính xác hơn". <strong>Self-enhancement (self-preference) bias</strong>: judge thiên vị output do chính nó hoặc model cùng họ sinh ra. Cách trị là chọn judge <em>khác họ model</em> với model đang bị chấm, hoặc đo thẳng độ lệch bằng hai judge chéo họ; và tuyệt đối đừng dùng judge cùng họ để so pairwise output nhà mình với output đối thủ. Các con số (đều từ MT-Bench): position-bias consistency của một judge chỉ <strong>65%</strong> với GPT-4 (nghĩa là ~30% vẫn theo vị trí đầu), nhưng lên <strong>98.8%</strong> khi hai câu chênh nhau rõ về chất lượng (bias chủ yếu quan trọng ở các ca sát nút).</p>
     </div>
 
     <figure class="figure">
@@ -1295,7 +1295,7 @@ footer.site{border-top:1px solid var(--border);padding:26px 24px;text-align:cent
 
     <div class="callout warn">
       <div class="callout-title">Con số cảnh báo (MT-Bench)</div>
-      <p><strong>Verbosity "repetitive list attack"</strong>: trên 23 câu cố tình phình dài mà không thêm chất, tỷ lệ judge bị lừa chọn câu phình là <strong>91,3%</strong> (Claude-v1), <strong>91,3%</strong> (GPT-3.5), <strong>8,7%</strong> (GPT-4). <strong>Judge toán/suy luận</strong>: prompt mặc định fail <strong>14/20</strong> bài; chain-of-thought giảm còn <strong>6/20</strong>; reference-guided (đưa judge đáp án đúng) còn <strong>3/20</strong>. Bias không phải chuyện lý thuyết — nó lớn và đo được.</p>
+      <p><strong>Verbosity "repetitive list attack"</strong>: trên 23 câu cố tình phình dài mà không thêm chất, tỷ lệ judge bị lừa chọn câu phình là <strong>91,3%</strong> (Claude-v1), <strong>91,3%</strong> (GPT-3.5), <strong>8,7%</strong> (GPT-4). <strong>Judge toán/suy luận</strong>: prompt mặc định fail <strong>14/20</strong> bài; chain-of-thought giảm còn <strong>6/20</strong>; reference-guided (đưa judge đáp án đúng) còn <strong>3/20</strong>. Bias lớn và đo được.</p>
     </div>
 
     <div class="concept">
@@ -1305,14 +1305,14 @@ footer.site{border-top:1px solid var(--border);padding:26px 24px;text-align:cent
     </div>
 
     <div class="callout warn">
-      <div class="callout-title">Judge là một dependency — hãy pin nó</div>
+      <div class="callout-title">Judge là một dependency: hãy pin nó</div>
       <p>Một judge đã calibrate là một dụng cụ đo đã hiệu chuẩn, và nó sẽ trôi nếu bạn để bất kỳ mảnh nào của nó tự đổi. Pin cả ba mảnh: <strong>model ID</strong> của judge (đúng snapshot cụ thể, không phải alias trỏ "bản mới nhất"), <strong>version của rubric</strong>, và <strong>hash của prompt template</strong>. Đổi bất kỳ cái nào trong ba là một cuộc <em>eval migration</em>, không phải một lần sửa prompt: chạy lại tập nhãn giữ riêng, so TPR/TNR cũ với mới, rồi mới đổi.</p>
-      <p>Provider ship snapshot mới cũng chạy lại đúng tập nhãn đó trước khi chuyển sang. Và định kỳ lấy một lát cắt nhỏ verdict production cho người chấm lại — hiệu chuẩn là việc lặp theo nhịp, không phải việc làm một lần rồi quên.</p>
+      <p>Provider ship snapshot mới cũng chạy lại đúng tập nhãn đó trước khi chuyển sang. Và định kỳ lấy một lát cắt nhỏ verdict production cho người chấm lại. Hiệu chuẩn là việc lặp theo nhịp, không phải việc làm một lần rồi quên.</p>
     </div>
 
     <div class="callout info">
       <div class="callout-title">Nhắc lại bài 1.2</div>
-      <p>Đây chính là chỗ reliability ≠ accuracy hiện ra ở tầng công cụ: một judge "đôi khi đúng" tùy thứ tự trình bày là judge không đáng tin — bạn phải đo và trị bias của chính công cụ đo, trước khi tin nó gác cổng (bài 5.2).</p>
+      <p>Đây chính là chỗ reliability ≠ accuracy hiện ra ở tầng công cụ: một judge "đôi khi đúng" tùy thứ tự trình bày là judge không đáng tin. Bạn phải đo và trị bias của chính công cụ đo, trước khi tin nó gác cổng (bài 5.2).</p>
     </div>
 
     <div class="takeaway">
@@ -1320,14 +1320,14 @@ footer.site{border-top:1px solid var(--border);padding:26px 24px;text-align:cent
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true" focusable="false"><path d="M12 2v6m0 8v6M4.9 4.9l4.2 4.2m5.8 5.8l4.2 4.2M2 12h6m8 0h6M4.9 19.1l4.2-4.2m5.8-5.8l4.2-4.2"/></svg>
         Takeaway
       </span>
-      <p>LLM judge có bias đo được theo hướng — <span class="hl">position, verbosity, self-preference</span>. Trị bằng swap-and-check và reference-guided (rẻ, không cần model tốt hơn), rồi calibrate bằng TPR/TNR trên tập nhãn giữ riêng.</p>
+      <p>LLM judge có bias đo được theo hướng: <span class="hl">position, verbosity, self-preference</span>. Trị bằng swap-and-check và reference-guided (rẻ, không cần model tốt hơn), rồi calibrate bằng TPR/TNR trên tập nhãn giữ riêng.</p>
     </div>
 
     <div class="quiz" data-correct="0">
       <span class="eyebrow">Kiểm tra nhanh</span>
       <p class="quiz-q">Bạn dùng judge chọn giữa hai biến thể agent, và nghi ngờ kết quả bị chi phối bởi thứ tự trình bày. Cách trị rẻ và đúng nhất?</p>
-      <button class="quiz-opt" onclick="quizPick(this,0)"><span class="quiz-letter">A</span><span>Chạy judge hai chiều — (A,B) và (B,A) — chỉ tính thắng khi cùng một câu thắng cả hai lần; ca không nhất quán tính là hòa.</span></button>
-      <button class="quiz-opt" onclick="quizPick(this,1)"><span class="quiz-letter">B</span><span>Nâng cấp lên model judge đắt nhất — model mạnh thì không có position bias.</span></button>
+      <button class="quiz-opt" onclick="quizPick(this,0)"><span class="quiz-letter">A</span><span>Chạy judge hai chiều, (A,B) và (B,A), chỉ tính thắng khi cùng một câu thắng cả hai lần; ca không nhất quán tính là hòa.</span></button>
+      <button class="quiz-opt" onclick="quizPick(this,1)"><span class="quiz-letter">B</span><span>Nâng cấp lên model judge đắt nhất: model mạnh thì không có position bias.</span></button>
       <button class="quiz-opt" onclick="quizPick(this,2)"><span class="quiz-letter">C</span><span>Luôn đặt câu trả lời của agent mới lên trước để nó có lợi thế vị trí.</span></button>
       <div class="quiz-feedback" role="status" data-explain="A đúng: swap-and-check trị thẳng position bias, đối xứng, rẻ, không cần model tốt hơn. B sai — ngay GPT-4 vẫn còn ~30% position bias (consistency 65%). C là cố tình lợi dụng bias — làm eval sai lệch chứ không trị."></div>
     </div>
@@ -1360,13 +1360,13 @@ footer.site{border-top:1px solid var(--border);padding:26px 24px;text-align:cent
       </ul>
     </div>
 
-    <p>Team khoe: "agent giải 95% task!". Nghe tuyệt cho tới khi bạn hỏi họ đo thế nào — best-of-k: chạy mỗi task nhiều lần, tính đúng nếu <em>ít nhất một lần</em> đúng. Nhưng user production chạy một lần. Cái họ gặp không phải 95%.</p>
+    <p>Team khoe: "agent giải 95% task!". Nghe tuyệt cho tới khi bạn hỏi họ đo thế nào. Best-of-k: chạy mỗi task nhiều lần, tính đúng nếu <em>ít nhất một lần</em> đúng. Nhưng user production chạy một lần. Cái họ gặp không phải 95%.</p>
 
     <div class="concept">
       <span class="eyebrow">Khái niệm</span>
       <h4>pass@k vs pass^k (τ-bench, Yao et al.)</h4>
-      <p>Với k lần thử: <strong>pass@k</strong> = "xác suất agent có ít nhất một lời giải đúng trong k lần" — hữu ích khi một lần thành công là đủ. <strong>pass^k</strong> = "xác suất cả k lần đều đúng" — chỉ số này do <a href="https://arxiv.org/abs/2406.12045" target="_blank" rel="noreferrer">τ-bench (Yao et al., Sierra, 2024)</a> đề xuất làm thước đo độ tin cậy, và Anthropic là bên dùng lại rồi phổ biến nó. Con số của chính paper đó: gpt-4o thành công <strong>&lt;50%</strong> số task, và "khá thiếu nhất quán (pass^8 &lt;25% ở miền retail)" — phần lớn cái nó làm được một lần, nó không làm được tám lần liên tiếp.</p>
-      <p><strong>Đọc hai chỉ số này cho đúng vai.</strong> Số headline nên là <strong>p</strong> — tỷ lệ đúng một-shot, đúng cái một user gặp ở mỗi lượt. pass^k <em>không</em> phải một ngưỡng để gate: với mọi p thực tế, pass^k = p<sup>k</sup> tiến về 0 khi k lớn, kể cả với một agent rất tốt, nên đặt luật "pass^8 phải ≥ X%" là tự đặt bẫy cho mình. Vai của nó là <em>stress test độ nhất quán</em>: so hai phiên bản ở cùng một k, hoặc trả lời "trong tám khách hỏi cùng một việc, bao nhiêu người được phục vụ như nhau".</p>
+      <p>Với k lần thử: <strong>pass@k</strong> = "xác suất agent có ít nhất một lời giải đúng trong k lần", hữu ích khi một lần thành công là đủ. <strong>pass^k</strong> = "xác suất cả k lần đều đúng". Chỉ số này do <a href="https://arxiv.org/abs/2406.12045" target="_blank" rel="noreferrer">τ-bench (Yao et al., Sierra, 2024)</a> đề xuất làm thước đo độ tin cậy, và Anthropic là bên dùng lại rồi phổ biến nó. Con số của chính paper đó: gpt-4o thành công <strong>&lt;50%</strong> số task, và "khá thiếu nhất quán (pass^8 &lt;25% ở miền retail)": phần lớn cái nó làm được một lần, nó không làm được tám lần liên tiếp.</p>
+      <p><strong>Đọc hai chỉ số này cho đúng vai.</strong> Số headline nên là <strong>p</strong>: tỷ lệ đúng một-shot, đúng cái một user gặp ở mỗi lượt. pass^k <em>không</em> phải một ngưỡng để gate: với mọi p thực tế, pass^k = p<sup>k</sup> tiến về 0 khi k lớn, kể cả với một agent rất tốt, nên đặt luật "pass^8 phải ≥ X%" là tự đặt bẫy cho mình. Vai của nó là <em>stress test độ nhất quán</em>: so hai phiên bản ở cùng một k, hoặc trả lời "trong tám khách hỏi cùng một việc, bao nhiêu người được phục vụ như nhau".</p>
     </div>
 
     <figure class="figure">
@@ -1393,12 +1393,12 @@ footer.site{border-top:1px solid var(--border);padding:26px 24px;text-align:cent
 
     <div class="callout danger">
       <div class="callout-title">Bốn cách eval tự đánh lừa bạn (Anthropic)</div>
-      <p><strong>Saturation</strong>: "eval ở 100% theo dõi được regression nhưng không cho tín hiệu cải thiện". <strong>Grading bug đội lốt lỗi model</strong>: điểm CORE-Bench của Opus 4.5 "nhảy từ 42% lên 95% sau khi sửa grading cứng nhắc" — model không có lỗi, grader mới có. <strong>0% là mùi task hỏng</strong>: "0% pass qua nhiều lần thử thường là dấu hiệu task hỏng, không phải agent bất tài". <strong>Bẫy điểm-không-transcript</strong>: "chúng tôi không tin điểm eval ở mặt ngoài cho tới khi có người đọc transcript".</p>
+      <p><strong>Saturation</strong>: "eval ở 100% theo dõi được regression nhưng không cho tín hiệu cải thiện". <strong>Grading bug đội lốt lỗi model</strong>: điểm CORE-Bench của Opus 4.5 "nhảy từ 42% lên 95% sau khi sửa grading cứng nhắc". Model không có lỗi, grader mới có. <strong>0% là mùi task hỏng</strong>: "0% pass qua nhiều lần thử thường là dấu hiệu task hỏng, không phải agent bất tài". <strong>Bẫy điểm-không-transcript</strong>: "chúng tôi không tin điểm eval ở mặt ngoài cho tới khi có người đọc transcript".</p>
     </div>
 
     <div class="callout info">
       <div class="callout-title">Nhắc lại bài 1.2 & 2.1</div>
-      <p>pass^k chính là định lượng của reliability ≠ accuracy (bài 1.2): accuracy cao = pass@k đẹp, reliability = pass^k. Và "đọc transcript" là chị em của "đọc trace" trong error analysis (bài 2.1) — dashboard không thay được việc đọc bằng chứng thô.</p>
+      <p>pass^k chính là định lượng của reliability ≠ accuracy (bài 1.2): accuracy cao = pass@k đẹp, reliability = pass^k. Và "đọc transcript" là chị em của "đọc trace" trong error analysis (bài 2.1): dashboard không thay được việc đọc bằng chứng thô.</p>
     </div>
 
     <div class="takeaway">
@@ -1406,15 +1406,15 @@ footer.site{border-top:1px solid var(--border);padding:26px 24px;text-align:cent
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true" focusable="false"><path d="M12 2v6m0 8v6M4.9 4.9l4.2 4.2m5.8 5.8l4.2 4.2M2 12h6m8 0h6M4.9 19.1l4.2-4.2m5.8-5.8l4.2-4.2"/></svg>
         Takeaway
       </span>
-      <p><span class="hl">pass@k đẹp trên giấy; số user thật sự gặp là p (một-shot)</span> — báo p làm headline, kèm pass^k như một bài stress test độ nhất quán, nhất là trước khi launch. Và đừng tin điểm eval khi chưa đọc transcript: 0% thường là task hỏng, và một grading bug có thể xê dịch điểm hơn 50 điểm.</p>
+      <p><span class="hl">pass@k đẹp trên giấy; số user thật sự gặp là p (một-shot)</span>. Báo p làm headline, kèm pass^k như một bài stress test độ nhất quán, nhất là trước khi launch. Và đừng tin điểm eval khi chưa đọc transcript: 0% thường là task hỏng, và một grading bug có thể xê dịch điểm hơn 50 điểm.</p>
     </div>
 
     <div class="quiz" data-correct="1">
       <span class="eyebrow">Kiểm tra nhanh</span>
       <p class="quiz-q">Trước buổi review launch, một nhóm báo "agent đạt 92% task". Câu hỏi làm rõ quan trọng nhất bạn nên đặt?</p>
-      <button class="quiz-opt" onclick="quizPick(this,0)"><span class="quiz-letter">A</span><span>"Dùng model nào?" — vì model quyết định con số.</span></button>
-      <button class="quiz-opt" onclick="quizPick(this,1)"><span class="quiz-letter">B</span><span>"Đó là pass@k hay pass^k?" — nếu là best-of-k, con số user một-shot gặp sẽ thấp hơn nhiều; và đã có ai đọc transcript chưa?</span></button>
-      <button class="quiz-opt" onclick="quizPick(this,2)"><span class="quiz-letter">C</span><span>"Có làm tròn lên không?" — 92% có thể thật ra là 91,5%.</span></button>
+      <button class="quiz-opt" onclick="quizPick(this,0)"><span class="quiz-letter">A</span><span>"Dùng model nào?", vì model quyết định con số.</span></button>
+      <button class="quiz-opt" onclick="quizPick(this,1)"><span class="quiz-letter">B</span><span>"Đó là pass@k hay pass^k?" Nếu là best-of-k, con số user một-shot gặp sẽ thấp hơn nhiều; và đã có ai đọc transcript chưa?</span></button>
+      <button class="quiz-opt" onclick="quizPick(this,2)"><span class="quiz-letter">C</span><span>"Có làm tròn lên không?" 92% có thể thật ra là 91,5%.</span></button>
       <div class="quiz-feedback" role="status" data-explain="B đúng: phân biệt pass@k/pass^k quyết định con số có phản ánh trải nghiệm user một-shot không, và đọc transcript là kỷ luật chống điểm-đánh-lừa. A và C là chi tiết phụ, không chạm cái bẫy metric mà bài này dạy."></div>
     </div>
   </div>
@@ -1454,12 +1454,12 @@ footer.site{border-top:1px solid var(--border);padding:26px 24px;text-align:cent
       </ul>
     </div>
 
-    <p>Agent "chậm 45 giây" — nhưng log của bạn chỉ có một dòng "request hoàn tất 45s". Do model chậm? Do một tool call? Do retry loop? (Bạn đã thấy vấn đề này ở bài 1.1.) Không có cách tách chuỗi thao tác ra, bạn chỉ đoán.</p>
+    <p>Agent "chậm 45 giây", nhưng log của bạn chỉ có một dòng "request hoàn tất 45s". Do model chậm? Do một tool call? Do retry loop? (Bạn đã thấy vấn đề này ở bài 1.1.) Không có cách tách chuỗi thao tác ra, bạn chỉ đoán.</p>
 
     <div class="concept">
       <span class="eyebrow">Khái niệm</span>
       <h4>Trace = một lần chạy; span = một đơn vị việc</h4>
-      <p>Bốn nguồn (OpenTelemetry, LangSmith, Langfuse, Arize) hội tụ cùng một hình: một <strong>trace</strong> = một lần chạy agent end-to-end. Bên trong, mỗi đơn vị việc rời rạc là một <strong>span</strong> — LangSmith: "một run là một span biểu diễn một đơn vị việc: một LLM call, một bước format prompt, một retrieval, hay bất kỳ thao tác rời nào… nếu bạn quen OpenTelemetry, coi run như span." Langfuse tách thêm <strong>generation</strong> — một span chuyên cho một LLM call, mang model, prompt, completion, token usage, cost như đối tượng hạng nhất. Đây là đơn vị nguyên tử mà mọi tool observability thao tác trên đó.</p>
+      <p>Bốn nguồn (OpenTelemetry, LangSmith, Langfuse, Arize) hội tụ cùng một hình: một <strong>trace</strong> = một lần chạy agent end-to-end. Bên trong, mỗi đơn vị việc rời rạc là một <strong>span</strong>. LangSmith: "một run là một span biểu diễn một đơn vị việc: một LLM call, một bước format prompt, một retrieval, hay bất kỳ thao tác rời nào… nếu bạn quen OpenTelemetry, coi run như span." Langfuse tách thêm <strong>generation</strong>: một span chuyên cho một LLM call, mang model, prompt, completion, token usage, cost như đối tượng hạng nhất. Đây là đơn vị nguyên tử mà mọi tool observability thao tác trên đó.</p>
     </div>
 
     <figure class="figure">
@@ -1494,7 +1494,7 @@ footer.site{border-top:1px solid var(--border);padding:26px 24px;text-align:cent
 
     <div class="callout warn">
       <div class="callout-title">Trần thực tế</div>
-      <p>LangSmith: "mỗi trace giới hạn tối đa 25.000 run." Đáng nhớ khi bàn về agent chạy dài hoặc lặp sâu — một agent lặp không kiểm soát có thể đụng trần này (một lý do nữa để có trần retry, bài 6.1).</p>
+      <p>LangSmith: "mỗi trace giới hạn tối đa 25.000 run." Đáng nhớ khi bàn về agent chạy dài hoặc lặp sâu: một agent lặp không kiểm soát có thể đụng trần này (một lý do nữa để có trần retry, bài 6.1).</p>
     </div>
 
     <div class="takeaway">
@@ -1502,7 +1502,7 @@ footer.site{border-top:1px solid var(--border);padding:26px 24px;text-align:cent
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true" focusable="false"><path d="M12 2v6m0 8v6M4.9 4.9l4.2 4.2m5.8 5.8l4.2 4.2M2 12h6m8 0h6M4.9 19.1l4.2-4.2m5.8-5.8l4.2-4.2"/></svg>
         Takeaway
       </span>
-      <p>Một lần chạy agent = <span class="hl">một trace gồm nhiều span</span>; mỗi LLM call, tool call, retrieval là một span con có latency/token/cost riêng — đơn vị nguyên tử biến "chậm 45s" thành "chậm ở đâu".</p>
+      <p>Một lần chạy agent = <span class="hl">một trace gồm nhiều span</span>; mỗi LLM call, tool call, retrieval là một span con có latency/token/cost riêng, đơn vị nguyên tử biến "chậm 45s" thành "chậm ở đâu".</p>
     </div>
 
     <div class="quiz" data-correct="2">
@@ -1542,17 +1542,17 @@ footer.site{border-top:1px solid var(--border);padding:26px 24px;text-align:cent
       </ul>
     </div>
 
-    <p>Bạn bật full-trace để gỡ một lỗi, rồi vài ngày sau nhận ra tracing backend của mình chứa nguyên văn tin nhắn người dùng — kèm số thẻ, địa chỉ, secret. Một quyết định log vô ý vừa biến hệ observability thành một kho rò rỉ PII.</p>
+    <p>Bạn bật full-trace để gỡ một lỗi, rồi vài ngày sau nhận ra tracing backend của mình chứa nguyên văn tin nhắn người dùng, kèm số thẻ, địa chỉ, secret. Một quyết định log vô ý vừa biến hệ observability thành một kho rò rỉ PII.</p>
 
     <div class="concept">
       <span class="eyebrow">Khái niệm</span>
-      <h4>Quy ước <code>gen_ai.*</code> — hữu ích nhưng chưa đóng băng</h4>
-      <p>OpenTelemetry GenAI đặt tên span theo thao tác, không phải chữ tự do: span inference tên <code>"{gen_ai.operation.name} {gen_ai.request.model}"</code> — ví dụ <code>chat gpt-4o</code>; span tool tên <code>"execute_tool {gen_ai.tool.name}"</code>. Các well-known value gồm <code>chat</code>, <code>execute_tool</code>, <code>retrieval</code>, <code>invoke_agent</code>… Token đo bằng <code>gen_ai.usage.input_tokens</code> / <code>output_tokens</code>. Nhưng đây là <strong>snapshot 21/08/2026</strong>, không phải schema bất biến.</p>
+      <h4>Quy ước <code>gen_ai.*</code>: hữu ích nhưng chưa đóng băng</h4>
+      <p>OpenTelemetry GenAI đặt tên span theo thao tác, không phải chữ tự do: span inference tên <code>"{gen_ai.operation.name} {gen_ai.request.model}"</code>, ví dụ <code>chat gpt-4o</code>; span tool tên <code>"execute_tool {gen_ai.tool.name}"</code>. Các well-known value gồm <code>chat</code>, <code>execute_tool</code>, <code>retrieval</code>, <code>invoke_agent</code>… Token đo bằng <code>gen_ai.usage.input_tokens</code> / <code>output_tokens</code>. Nhưng đây là <strong>snapshot 21/08/2026</strong>, không phải schema bất biến.</p>
     </div>
 
     <div class="callout warn">
       <div class="callout-title">Maturity check · 21/08/2026</div>
-      <p>Nội dung <code>gen_ai.*</code> nay sống ở một repo riêng: <a href="https://github.com/open-telemetry/semantic-conventions-genai" target="_blank" rel="noreferrer">open-telemetry/semantic-conventions-genai</a>. Tính tới 21/08/2026 repo đó <strong>chưa có release hay tag nào</strong> — nên trên thực tế bạn không pin được "version convention"; bạn pin một <strong>commit</strong>, hoặc pin theo release của thư viện instrumentation mình dùng. Các value của <code>gen_ai.operation.name</code> vẫn ở mức <strong>Development</strong>, nhưng nay đã phủ cả vòng đời agent — <code>create_agent</code>, <code>invoke_agent</code>, <code>invoke_workflow</code>, <code>plan</code>, và nhóm thao tác memory — và quy ước cho MCP cũng nằm trong repo này. Khi triển khai: map telemetry nội bộ qua một adapter, test dashboard trên cả schema cũ/mới khi migration. Ý tưởng ổn định là trace/span + metadata an toàn; tên attribute cụ thể có thể đổi.</p>
+      <p>Nội dung <code>gen_ai.*</code> nay sống ở một repo riêng: <a href="https://github.com/open-telemetry/semantic-conventions-genai" target="_blank" rel="noreferrer">open-telemetry/semantic-conventions-genai</a>. Tính tới 21/08/2026 repo đó <strong>chưa có release hay tag nào</strong>, nên trên thực tế bạn không pin được "version convention"; bạn pin một <strong>commit</strong>, hoặc pin theo release của thư viện instrumentation mình dùng. Các value của <code>gen_ai.operation.name</code> vẫn ở mức <strong>Development</strong>, nhưng nay đã phủ cả vòng đời agent (<code>create_agent</code>, <code>invoke_agent</code>, <code>invoke_workflow</code>, <code>plan</code>, và nhóm thao tác memory), và quy ước cho MCP cũng nằm trong repo này. Khi triển khai: map telemetry nội bộ qua một adapter, test dashboard trên cả schema cũ/mới khi migration. Ý tưởng ổn định là trace/span + metadata an toàn; tên attribute cụ thể có thể đổi.</p>
     </div>
 
     <p>Phần content giữ nguyên nguyên tắc an toàn: prompt, output và tool arguments là dữ liệu nhạy cảm. Chỉ ghi <code>gen_ai.input.messages</code>/<code>output.messages</code> khi đã bật có chủ đích qua policy, sampling và redaction; metadata như model, token, latency, finish reason là baseline quan sát rẻ hơn.</p>
@@ -1603,7 +1603,7 @@ footer.site{border-top:1px solid var(--border);padding:26px 24px;text-align:cent
 
     <div class="callout info">
       <div class="callout-title">Nhắc lại bài 4.1 & 2.2</div>
-      <p>Token trên mỗi span (<code>usage.input_tokens</code>/<code>output_tokens</code>) chính là dữ liệu thô cho dashboard chi phí, và <code>gen_ai.tool.name</code>/<code>tool.call.arguments</code> là bề mặt để trả lời "agent chọn đúng tool chưa" — đúng cái step-level diagnostics ở bài 2.2 cần.</p>
+      <p>Token trên mỗi span (<code>usage.input_tokens</code>/<code>output_tokens</code>) chính là dữ liệu thô cho dashboard chi phí, và <code>gen_ai.tool.name</code>/<code>tool.call.arguments</code> là bề mặt để trả lời "agent chọn đúng tool chưa", đúng cái step-level diagnostics ở bài 2.2 cần.</p>
     </div>
 
     <div class="takeaway">
@@ -1646,17 +1646,17 @@ footer.site{border-top:1px solid var(--border);padding:26px 24px;text-align:cent
       <span class="eyebrow">Sau bài này bạn có thể</span>
       <ul>
         <li>Phân biệt ba chế độ: offline eval, guardrail inline, online eval.</li>
-        <li>Tách hai loại drift — behavior vs distribution — và biết làn nào bắt được loại nào.</li>
+        <li>Tách hai loại drift (behavior vs distribution) và biết làn nào bắt được loại nào.</li>
         <li>Khép vòng: trace lỗi production → làm giàu golden dataset.</li>
       </ul>
     </div>
 
-    <p>"Eval đã pass lúc ship" — nhưng vài tuần sau, điểm chất lượng tụt dần trong khi error rate không hề tăng, không có crash, không có input lạ. Bộ eval offline của bạn không thể bắt cái này, vì nó chỉ kiểm những gì bạn nghĩ ra <em>trước</em> khi ship.</p>
+    <p>"Eval đã pass lúc ship". Nhưng vài tuần sau, điểm chất lượng tụt dần trong khi error rate không hề tăng, không có crash, không có input lạ. Bộ eval offline của bạn không thể bắt cái này, vì nó chỉ kiểm những gì bạn nghĩ ra <em>trước</em> khi ship.</p>
 
     <div class="concept">
       <span class="eyebrow">Khái niệm</span>
       <h4>Ba làn, ba ràng buộc latency</h4>
-      <p><strong>Offline</strong> (pre-deploy): unit test tất định + LLM-judge trên golden set, gác cổng ship. <strong>Guardrail</strong> (inline, trong prod): kiểm từng request với ngân sách millisecond, chặn <em>trước</em> khi trả lời. <strong>Online</strong> (post-deploy): sample traffic thật, chấm async, cảnh báo khi điểm cuộn tụt. Phân biệt then chốt (nguyên văn): "một evaluator chấm chất lượng output async, sau khi việc xảy ra, còn một guardrail chặn một failure mode cụ thể inline, với yêu cầu độ trễ millisecond." <strong>Drift</strong> — "thay đổi ngoài ý muốn trong hành vi/tông/chất lượng suy luận theo thời gian" — có hai loại, và hai loại đó không cùng một người bắt (callout ngay dưới).</p>
+      <p><strong>Offline</strong> (pre-deploy): unit test tất định + LLM-judge trên golden set, gác cổng ship. <strong>Guardrail</strong> (inline, trong prod): kiểm từng request với ngân sách millisecond, chặn <em>trước</em> khi trả lời. <strong>Online</strong> (post-deploy): sample traffic thật, chấm async, cảnh báo khi điểm cuộn tụt. Phân biệt then chốt (nguyên văn): "một evaluator chấm chất lượng output async, sau khi việc xảy ra, còn một guardrail chặn một failure mode cụ thể inline, với yêu cầu độ trễ millisecond." <strong>Drift</strong> ("thay đổi ngoài ý muốn trong hành vi/tông/chất lượng suy luận theo thời gian") có hai loại, và hai loại đó không cùng một người bắt (callout ngay dưới).</p>
     </div>
 
     <figure class="figure">
@@ -1685,23 +1685,23 @@ footer.site{border-top:1px solid var(--border);padding:26px 24px;text-align:cent
 
     <div class="callout insight">
       <div class="callout-title">Hai loại drift, hai người bắt khác nhau</div>
-      <p><strong>Behavior drift</strong>: provider đổi model hoặc snapshot, hành vi lệch đi trong khi input của bạn không đổi gì cả. Loại này <em>không</em> cần online eval. Chính bộ offline của bạn — chạy theo lịch (ví dụ mỗi đêm) trên endpoint live thay vì chỉ chạy khi có commit — là cách bắt sớm nhất và rẻ nhất: cùng input, cùng grader, nên điểm tụt là một tín hiệu sạch, không lẫn nhiễu từ việc user hỏi thứ khác.</p>
-      <p><strong>Distribution drift</strong>: model không đổi, nhưng user bắt đầu hỏi những việc khác — bộ offline của bạn thôi không còn đại diện cho thực tế nữa. Loại này chỉ sample traffic thật mới thấy, vì theo đúng định nghĩa nó nằm ngoài cái bạn nghĩ ra trước lúc ship. Đây mới là việc của làn online. Nhầm hai loại là cách người ta dựng cả một đường ống online eval để bắt thứ mà một cron job nightly đã bắt được từ lâu.</p>
+      <p><strong>Behavior drift</strong>: provider đổi model hoặc snapshot, hành vi lệch đi trong khi input của bạn không đổi gì cả. Loại này <em>không</em> cần online eval. Chính bộ offline của bạn, chạy theo lịch (ví dụ mỗi đêm) trên endpoint live thay vì chỉ chạy khi có commit, là cách bắt sớm nhất và rẻ nhất: cùng input, cùng grader, nên điểm tụt là một tín hiệu sạch, không lẫn nhiễu từ việc user hỏi thứ khác.</p>
+      <p><strong>Distribution drift</strong>: model không đổi, nhưng user bắt đầu hỏi những việc khác, nên bộ offline của bạn thôi không còn đại diện cho thực tế nữa. Loại này chỉ sample traffic thật mới thấy, vì theo đúng định nghĩa nó nằm ngoài cái bạn nghĩ ra trước lúc ship. Đây mới là việc của làn online. Nhầm hai loại là cách người ta dựng cả một pipeline online eval để bắt thứ mà một cron job nightly đã bắt được từ lâu.</p>
     </div>
 
     <div class="callout success">
       <div class="callout-title">Sample online có phân tầng, đừng ngẫu nhiên thuần</div>
-      <p>Sample ngẫu nhiên 5% thì 95% cái bạn đọc là những run bình thường. Đảo ngược ưu tiên: lấy <strong>100% các run có tín hiệu xấu</strong> — user hỏi lại cùng một việc, user bỏ giữa chừng, ca escalate cho người, tool trả lỗi, guardrail nổ tripwire, thumbs-down — cộng một lát cắt ngẫu nhiên nhỏ làm đường nền để biết "bình thường" trông ra sao. Bản thân các tín hiệu hành vi đó đã là nhãn miễn phí: không cần judge nào để biết một user hỏi lại ba lần là chưa được phục vụ.</p>
+      <p>Sample ngẫu nhiên 5% thì 95% cái bạn đọc là những run bình thường. Đảo ngược ưu tiên: lấy <strong>100% các run có tín hiệu xấu</strong> (user hỏi lại cùng một việc, user bỏ giữa chừng, ca escalate cho người, tool trả lỗi, guardrail nổ tripwire, thumbs-down), cộng một lát cắt ngẫu nhiên nhỏ làm đường nền để biết "bình thường" trông ra sao. Bản thân các tín hiệu hành vi đó đã là nhãn miễn phí: không cần judge nào để biết một user hỏi lại ba lần là chưa được phục vụ.</p>
     </div>
 
     <div class="callout info">
       <div class="callout-title">Khép vòng flywheel (nhắc bài 1.3)</div>
-      <p>Đây là flywheel của bài 1.3 ở dạng vận hành: "trace lỗi production được thêm vào offline dataset. Bạn tạo evaluator nhắm failure mode đó. Bạn kiểm fix trên dataset đã mở rộng." Cộng một nhịp thực hành: mỗi tuần kéo ngẫu nhiên vài trace production cho người xem — 20 trace mỗi thứ Hai là một <em>ví dụ vận hành, không phải chuẩn ngành</em>.</p>
+      <p>Đây là flywheel của bài 1.3 ở dạng vận hành: "trace lỗi production được thêm vào offline dataset. Bạn tạo evaluator nhắm failure mode đó. Bạn kiểm fix trên dataset đã mở rộng." Cộng một nhịp thực hành: mỗi tuần kéo ngẫu nhiên vài trace production cho người xem; 20 trace mỗi thứ Hai là một <em>ví dụ vận hành, không phải chuẩn ngành</em>.</p>
     </div>
 
     <div class="callout warn">
       <div class="callout-title">Con số là ví dụ vận hành</div>
-      <p>Các ngưỡng như sample 5–10%, p95 &lt; 8s, chi phí &lt; $0.50/lượt giải quyết, hay ngưỡng calibrate judge ≥ 85% agreement đến từ một bài viết thực hành của một nhóm — <strong>ví dụ vận hành, không phải chuẩn ngành</strong>. Dùng làm điểm khởi đầu, đo lại cho hệ của bạn.</p>
+      <p>Các ngưỡng như sample 5–10%, p95 &lt; 8s, chi phí &lt; $0.50/lượt giải quyết, hay ngưỡng calibrate judge ≥ 85% agreement đến từ một bài viết thực hành của một nhóm: <strong>ví dụ vận hành, không phải chuẩn ngành</strong>. Dùng làm điểm khởi đầu, đo lại cho hệ của bạn.</p>
     </div>
 
     <div class="takeaway">
@@ -1709,14 +1709,14 @@ footer.site{border-top:1px solid var(--border);padding:26px 24px;text-align:cent
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true" focusable="false"><path d="M12 2v6m0 8v6M4.9 4.9l4.2 4.2m5.8 5.8l4.2 4.2M2 12h6m8 0h6M4.9 19.1l4.2-4.2m5.8-5.8l4.2-4.2"/></svg>
         Takeaway
       </span>
-      <p>Offline gác ship, guardrail chặn inline, online chấm mẫu prod — và <span class="hl">behavior drift do offline chạy theo lịch bắt, distribution drift mới cần online</span>, còn trace lỗi online quay về nuôi golden dataset. Ba làn, ba ràng buộc latency, một feedback loop.</p>
+      <p>Offline gác ship, guardrail chặn inline, online chấm mẫu prod. <span class="hl">Behavior drift do offline chạy theo lịch bắt, distribution drift mới cần online</span>; còn trace lỗi online quay về nuôi golden dataset. Ba làn, ba ràng buộc latency, một feedback loop.</p>
     </div>
 
     <div class="quiz" data-correct="1">
       <span class="eyebrow">Kiểm tra nhanh</span>
       <p class="quiz-q">Agent pass toàn bộ eval offline lúc ship. Ba tuần sau chất lượng tụt dần nhưng không crash, không lỗi, input không đổi shape. Cái gì đang xảy ra và ai bắt được nó?</p>
-      <button class="quiz-opt" onclick="quizPick(this,0)"><span class="quiz-letter">A</span><span>Không có gì bất thường — eval offline đã pass nên hệ vẫn ổn.</span></button>
-      <button class="quiz-opt" onclick="quizPick(this,1)"><span class="quiz-letter">B</span><span>Đây là behavior drift — input không đổi, nên chính bộ eval offline chạy theo lịch (vd nightly) trên endpoint live bắt được sớm nhất và rẻ nhất; online sampling để dành cho distribution drift, tức khi input user mới là cái đổi.</span></button>
+      <button class="quiz-opt" onclick="quizPick(this,0)"><span class="quiz-letter">A</span><span>Không có gì bất thường: eval offline đã pass nên hệ vẫn ổn.</span></button>
+      <button class="quiz-opt" onclick="quizPick(this,1)"><span class="quiz-letter">B</span><span>Đây là behavior drift: input không đổi, nên chính bộ eval offline chạy theo lịch (vd nightly) trên endpoint live bắt được sớm nhất và rẻ nhất; online sampling để dành cho distribution drift, tức khi input user mới là cái đổi.</span></button>
       <button class="quiz-opt" onclick="quizPick(this,2)"><span class="quiz-letter">C</span><span>Là lỗi hạ tầng; thêm guardrail inline với ngân sách millisecond sẽ phát hiện suy giảm chất lượng dần này.</span></button>
       <div class="quiz-feedback" role="status" data-explain="B đúng: input không đổi shape nên đây là behavior drift, và cùng-input-cùng-grader chính là điều kiện lý tưởng cho bộ offline — bạn chỉ cần chuyển nó từ 'chạy khi có commit' sang 'chạy theo lịch trên endpoint live'. A bỏ sót vì offline pass lúc ship không nói gì về hành vi model ba tuần sau. C nhầm vai — guardrail chặn một failure mode cụ thể inline theo millisecond, không phải công cụ theo dõi suy giảm dần theo tuần."></div>
     </div>
@@ -1757,12 +1757,12 @@ footer.site{border-top:1px solid var(--border);padding:26px 24px;text-align:cent
       </ul>
     </div>
 
-    <p>Bạn sửa prompt để vá một bug user báo. Deploy. Hai ngày sau, một case <em>khác</em> — từng chạy tốt — giờ hỏng, vì sửa prompt cho case này làm lệch case kia. Không có lưới an toàn nào bắt được sự đánh đổi đó trước khi user gặp.</p>
+    <p>Bạn sửa prompt để vá một bug user báo. Deploy. Hai ngày sau, một case <em>khác</em> (từng chạy tốt) giờ hỏng, vì sửa prompt cho case này làm lệch case kia. Không có lưới an toàn nào bắt được sự đánh đổi đó trước khi user gặp.</p>
 
     <div class="concept">
       <span class="eyebrow">Khái niệm</span>
       <h4>Eval-driven development</h4>
-      <p>Thay vì "ship rồi cầu may", biến mỗi lỗi production thành một eval case: viết eval từ lỗi thật → chạy agent → fail → sửa prompt/tool → gate xanh → ship → lỗi mới lại thành eval case mới. Giống TDD (red-green-refactor) nhưng chấm bằng eval thay vì assertion. Anthropic khởi đầu với "khoảng 20 query đại diện cách dùng thật" và thấy ở giai đoạn đó thay đổi tạo dao động lớn — <strong>success rate nhảy từ 30% lên 80%</strong> — nên chưa cần độ chặt thống kê N lớn tới khi cải thiện thành từng chút.</p>
+      <p>Thay vì "ship rồi cầu may", biến mỗi lỗi production thành một eval case: viết eval từ lỗi thật → chạy agent → fail → sửa prompt/tool → gate xanh → ship → lỗi mới lại thành eval case mới. Giống TDD (red-green-refactor) nhưng chấm bằng eval thay vì assertion. Anthropic (bài về hệ multi-agent research, 06/2025) khởi đầu với "khoảng 20 query đại diện cách dùng thật" và thấy ở giai đoạn đó thay đổi tạo dao động lớn (<strong>success rate nhảy từ 30% lên 80%</strong>), nên chưa cần độ chặt thống kê N lớn tới khi cải thiện thành từng chút.</p>
     </div>
 
     <figure class="figure">
@@ -1799,7 +1799,7 @@ footer.site{border-top:1px solid var(--border);padding:26px 24px;text-align:cent
     </div>
 
     <div>
-      <span class="eyebrow" style="display:block;margin-bottom:10px">Vệ sinh bộ eval — bốn quy tắc giữ nó còn nói thật</span>
+      <span class="eyebrow" style="display:block;margin-bottom:10px">Vệ sinh bộ eval: bốn quy tắc giữ nó còn nói thật</span>
       <div class="table-wrap">
         <table>
           <thead><tr><th style="width:200px">Quy tắc</th><th>Vì sao</th></tr></thead>
@@ -1818,14 +1818,14 @@ footer.site{border-top:1px solid var(--border);padding:26px 24px;text-align:cent
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true" focusable="false"><path d="M12 2v6m0 8v6M4.9 4.9l4.2 4.2m5.8 5.8l4.2 4.2M2 12h6m8 0h6M4.9 19.1l4.2-4.2m5.8-5.8l4.2-4.2"/></svg>
         Takeaway
       </span>
-      <p>Biến mỗi lỗi production thành một <span class="hl">eval case, mặc định giữ vĩnh viễn</span> trước khi sửa — như TDD nhưng chấm bằng eval. Mỗi case có một chủ và một lý do tồn tại; chỉ retire kèm ghi chú khi hành vi sản phẩm cố tình đổi. Bắt đầu ~20 case; giai đoạn đầu effect size lớn nên chưa cần N khổng lồ.</p>
+      <p>Biến mỗi lỗi production thành một <span class="hl">eval case, mặc định giữ vĩnh viễn</span> trước khi sửa, như TDD nhưng chấm bằng eval. Mỗi case có một chủ và một lý do tồn tại; chỉ retire kèm ghi chú khi hành vi sản phẩm cố tình đổi. Bắt đầu ~20 case; giai đoạn đầu effect size lớn nên chưa cần N khổng lồ.</p>
     </div>
 
     <div class="quiz" data-correct="0">
       <span class="eyebrow">Kiểm tra nhanh</span>
       <p class="quiz-q">Một user báo agent xử sai một loại ticket. Cách phản ứng theo eval-driven development là gì?</p>
-      <button class="quiz-opt" onclick="quizPick(this,0)"><span class="quiz-letter">A</span><span>Biến ca lỗi thành một eval case (fail trước), sửa prompt/tool tới khi gate xanh, và giữ case đó — mặc định vĩnh viễn, có chủ và có lý do tồn tại; chỉ retire kèm ghi chú nếu sau này sản phẩm cố tình đổi hành vi đó.</span></button>
-      <button class="quiz-opt" onclick="quizPick(this,1)"><span class="quiz-letter">B</span><span>Sửa prompt ngay theo trực giác rồi deploy, không thêm test — để đỡ mất thời gian.</span></button>
+      <button class="quiz-opt" onclick="quizPick(this,0)"><span class="quiz-letter">A</span><span>Biến ca lỗi thành một eval case (fail trước), sửa prompt/tool tới khi gate xanh, và giữ case đó: mặc định vĩnh viễn, có chủ và có lý do tồn tại; chỉ retire kèm ghi chú nếu sau này sản phẩm cố tình đổi hành vi đó.</span></button>
+      <button class="quiz-opt" onclick="quizPick(this,1)"><span class="quiz-letter">B</span><span>Sửa prompt ngay theo trực giác rồi deploy, không thêm test, để đỡ mất thời gian.</span></button>
       <button class="quiz-opt" onclick="quizPick(this,2)"><span class="quiz-letter">C</span><span>Chờ gom đủ vài trăm ca tương tự rồi mới xử lý một thể cho có ý nghĩa thống kê.</span></button>
       <div class="quiz-feedback" role="status" data-explain="A đúng: đây là vòng eval-driven — regression thành test, mặc định vĩnh viễn. B là ship-then-hope, không lưới, dễ làm lệch case khác. C trì hoãn vô ích — giai đoạn đầu effect size lớn, một case cũng đủ bắt đầu. Lưu ý 'vĩnh viễn' nghĩa là mặc định, không phải bất khả xâm phạm: xoá lặng lẽ một case đang fail cho gate xanh thì luôn sai, còn retire công khai kèm lý do khi sản phẩm cố tình đổi hành vi thì đúng."></div>
     </div>
@@ -1859,19 +1859,19 @@ footer.site{border-top:1px solid var(--border);padding:26px 24px;text-align:cent
       </ul>
     </div>
 
-    <p>Bạn muốn "gate CI chặn regression", nên bật blocking eval gate ngay hôm nay. Build đỏ liên tục — vì judge còn nhiễu, nó fail cả những thay đổi tốt. Sau ba ngày, cả team tắt gate cho đỡ phiền. Bạn vừa mất luôn cái gate lẽ ra bảo vệ mình.</p>
+    <p>Bạn muốn "gate CI chặn regression", nên bật blocking eval gate ngay hôm nay. Build đỏ liên tục, vì judge còn nhiễu, nó fail cả những thay đổi tốt. Sau ba ngày, cả team tắt gate cho đỡ phiền. Bạn vừa mất luôn cái gate lẽ ra bảo vệ mình.</p>
 
     <div class="callout danger">
       <div class="callout-title">Trước khi trao quyền chặn: đo sàn nhiễu của chính bộ eval</div>
-      <p>Một gate chỉ có nghĩa nếu tín hiệu nó đọc lớn hơn nhiễu của chính nó. Nên đo sàn nhiễu trước: chạy <em>cùng một commit</em> qua bộ eval n lần rồi xem điểm dao động trong dải nào. Ngưỡng chặn phải nằm ngoài dải đó — nếu không bạn đang fail build bằng xúc xắc. Với 50 case, 92% và 88% thường là cùng một hệ, hai lần tung của một đồng xu, không phải một regression.</p>
-      <p>Ba kỹ thuật rẻ để đọc con số cho tử tế, theo <a href="https://arxiv.org/abs/2411.00640" target="_blank" rel="noreferrer">Miller, "Adding Error Bars to Evals" (2024)</a>: (1) so <strong>paired</strong> theo từng task — cùng bộ câu hỏi cho hai phiên bản rồi làm thống kê trên chênh lệch từng câu, không phải trên hai con số tổng; (2) báo <strong>khoảng tin cậy 95%</strong> thay vì một con số trần trụi; (3) dùng <strong>clustered standard error</strong> khi nhiều case sinh ra từ cùng một nguồn — paper cho thấy sai số cụm có thể lớn hơn 3× sai số tính ngây thơ, tức bạn đang tự tin gấp ba lần mức đáng có.</p>
+      <p>Một gate chỉ có nghĩa nếu tín hiệu nó đọc lớn hơn nhiễu của chính nó. Nên đo sàn nhiễu trước: chạy <em>cùng một commit</em> qua bộ eval n lần rồi xem điểm dao động trong dải nào. Ngưỡng chặn phải nằm ngoài dải đó; nếu không, bạn đang fail build bằng xúc xắc. Với 50 case, 92% và 88% thường là cùng một hệ, hai lần tung của một đồng xu, không phải một regression.</p>
+      <p>Ba kỹ thuật rẻ để đọc con số cho tử tế, theo <a href="https://arxiv.org/abs/2411.00640" target="_blank" rel="noreferrer">Miller, "Adding Error Bars to Evals" (2024)</a>: (1) so <strong>paired</strong> theo từng task, tức cùng bộ câu hỏi cho hai phiên bản rồi làm thống kê trên chênh lệch từng câu, không phải trên hai con số tổng; (2) báo <strong>khoảng tin cậy 95%</strong> thay vì một con số trần trụi; (3) dùng <strong>clustered standard error</strong> khi nhiều case sinh ra từ cùng một nguồn; paper cho thấy sai số cụm có thể lớn hơn 3× sai số tính ngây thơ, tức bạn đang tự tin gấp ba lần mức đáng có.</p>
     </div>
 
     <div class="concept">
       <span class="eyebrow">Khái niệm</span>
       <h4>Thang trưởng thành của gate</h4>
-      <p>Đừng wire một LLM-judge chưa calibrate thẳng vào blocking gate. Leo thang (Confident AI): <strong>(1) reporting mode</strong> — điểm được log, không chặn gì; <strong>(2) calibration</strong> — người annotate các ca bất đồng, chỉnh điểm tự động khớp phán đoán người; <strong>(3) blocking gate</strong> — build fail khi điểm dưới ngưỡng. Chỉ leo lên khi bậc dưới đã đáng tin. Nguyên tắc: "gate tồi tạo alert fatigue. Gate được calibrate ngăn regression."</p>
-      <p><strong>Nhưng thang này chỉ áp cho gate chấm-bằng-judge.</strong> Các check tất định — outcome đối chiếu DB, schema validation, assertion trên tool call, trần chi phí/latency — không có gì để calibrate: chúng đúng hoặc sai, không nhiễu, không bias theo thứ tự hay độ dài. Nhóm đó phải <em>chặn ngay từ ngày đầu</em>. Nên tách cổng làm hai làn: làn tất định blocking luôn, làn judge leo thang. Trộn chung là cách bạn hoãn mất lớp bảo vệ rẻ nhất mình đang có.</p>
+      <p>Đừng wire một LLM-judge chưa calibrate thẳng vào blocking gate. Leo thang (Confident AI): <strong>(1) reporting mode</strong>: điểm được log, không chặn gì; <strong>(2) calibration</strong>: người annotate các ca bất đồng, chỉnh điểm tự động khớp phán đoán người; <strong>(3) blocking gate</strong>: build fail khi điểm dưới ngưỡng. Chỉ leo lên khi bậc dưới đã đáng tin. Nguyên tắc: "gate tồi tạo alert fatigue. Gate được calibrate ngăn regression."</p>
+      <p><strong>Nhưng thang này chỉ áp cho gate chấm-bằng-judge.</strong> Các check tất định (outcome đối chiếu DB, schema validation, assertion trên tool call, trần chi phí/latency) không có gì để calibrate: chúng đúng hoặc sai, không nhiễu, không bias theo thứ tự hay độ dài. Nhóm đó phải <em>chặn ngay từ ngày đầu</em>. Nên tách cổng làm hai làn: làn tất định blocking luôn, làn judge leo thang. Trộn chung là cách bạn hoãn mất lớp bảo vệ rẻ nhất mình đang có.</p>
     </div>
 
     <figure class="figure">
@@ -1907,7 +1907,7 @@ footer.site{border-top:1px solid var(--border);padding:26px 24px;text-align:cent
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true" focusable="false"><path d="M12 2v6m0 8v6M4.9 4.9l4.2 4.2m5.8 5.8l4.2 4.2M2 12h6m8 0h6M4.9 19.1l4.2-4.2m5.8-5.8l4.2-4.2"/></svg>
         Takeaway
       </span>
-      <p>Đừng wire judge chưa calibrate vào blocking gate — <span class="hl">leo thang reporting → calibrate → blocking</span>. Gate tồi tạo alert fatigue và bị tắt; gate được calibrate mới thật sự ngăn regression. Nhưng thang đó chỉ dành cho làn judge: check tất định chặn ngay từ ngày đầu, vì chúng không có gì để calibrate. Và đo sàn nhiễu trước khi đặt ngưỡng.</p>
+      <p>Đừng wire judge chưa calibrate vào blocking gate: <span class="hl">leo thang reporting → calibrate → blocking</span>. Gate tồi tạo alert fatigue và bị tắt; gate được calibrate mới thật sự ngăn regression. Nhưng thang đó chỉ dành cho làn judge: check tất định chặn ngay từ ngày đầu, vì chúng không có gì để calibrate. Và đo sàn nhiễu trước khi đặt ngưỡng.</p>
     </div>
 
     <div class="quiz" data-correct="2">
@@ -1947,7 +1947,7 @@ footer.site{border-top:1px solid var(--border);padding:26px 24px;text-align:cent
       </ul>
     </div>
 
-    <p>Bạn viết trong prompt "đừng bao giờ gọi tool xóa dữ liệu khi chưa xác nhận". Agent vẫn gọi <code>delete_records()</code> với tham số sai trong một nhánh bạn không lường. Một lời dặn trong prompt không phải một cái chặn — nó là gợi ý, và model phi tất định không luôn nghe.</p>
+    <p>Bạn viết trong prompt "đừng bao giờ gọi tool xóa dữ liệu khi chưa xác nhận". Agent vẫn gọi <code>delete_records()</code> với tham số sai trong một nhánh bạn không lường. Một lời dặn trong prompt là gợi ý, không phải một cái chặn, và model phi tất định không luôn nghe.</p>
 
     <div class="concept">
       <span class="eyebrow">Khái niệm</span>
@@ -1979,18 +1979,18 @@ footer.site{border-top:1px solid var(--border);padding:26px 24px;text-align:cent
 
     <div class="callout insight">
       <div class="callout-title">Lớp phòng thủ thứ nhất nằm trong chính cái tool</div>
-      <p>Guardrail của framework là lớp thứ hai, và yếu hơn bạn tưởng: nó bypass được, không có tính transaction, và không sống sót qua retry ở tầng trên nó. Lớp thứ nhất là bản thân cái tool. Cho mỗi tool nguy hiểm một <strong>idempotency key</strong> dẫn xuất từ đối tượng nghiệp vụ — mã ticket, mã đơn — để lần gọi thứ hai không tạo thêm hiệu ứng nào; và cấp <strong>credential hẹp theo phiên</strong> thay vì một token vạn năng dùng chung.</p>
-      <p>Câu hỏi kiểm tra cho mọi tool: "nếu agent gọi tool này hai lần, hệ thống có hỏng không?" Nếu có, đó là bug của tool — đừng đi vá nó bằng một guardrail.</p>
+      <p>Guardrail của framework là lớp thứ hai, và yếu hơn bạn tưởng: nó bypass được, không có tính transaction, và không sống sót qua retry ở tầng trên nó. Lớp thứ nhất là bản thân cái tool. Cho mỗi tool nguy hiểm một <strong>idempotency key</strong> dẫn xuất từ đối tượng nghiệp vụ (mã ticket, mã đơn) để lần gọi thứ hai không tạo thêm hiệu ứng nào; và cấp <strong>credential hẹp theo phiên</strong> thay vì một token vạn năng dùng chung.</p>
+      <p>Câu hỏi kiểm tra cho mọi tool: "nếu agent gọi tool này hai lần, hệ thống có hỏng không?" Nếu có, đó là bug của tool; đừng đi vá nó bằng một guardrail.</p>
     </div>
 
     <div class="callout danger">
       <div class="callout-title">Làn adversarial: agent đọc cả những chữ user không viết</div>
-      <p>Input guardrail canh cái user gõ vào. Nhưng agent còn nuốt nội dung không ai trong đội bạn viết: kết quả web search, thân ticket khách gửi, output của một MCP server, file đính kèm. Chữ nằm trong đó có thể là chỉ thị nhắm thẳng vào model — indirect prompt injection. Việc cần làm khá cơ học: <strong>liệt kê mọi kênh</strong> nội dung ngoại lai đi vào context, <strong>bắn payload thử</strong> cho từng kênh một, rồi <strong>giữ chúng lại thành một bộ regression adversarial chạy trong CI</strong> như mọi eval case khác — vì kênh mới sẽ được thêm vào, và người thêm nó thường không nghĩ tới chuyện này.</p>
+      <p>Input guardrail canh cái user gõ vào. Nhưng agent còn nuốt nội dung không ai trong đội bạn viết: kết quả web search, thân ticket khách gửi, output của một MCP server, file đính kèm. Chữ nằm trong đó có thể là chỉ thị nhắm thẳng vào model: indirect prompt injection. Việc cần làm khá cơ học: <strong>liệt kê mọi kênh</strong> nội dung ngoại lai đi vào context, <strong>bắn payload thử</strong> cho từng kênh một, rồi <strong>giữ chúng lại thành một bộ regression adversarial chạy trong CI</strong> như mọi eval case khác, vì kênh mới sẽ được thêm vào, và người thêm nó thường không nghĩ tới chuyện này.</p>
     </div>
 
     <div class="callout info">
       <div class="callout-title">Blocking vs parallel</div>
-      <p>OpenAI cho hai chế độ chạy guardrail, và <strong>parallel là mặc định</strong> — guardrail chạy song song với agent (<code>run_in_parallel=True</code> trong openai-agents-python, <code>runInParallel: true</code> trong openai-agents-js). Đổi lại: khi tripwire nổ thì model có thể đã tiêu token và chạy tool rồi. <strong>Blocking</strong> là thứ bạn phải bật có chủ đích (đặt cờ đó thành <code>false</code>): guardrail xong <em>trước</em> khi agent bắt đầu, nên không tốn token cũng không có side effect từ tool — dùng khi chi phí/rủi ro khởi động agent quá cao. Nhớ bài 4.3: guardrail là làn inline có ngân sách millisecond.</p>
+      <p>OpenAI cho hai chế độ chạy guardrail, và <strong>parallel là mặc định</strong>: guardrail chạy song song với agent (<code>run_in_parallel=True</code> trong openai-agents-python, <code>runInParallel: true</code> trong openai-agents-js). Đổi lại: khi tripwire nổ thì model có thể đã tiêu token và chạy tool rồi. <strong>Blocking</strong> là thứ bạn phải bật có chủ đích (đặt cờ đó thành <code>false</code>): guardrail xong <em>trước</em> khi agent bắt đầu, nên không tốn token cũng không có side effect từ tool. Dùng khi chi phí/rủi ro khởi động agent quá cao. Nhớ bài 4.3: guardrail là làn inline có ngân sách millisecond.</p>
     </div>
 
     <div class="takeaway">
@@ -1998,7 +1998,7 @@ footer.site{border-top:1px solid var(--border);padding:26px 24px;text-align:cent
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true" focusable="false"><path d="M12 2v6m0 8v6M4.9 4.9l4.2 4.2m5.8 5.8l4.2 4.2M2 12h6m8 0h6M4.9 19.1l4.2-4.2m5.8-5.8l4.2-4.2"/></svg>
         Takeaway
       </span>
-      <p>Guardrail là <span class="hl">checkpoint dừng-cứng (tripwire)</span>, không phải lời dặn trong prompt — chạy ở ba điểm input/tool/output, và HITL pause-resume giữ nguyên state cho người duyệt.</p>
+      <p>Guardrail là <span class="hl">checkpoint dừng-cứng (tripwire)</span>, không phải lời dặn trong prompt. Nó chạy ở ba điểm input/tool/output, và HITL pause-resume giữ nguyên state cho người duyệt.</p>
     </div>
 
     <div class="quiz" data-correct="1">
@@ -2038,12 +2038,12 @@ footer.site{border-top:1px solid var(--border);padding:26px 24px;text-align:cent
       </ul>
     </div>
 
-    <p>Bạn ship phiên bản agent mới qua một feature flag: bật hoặc tắt. Offline groundedness 0.91 — xanh. Nhưng một prompt change làm hỏng schema tool trên một sub-route, và <em>production</em> groundedness trên luồng bị ảnh hưởng chỉ 0.62. Gate offline xanh vì nó trả lời sai câu hỏi: tổng thể, không phải theo segment.</p>
+    <p>Bạn ship phiên bản agent mới qua một feature flag: bật hoặc tắt. Offline groundedness 0.91: xanh. Nhưng một prompt change làm hỏng schema tool trên một sub-route, và <em>production</em> groundedness trên luồng bị ảnh hưởng chỉ 0.62. Gate offline xanh vì nó trả lời sai câu hỏi: tổng thể, không phải theo segment.</p>
 
     <div class="concept">
       <span class="eyebrow">Khái niệm</span>
       <h4>Bốn tầng, mỗi tầng một câu hỏi</h4>
-      <p>Không thể nhảy thẳng từ offline sang full và có tín hiệu tương đương. Mỗi tầng trả lời một câu khác: <strong>Shadow</strong> (mirror 100% traffic, 0% lộ user) — "nó hành xử hợp lý không?"; <strong>Canary</strong> (1–5% traffic thật) — "có tốt hơn với user trong vòng lặp không?"; <strong>Ramp</strong> (10→25→50%) — "delta có thật, không phải nhiễu?"; <strong>Full</strong> (100%, auto-rollback) — "chịu tải không?". Các % này là <em>ví dụ vận hành, không phải chuẩn ngành</em>. Cho session stateful, <strong>rainbow deployment</strong> dịch traffic dần để session đang chạy không bị đứt giữa chừng.</p>
+      <p>Không thể nhảy thẳng từ offline sang full và có tín hiệu tương đương. Mỗi tầng trả lời một câu khác: <strong>Shadow</strong> (mirror 100% traffic, 0% lộ user): "nó hành xử hợp lý không?"; <strong>Canary</strong> (1–5% traffic thật): "có tốt hơn với user trong vòng lặp không?"; <strong>Ramp</strong> (10→25→50%): "delta có thật, không phải nhiễu?"; <strong>Full</strong> (100%, auto-rollback): "chịu tải không?". Các % này là <em>ví dụ vận hành, không phải chuẩn ngành</em>. Cho session stateful, <strong>rainbow deployment</strong> dịch traffic dần để session đang chạy không bị đứt giữa chừng.</p>
     </div>
 
     <figure class="figure">
@@ -2077,7 +2077,7 @@ footer.site{border-top:1px solid var(--border);padding:26px 24px;text-align:cent
 
     <div class="callout info">
       <div class="callout-title">Nhắc lại bài 3.3 & 4.3</div>
-      <p>Thước "tốt hơn với user thật" ở tầng canary chính là pass^k của bài 3.3 — trải nghiệm một-shot của user, không phải best-of-k. Và lý do offline không đủ là drift/segment của bài 4.3: chỉ traffic thật mới lộ cái phân phối offline không đại diện.</p>
+      <p>Thước "tốt hơn với user thật" ở tầng canary chính là pass^k của bài 3.3: trải nghiệm một-shot của user, không phải best-of-k. Và lý do offline không đủ là drift/segment của bài 4.3: chỉ traffic thật mới lộ cái phân phối offline không đại diện.</p>
     </div>
 
     <div class="takeaway">
@@ -2085,13 +2085,13 @@ footer.site{border-top:1px solid var(--border);padding:26px 24px;text-align:cent
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true" focusable="false"><path d="M12 2v6m0 8v6M4.9 4.9l4.2 4.2m5.8 5.8l4.2 4.2M2 12h6m8 0h6M4.9 19.1l4.2-4.2m5.8-5.8l4.2-4.2"/></svg>
         Takeaway
       </span>
-      <p>Mỗi tầng rollout trả lời một câu khác nhau — <span class="hl">shadow: hợp lý? canary: tốt hơn với user? ramp: delta thật? full: chịu tải?</span> — nên không thể nhảy cóc. Offline xanh vẫn giấu regression segment; rainbow deployment cho session stateful.</p>
+      <p>Mỗi tầng rollout trả lời một câu khác nhau (<span class="hl">shadow: hợp lý? canary: tốt hơn với user? ramp: delta thật? full: chịu tải?</span>), nên không thể nhảy cóc. Offline xanh vẫn giấu regression segment; rainbow deployment cho session stateful.</p>
     </div>
 
     <div class="quiz" data-correct="2">
       <span class="eyebrow">Kiểm tra nhanh</span>
       <p class="quiz-q">Bản agent mới có offline eval 0.91 (xanh). Đồng nghiệp đề nghị ship thẳng 100% vì "số đẹp rồi". Phản biện đúng nhất?</p>
-      <button class="quiz-opt" onclick="quizPick(this,0)"><span class="quiz-letter">A</span><span>Đồng ý — offline 0.91 đủ chứng minh an toàn để full rollout.</span></button>
+      <button class="quiz-opt" onclick="quizPick(this,0)"><span class="quiz-letter">A</span><span>Đồng ý: offline 0.91 đủ chứng minh an toàn để full rollout.</span></button>
       <button class="quiz-opt" onclick="quizPick(this,1)"><span class="quiz-letter">B</span><span>Chỉ cần thêm vài eval offline nữa là đủ tự tin ship thẳng.</span></button>
       <button class="quiz-opt" onclick="quizPick(this,2)"><span class="quiz-letter">C</span><span>Offline đo tổng thể có thể giấu regression trên một segment (như 0.62 trên một sub-route). Đi qua shadow → canary để thấy hành vi với traffic thật trước khi ramp.</span></button>
       <div class="quiz-feedback" role="status" data-explain="C đúng: điểm tổng offline xanh vẫn có thể che một segment hỏng — canary/shadow trên traffic thật mới lộ. A tin mù vào một con số tổng. B vẫn ở trong offline, không chạm được cái phân phối thật mà chỉ traffic sống mới có."></div>
@@ -2106,7 +2106,7 @@ footer.site{border-top:1px solid var(--border);padding:26px 24px;text-align:cent
       <header class="module-header" data-module="6">
         <span class="eyebrow">Module 06 · Phần VI · Vận hành</span>
         <h2>Vận hành</h2>
-        <p>Một chỗ để thấy toàn cảnh: reliability là một lắp ráp harness (không phải prompt), rồi ba trụ chạy trên một hệ agent ví dụ — mỗi con số treo vào một quyết định. Hai bài này khép vòng và cho bạn map-to-reality.</p>
+        <p>Một chỗ để thấy toàn cảnh: reliability là một lắp ráp harness (không phải prompt), rồi ba trụ chạy trên một hệ agent ví dụ, mỗi con số treo vào một quyết định. Hai bài này khép vòng và cho bạn map-to-reality.</p>
       </header>
 <article class="lesson" id="m6-l1" data-lesson>
   <div class="lesson-head">
@@ -2133,12 +2133,12 @@ footer.site{border-top:1px solid var(--border);padding:26px 24px;text-align:cent
       </ul>
     </div>
 
-    <p>Sếp bảo "thêm một bước tự phản biện cho nó đáng tin hơn". Bạn thêm một prompt "hãy tự kiểm lại", và... lỗi vẫn thế. Vì "self-critique chung chung" không nhắm loại lỗi nào cụ thể. Và khi một run dài fail giữa chừng, agent chạy lại từ đầu — tốn gấp đôi. Độ tin cậy không nằm trong prompt; nó nằm trong bộ khung quanh model.</p>
+    <p>Sếp bảo "thêm một bước tự phản biện cho nó đáng tin hơn". Bạn thêm một prompt "hãy tự kiểm lại", và... lỗi vẫn thế. Vì "self-critique chung chung" không nhắm loại lỗi nào cụ thể. Và khi một run dài fail giữa chừng, agent chạy lại từ đầu, tốn gấp đôi. Độ tin cậy không nằm trong prompt; nó nằm trong bộ khung quanh model.</p>
 
     <div class="concept">
       <span class="eyebrow">Khái niệm</span>
       <h4>Harness = tám cơ chế quanh model</h4>
-      <p>Anthropic và Fowler/Bayer dùng gần cùng một danh sách: <strong>harness</strong> là mọi thứ quanh model — orchestration, tool boundaries, state persistence, retries/fallbacks, validation, reflection loops, observability, human review. "Reliability được sinh ra bởi harness, không phải chất lượng prompt đơn thuần." Context engineering là cái model thấy trong một lượt; harness engineering là scaffolding bền qua các lượt/phiên.</p>
+      <p>Anthropic và Fowler/Bayer dùng gần cùng một danh sách: <strong>harness</strong> là mọi thứ quanh model, gồm orchestration, tool boundaries, state persistence, retries/fallbacks, validation, reflection loops, observability, human review. "Reliability được sinh ra bởi harness, không phải chất lượng prompt đơn thuần." Context engineering là cái model thấy trong một lượt; harness engineering là scaffolding bền qua các lượt/phiên.</p>
     </div>
 
     <figure class="figure">
@@ -2171,13 +2171,13 @@ footer.site{border-top:1px solid var(--border);padding:26px 24px;text-align:cent
 
     <div class="concept">
       <span class="eyebrow">Khái niệm</span>
-      <h4>Ba reflection loop — mỗi loại một lỗi</h4>
-      <p>Fowler/Bayer tách reflection thành ba, không phải một "critique chung": <strong>(1) Process reflection</strong> ("Tôi làm đúng cách chưa? tiến độ đúng chưa?"); <strong>(2) Data reflection</strong> — một Reflection Agent so context lấy được với query gốc để tìm chỗ thiếu trước khi tổng hợp; <strong>(3) Draft reflection</strong> — Writer tự soi bản nháp tìm phần thiếu/bảng lệch. Mỗi loại kiểm một lớp lỗi khác nhau, đặt đúng chỗ lỗi đó xảy ra.</p>
+      <h4>Ba reflection loop, mỗi loại một lỗi</h4>
+      <p>Fowler/Bayer tách reflection thành ba, không phải một "critique chung": <strong>(1) Process reflection</strong> ("Tôi làm đúng cách chưa? tiến độ đúng chưa?"); <strong>(2) Data reflection</strong>: một Reflection Agent so context lấy được với query gốc để tìm chỗ thiếu trước khi tổng hợp; <strong>(3) Draft reflection</strong>: Writer tự soi bản nháp tìm phần thiếu/bảng lệch. Mỗi loại kiểm một lớp lỗi khác nhau, đặt đúng chỗ lỗi đó xảy ra.</p>
     </div>
 
     <div class="callout success">
       <div class="callout-title">State persistence + trần retry (nhắc bài 4.1)</div>
-      <p>Fowler/Bayer: state cả workflow được persist nên một run fail "resume trực tiếp từ node fail", retry "bỏ qua các bước đã xong". Và fallback chain: nếu model chính fail sau vài retry thì tự chuyển model thay thế; sinh SQL cap ở <strong>tối đa 3 lần</strong> rồi bỏ query thay vì lặp vô hạn — một circuit-breaker cho lớp lỗi non-termination (và tránh trần 25.000 run ở bài 4.1).</p>
+      <p>Fowler/Bayer: state cả workflow được persist nên một run fail "resume trực tiếp từ node fail", retry "bỏ qua các bước đã xong". Và fallback chain: nếu model chính fail sau vài retry thì tự chuyển model thay thế; sinh SQL cap ở <strong>tối đa 3 lần</strong> rồi bỏ query thay vì lặp vô hạn, một circuit-breaker cho lớp lỗi non-termination (và tránh trần 25.000 run ở bài 4.1).</p>
     </div>
 
     <div class="takeaway">
@@ -2185,7 +2185,7 @@ footer.site{border-top:1px solid var(--border);padding:26px 24px;text-align:cent
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true" focusable="false"><path d="M12 2v6m0 8v6M4.9 4.9l4.2 4.2m5.8 5.8l4.2 4.2M2 12h6m8 0h6M4.9 19.1l4.2-4.2m5.8-5.8l4.2-4.2"/></svg>
         Takeaway
       </span>
-      <p>Độ tin cậy là một <span class="hl">lắp ráp harness tám cơ chế</span>, không phải prompt — reflection phải tách theo lớp lỗi (process/data/draft), và state persistence + trần retry mới làm agent dài khả thi.</p>
+      <p>Độ tin cậy là một <span class="hl">lắp ráp harness tám cơ chế</span>, không phải prompt. Reflection phải tách theo lớp lỗi (process/data/draft), và state persistence + trần retry mới làm agent dài khả thi.</p>
     </div>
 
     <div class="quiz" data-correct="2">
@@ -2225,11 +2225,11 @@ footer.site{border-top:1px solid var(--border);padding:26px 24px;text-align:cent
       </ul>
     </div>
 
-    <p>Bạn đã học từng mảnh rời — outcome vs trajectory, judge và bias, pass^k, trace, guardrail, rollout. Giờ cần thấy chúng khớp trên <strong>một hệ agent ví dụ</strong>: một research/support agent minh họa, chạy đủ vòng.</p>
+    <p>Bạn đã học từng mảnh rời: outcome vs trajectory, judge và bias, pass^k, trace, guardrail, rollout. Giờ cần thấy chúng khớp trên <strong>một hệ agent ví dụ</strong>: một research/support agent minh họa, chạy đủ vòng.</p>
 
     <div class="callout info">
       <div class="callout-title">Đây là một hệ ví dụ</div>
-      <p>Hệ agent dưới đây là <strong>minh họa</strong> để gắn ba trụ vào, không phải hệ production của một tổ chức cụ thể. Các con số reliability là <em>ví dụ vận hành, không phải chuẩn ngành</em> — dùng để thấy hình dạng, rồi đo lại cho hệ của bạn.</p>
+      <p>Hệ agent dưới đây là <strong>minh họa</strong> để gắn ba trụ vào, không phải hệ production của một tổ chức cụ thể. Các con số reliability là <em>ví dụ vận hành, không phải chuẩn ngành</em>. Dùng để thấy hình dạng, rồi đo lại cho hệ của bạn.</p>
     </div>
 
     <figure class="figure">
@@ -2266,7 +2266,7 @@ footer.site{border-top:1px solid var(--border);padding:26px 24px;text-align:cent
     <div class="concept">
       <span class="eyebrow">Khái niệm</span>
       <h4>Mỗi con số treo vào một quyết định</h4>
-      <p>Trên hệ ví dụ, các số thật (Anthropic) mỗi số là một cần gạt quyết định — đều là <em>ví dụ vận hành, không phải chuẩn ngành</em>:</p>
+      <p>Trên hệ ví dụ, các số thật (Anthropic) mỗi số là một cần gạt quyết định, và đều là <em>ví dụ vận hành, không phải chuẩn ngành</em>:</p>
     </div>
 
     <div class="table-wrap">
@@ -2282,7 +2282,7 @@ footer.site{border-top:1px solid var(--border);padding:26px 24px;text-align:cent
       </table>
     </div>
 
-    <span class="eyebrow" style="display:block;margin-top:18px">Tờ SLI/SLO — sáu con số đáng treo lên tường</span>
+    <span class="eyebrow" style="display:block;margin-top:18px">Tờ SLI/SLO: sáu con số đáng treo lên tường</span>
     <div class="table-wrap">
       <table>
         <thead><tr><th style="width:230px">SLI</th><th>Ngưỡng của nó là một điều kiện rollback viết sẵn</th></tr></thead>
@@ -2296,12 +2296,12 @@ footer.site{border-top:1px solid var(--border);padding:26px 24px;text-align:cent
         </tbody>
       </table>
     </div>
-    <p>Sáu dòng này là <em>danh sách cần đo</em>, không phải danh sách con số. Khoá này cố tình không đưa ngưỡng: một ngưỡng chỉ có nghĩa sau khi bạn đo baseline của chính hệ mình. Nhưng mỗi dòng <strong>phải</strong> có một ngưỡng viết ra trước khi ship — vì ngưỡng chưa viết ra thì lúc 2 giờ sáng nó sẽ được "quyết" bằng cảm tính của người đang trực.</p>
+    <p>Sáu dòng này là <em>danh sách cần đo</em>, không phải danh sách con số. Khoá này cố tình không đưa ngưỡng: một ngưỡng chỉ có nghĩa sau khi bạn đo baseline của chính hệ mình. Nhưng mỗi dòng <strong>phải</strong> có một ngưỡng viết ra trước khi ship, vì ngưỡng chưa viết ra thì lúc 2 giờ sáng nó sẽ được "quyết" bằng cảm tính của người đang trực.</p>
 
     <div class="callout warn">
       <div class="callout-title">So sánh hai kiến trúc agent: giữ ngân sách gần nhau trước đã</div>
-      <p>Hai dòng đầu của bảng trên nên đọc cùng nhau. Nếu token giải thích <strong>80%</strong> variance, thì một phép so sánh "multi-agent vs single-agent" mà bên multi-agent được tiêu gấp ~15× sẽ khó tách được phần nào đến từ <em>kiến trúc</em> và phần nào đến từ <em>ngân sách</em>. Cách so công bằng hơn: cho single-agent chạy nhiều lượt hơn, hoặc effort cao hơn, cho tới khi tổng token hai bên xấp xỉ nhau, rồi mới so kết quả. Nếu khoảng cách biến mất, thứ bạn mua được là <em>thời gian chạy</em> chứ chưa hẳn là chất lượng — vẫn có thể đáng, nhưng là một quyết định khác.</p>
-      <p>Muốn quy chi phí về từng vai thì span phải mang đủ thuộc tính để nhóm lại: <strong>ai là cha của span này</strong>, <strong>agent đó đóng vai gì</strong>, và <strong>chạy ở mức effort nào</strong>. Thiếu ba thứ đó, dashboard chỉ nói được "phiên này đắt", không nói được "đắt ở con verifier chạy effort cao mà hầu như không bắt được lỗi nào" — mà đó mới là thứ giúp bạn cắt đúng chỗ.</p>
+      <p>Hai dòng đầu của bảng trên nên đọc cùng nhau. Nếu token giải thích <strong>80%</strong> variance, thì một phép so sánh "multi-agent vs single-agent" mà bên multi-agent được tiêu gấp ~15× sẽ khó tách được phần nào đến từ <em>kiến trúc</em> và phần nào đến từ <em>ngân sách</em>. Cách so công bằng hơn: cho single-agent chạy nhiều lượt hơn, hoặc effort cao hơn, cho tới khi tổng token hai bên xấp xỉ nhau, rồi mới so kết quả. Nếu khoảng cách biến mất, thứ bạn mua được là <em>thời gian chạy</em> chứ chưa hẳn là chất lượng. Vẫn có thể đáng, nhưng là một quyết định khác.</p>
+      <p>Muốn quy chi phí về từng vai thì span phải mang đủ thuộc tính để nhóm lại: <strong>ai là cha của span này</strong>, <strong>agent đó đóng vai gì</strong>, và <strong>chạy ở mức effort nào</strong>. Thiếu ba thứ đó, dashboard chỉ nói được "phiên này đắt", không nói được "đắt ở con verifier chạy effort cao mà hầu như không bắt được lỗi nào", mà đó mới là thứ giúp bạn cắt đúng chỗ.</p>
     </div>
 
     <div class="callout success">
@@ -2314,13 +2314,13 @@ footer.site{border-top:1px solid var(--border);padding:26px 24px;text-align:cent
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true" focusable="false"><path d="M12 2v6m0 8v6M4.9 4.9l4.2 4.2m5.8 5.8l4.2 4.2M2 12h6m8 0h6M4.9 19.1l4.2-4.2m5.8-5.8l4.2-4.2"/></svg>
         Takeaway
       </span>
-      <p>Ba trụ — observability, eval, gate — <span class="hl">khớp thành một hệ vận hành, nối bằng flywheel</span>, và mỗi con số reliability treo vào một quyết định thật (chi phí, kiến trúc, rollout). Đó là bản đồ bạn áp lên agent của mình.</p>
+      <p>Ba trụ (observability, eval, gate) <span class="hl">khớp thành một hệ vận hành, nối bằng flywheel</span>, và mỗi con số reliability treo vào một quyết định thật (chi phí, kiến trúc, rollout). Đó là bản đồ bạn áp lên agent của mình.</p>
     </div>
 
     <div class="quiz" data-correct="0">
       <span class="eyebrow">Kiểm tra nhanh</span>
       <p class="quiz-q">Trên hệ ví dụ, đội báo multi-agent dùng ~15× token so với chat và token giải thích 80% variance chi phí. Kết luận vận hành đúng nhất?</p>
-      <button class="quiz-opt" onclick="quizPick(this,0)"><span class="quiz-letter">A</span><span>Cost-per-task cần dashboard riêng, và giảm sub-agent sprawl (như '50 subagent cho query đơn giản') là cần gạt chi phí — không chỉ chuyện chất lượng.</span></button>
+      <button class="quiz-opt" onclick="quizPick(this,0)"><span class="quiz-letter">A</span><span>Cost-per-task cần dashboard riêng, và giảm sub-agent sprawl (như '50 subagent cho query đơn giản') là cần gạt chi phí, không chỉ chuyện chất lượng.</span></button>
       <button class="quiz-opt" onclick="quizPick(this,1)"><span class="quiz-letter">B</span><span>Token không liên quan độ tin cậy, nên bỏ qua khi nói về reliability.</span></button>
       <button class="quiz-opt" onclick="quizPick(this,2)"><span class="quiz-letter">C</span><span>Cứ luôn dùng multi-agent vì nó +90,2% trên eval nội bộ, chi phí không quan trọng.</span></button>
       <div class="quiz-feedback" role="status" data-explain="A đúng: mỗi con số treo vào một quyết định — token là cần gạt cost-per-task, và cắt sub-agent sprawl vừa giảm chi phí vừa là failure mode (bài 1.1). B sai: chi phí/latency là chiều reliability thật (đáng tin trong ngân sách). C tuyệt đối hóa một con số mà bỏ qua đánh đổi chi phí 15×."></div>

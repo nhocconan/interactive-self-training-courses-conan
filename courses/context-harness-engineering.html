@@ -180,7 +180,7 @@ code{font-family:var(--font-mono);font-size:.85em;background:var(--surface-2);pa
 .stack-caption{font-family:var(--font-mono);font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-3);margin-bottom:10px}
 .prompt-card,.code-card{border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;background:var(--surface)}
 .prompt-head{display:flex;align-items:center;justify-content:space-between;padding:9px 14px;background:var(--surface-2);border-bottom:1px solid var(--border);font-family:var(--font-mono);font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-2)}
-.copy-btn{font-family:var(--font-mono);font-size:10.5px;letter-spacing:.06em;text-transform:uppercase;background:var(--surface);border:1px solid var(--border);border-radius:7px;padding:4px 10px;cursor:pointer;color:var(--ink-2);transition:all .15s}
+.copy-btn{font-family:var(--font-mono);font-size:10.5px;letter-spacing:.06em;text-transform:uppercase;background:var(--surface);border:1px solid var(--border);border-radius:7px;padding:4px 10px;min-height:44px;min-width:44px;cursor:pointer;color:var(--ink-2);transition:all .15s}
 .copy-btn:hover{background:var(--accent);color:#fff;border-color:var(--accent)}.copy-btn.copied{background:var(--success);color:#fff;border-color:var(--success)}
 .prompt-card pre,.code-card pre{margin:0;padding:16px;overflow-x:auto;font-family:var(--font-mono);font-size:13px;line-height:1.6;white-space:pre-wrap;word-break:break-word;color:var(--ink)}
 .code-card pre{white-space:pre;word-break:normal}
@@ -524,9 +524,9 @@ PROMPT:
           </figure>
 
           <h4>Giải phẫu đầy đủ — cái gì thực sự lấp đầy cửa sổ</h4>
-          <p>Mỗi lệnh gọi mô hình lắp ráp <em>một chuỗi tuyến tính duy nhất</em>. Hiểu mỗi đoạn tốn bao nhiêu token — và tương tác với cache thế nào — là nền của mọi kỹ thuật context engineering còn lại.</p>
+          <p>Mỗi lệnh gọi mô hình lắp ráp <em>một chuỗi tuyến tính duy nhất</em>. Hiểu mỗi đoạn tốn bao nhiêu token, và tương tác với cache thế nào, là nền của mọi kỹ thuật context engineering còn lại.</p>
           <div class="callout insight">
-            <div class="callout-title">Kỷ nguyên 1M token · cái gì đổi, cái gì không</div>
+            <div class="callout-title">Cửa sổ 1M token · cái gì đổi, cái gì không</div>
             <p>Tính đến 08/2026, GPT-5.6, Claude Sonnet 5 và Opus 5 đều có lựa chọn context khoảng 1M token. Sức chứa này hữu ích cho tài liệu và task dài, nhưng không chứng minh một monorepo hay PDF bất kỳ sẽ được hiểu trọn vẹn. <strong>Context window là sức chứa; effective context là phần model dùng đúng trên eval của bạn.</strong></p>
           </div>
           <figure class="figure" style="padding:18px 20px 4px">
@@ -593,7 +593,7 @@ PROMPT:
             </ul>
           </div>
 
-          <p>Bài 2.1 cho bạn <em>vì sao</em> nhồi context làm giảm chất lượng. Bài này là mặt còn lại của cùng đồng xu: token cũng là <strong>tiền và độ trễ</strong>. Hiểu kinh tế token biến kỷ luật context từ "nên làm" thành đòn bẩy chi phí đo được.</p>
+          <p>Trợ lý nội bộ của bạn gửi kèm cùng một khối 100k token chỉ dẫn ở mọi request. Từ lần thứ hai, phần đó lẽ ra chỉ còn tương đương 10k nhờ cache; nhưng hóa đơn không giảm và time-to-first-token vẫn nằm nguyên. Mở payload ra: dòng đầu system prompt là timestamp hiện tại, đổi mỗi lần gọi, nên không lần nào prefix trùng. Token vừa là <strong>tiền</strong> vừa là <strong>độ trễ</strong>, và thứ tự bạn xếp chúng quyết định bạn trả bao nhiêu.</p>
 
           <h4>Kinh tế token — cái gì thực sự tốn</h4>
           <p>Input, cached input và output có đơn giá khác nhau theo model. Vì bảng giá đổi nhanh, đừng học thuộc một tỷ lệ; hãy đọc usage của request thật và tính theo model đang chạy. Phần thường bị bỏ sót là chi phí lặp lại qua từng vòng agent:</p>
@@ -694,7 +694,7 @@ console.log(result.providerMetadata?.anthropic);</pre>
           <div class="callout" style="border-left:4px solid var(--accent-2)">
             <div class="callout-title">📎 Ví dụ giả lập · trợ lý cho nhiều cửa hàng</div>
             <p>Một trợ lý nhận cùng lúc quy tắc thương hiệu, định nghĩa KPI và taxonomy của mọi cửa hàng. Timestamp còn nằm ở đầu system block. Triệu chứng dễ đo: cache miss thường xuyên và câu trả lời lấy nhầm taxonomy.</p>
-            <p><strong>Ba thay đổi để thử A/B:</strong> (1) chuyển ngày hiện tại sang tool hoặc hậu tố biến thiên; (2) chỉ nạp taxonomy của cửa hàng đang xử lý; (3) giữ file chỉ dẫn chung như một bản đồ ngắn, còn tài liệu dài lấy theo yêu cầu. Sau đó so cache-read tokens, latency và lỗi nhầm taxonomy trên cùng eval set. Đây là ví dụ minh họa; chỉ số cải thiện phải đến từ trace của hệ thật.</p>
+            <p><strong>Ba thay đổi để thử A/B:</strong> (1) chuyển ngày hiện tại sang tool hoặc hậu tố biến thiên; (2) chỉ nạp taxonomy của cửa hàng đang xử lý; (3) giữ file chỉ dẫn chung như một bản đồ ngắn, còn tài liệu dài lấy theo yêu cầu. Sau đó so cache-read tokens, latency và lỗi nhầm taxonomy trên cùng eval set. Đây là ví dụ minh họa; chỉ số cải thiện phải đến từ trace của hệ đang chạy.</p>
           </div>
 
           <div class="concept">
@@ -749,7 +749,7 @@ console.log(result.providerMetadata?.anthropic);</pre>
       <header class="module-header" data-module="3">
         <span class="eyebrow">Chương 03 · Phần I · Nền tảng</span>
         <h2>Các pattern Context Engineering</h2>
-        <p>Sáu vấn đề lặp đi lặp lại, sáu pattern đã tôi luyện. Đây là playbook của Anthropic cộng thêm những bổ sung từ production. Thấm sáu cái này, bạn thiết kế được context cho bất kỳ tính năng AI nào. Và một góc thường bị bỏ quên: context không chỉ có cửa sổ, nó có vòng đời.</p>
+        <p>Sáu vấn đề lặp đi lặp lại, sáu pattern đã tôi luyện. Đây là playbook của Anthropic cộng thêm những bổ sung từ production. Thấm sáu cái này, bạn thiết kế được context cho bất kỳ tính năng AI nào. Và một góc thường bị bỏ quên: context có vòng đời (thu nạp, dùng, cô đọng, quên), trong đó giai đoạn cuối là giai đoạn hay thiếu nhất.</p>
       </header>
 
       <article class="lesson" id="m3-l1" data-lesson>
@@ -770,7 +770,7 @@ console.log(result.providerMetadata?.anthropic);</pre>
               <li>Nhận diện &amp; phá vỡ context poisoning trong loop dài.</li>
             </ul>
           </div>
-          <p>Chương 2 cho bạn <em>vật lý</em> của context. Chương 3 cho bạn <em>kỹ thuật</em>. Sáu pattern, mỗi cái trị một vấn đề cụ thể.</p>
+          <p>Tính năng hỏi-đáp khách hàng của bạn nạp sẵn 50 record khách, 200 spec sản phẩm và đơn hàng 30 ngày vào mỗi request "cho chắc": 80k token trước khi model kịp đọc tới câu hỏi. Người dùng chỉ hỏi về một đơn duy nhất. Phần còn lại tiêu ngân sách chú ý và kéo dài mỗi vòng loop. Sáu pattern dưới đây, mỗi cái trị một vấn đề như vậy.</p>
 
           <h4>Pattern 1 · Just-in-time retrieval</h4>
           <p>Một trong những chuyển dịch đáng chú ý nhất trong thiết kế agent năm qua. Tư duy cũ: pre-load mọi thứ agent <em>có thể</em> cần. Tư duy mới: cho agent <strong>công cụ để tự lấy cái nó cần, khi cần</strong>.</p>
@@ -831,7 +831,7 @@ console.log(result.providerMetadata?.anthropic);</pre>
           <ul>
             <li><strong>Ghim phần ổn định khi nó còn đúng.</strong> Giữ system + mục tiêu gốc ở vùng dễ thấy, giữ lượt gần nguyên văn và tóm tắt phần giữa. Nếu mục tiêu đổi, hãy cập nhật source of truth thay vì ghim chỉ dẫn cũ.</li>
             <li><strong>Tóm tắt output tool mạnh tay.</strong> Kết quả tool 5k thành <code>[nội dung file đã lược · 1240 dòng · src/foo.ts]</code>. Giữ tham chiếu, bỏ nhiễu.</li>
-            <li><strong>Giữ quyết định, bỏ tranh luận.</strong> "Chọn Drizzle, loại Prisma vì bundle size" — giữ. 2.000 token tranh cãi dẫn tới đó — bỏ.</li>
+            <li><strong>Giữ quyết định, bỏ tranh luận.</strong> Giữ "Chọn Drizzle, loại Prisma vì bundle size". Bỏ 2.000 token tranh cãi dẫn tới đó.</li>
             <li><strong>Compaction cũng là một lệnh gọi model</strong> — tốn token và có thể làm rơi chi tiết. Kích hoạt theo eval của task, không theo một phần trăm cửa sổ dùng chung cho mọi hệ.</li>
           </ul>
 
@@ -900,7 +900,7 @@ const { object } = await generateObject({
 
           <h4>Anti-pattern · Context poisoning (đầu độc ngữ cảnh)</h4>
           <p>Một câu sai nằm trong lịch sử có thể trở thành tiền đề cho các lượt sau. Agent tiếp tục suy luận từ state sai, nhất là khi harness không xác minh output trung gian. Đây là <strong>context poisoning</strong>: lỗi cũ được tái sử dụng như dữ kiện.</p>
-          <div class="callout warn"><div class="callout-title">Cách chống</div><p><strong>(1)</strong> Validate output trung gian <em>trước khi</em> nó vào lịch sử — nếu agent bảo đã deploy, hãy xác minh trước khi giữ claim đó trong context. <strong>(2)</strong> Khi phát hiện lỗi, viết lại hoặc xóa lượt sai — đừng chỉ nối "à nhầm, cái đó sai". <strong>(3)</strong> Với loop dài, định kỳ reset về state sạch; subagent giúp cô lập phần khám phá khỏi context chính.</p></div>
+          <div class="callout warn"><div class="callout-title">Cách chống</div><p><strong>(1)</strong> Validate output trung gian <em>trước khi</em> nó vào lịch sử: nếu agent bảo đã deploy, hãy xác minh trước khi giữ claim đó trong context. <strong>(2)</strong> Khi phát hiện lỗi, viết lại hoặc xóa lượt sai — đừng chỉ nối "à nhầm, cái đó sai". <strong>(3)</strong> Với loop dài, định kỳ reset về state sạch; subagent giúp cô lập phần khám phá khỏi context chính.</p></div>
 
           <div class="exercise">
             <h5>Bài tập · Thay pre-load bằng just-in-time</h5>
@@ -942,7 +942,7 @@ const { object } = await generateObject({
           <div class="objectives">
             <span class="eyebrow">Học xong bài này bạn có thể</span>
             <ul>
-              <li>Nhìn context như một <em>vòng đời</em> bốn giai đoạn — thu nạp → dùng → cô đọng → quên — chứ không chỉ một cửa sổ.</li>
+              <li>Nhìn context như một <em>vòng đời</em> bốn giai đoạn: thu nạp → dùng → cô đọng → quên.</li>
               <li>Gắn <em>nguồn + quyền + ngày</em> (provenance) cho mỗi mảnh nhớ, và biết cái gì thắng cái gì khi xung đột.</li>
               <li>Dựng một <em>write gate</em> và cơ chế quên tối thiểu để bộ nhớ dài hạn không tự đầu độc chính nó.</li>
             </ul>
@@ -956,7 +956,7 @@ const { object } = await generateObject({
           </div>
 
           <h4>Context có vòng đời, không chỉ có cửa sổ</h4>
-          <p>Mọi mảnh context đi qua bốn giai đoạn. Bạn đã học pattern cho ba giai đoạn đầu ở Chương 2–3; giai đoạn thứ tư — <em>quên</em> — là mảnh còn thiếu trong đa số hệ.</p>
+          <p>Mọi mảnh context đi qua bốn giai đoạn. Bạn đã học pattern cho ba giai đoạn đầu ở Chương 2–3; giai đoạn thứ tư (<em>quên</em>) là mảnh còn thiếu trong đa số hệ.</p>
           <figure class="figure">
             <svg viewBox="0 0 720 214" role="img" aria-label="Vòng đời context bốn giai đoạn nối tiếp: thu nạp, sử dụng, cô đọng, quên; một mũi tên vòng từ quên quay lại thu nạp cho thấy đây là chu trình lặp lại">
               <rect class="dgm-accent" x="14" y="46" width="150" height="60" rx="10" stroke-width="2"/>
@@ -1021,7 +1021,7 @@ const { object } = await generateObject({
 
           <div class="takeaway">
             <span class="eyebrow"><svg aria-hidden="true" focusable="false" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 2v6m0 8v6M4.9 4.9l4.2 4.2m5.8 5.8l4.2 4.2M2 12h6m8 0h6M4.9 19.1l4.2-4.2m5.8-5.8l4.2-4.2"/></svg>Takeaway</span>
-            <p>Context không chỉ có cửa sổ — nó có <span class="hl">vòng đời: thu nạp → dùng → cô đọng → quên</span>. Ghi có <span class="hl">write gate</span>, nhớ có <span class="hl">nguồn + ngày</span>, và <span class="hl">quên là một tính năng</span> phải thiết kế, không phải một sự cố xảy đến.</p>
+            <p>Cửa sổ context chỉ là một lát cắt; thứ phải quản trị là <span class="hl">vòng đời: thu nạp → dùng → cô đọng → quên</span>. Ghi có <span class="hl">write gate</span>, nhớ có <span class="hl">nguồn + ngày</span>, và <span class="hl">quên là một tính năng</span> phải thiết kế, không phải một sự cố xảy đến.</p>
           </div>
 
           <div class="quiz" data-correct="2">
@@ -1063,7 +1063,8 @@ const { object } = await generateObject({
               <li>Lập threat model tối thiểu cho một harness: injection, poisoning, tự cấp quyền, hành động không đảo ngược, tool sprawl.</li>
             </ul>
           </div>
-          <p>Context engineering quyết định mô hình <em>thấy gì</em>. Harness engineering quyết định mô hình <em>làm được gì</em> và <em>hỏng thế nào</em>. Đây là nơi tính năng thành sản phẩm.</p>
+          <p>Bạn vừa gắn cho trợ lý chăm sóc khách hàng một tool <code>refund_customer(order_id, amount)</code> và để model tự quyết theo diễn biến hội thoại. Chốt chặn duy nhất là một dòng trong system prompt: "chỉ hoàn tiền khi thật sự chính đáng". Một khách kể câu chuyện đủ thuyết phục, model gọi tool, tiền đã đi.</p>
+          <p>Context engineering quyết định mô hình <em>thấy gì</em>. Harness engineering quyết định mô hình <em>làm được gì</em> và <em>hỏng thế nào</em>: dòng chỉ dẫn kia là văn bản nằm trong context, còn thứ chặn được cú gọi tool nằm ở harness.</p>
           <figure class="figure" style="padding:18px 20px 4px">
             <div class="stack-caption">harness · năm trụ cột</div>
             <div class="stack">
@@ -1159,7 +1160,7 @@ const { object } = await generateObject({
   throw new Error(`Agent vượt ${MAX_ITER} vòng. Nhiều khả năng bị kẹt.`);  // GIỚI HẠN 4 · max iter
 }</pre>
           </div>
-          <div class="callout warn"><div class="callout-title">Ba loại loop dễ gây sự cố</div><p><strong>(1) Retry vô tận</strong> — cùng tool fail y hệt lặp lại → phát hiện gọi trùng. <strong>(2) Suy luận vòng tròn</strong> — model đảo qua lại hai state → cap số vòng. <strong>(3) Khám phá quá đà</strong> — model "kiểm tra lại" mãi → trần chi phí ép dừng. Đặt giới hạn và log đủ message, tool call, lỗi, token, thời gian để tái hiện đường đi của agent.</p></div>
+          <div class="callout warn"><div class="callout-title">Ba loại loop dễ gây sự cố</div><p><strong>(1) Retry vô tận</strong>: cùng tool fail y hệt lặp lại → phát hiện gọi trùng. <strong>(2) Suy luận vòng tròn</strong>: model đảo qua lại hai state → cap số vòng. <strong>(3) Khám phá quá đà</strong>: model "kiểm tra lại" mãi → trần chi phí ép dừng. Đặt giới hạn và log đủ message, tool call, lỗi, token, thời gian để tái hiện đường đi của agent.</p></div>
 
           <h4>Trụ 3 · Kiến trúc bộ nhớ</h4>
           <p>Ba tầng, hay bị lẫn. Dùng nhầm tầng gây bug rất cụ thể.</p>
@@ -1209,7 +1210,7 @@ const { object } = await generateObject({
               </tbody>
             </table>
           </div>
-          <p>Đây là mức tối thiểu, không phải danh sách đầy đủ. Nguyên tắc chung — "<strong>model đề xuất, harness quyết định</strong>" (đã học ở Trụ 4) — chính là tuyến phòng thủ số một.</p>
+          <p>Đây là mức tối thiểu, không phải danh sách đầy đủ. Nguyên tắc chung "<strong>model đề xuất, harness quyết định</strong>" (đã học ở Trụ 4) chính là tuyến phòng thủ số một.</p>
 
           <h4>Containment trước alignment</h4>
           <p>Bảng threat model ở trên vẫn giả định bạn kịp phát hiện agent làm sai. Có một câu hỏi đi <em>trước</em> nó: agent <strong>có thể</strong> chạm tới cái gì? Anthropic (05/2026) mô tả cách họ vận hành agent nội bộ theo đúng thứ tự này — giám sát cái agent <em>có thể</em> làm trước khi giám sát cái nó <em>đã</em> làm. Lý do rất thực dụng: lớp thứ nhất vẫn đứng vững cả khi model bị prompt injection, hiểu sai việc, hay chỉ đơn giản là gọi nhầm tool; lớp thứ hai thì phụ thuộc vào việc bạn đọc kịp log.</p>
@@ -1241,10 +1242,10 @@ const { object } = await generateObject({
             </svg>
             <figcaption><b>Hình 4.2</b> — Ba pattern cô lập đã có trong công cụ hôm nay, xếp cạnh mức "không cô lập" để thấy cái giá. Leo sang phải, bạn đổi độ tiện tay lấy bán kính ảnh hưởng nhỏ hơn — và đổi cả số lần phải hỏi người (xem callout dưới).</figcaption>
           </figure>
-          <p>Ba pattern isolation đã ship và bạn dùng được ngay: <strong>(1) container dùng-xong-vứt</strong> — mỗi task chạy trong một bản môi trường mới, xong thì huỷ, nên state bẩn không rò sang task sau; <strong>(2) OS sandbox + hỏi người</strong> — quyền đọc/ghi file và truy cập mạng bị chặn ở tầng hệ điều hành, agent chỉ phải hỏi khi thật sự cần vượt ranh; <strong>(3) VM niêm phong</strong> — cả phiên nằm trong máy ảo tách rời, mặc định không có đường ra mạng, hợp với việc chạy dài không người ngồi canh.</p>
+          <p>Ba pattern isolation đã ship và bạn dùng được ngay: <strong>(1) container dùng-xong-vứt</strong>: mỗi task chạy trong một bản môi trường mới, xong thì huỷ, nên state bẩn không rò sang task sau; <strong>(2) OS sandbox + hỏi người</strong>: quyền đọc/ghi file và truy cập mạng bị chặn ở tầng hệ điều hành, agent chỉ phải hỏi khi thật sự cần vượt ranh; <strong>(3) VM niêm phong</strong>: cả phiên nằm trong máy ảo tách rời, mặc định không có đường ra mạng, hợp với việc chạy dài không người ngồi canh.</p>
           <div class="callout warn">
             <div class="callout-title">Trạng thái sản phẩm · kiểm tra 25/07/2026 — vì sao "hỏi người" một mình không đủ</div>
-            <p>Anthropic báo cáo (05/2026) rằng khoảng <strong>93% permission prompt được người dùng bấm đồng ý</strong> — hiện tượng approval fatigue: hỏi càng nhiều, cái "có" càng rẻ, và hàng rào người trên thực tế mỏng hơn nó trông. Cũng theo báo cáo đó, khi bật sandbox ở tầng OS, <strong>số prompt phải hỏi giảm khoảng 84%</strong>, vì phần lớn hành động vốn đã bị chặn cứng nên không cần hỏi nữa. Đây là số từ một nhà cung cấp trên workload của họ — hãy coi là chỉ dấu hướng, không phải hằng số cho đội bạn. Cách đọc bền: <em>dùng containment để cắt số lần phải hỏi, rồi dành hàng rào người cho đúng nhóm hành động không đảo ngược</em> (Trụ 4). Tên chế độ và giao diện có thể đổi — kiểm tra lại trước khi dựa vào.</p>
+            <p>Anthropic báo cáo (05/2026) rằng khoảng <strong>93% permission prompt được người dùng bấm đồng ý</strong> — hiện tượng approval fatigue: hỏi càng nhiều, cái "có" càng rẻ, và hàng rào người trên thực tế mỏng hơn nó trông. Cũng theo báo cáo đó, khi bật sandbox ở tầng OS, <strong>số prompt phải hỏi giảm khoảng 84%</strong>, vì phần lớn hành động vốn đã bị chặn cứng nên không cần hỏi nữa. Đây là số từ một nhà cung cấp trên workload của họ, hãy coi là chỉ dấu hướng, không phải hằng số cho đội bạn. Cách đọc bền: <em>dùng containment để cắt số lần phải hỏi, rồi dành hàng rào người cho đúng nhóm hành động không đảo ngược</em> (Trụ 4). Tên chế độ và giao diện có thể đổi; kiểm tra lại trước khi dựa vào.</p>
           </div>
 
           <h4>Trụ 5 · Observability — log đường đi cần để tái hiện</h4>
@@ -1253,7 +1254,7 @@ const { object } = await generateObject({
           <div class="callout insight"><div class="callout-title">Model mới, kiểm lại giàn giáo cũ</div><p>Harness là code nên cũng có thể lỗi thời. Sau mỗi lần nâng model, chạy cùng eval với từng lớp scaffold được bật/tắt: prompt lập kế hoạch dài, bước tự-phê bình, subagent, retry, compaction. Giữ lớp nào cải thiện chất lượng hoặc độ an toàn đủ để bù chi phí; bỏ lớp chỉ còn làm tăng độ trễ. Đây là <strong>ablation test</strong> — thử tháo từng thanh giàn để biết thanh nào còn chịu lực.</p></div>
 
           <h4>Post-run learning · harness học sau mỗi lần chạy</h4>
-          <p>Mỗi lần chạy — tốt hay xấu — đều để lại tri thức, và phần lớn nó bị vứt đi. Một harness trưởng thành <em>chắt</em> kết quả mỗi lần chạy thành tài sản bền: một eval case mới sinh ra từ mỗi lỗi thật; một quy tắc hoặc cái bẫy được ghi vào tri thức dự án; một checklist hay skill được rút ra từ một quy trình đã lặp thành công. Đây là JIT retrieval chạy theo chiều ngược — thay vì chỉ <em>lấy</em> tri thức vào, harness <em>chưng kết</em> tri thức ra.</p>
+          <p>Mỗi lần chạy, tốt hay xấu, đều để lại tri thức, và phần lớn nó bị vứt đi. Một harness trưởng thành <em>chắt</em> kết quả mỗi lần chạy thành tài sản bền: một eval case mới sinh ra từ mỗi lỗi thật; một quy tắc hoặc cái bẫy được ghi vào tri thức dự án; một checklist hay skill được rút ra từ một quy trình đã lặp thành công. Đây là JIT retrieval chạy theo chiều ngược: thay vì chỉ <em>lấy</em> tri thức vào, harness <em>chắt lọc</em> tri thức ra.</p>
           <p>Chìa khóa là kỷ luật, không phải khối lượng: mọi thứ được persist phải đi qua <strong>write gate</strong> (Bài 3.2) — chỉ giữ cái đã kiểm chứng. Chắt lọc có chọn lọc biến trải nghiệm thành năng lực; chắt lọc bừa bãi chỉ biến nó thành nợ.</p>
           <div class="callout warn"><div class="callout-title">Anti-pattern · learning sprawl</div><p>Tự động persist <em>mọi</em> "bài học" sau mỗi lần chạy nghe thì hay, nhưng nó làm bộ nhớ phình và bền vững hóa cả những fact sai — đúng cái bẫy bộ-nhớ-không-bao-giờ-quên. Persist có chọn lọc và có ngày. <strong>Đo:</strong> tỷ lệ lặp lại cùng một loại lỗi qua các tuần (phải giảm), số eval case tăng theo thời gian, và kích thước phần tri-thức-nạp-mỗi-phiên <em>không</em> tăng tuyến tính theo số lần chạy.</p></div>
 
@@ -1294,7 +1295,7 @@ const { object } = await generateObject({
       <header class="module-header" data-module="5">
         <span class="eyebrow">Chương 05 · Phần II · Làm chủ công cụ</span>
         <h2>Claude Code · Kiến trúc phân lớp</h2>
-        <p>Claude Code không phải "ô chat trong terminal". Nó là một <em>harness</em> có thể lập trình. Hiểu ba lớp — CORE, DELEGATION, EXTENSION — bạn biến nó từ autocomplete thành một đội kỹ sư.</p>
+        <p>Claude Code không phải "ô chat trong terminal". Nó là một <em>harness</em> có thể lập trình. Hiểu ba lớp (CORE, DELEGATION, EXTENSION), bạn biến nó từ autocomplete thành một đội kỹ sư.</p>
       </header>
 
       <article class="lesson" id="m5-l1" data-lesson>
@@ -1383,12 +1384,12 @@ description: Dùng khi cần xuất báo cáo tuần cho khách từ dashboard n
           </div>
           <div class="callout info">
             <div class="callout-title">Trạng thái sản phẩm · kiểm tra 25/07/2026</div>
-            <p>Định dạng Agent Skills đã đi ra ngoài phạm vi một nhà cung cấp: năm 2026 nó được công bố như một chuẩn mở (tài liệu tại <a href="https://agentskills.io" target="_blank" rel="noopener noreferrer">agentskills.io</a>) và được nhiều công cụ khác đọc — Codex, Gemini CLI, Cursor nằm trong nhóm đó. Nghĩa thực dụng: thư viện skill của đội có cơ hội dùng lại khi bạn đổi công cụ, thay vì phải viết lại. <em>Danh sách công cụ hỗ trợ và chi tiết định dạng có thể đổi — kiểm tra lại trước khi cam kết chuẩn hoá cả đội.</em></p>
+            <p>Định dạng Agent Skills đã đi ra ngoài phạm vi một nhà cung cấp: năm 2026 nó được công bố như một chuẩn mở (tài liệu tại <a href="https://agentskills.io" target="_blank" rel="noopener noreferrer">agentskills.io</a>) và được nhiều công cụ khác đọc: Codex, Gemini CLI, Cursor nằm trong nhóm đó. Nghĩa thực dụng: thư viện skill của đội có cơ hội dùng lại khi bạn đổi công cụ, thay vì phải viết lại. <em>Danh sách công cụ hỗ trợ và chi tiết định dạng có thể đổi; kiểm tra lại trước khi cam kết chuẩn hoá cả đội.</em></p>
           </div>
 
           <h4>DELEGATION · Subagents &amp; git worktree — cô lập là tính năng</h4>
           <p>Subagent = một context mới toanh cho task tập trung; cha chỉ nhận kết luận (đúng Pattern 4, Chương 3). <strong>Git worktree</strong> nâng cấp điều này lên tầng filesystem: mỗi agent làm trên một bản sao repo cô lập → nhiều agent sửa file song song mà không giẫm chân nhau, rồi merge. Dùng worktree khi (và chỉ khi) các agent thực sự ghi file song song — nó tốn đĩa + thiết lập.</p>
-          <p>Subagent không chỉ <em>cô lập</em> context — nó còn có thể <em>tích lũy</em>. Tính đến 07/2026, một subagent có thể khai báo trường <code>memory</code> (phạm vi <code>user</code> / <code>project</code> / <code>local</code>) để có một thư mục bộ nhớ bền qua các phiên, biến nó thành một "chuyên gia" sâu dần theo thời gian: reviewer nhớ những cái bẫy của repo, debugger nhớ các pattern lỗi từng gặp. Nhưng bộ nhớ bền của subagent cũng cần <strong>write gate + cơ chế quên</strong> (Bài 3.2) — nếu không, mỗi subagent thành một ổ bộ-nhớ-không-bao-giờ-quên riêng.</p>
+          <p>Subagent vừa <em>cô lập</em> context vừa có thể <em>tích lũy</em>. Tính đến 07/2026, một subagent có thể khai báo trường <code>memory</code> (phạm vi <code>user</code> / <code>project</code> / <code>local</code>) để có một thư mục bộ nhớ bền qua các phiên, biến nó thành một "chuyên gia" sâu dần theo thời gian: reviewer nhớ những cái bẫy của repo, debugger nhớ các pattern lỗi từng gặp. Nhưng bộ nhớ bền của subagent cũng cần <strong>write gate + cơ chế quên</strong> (Bài 3.2): nếu không, mỗi subagent thành một ổ bộ-nhớ-không-bao-giờ-quên riêng.</p>
 
           <h4>EXTENSION · Hooks &amp; MCP</h4>
           <p><strong>Hooks</strong> là hành vi harness lập trình được: chạy lệnh của <em>bạn</em> tại các sự kiện (PreToolUse, PostToolUse, Stop…) để chặn lệnh nguy hiểm, tự chạy test/lint, hay ép quy ước. Output của hook được coi như phản hồi cho agent. <strong>MCP</strong> mở rộng registry tool bằng server ngoài (DB, API, dịch vụ). Nhớ thuế registry ở Chương 2: <em>mỗi</em> MCP bật đều tốn token mọi lệnh gọi — bật theo phạm vi dự án, audit bằng <code>/mcp</code>.</p>
@@ -1427,7 +1428,7 @@ description: Dùng khi cần xuất báo cáo tuần cho khách từ dashboard n
 
           <div class="exercise">
             <h5>Bài tập · Sắp lớp cho setup của bạn</h5>
-            <p>Mở một dự án bạn dùng Claude Code. Liệt kê: <strong>(1)</strong> CLAUDE.md hiện dài bao nhiêu — có dòng nào Claude tự suy được không? <strong>(2)</strong> Có tri thức miền nào nên tách ra Skill? <strong>(3)</strong> Có MCP nào bật mà task hiện tại không cần — tắt để lấy lại token. Đo <code>/mcp</code> trước &amp; sau.</p>
+            <p>Mở một dự án bạn dùng Claude Code. Liệt kê: <strong>(1)</strong> CLAUDE.md hiện dài bao nhiêu, có dòng nào Claude tự suy được không? <strong>(2)</strong> Có tri thức miền nào nên tách ra Skill? <strong>(3)</strong> Có MCP nào bật mà task hiện tại không cần, tắt để lấy lại token. Đo <code>/mcp</code> trước &amp; sau.</p>
           </div>
 
           <div class="takeaway">
@@ -1461,7 +1462,7 @@ description: Dùng khi cần xuất báo cáo tuần cho khách từ dashboard n
           <div class="objectives">
             <span class="eyebrow">Học xong bài này bạn có thể</span>
             <ul>
-              <li>Nhận ra chi phí thứ hai của context thừa: không chỉ token, mà cả công phân xử khi các nguồn mâu thuẫn nhau.</li>
+              <li>Nhận ra chi phí thứ hai của context thừa: công phân xử khi các nguồn mâu thuẫn nhau.</li>
               <li>Chạy một lượt rà CLAUDE.md và Skill theo năm nhãn — và biết loại dòng nào không nên cắt dù model có mạnh lên.</li>
               <li>Giải thích được vì sao một best practice về context có thể hết hạn khi đổi đời model.</li>
             </ul>
@@ -1474,7 +1475,7 @@ description: Dùng khi cần xuất báo cáo tuần cho khách từ dashboard n
             <p>Anthropic công bố (24/07/2026, Thariq Shihipar) rằng họ đã <em>"removed over 80% of Claude Code's system prompt for models like Claude Opus 5 and Claude Fable 5 with no measurable loss on our coding evaluations"</em>. Ba giới hạn của phạm vi nên đọc kèm: đó là <strong>system prompt của Claude Code</strong> — do chính hãng viết cho sản phẩm của họ, không phải CLAUDE.md của bạn; <em>"no measurable loss"</em> nghĩa là <strong>hoà</strong>, không phải tốt lên; và thước đo là <strong>eval nội bộ của họ</strong>, trên workload của họ. Lý do họ đưa ra: họ nhận thấy mình đang <em>"overconstraining Claude Code, both through our system prompt and in our CLAUDE.md files and skills"</em>.</p>
           </div>
 
-          <p>Chương 2 đã tính chi phí thứ nhất của context thừa: token và thuế registry. Bài này thêm chi phí thứ hai, khó thấy hơn — <strong>công phân xử</strong>. Ví dụ chính Anthropic đưa ra là chuyện comment: một chỗ nói <em>"leave documentation as appropriate"</em>, chỗ khác nói <em>"DO NOT add comments"</em> — cùng lúc trong system prompt, trong một Skill đang bật, và trong câu người dùng vừa nhắn. Theo mô tả của họ, model khi đó phải <em>"think more carefully about these overlapping and conflicting messages before deciding what to do"</em>. Mỗi luật thêm vào không chỉ cộng token; nó còn cộng thêm một khả năng va chạm với những luật đã có.</p>
+          <p>Chương 2 đã tính chi phí thứ nhất của context thừa: token và thuế registry. Bài này thêm chi phí thứ hai, khó thấy hơn: <strong>công phân xử</strong>. Ví dụ chính Anthropic đưa ra là chuyện comment: một chỗ nói <em>"leave documentation as appropriate"</em>, chỗ khác nói <em>"DO NOT add comments"</em>, cùng lúc trong system prompt, trong một Skill đang bật, và trong câu người dùng vừa nhắn. Theo mô tả của họ, model khi đó phải <em>"think more carefully about these overlapping and conflicting messages before deciding what to do"</em>. Mỗi luật thêm vào vừa cộng token, vừa cộng thêm một khả năng va chạm với những luật đã có.</p>
 
           <figure class="figure">
             <svg viewBox="0 0 660 212" role="img" aria-label="Sơ đồ ba nguồn chỉ dẫn cùng nói về comment nhưng mâu thuẫn nhau: system prompt, skill đang bật, và câu người dùng, cùng dồn xuống một bước phân xử của model">
@@ -1497,7 +1498,7 @@ description: Dùng khi cần xuất báo cáo tuần cho khách từ dashboard n
               <rect class="dgm-box" x="150" y="170" width="360" height="32" rx="8"/>
               <text class="dgm-ink2" x="330" y="190" text-anchor="middle" font-size="9" font-family="IBM Plex Mono">mỗi luật thêm vào cộng thêm một khả năng va chạm</text>
             </svg>
-            <figcaption><b>Hình 5.3</b> — Ba nguồn đều hợp lý khi đọc riêng, và mâu thuẫn khi đọc cùng nhau. Đây là lý do một CLAUDE.md dài không chỉ đắt hơn mà còn <em>khó đoán hơn</em>: phần công model bỏ ra để hoà giải các chỉ dẫn là phần không sinh ra kết quả nào cho bạn.</figcaption>
+            <figcaption><b>Hình 5.3</b> — Ba nguồn đều hợp lý khi đọc riêng, và mâu thuẫn khi đọc cùng nhau. Đây là lý do một CLAUDE.md dài vừa đắt hơn vừa <em>khó đoán hơn</em>: phần công model bỏ ra để hoà giải các chỉ dẫn là phần không sinh ra kết quả nào cho bạn.</figcaption>
           </figure>
 
           <h4>Sáu chuyển dịch mà Anthropic mô tả</h4>
@@ -1537,12 +1538,12 @@ description: Dùng khi cần xuất báo cáo tuần cho khách từ dashboard n
 
           <div class="callout danger">
             <div class="callout-title">Phán đoán thay được style rule, không thay được authorization</div>
-            <p>Một điểm dễ đọc lệch nếu chỉ lướt qua bài gốc: lập luận "để model tự phán đoán" ở đó được minh hoạ bằng comment, idiom, cách viết giống code xung quanh — tức là <em>style</em>. Bài viết không đề xuất bỏ cổng duyệt hay ranh giới an toàn. Kết luận Chương 4 vẫn đứng nguyên: <strong>authorization thuộc harness, không thuộc phán đoán model</strong> — và một model mạnh hơn không đổi được điều đó, vì vấn đề không nằm ở năng lực phán đoán mà ở chỗ ai chịu trách nhiệm khi phán đoán sai. Khi rà CLAUDE.md, các dòng thuộc nhóm <span class="badge" style="background:var(--danger-bg);color:var(--danger)">KHÔNG ĐỘNG</span> nên được đọc như một bản ghi tạm của ràng buộc thật; chỗ ở lâu dài của chúng là cấu hình harness — allowlist tool, sandbox, quyền ghi, cổng duyệt theo hành động.</p>
+            <p>Một điểm dễ đọc lệch nếu chỉ lướt qua bài gốc: lập luận "để model tự phán đoán" ở đó được minh hoạ bằng comment, idiom, cách viết giống code xung quanh — tức là <em>style</em>. Bài viết không đề xuất bỏ cổng duyệt hay ranh giới an toàn. Kết luận Chương 4 vẫn đứng nguyên: <strong>authorization thuộc harness, không thuộc phán đoán model</strong>, và một model mạnh hơn không đổi được điều đó, vì vấn đề không nằm ở năng lực phán đoán mà ở chỗ ai chịu trách nhiệm khi phán đoán sai. Khi rà CLAUDE.md, các dòng thuộc nhóm <span class="badge" style="background:var(--danger-bg);color:var(--danger)">KHÔNG ĐỘNG</span> nên được đọc như một bản ghi tạm của ràng buộc thật; chỗ ở lâu dài của chúng là cấu hình harness — allowlist tool, sandbox, quyền ghi, cổng duyệt theo hành động.</p>
           </div>
 
           <div class="callout warn">
             <div class="callout-title">Cắt được 80% vì có cái để đo</div>
-            <p>Anthropic cắt được nhiều như vậy một phần vì họ có bộ eval coding để biết mình đã làm hỏng gì chưa. Không có bộ đo tương đương, "cắt 80%" là một canh bạc chứ chưa phải một quyết định — và cái hỏng sẽ xuất hiện thưa thớt, khó truy ngược về lần cắt. Một cách xoay xở khi chưa có eval: giữ lại 5–10 task đã từng làm agent sai, chạy chúng trước và sau khi cắt, so số lần phải sửa tay. Nhỏ, nhưng vẫn hơn cảm nhận. Tính đến 07/2026, Claude Code cũng có <code>/doctor</code> (<code>claude doctor</code>) hỗ trợ rà lại phần cấu hình này — tên lệnh có thể đổi, thao tác rà thì không.</p>
+            <p>Anthropic cắt được nhiều như vậy một phần vì họ có bộ eval coding để biết mình đã làm hỏng gì chưa. Không có bộ đo tương đương, "cắt 80%" là một canh bạc chứ chưa phải một quyết định, và cái hỏng sẽ xuất hiện thưa thớt, khó truy ngược về lần cắt. Một cách xoay xở khi chưa có eval: giữ lại 5–10 task đã từng làm agent sai, chạy chúng trước và sau khi cắt, so số lần phải sửa tay. Nhỏ, nhưng vẫn hơn cảm nhận. Tính đến 07/2026, Claude Code cũng có <code>/doctor</code> (<code>claude doctor</code>) hỗ trợ rà lại phần cấu hình này; tên lệnh có thể đổi, thao tác rà thì không.</p>
           </div>
 
           <div class="exercise">
@@ -1616,11 +1617,11 @@ description: Dùng khi cần xuất báo cáo tuần cho khách từ dashboard n
           <p>Tương đương <code>CLAUDE.md</code> nhưng theo <strong>thứ tự khám phá phân cấp</strong>: Codex đọc <code>AGENTS.md</code> từ gốc repo xuống thư mục hiện tại, file gần hơn <em>override</em> file xa hơn. Nhờ đó một monorepo có thể có quy ước chung ở gốc và quy ước riêng cho từng package — đúng nguyên tắc "context gần việc thì thắng".</p>
           <div class="callout info">
             <div class="callout-title">Trạng thái sản phẩm · kiểm tra 25/07/2026</div>
-            <p><code>AGENTS.md</code> không còn là định dạng riêng của một hãng: năm 2026 nó được đưa về một tổ chức trung lập — Agentic AI Foundation, dưới Linux Foundation — và được nhiều công cụ khác nhau cùng đọc (<a href="https://agents.md" target="_blank" rel="noopener noreferrer">agents.md</a>). Nghĩa thực dụng cho đội: chọn <code>AGENTS.md</code> làm nguồn quy ước chính có ít rủi ro khoá cứng vào một vendor hơn trước. <em>Tổ chức quản lý và chi tiết định dạng có thể đổi — kiểm tra lại trước khi chuẩn hoá cả tổ chức.</em></p>
+            <p><code>AGENTS.md</code> không còn là định dạng riêng của một hãng: năm 2026 nó được đưa về một tổ chức trung lập (Agentic AI Foundation, dưới Linux Foundation) và được nhiều công cụ khác nhau cùng đọc (<a href="https://agents.md" target="_blank" rel="noopener noreferrer">agents.md</a>). Nghĩa thực dụng cho đội: chọn <code>AGENTS.md</code> làm nguồn quy ước chính có ít rủi ro khoá cứng vào một vendor hơn trước. <em>Tổ chức quản lý và chi tiết định dạng có thể đổi; kiểm tra lại trước khi chuẩn hoá cả tổ chức.</em></p>
           </div>
 
           <h4>Sandbox · thực thi an toàn mặc định</h4>
-          <p>Điểm mạnh riêng của Codex: mỗi lệnh chạy trong sandbox với quyền hạn khai báo. Chọn chế độ theo rủi ro — chỉ-đọc, ghi-trong-workspace, hay full-access — thay vì tin agent "sẽ ngoan". Đây là nguyên tắc <em>authorization thuộc harness</em> (Chương 4) được đóng gói sẵn: harness quyết định agent chạm được gì, không phải phán đoán của model.</p>
+          <p>Điểm mạnh riêng của Codex: mỗi lệnh chạy trong sandbox với quyền hạn khai báo. Chọn chế độ theo rủi ro (chỉ-đọc, ghi-trong-workspace, hay full-access) thay vì tin agent "sẽ ngoan". Đây là nguyên tắc <em>authorization thuộc harness</em> (Chương 4) được đóng gói sẵn: harness quyết định agent chạm được gì, không phải phán đoán của model.</p>
           <p>Chỗ hay nhầm: đây thực ra là <strong>hai dial độc lập</strong>, không phải một thanh trượt "an toàn ↔ tự do". Một dial nói agent <em>có thể</em> làm gì (chỉ đọc / ghi trong workspace / toàn quyền); dial kia nói <em>khi nào phải hỏi</em> bạn (không tin thì hỏi / hỏi khi cần / không bao giờ hỏi). Chúng cắt nhau thành một lưới, và ô bạn đang đứng mới là cấu hình thật của phiên.</p>
           <figure class="figure">
             <svg viewBox="0 0 700 288" role="img" aria-label="Lưới hai trục cấu hình Codex: trục ngang là sandbox mode gồm chỉ đọc, ghi trong workspace, toàn quyền; trục dọc là chính sách duyệt gồm không tin nên hỏi, hỏi khi cần, không bao giờ hỏi; ba ô được đánh dấu là đọc hiểu repo, mặc định hằng ngày, và ô toàn quyền không hỏi là ô không còn hàng rào nào">
@@ -1652,7 +1653,7 @@ description: Dùng khi cần xuất báo cáo tuần cho khách từ dashboard n
           </figure>
           <div class="callout info">
             <div class="callout-title">Trạng thái sản phẩm · kiểm tra 25/07/2026</div>
-            <p>Theo tài liệu Codex tại thời điểm kiểm (07/2026), <strong>truy cập mạng bị tắt mặc định ở mọi chế độ sandbox</strong> — kể cả chế độ ghi-trong-workspace; khi bạn bật, có thể giới hạn bằng <strong>domain allowlist</strong> thay vì mở toàn bộ internet. Đáng nhớ vì mạng là đường thoát của phần lớn kịch bản exfiltration sau một prompt injection (Chương 4). <em>Tên chế độ, tên tham số và mặc định có thể đổi — kiểm tra lại tài liệu trước khi dựa vào.</em></p>
+            <p>Theo tài liệu Codex tại thời điểm kiểm (07/2026), <strong>truy cập mạng bị tắt mặc định ở mọi chế độ sandbox</strong>, kể cả chế độ ghi-trong-workspace; khi bạn bật, có thể giới hạn bằng <strong>domain allowlist</strong> thay vì mở toàn bộ internet. Đáng nhớ vì mạng là đường thoát của phần lớn kịch bản exfiltration sau một prompt injection (Chương 4). <em>Tên chế độ, tên tham số và mặc định có thể đổi — kiểm tra lại tài liệu trước khi dựa vào.</em></p>
           </div>
 
           <h4>Review workflow · cổng chất lượng, không phải đóng dấu cho có</h4>
@@ -1710,7 +1711,7 @@ description: Dùng khi cần xuất báo cáo tuần cho khách từ dashboard n
               <li>Cân bằng lợi ích song song với thực tế chi phí &amp; rủi ro merge.</li>
             </ul>
           </div>
-          <p>Vì sao <em>kết hợp</em> thay vì <em>chọn</em>? Vì cùng một model, chạy hai lần trên cùng ngữ cảnh, cho ra hai câu trả lời tương quan cao — kể cả lỗi cũng tương quan. Một agent <em>khác</em> (công cụ khác, system prompt khác, không thấy lý lẽ thiết kế gốc) mới cho bạn góc nhìn thật sự độc lập.</p>
+          <p>Bạn nhờ một agent thiết kế endpoint auth, rồi ngay trong phiên đó nhờ chính nó review bảo mật. Nó đọc lại code của mình và báo "không có vấn đề". Cùng một model chạy hai lần trên cùng ngữ cảnh cho ra hai câu trả lời tương quan cao, và lỗi cũng tương quan theo. Góc nhìn độc lập chỉ đến từ một agent <em>khác</em>: công cụ khác, system prompt khác, không thấy lý lẽ thiết kế gốc.</p>
 
           <figure class="figure">
             <svg viewBox="0 0 660 250" role="img" aria-label="Cây quyết định: việc cần steer từng bước thì dùng công cụ đồng bộ; việc well-scoped fire-and-forget thì async cloud; luôn review bằng công cụ thứ hai">
@@ -1802,7 +1803,7 @@ description: Dùng khi cần xuất báo cáo tuần cho khách từ dashboard n
               <li>Dùng scout + góc nhìn đa agent để làm PRD chắc trước khi code.</li>
             </ul>
           </div>
-          <p>Ở Phần I–II bạn đã có nền tảng và công cụ. Phần III áp chúng vào từng pha SDLC. Bắt đầu từ pha bị coi nhẹ nhất — và là nơi AI mang lại giá trị cao nhất.</p>
+          <p>Bạn gõ "viết cho tôi cái dashboard" rồi để agent chạy. Nó trả về một trang trông rất chỉn chu: biểu đồ, bộ lọc, bảng số. Không cái nào là chỉ số đội bạn thật sự theo dõi, vì bạn chưa từng nói ra và agent đã đoán thay. Phần III bắt đầu đúng ở pha bị coi nhẹ nhất đó: đặc tả.</p>
 
           <div class="compare">
             <div class="compare-col bad"><span class="eyebrow">Failure mode 1 · spec quá sơ sài</span><ul><li>"Viết cho tôi cái dashboard" → agent đoán mò, ra thứ trông đúng nhưng sai yêu cầu ngầm.</li><li>Càng nhanh càng nhiều code sai để dọn.</li></ul></div>
@@ -1893,7 +1894,7 @@ description: Dùng khi cần xuất báo cáo tuần cho khách từ dashboard n
               <li>Threat-model và vẽ sơ đồ hệ thống dưới dạng code với AI.</li>
             </ul>
           </div>
-          <p>Kiến trúc không phải "câu trả lời đúng" mà là tìm điểm tốt nhất trong một không gian bị ràng buộc (chi phí, đội ngũ, thời gian, vận hành). AI giỏi ở <em>mở rộng</em> không gian (nhiều phương án) và đóng vai chuyên gia; bạn giỏi ở <em>đánh đổi</em> theo bối cảnh thật.</p>
+          <p>Hệ đơn hàng của bạn cần một giao dịch chạm cùng lúc ba bảng: đơn, thanh toán, tồn kho. Bạn hỏi AI "nên dùng DB nào?" và nhận về một đoạn văn cân bằng, đúng cho mọi hệ và vì thế vô dụng cho hệ của bạn. Câu hỏi thật là ràng buộc nào của bạn loại được phương án nào, và ai chịu trách nhiệm cho phần bị loại. AI mở rộng không gian phương án và đóng vai chuyên gia; bạn gánh phần đánh đổi theo bối cảnh thật, rồi ghi lại bằng ADR.</p>
 
           <figure class="figure">
             <svg viewBox="0 0 720 210" role="img" aria-label="Luồng kiến trúc với AI: AI mở rộng nhiều phương án, ba persona-subagent (SRE, bảo mật, chi phí) phản biện theo ràng buộc, bạn phân xử giữ đánh đổi rồi chốt bằng ADR">
@@ -1935,7 +1936,7 @@ description: Dùng khi cần xuất báo cáo tuần cho khách từ dashboard n
 
           <div class="callout insight"><div class="callout-title">Cuộc họp review kiến trúc · với AI trong phòng</div><p>Cho mỗi subagent-persona phản biện thiết kế <em>trước</em> cuộc họp người. Vào họp với danh sách rủi ro &amp; câu hỏi đã được AI khai quật — người tập trung vào đánh đổi, không phải vào việc phát hiện lỗ hổng cơ bản. Nhớ Chương 7: reviewer phải là agent <em>khác</em> với builder.</p></div>
 
-          <div class="callout info"><div class="callout-title">Ví dụ 30 giây · một ADR rút gọn 5 dòng</div><p><strong>Bối cảnh:</strong> hệ đơn hàng cần giao dịch nhiều bảng (đơn, thanh toán, tồn kho) với ràng buộc nhất quán mạnh. <strong>Quyết định:</strong> dùng Postgres làm store chính. <strong>Phương án loại:</strong> MongoDB — loại vì không có giao dịch đa-document dễ dùng và schema đơn hàng vốn quan hệ. <strong>Hệ quả:</strong> được ACID + JOIN + ràng buộc khóa ngoại; đổi lại phải quản lý migration schema và chấp nhận scale ngang khó hơn. Năm dòng này là toàn bộ một ADR — AI phác nhanh, bạn quyết đánh đổi cuối.</p></div>
+          <div class="callout info"><div class="callout-title">Ví dụ 30 giây · một ADR rút gọn 5 dòng</div><p><strong>Bối cảnh:</strong> hệ đơn hàng cần giao dịch nhiều bảng (đơn, thanh toán, tồn kho) với ràng buộc nhất quán mạnh. <strong>Quyết định:</strong> dùng Postgres làm store chính. <strong>Phương án loại:</strong> MongoDB, loại vì không có giao dịch đa-document dễ dùng và schema đơn hàng vốn quan hệ. <strong>Hệ quả:</strong> được ACID + JOIN + ràng buộc khóa ngoại; đổi lại phải quản lý migration schema và chấp nhận scale ngang khó hơn. Năm dòng này là toàn bộ một ADR — AI phác nhanh, bạn quyết đánh đổi cuối.</p></div>
 
           <div class="exercise">
             <h5>Bài tập · Panel chuyên gia cho một quyết định thật</h5>
@@ -2076,7 +2077,7 @@ description: Dùng khi cần xuất báo cáo tuần cho khách từ dashboard n
               <li>Biết AI giỏi gì / dở gì khi sinh test, và dùng eval như test hồi quy cho tính năng AI.</li>
             </ul>
           </div>
-          <p>Lợi thế cấu trúc của AI reviewer là nó <em>không mỏi và không nể nang</em>: dòng thứ 800 vẫn được đọc với đúng thái độ như dòng đầu, không có "quá dài để đọc kỹ", không ngại làm phật lòng tác giả. Nhưng nó vẫn chịu đúng ràng buộc attention budget đã học ở Chương 2 — một diff rất dài vẫn bị context rot, nên hãy <strong>cắt diff lớn thành từng cụm thay đổi và review từng cụm</strong> thay vì thả cả 3.000 dòng vào một lượt. Và lợi thế đó bốc hơi nếu reviewer là chính agent đã viết code — nó thừa hưởng đúng điểm mù (Chương 7).</p>
+          <p>Nhóm bạn muốn thêm "AI review" vào quy trình, và ai đó đề xuất cách rẻ nhất: để chính agent vừa viết code tự review lại rồi mới mở PR. Nghe hợp lý, vì AI reviewer có một lợi thế cấu trúc thật: nó <em>không mỏi và không nể nang</em>, dòng thứ 800 vẫn được đọc với đúng thái độ như dòng đầu, không có "quá dài để đọc kỹ", không ngại làm phật lòng tác giả. Nhưng lợi thế đó bốc hơi khi reviewer chính là agent đã viết code: nó thừa hưởng đúng điểm mù đã tạo ra lỗi (Chương 7). Nó cũng vẫn chịu ràng buộc attention budget của Chương 2, nên hãy <strong>cắt diff lớn thành từng cụm thay đổi và review từng cụm</strong> thay vì thả cả 3.000 dòng vào một lượt.</p>
 
           <div class="table-wrap">
             <table>
@@ -2091,7 +2092,7 @@ description: Dùng khi cần xuất báo cáo tuần cho khách từ dashboard n
 
           <div class="callout info">
             <div class="callout-title">Bằng chứng 2026 · reviewer context-sạch</div>
-            <p>Cognition báo cáo (04/2026) rằng một reviewer chạy trên <em>context sạch</em> — không thấy lý lẽ thiết kế của builder — bắt trung bình khoảng <strong>2 bug mỗi PR</strong>, trong đó khoảng <strong>58% được họ xếp là nghiêm trọng</strong>, và làm việc <em>tốt hơn</em> khi không chia sẻ context với builder. Cùng nhóm đó cũng đảo lại khuyến cáo chống multi-agent năm 2025 của chính họ theo hướng "nhiều agent ĐỌC, một agent VIẾT" (Chương 7) — reviewer là một agent ĐỌC điển hình. Đây là số một hãng công bố trên codebase của họ, hãy đọc như chỉ dấu hướng: điều đáng mang về là <strong>độc lập về context, chứ không phải đổi logo công cụ</strong>.</p>
+            <p>Cognition báo cáo (04/2026) rằng một reviewer chạy trên <em>context sạch</em> (không thấy lý lẽ thiết kế của builder) bắt trung bình khoảng <strong>2 bug mỗi PR</strong>, trong đó khoảng <strong>58% được họ xếp là nghiêm trọng</strong>, và làm việc <em>tốt hơn</em> khi không chia sẻ context với builder. Cùng nhóm đó cũng đảo lại khuyến cáo chống multi-agent năm 2025 của chính họ theo hướng "nhiều agent ĐỌC, một agent VIẾT" (Chương 7) — reviewer là một agent ĐỌC điển hình. Đây là số một hãng công bố trên codebase của họ, hãy đọc như chỉ dấu hướng: điều đáng mang về là <strong>độc lập về context, chứ không phải đổi logo công cụ</strong>.</p>
           </div>
 
           <figure class="figure">
@@ -2178,7 +2179,7 @@ description: Dùng khi cần xuất báo cáo tuần cho khách từ dashboard n
               <li>Áp kỷ luật chi phí &amp; quan sát cho chính các tính năng AI.</li>
             </ul>
           </div>
-          <p>Quy tắc chung: AI tỏa sáng ở việc có <em>tín hiệu khách quan để bám</em> — test pass/fail, log lỗi, diff. Nó chông chênh ở việc mơ hồ, thiếu phản hồi. Vận hành production đầy tín hiệu rõ, nên là mảnh đất tốt.</p>
+          <p>2 giờ sáng, độ sâu hàng đợi tăng dốc và tuổi message cũ nhất bò lên. Bạn dán log lỗi cùng đồ thị throughput vào/ra cho agent; nó dựng lại một khung bốn bước để bám theo: xác nhận triệu chứng, khoanh nguyên nhân, giảm áp, xác minh. Nó làm được việc đó vì mọi thứ nó cần đều là <em>tín hiệu khách quan</em> (log, số đo, diff); ở đầu kia của trục, những việc mơ hồ và thiếu vòng phản hồi, nó chông chênh. Quyết định scale consumer hay điều tiết producer thì vẫn là của người trực.</p>
 
           <figure class="figure">
             <svg viewBox="0 0 640 210" role="img" aria-label="Bản đồ tín hiệu: trục ngang từ tín hiệu mù mờ bên trái đến tín hiệu rõ diff log test bên phải; các điểm đặt AI review PR runbook incident triage nằm phía tín hiệu rõ; vùng người giữ quyết định đánh dấu ở các hành động rủi ro rollback merge on-call">
@@ -2263,7 +2264,7 @@ description: Dùng khi cần xuất báo cáo tuần cho khách từ dashboard n
               <li>Chống suy giảm kỹ năng (skill atrophy) và đo thành công ở cấp đội, không phải cấp cá nhân.</li>
             </ul>
           </div>
-          <p>Đây là chương L5: bạn không chỉ dùng giỏi, bạn <em>dẫn dắt</em> người khác dùng giỏi — và biết khi nào bảo cả nhóm dừng lại. Adoption thất bại có khuôn mẫu rõ, nên tránh được.</p>
+          <p>Đội bạn mở license cho cả team, chạy một buổi training bằng slide, rồi treo "số dòng code AI sinh mỗi tuần" lên dashboard. Vài tuần sau, mỗi người một kiểu prompt và không ai tái dùng được của ai; số dòng thì tăng, thời gian review cũng tăng theo. Không ai làm sai điều gì cụ thể: cái thiếu là chuẩn chung, một pilot học-bằng-làm, và một chỉ số đo đúng thứ cần đo. Adoption thất bại có khuôn mẫu rõ, nên tránh được.</p>
 
           <div class="callout danger"><div class="callout-title">Vì sao adoption thất bại</div><p>Không phải vì công cụ dở. Mà vì: <strong>(1)</strong> không có chuẩn chung (mỗi người một kiểu, không tái dùng được); <strong>(2)</strong> đào tạo bằng slide thay vì học-bằng-làm; <strong>(3)</strong> đo sai thành công (dòng code/ngày thay vì kết quả); <strong>(4)</strong> bỏ quên "khi nào KHÔNG dùng AI".</p></div>
 

@@ -179,7 +179,7 @@ code{font-family:var(--font-mono);font-size:.85em;background:var(--surface-2);pa
 .stack-caption{font-family:var(--font-mono);font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-3);margin-bottom:10px}
 .prompt-card,.code-card{border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;background:var(--surface)}
 .prompt-head{display:flex;align-items:center;justify-content:space-between;padding:9px 14px;background:var(--surface-2);border-bottom:1px solid var(--border);font-family:var(--font-mono);font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-2)}
-.copy-btn{font-family:var(--font-mono);font-size:10.5px;letter-spacing:.06em;text-transform:uppercase;background:var(--surface);border:1px solid var(--border);border-radius:7px;padding:4px 10px;cursor:pointer;color:var(--ink-2);transition:all .15s}
+.copy-btn{font-family:var(--font-mono);font-size:10.5px;letter-spacing:.06em;text-transform:uppercase;background:var(--surface);border:1px solid var(--border);border-radius:7px;padding:4px 10px;min-height:44px;min-width:44px;cursor:pointer;color:var(--ink-2);transition:all .15s}
 .copy-btn:hover{background:var(--accent);color:#fff;border-color:var(--accent)}.copy-btn.copied{background:var(--success);color:#fff;border-color:var(--success)}
 .prompt-card pre,.code-card pre{margin:0;padding:16px;overflow-x:auto;font-family:var(--font-mono);font-size:13px;line-height:1.6;white-space:pre-wrap;word-break:break-word;color:var(--ink)}
 .code-card pre{white-space:pre;word-break:normal}
@@ -337,7 +337,7 @@ footer.site{border-top:1px solid var(--border);padding:26px 24px;text-align:cent
           <div class="objectives">
             <span class="eyebrow">After this lesson you can</span>
             <ul>
-              <li>Cleanly tell the three layers apart — prompt, context, harness — and know which layer each failure belongs to.</li>
+              <li>Cleanly tell the three layers apart (prompt, context, harness) and know which layer each failure belongs to.</li>
               <li>Apply the right <em>diagnostic order</em> when an AI feature "works in dev, breaks in prod".</li>
               <li>Ask the right three review questions for an AI-feature PR.</li>
             </ul>
@@ -523,9 +523,9 @@ PROMPT:
           </figure>
 
           <h4>Full anatomy — what actually fills the window</h4>
-          <p>Every model call assembles <em>a single linear sequence</em>. Understanding how many tokens each segment costs — and how it interacts with the cache — is the foundation for every other context-engineering technique.</p>
+          <p>Every model call assembles <em>a single linear sequence</em>. Understanding how many tokens each segment costs, and how it interacts with the cache, is the foundation for every other context-engineering technique.</p>
           <div class="callout insight">
-            <div class="callout-title">The 1M-token era · what changes, what doesn't</div>
+            <div class="callout-title">The 1M-token window · what changes, what doesn't</div>
             <p>As of Aug 2026, GPT-5.6, Claude Sonnet 5 and Opus 5 all offer a context option around 1M tokens. That capacity is useful for long documents and tasks, but doesn't prove that any given monorepo or PDF will be understood in full. <strong>The context window is capacity; effective context is the part the model uses correctly on your eval.</strong></p>
           </div>
           <figure class="figure" style="padding:18px 20px 4px">
@@ -592,7 +592,7 @@ PROMPT:
             </ul>
           </div>
 
-          <p>Lesson 2.1 gave you <em>why</em> stuffing context lowers quality. This lesson is the other side of the same coin: tokens are also <strong>money and latency</strong>. Understanding token economics turns context discipline from a "should do" into a measurable cost lever.</p>
+          <p>Your internal assistant ships the same 100k-token instruction block with every request. From the second call on, that block should cost the equivalent of 10k thanks to caching; instead the bill stays flat and time-to-first-token never moves. Open the payload: the first line of the system prompt is the current timestamp, rewritten on every call, so no prefix ever matches. Tokens are <strong>money</strong> and they are <strong>latency</strong>, and the order you lay them out decides how much you pay.</p>
 
           <h4>Token economics — what actually costs</h4>
           <p>Input, cached input and output have different unit prices per model. Because price lists change fast, don't memorize a ratio; read the usage of a real request and compute against the model you're running. The part usually missed is the cost that repeats through every agent loop:</p>
@@ -748,7 +748,7 @@ console.log(result.providerMetadata?.anthropic);</pre>
       <header class="module-header" data-module="3">
         <span class="eyebrow">Chapter 03 · Part I · Foundations</span>
         <h2>Context Engineering patterns</h2>
-        <p>Six recurring problems, six battle-tested patterns. This is Anthropic's playbook plus a few additions from production. Internalize these six and you can design context for any AI feature. And one corner that's often forgotten: context isn't just a window, it has a lifecycle.</p>
+        <p>Six recurring problems, six battle-tested patterns. This is Anthropic's playbook plus a few additions from production. Internalize these six and you can design context for any AI feature. And one corner that's often forgotten: context has a lifecycle (ingest, use, consolidate, forget), and the last stage is the one most systems never build.</p>
       </header>
 
       <article class="lesson" id="m3-l1" data-lesson>
@@ -769,7 +769,7 @@ console.log(result.providerMetadata?.anthropic);</pre>
               <li>Recognize &amp; break context poisoning in long loops.</li>
             </ul>
           </div>
-          <p>Chapter 2 gave you the <em>physics</em> of context. Chapter 3 gives you the <em>technique</em>. Six patterns, each treating one specific problem.</p>
+          <p>Your customer Q&amp;A feature pre-loads 50 customer records, 200 product specs and 30 days of orders into every request "just in case": 80k tokens before the model has even read the question. The user asked about one order. Everything else spends attention budget and stretches every loop iteration. Six patterns follow, each treating one problem of that shape.</p>
 
           <h4>Pattern 1 · Just-in-time retrieval</h4>
           <p>One of the most notable shifts in agent design over the past year. Old thinking: pre-load everything the agent <em>might</em> need. New thinking: give the agent <strong>the tools to fetch what it needs, when it needs it</strong>.</p>
@@ -830,7 +830,7 @@ console.log(result.providerMetadata?.anthropic);</pre>
           <ul>
             <li><strong>Pin the stable part while it's still correct.</strong> Keep the system + original goal in a visible zone, keep recent turns verbatim, and summarize the middle. If the goal changes, update the source of truth instead of pinning stale instructions.</li>
             <li><strong>Summarize tool output aggressively.</strong> A 5k tool result becomes <code>[abridged file contents · 1240 lines · src/foo.ts]</code>. Keep the reference, drop the noise.</li>
-            <li><strong>Keep decisions, drop the debate.</strong> "Chose Drizzle, rejected Prisma over bundle size" — keep. The 2,000 tokens of argument that led there — drop.</li>
+            <li><strong>Keep decisions, drop the debate.</strong> Keep "Chose Drizzle, rejected Prisma over bundle size". Drop the 2,000 tokens of argument that led there.</li>
             <li><strong>Compaction is itself a model call</strong> — it costs tokens and can drop detail. Trigger it from the task's eval, not from a window-percentage shared across every system.</li>
           </ul>
 
@@ -844,7 +844,7 @@ console.log(result.providerMetadata?.anthropic);</pre>
           <div class="callout insight"><div class="callout-title">The file <em>is</em> the agent's external memory</div><p>Once this clicks, you stop trying to stuff everything into the context and start treating the conversation as a resettable desktop.</p></div>
 
           <h4>Pattern 4 · Subagent isolation</h4>
-          <p>Spawn a fresh agent context for a focused task. The parent only receives the final artifact/summary, so the child's detailed exploration doesn't spill into the main context. Anthropic recommends this pattern for long-running tasks; it's close to how a lead receives a report instead of reading every action of each IC.</p>
+          <p>Spawn a fresh agent context for a focused task. The parent only receives the final artifact/summary, so the child's detailed exploration doesn't spill into the main context. Anthropic recommends this pattern for long-running tasks; it's close to how a lead receives a report instead of reading every action of each team member.</p>
           <figure class="figure">
             <svg viewBox="0 0 660 150" role="img" aria-label="An illustrative subagent-isolation flow: the parent agent spawns a subagent with a brief, the subagent explores in its own context and returns a short summary for the parent to continue">
               <rect class="dgm-accent" x="16" y="54" width="110" height="42" rx="9" stroke-width="2"/>
@@ -899,7 +899,7 @@ const { object } = await generateObject({
 
           <h4>Anti-pattern · Context poisoning</h4>
           <p>One wrong statement sitting in the history can become a premise for later turns. The agent keeps reasoning from the bad state, especially when the harness doesn't verify intermediate output. This is <strong>context poisoning</strong>: an old error reused as fact.</p>
-          <div class="callout warn"><div class="callout-title">How to prevent it</div><p><strong>(1)</strong> Validate intermediate output <em>before</em> it enters the history — if the agent says it deployed, verify before keeping that claim in the context. <strong>(2)</strong> When you find an error, rewrite or delete the bad turn — don't just append "oops, that was wrong". <strong>(3)</strong> For long loops, periodically reset to a clean state; subagents help isolate exploration from the main context.</p></div>
+          <div class="callout warn"><div class="callout-title">How to prevent it</div><p><strong>(1)</strong> Validate intermediate output <em>before</em> it enters the history: if the agent says it deployed, verify before keeping that claim in the context. <strong>(2)</strong> When you find an error, rewrite or delete the bad turn — don't just append "oops, that was wrong". <strong>(3)</strong> For long loops, periodically reset to a clean state; subagents help isolate exploration from the main context.</p></div>
 
           <div class="exercise">
             <h5>Exercise · Replace pre-load with just-in-time</h5>
@@ -941,7 +941,7 @@ const { object } = await generateObject({
           <div class="objectives">
             <span class="eyebrow">After this lesson you can</span>
             <ul>
-              <li>See context as a four-stage <em>lifecycle</em> — ingest → use → consolidate → forget — not just a window.</li>
+              <li>See context as a four-stage <em>lifecycle</em>: ingest → use → consolidate → forget.</li>
               <li>Attach <em>source + authority + date</em> (provenance) to each remembered item, and know what beats what in a conflict.</li>
               <li>Build a <em>write gate</em> and a minimal forgetting mechanism so long-term memory doesn't poison itself.</li>
             </ul>
@@ -955,7 +955,7 @@ const { object } = await generateObject({
           </div>
 
           <h4>Context has a lifecycle, not just a window</h4>
-          <p>Every piece of context passes through four stages. You learned patterns for the first three in Chapters 2–3; the fourth — <em>forgetting</em> — is the missing piece in most systems.</p>
+          <p>Every piece of context passes through four stages. You learned patterns for the first three in Chapters 2–3; the fourth (<em>forgetting</em>) is the missing piece in most systems.</p>
           <figure class="figure">
             <svg viewBox="0 0 720 214" role="img" aria-label="A four-stage context lifecycle in sequence: ingest, use, consolidate, forget; a loop arrow from forget back to ingest shows this is a repeating cycle">
               <rect class="dgm-accent" x="14" y="46" width="150" height="60" rx="10" stroke-width="2"/>
@@ -1006,7 +1006,7 @@ const { object } = await generateObject({
 
           <div class="callout insight">
             <div class="callout-title">Forgetting is a feature, not an incident</div>
-            <p>A minimal forgetting mechanism: each item carries a <strong>date + source</strong>; periodically audit two questions — "is this still true?" and "when was it last used?"; and for a wrong item, <strong>delete</strong> it — don't append a correction line (two contradictory facts coexisting is worse). <strong>Measure:</strong> the average age of memory items, the share referenced in the last 30 days, and how often the agent cites an expired fact on the eval. Good memory shrinks over time, it doesn't bloat forever.</p>
+            <p>A minimal forgetting mechanism: each item carries a <strong>date + source</strong>; periodically audit two questions, "is this still true?" and "when was it last used?"; and for a wrong item, <strong>delete</strong> it rather than append a correction line (two contradictory facts coexisting is worse). <strong>Measure:</strong> the average age of memory items, the share referenced in the last 30 days, and how often the agent cites an expired fact on the eval. Good memory shrinks over time, it doesn't bloat forever.</p>
           </div>
 
           <div class="exercise">
@@ -1020,7 +1020,7 @@ const { object } = await generateObject({
 
           <div class="takeaway">
             <span class="eyebrow"><svg aria-hidden="true" focusable="false" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 2v6m0 8v6M4.9 4.9l4.2 4.2m5.8 5.8l4.2 4.2M2 12h6m8 0h6M4.9 19.1l4.2-4.2m5.8-5.8l4.2-4.2"/></svg>Takeaway</span>
-            <p>Context isn't just a window — it has a <span class="hl">lifecycle: ingest → use → consolidate → forget</span>. Write through a <span class="hl">write gate</span>, remember with a <span class="hl">source + date</span>, and treat <span class="hl">forgetting as a feature</span> you design, not an incident that happens to you.</p>
+            <p>The context window is only a slice; the thing you manage is the <span class="hl">lifecycle: ingest → use → consolidate → forget</span>. Write through a <span class="hl">write gate</span>, remember with a <span class="hl">source + date</span>, and treat <span class="hl">forgetting as a feature</span> you design, not an incident that happens to you.</p>
           </div>
 
           <div class="quiz" data-correct="2">
@@ -1062,7 +1062,8 @@ const { object } = await generateObject({
               <li>Draw a minimal threat model for a harness: injection, poisoning, self-granted permissions, irreversible actions, tool sprawl.</li>
             </ul>
           </div>
-          <p>Context engineering decides what the model <em>sees</em>. Harness engineering decides what the model <em>can do</em> and <em>how it fails</em>. This is where a feature becomes a product.</p>
+          <p>You just handed your support assistant a <code>refund_customer(order_id, amount)</code> tool and let the model decide refunds from how the conversation goes. The only thing standing between a customer and your money is one line in the system prompt: "only refund when it is genuinely warranted." A customer tells a convincing enough story, the model calls the tool, the money is gone.</p>
+          <p>Context engineering decides what the model <em>sees</em>. Harness engineering decides what the model <em>can do</em> and <em>how it fails</em>: that instruction is text sitting inside the context, while the thing that can actually stop the tool call lives in the harness.</p>
           <figure class="figure" style="padding:18px 20px 4px">
             <div class="stack-caption">harness · five pillars</div>
             <div class="stack">
@@ -1158,7 +1159,7 @@ const { object } = await generateObject({
   throw new Error(`Agent exceeded ${MAX_ITER} iterations. Most likely stuck.`);  // BOUND 4 · max iter
 }</pre>
           </div>
-          <div class="callout warn"><div class="callout-title">Three loop types that cause incidents</div><p><strong>(1) Infinite retry</strong> — the same tool fails identically over and over → duplicate-call detection. <strong>(2) Circular reasoning</strong> — the model flips between two states → cap the iterations. <strong>(3) Over-exploration</strong> — the model "double-checks" forever → the cost ceiling forces a stop. Set bounds and log enough messages, tool calls, errors, tokens and timing to reconstruct the agent's path.</p></div>
+          <div class="callout warn"><div class="callout-title">Three loop types that cause incidents</div><p><strong>(1) Infinite retry</strong>: the same tool fails identically over and over → duplicate-call detection. <strong>(2) Circular reasoning</strong>: the model flips between two states → cap the iterations. <strong>(3) Over-exploration</strong>: the model "double-checks" forever → the cost ceiling forces a stop. Set bounds and log enough messages, tool calls, errors, tokens and timing to reconstruct the agent's path.</p></div>
 
           <h4>Pillar 3 · Memory architecture</h4>
           <p>Three layers, often conflated. Using the wrong layer causes very specific bugs.</p>
@@ -1208,7 +1209,7 @@ const { object } = await generateObject({
               </tbody>
             </table>
           </div>
-          <p>This is the minimum, not a complete list. The general principle — "<strong>the model proposes, the harness decides</strong>" (learned in Pillar 4) — is the number-one line of defense.</p>
+          <p>This is the minimum, not a complete list. The general principle "<strong>the model proposes, the harness decides</strong>" (learned in Pillar 4) is the number-one line of defense.</p>
 
           <h4>Containment before alignment</h4>
           <p>The threat-model table above still assumes you notice the agent going wrong in time. There is a question that comes <em>before</em> it: what can the agent <strong>reach at all</strong>? Anthropic (05/2026) describes running its internal agents in exactly that order — govern what the agent <em>can</em> do before governing what it <em>did</em> do. The reason is practical: the first layer holds even when the model is prompt-injected, misreads the task, or simply calls the wrong tool; the second layer depends on you reading the logs in time.</p>
@@ -1240,10 +1241,10 @@ const { object } = await generateObject({
             </svg>
             <figcaption><b>Figure 4.2</b> — Three isolation patterns that already ship in today's tools, placed next to "no isolation" so the cost is visible. Moving right, you trade convenience for a smaller blast radius — and for a different number of human prompts (see the callout below).</figcaption>
           </figure>
-          <p>Three isolation patterns you can adopt today: <strong>(1) disposable containers</strong> — each task runs in a fresh environment that is destroyed afterwards, so dirty state can't leak into the next task; <strong>(2) OS sandbox plus a human gate</strong> — file read/write and network access are bounded at the operating-system level, and the agent only has to ask when it genuinely needs to cross the boundary; <strong>(3) a sealed VM</strong> — the whole session lives in a separate virtual machine with no network egress by default, which suits long unattended runs.</p>
+          <p>Three isolation patterns you can adopt today: <strong>(1) disposable containers</strong>: each task runs in a fresh environment that is destroyed afterwards, so dirty state can't leak into the next task; <strong>(2) OS sandbox plus a human gate</strong>: file read/write and network access are bounded at the operating-system level, and the agent only has to ask when it genuinely needs to cross the boundary; <strong>(3) a sealed VM</strong>: the whole session lives in a separate virtual machine with no network egress by default, which suits long unattended runs.</p>
           <div class="callout warn">
             <div class="callout-title">Product state · checked 25 Jul 2026 — why "ask a human" alone isn't enough</div>
-            <p>Anthropic reports (05/2026) that roughly <strong>93% of permission prompts are approved</strong> — approval fatigue: the more you ask, the cheaper "yes" becomes, and the human gate is thinner than it looks. In the same report, turning on OS-level sandboxing cut the <strong>number of prompts by about 84%</strong>, because most actions were already hard-blocked and no longer needed a question. These are one vendor's numbers on their own workload — read them as a direction, not a constant for your team. The durable reading: <em>use containment to reduce how often you must ask, then spend the human gate on the genuinely irreversible actions</em> (Pillar 4). Mode names and UI can change — re-check before relying on them.</p>
+            <p>Anthropic reports (05/2026) that roughly <strong>93% of permission prompts are approved</strong> — approval fatigue: the more you ask, the cheaper "yes" becomes, and the human gate is thinner than it looks. In the same report, turning on OS-level sandboxing cut the <strong>number of prompts by about 84%</strong>, because most actions were already hard-blocked and no longer needed a question. These are one vendor's numbers on their own workload, so read them as a direction, not a constant for your team. The durable reading: <em>use containment to reduce how often you must ask, then spend the human gate on the genuinely irreversible actions</em> (Pillar 4). Mode names and UI can change; re-check before relying on them.</p>
           </div>
 
           <h4>Pillar 5 · Observability — log the path you need to reconstruct</h4>
@@ -1252,7 +1253,7 @@ const { object } = await generateObject({
           <div class="callout insight"><div class="callout-title">New model, re-check the old scaffolding</div><p>The harness is code, so it too can become obsolete. After every model upgrade, run the same eval with each scaffold layer toggled on/off: long planning prompts, self-critique steps, subagents, retries, compaction. Keep any layer that improves quality or safety enough to justify its cost; drop layers that now only add latency. This is an <strong>ablation test</strong> — remove each strut of the scaffold to learn which ones still bear load.</p></div>
 
           <h4>Post-run learning · the harness learns after each run</h4>
-          <p>Every run — good or bad — leaves behind knowledge, and most of it gets thrown away. A mature harness <em>distills</em> each run's result into a durable asset: a new eval case born from every real failure; a rule or trap written into project knowledge; a checklist or skill extracted from a process that repeatedly succeeded. This is JIT retrieval running in reverse — instead of only <em>pulling</em> knowledge in, the harness <em>distills</em> knowledge out.</p>
+          <p>Every run, good or bad, leaves behind knowledge, and most of it gets thrown away. A mature harness <em>distills</em> each run's result into a durable asset: a new eval case born from every real failure; a rule or trap written into project knowledge; a checklist or skill extracted from a process that repeatedly succeeded. This is JIT retrieval running in reverse: instead of only <em>pulling</em> knowledge in, the harness <em>distills</em> knowledge out.</p>
           <p>The key is discipline, not volume: everything persisted must pass through the <strong>write gate</strong> (Lesson 3.2) — keep only what's verified. Selective distillation turns experience into capability; indiscriminate distillation just turns it into debt.</p>
           <div class="callout warn"><div class="callout-title">Anti-pattern · learning sprawl</div><p>Automatically persisting <em>every</em> "lesson" after each run sounds great, but it bloats memory and makes even wrong facts permanent — exactly the memory-that-never-forgets trap. Persist selectively and with a date. <strong>Measure:</strong> the rate of repeating the same class of error across weeks (should fall), the number of eval cases growing over time, and the size of the knowledge-loaded-per-session part <em>not</em> growing linearly with the number of runs.</p></div>
 
@@ -1293,7 +1294,7 @@ const { object } = await generateObject({
       <header class="module-header" data-module="5">
         <span class="eyebrow">Chapter 05 · Part II · Mastering the tools</span>
         <h2>Claude Code · Layered architecture</h2>
-        <p>Claude Code isn't "a chat box in the terminal". It's a <em>programmable harness</em>. Understand the three layers — CORE, DELEGATION, EXTENSION — and you turn it from autocomplete into a team of engineers.</p>
+        <p>Claude Code isn't "a chat box in the terminal". It's a <em>programmable harness</em>. Understand the three layers (CORE, DELEGATION, EXTENSION) and you turn it from autocomplete into a team of engineers.</p>
       </header>
 
       <article class="lesson" id="m5-l1" data-lesson>
@@ -1382,12 +1383,12 @@ description: Use when exporting the weekly client report from the internal
           </div>
           <div class="callout info">
             <div class="callout-title">Product state · checked 25 Jul 2026</div>
-            <p>The Agent Skills format has moved beyond a single vendor: in 2026 it was published as an open standard (docs at <a href="https://agentskills.io" target="_blank" rel="noopener noreferrer">agentskills.io</a>) and is read by several other tools — Codex, Gemini CLI and Cursor among them. The practical meaning: your team's skill library has a chance of surviving a change of tooling instead of being rewritten. <em>The list of supporting tools and the format details can change — re-check before standardizing a whole team on it.</em></p>
+            <p>The Agent Skills format has moved beyond a single vendor: in 2026 it was published as an open standard (docs at <a href="https://agentskills.io" target="_blank" rel="noopener noreferrer">agentskills.io</a>) and is read by several other tools: Codex, Gemini CLI and Cursor among them. The practical meaning: your team's skill library has a chance of surviving a change of tooling instead of being rewritten. <em>The list of supporting tools and the format details can change; re-check before standardizing a whole team on it.</em></p>
           </div>
 
           <h4>DELEGATION · Subagents &amp; git worktree — isolation is a feature</h4>
           <p>A subagent = a brand-new context for a focused task; the parent only receives the conclusion (exactly Pattern 4, Chapter 3). <strong>Git worktree</strong> raises this to the filesystem level: each agent works on an isolated copy of the repo → multiple agents edit files in parallel without stepping on each other, then you merge. Use a worktree when (and only when) agents genuinely write files in parallel — it costs disk + setup.</p>
-          <p>A subagent doesn't only <em>isolate</em> context — it can also <em>accumulate</em>. As of Jul 2026, a subagent can declare a <code>memory</code> field (scope <code>user</code> / <code>project</code> / <code>local</code>) to have a memory directory that persists across sessions, turning it into an "expert" that deepens over time: a reviewer that remembers the repo's traps, a debugger that remembers the failure patterns it has seen. But a subagent's persistent memory also needs a <strong>write gate + a forgetting mechanism</strong> (Lesson 3.2) — otherwise each subagent becomes its own nest of the memory that never forgets.</p>
+          <p>A subagent both <em>isolates</em> context and can <em>accumulate</em> it. As of Jul 2026, a subagent can declare a <code>memory</code> field (scope <code>user</code> / <code>project</code> / <code>local</code>) to have a memory directory that persists across sessions, turning it into an "expert" that deepens over time: a reviewer that remembers the repo's traps, a debugger that remembers the failure patterns it has seen. But a subagent's persistent memory also needs a <strong>write gate + a forgetting mechanism</strong> (Lesson 3.2): otherwise each subagent becomes its own nest of the memory that never forgets.</p>
 
           <h4>EXTENSION · Hooks &amp; MCP</h4>
           <p><strong>Hooks</strong> are programmable harness behavior: run <em>your</em> command on events (PreToolUse, PostToolUse, Stop…) to block dangerous commands, auto-run tests/lint, or enforce conventions. A hook's output is treated as feedback to the agent. <strong>MCP</strong> extends the tool registry with external servers (DB, API, services). Remember the registry tax from Chapter 2: <em>every</em> MCP enabled costs tokens on every call — enable per project scope, audit with <code>/mcp</code>.</p>
@@ -1426,7 +1427,7 @@ description: Use when exporting the weekly client report from the internal
 
           <div class="exercise">
             <h5>Exercise · Layer your setup</h5>
-            <p>Open a project where you use Claude Code. List: <strong>(1)</strong> how long CLAUDE.md is now — is any line something Claude can infer? <strong>(2)</strong> Is there domain knowledge that should split into a Skill? <strong>(3)</strong> Is any MCP enabled that the current task doesn't need — turn it off to reclaim tokens. Measure <code>/mcp</code> before &amp; after.</p>
+            <p>Open a project where you use Claude Code. List: <strong>(1)</strong> how long CLAUDE.md is now, and is any line something Claude can infer? <strong>(2)</strong> Is there domain knowledge that should split into a Skill? <strong>(3)</strong> Is any MCP enabled that the current task doesn't need, and can you turn it off to reclaim tokens? Measure <code>/mcp</code> before &amp; after.</p>
           </div>
 
           <div class="takeaway">
@@ -1460,7 +1461,7 @@ description: Use when exporting the weekly client report from the internal
           <div class="objectives">
             <span class="eyebrow">After this lesson you can</span>
             <ul>
-              <li>Recognize the second cost of excess context: not just tokens, but the arbitration work when sources conflict.</li>
+              <li>Recognize the second cost of excess context: the arbitration work when sources conflict.</li>
               <li>Run a pass over CLAUDE.md and a Skill using five labels — and know which kind of line shouldn't get cut no matter how strong the model gets.</li>
               <li>Explain why a context best practice can expire when the model generation changes.</li>
             </ul>
@@ -1473,7 +1474,7 @@ description: Use when exporting the weekly client report from the internal
             <p>Anthropic reported (24 Jul 2026, Thariq Shihipar) that they had <em>"removed over 80% of Claude Code's system prompt for models like Claude Opus 5 and Claude Fable 5 with no measurable loss on our coding evaluations"</em>. Three scope limits worth reading alongside that: this is <strong>Claude Code's own system prompt</strong> — written by the vendor for their product, not your CLAUDE.md; <em>"no measurable loss"</em> means <strong>a wash</strong>, not an improvement; and the yardstick is <strong>their own internal eval</strong>, on their workload. The reason they give: they noticed they were <em>"overconstraining Claude Code, both through our system prompt and in our CLAUDE.md files and skills"</em>.</p>
           </div>
 
-          <p>Chapter 2 already counted the first cost of excess context: tokens and the registry tax. This lesson adds a second, harder-to-see cost — <strong>arbitration work</strong>. The main example Anthropic gives is about comments: one place says <em>"leave documentation as appropriate"</em>, another says <em>"DO NOT add comments"</em> — all at once, in the system prompt, in an enabled Skill, and in the message the user just sent. By their own description, the model then has to <em>"think more carefully about these overlapping and conflicting messages before deciding what to do"</em>. Every rule you add doesn't just add tokens; it also adds one more chance to collide with a rule already there.</p>
+          <p>Chapter 2 already counted the first cost of excess context: tokens and the registry tax. This lesson adds a second, harder-to-see cost: <strong>arbitration work</strong>. The main example Anthropic gives is about comments: one place says <em>"leave documentation as appropriate"</em>, another says <em>"DO NOT add comments"</em>, all at once, in the system prompt, in an enabled Skill, and in the message the user just sent. By their own description, the model then has to <em>"think more carefully about these overlapping and conflicting messages before deciding what to do"</em>. Every rule you add costs tokens and adds one more chance to collide with a rule already there.</p>
 
           <figure class="figure">
             <svg viewBox="0 0 660 212" role="img" aria-label="Diagram of three instruction sources all addressing comments but conflicting with each other: the system prompt, an enabled skill, and the user's message, all feeding down into one arbitration step for the model">
@@ -1496,7 +1497,7 @@ description: Use when exporting the weekly client report from the internal
               <rect class="dgm-box" x="150" y="170" width="360" height="32" rx="8"/>
               <text class="dgm-ink2" x="330" y="190" text-anchor="middle" font-size="9" font-family="IBM Plex Mono">each rule added is one more chance to collide</text>
             </svg>
-            <figcaption><b>Figure 5.3</b> — All three sources make sense read alone, and conflict when read together. This is why a long CLAUDE.md isn't just more expensive but also <em>harder to predict</em>: the work the model spends reconciling instructions is work that produces no result for you.</figcaption>
+            <figcaption><b>Figure 5.3</b> — All three sources make sense read alone, and conflict when read together. This is why a long CLAUDE.md is both more expensive and <em>harder to predict</em>: the work the model spends reconciling instructions is work that produces no result for you.</figcaption>
           </figure>
 
           <h4>Six shifts Anthropic describes</h4>
@@ -1536,12 +1537,12 @@ description: Use when exporting the weekly client report from the internal
 
           <div class="callout danger">
             <div class="callout-title">Judgment can replace a style rule, not authorization</div>
-            <p>One thing that's easy to misread when skimming the original: the "let the model use judgment" argument there is illustrated with comments, idiom, and matching surrounding code — that is, <em>style</em>. The article does not propose removing approval gates or safety boundaries. Chapter 4's conclusion still stands: <strong>authorization belongs to the harness, not to the model's judgment</strong> — and a stronger model doesn't change that, because the issue isn't judgment quality but who's accountable when the judgment is wrong. When auditing CLAUDE.md, lines in the <span class="badge" style="background:var(--danger-bg);color:var(--danger)">DO NOT TOUCH</span> group should be read as a temporary record of a real constraint; their lasting home is harness configuration — tool allowlists, sandboxing, write permissions, per-action approval gates.</p>
+            <p>One thing that's easy to misread when skimming the original: the "let the model use judgment" argument there is illustrated with comments, idiom, and matching surrounding code — that is, <em>style</em>. The article does not propose removing approval gates or safety boundaries. Chapter 4's conclusion still stands: <strong>authorization belongs to the harness, not to the model's judgment</strong>, and a stronger model doesn't change that, because the issue isn't judgment quality but who's accountable when the judgment is wrong. When auditing CLAUDE.md, lines in the <span class="badge" style="background:var(--danger-bg);color:var(--danger)">DO NOT TOUCH</span> group should be read as a temporary record of a real constraint; their lasting home is harness configuration — tool allowlists, sandboxing, write permissions, per-action approval gates.</p>
           </div>
 
           <div class="callout warn">
             <div class="callout-title">They could cut 80% because they had something to measure against</div>
-            <p>Anthropic could cut that much partly because they have a coding eval suite that tells them whether they broke anything. Without an equivalent measurement, "cut 80%" is a gamble rather than a decision — and the breakage tends to show up sparsely, hard to trace back to the cut that caused it. One way to manage without an eval: keep 5–10 tasks that have previously tripped up the agent, run them before and after the cut, and compare how many needed a manual fix. Small, but still better than a feeling. As of Jul 2026, Claude Code also has <code>/doctor</code> (<code>claude doctor</code>) to help audit this part of the configuration — the command name can change, the habit of auditing shouldn't.</p>
+            <p>Anthropic could cut that much partly because they have a coding eval suite that tells them whether they broke anything. Without an equivalent measurement, "cut 80%" is a gamble rather than a decision, and the breakage tends to show up sparsely, hard to trace back to the cut that caused it. One way to manage without an eval: keep 5–10 tasks that have previously tripped up the agent, run them before and after the cut, and compare how many needed a manual fix. Small, but still better than a feeling. As of Jul 2026, Claude Code also has <code>/doctor</code> (<code>claude doctor</code>) to help audit this part of the configuration; the command name can change, the habit of auditing shouldn't.</p>
           </div>
 
           <div class="exercise">
@@ -1551,7 +1552,7 @@ description: Use when exporting the weekly client report from the internal
 
           <div class="takeaway">
             <span class="eyebrow"><svg aria-hidden="true" focusable="false" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 2v6m0 8v6M4.9 4.9l4.2 4.2m5.8 5.8l4.2 4.2M2 12h6m8 0h6M4.9 19.1l4.2-4.2m5.8-5.8l4.2-4.2"/></svg>Takeaway</span>
-            <p>Excess context costs two things: <span class="hl">tokens</span> and <span class="hl">arbitration work</span> when sources conflict. Many instruction lines exist to compensate for one model generation's weakness, so when the model class changes, the move worth making is <span class="hl">audit, then measure</span> — not add more. But the scope of what gets cut is <span class="hl">style and obvious information</span> — <span class="hl">authorization and safety boundaries stay in the harness</span>, and they don't get any cheaper as the model gets stronger.</p>
+            <p>Excess context costs two things: <span class="hl">tokens</span> and <span class="hl">arbitration work</span> when sources conflict. Many instruction lines exist to compensate for one model generation's weakness, so when the model class changes, the move worth making is <span class="hl">audit, then measure</span> rather than add more. But the scope of what gets cut is <span class="hl">style and obvious information</span>: <span class="hl">authorization and safety boundaries stay in the harness</span>, and they don't get any cheaper as the model gets stronger.</p>
           </div>
 
           <div class="quiz" data-correct="1">
@@ -1615,11 +1616,11 @@ description: Use when exporting the weekly client report from the internal
           <p>The equivalent of <code>CLAUDE.md</code> but with a <strong>hierarchical discovery order</strong>: Codex reads <code>AGENTS.md</code> from the repo root down to the current directory, and a closer file <em>overrides</em> a farther one. That lets a monorepo have shared conventions at the root and per-package conventions of its own — exactly the "context closest to the work wins" principle.</p>
           <div class="callout info">
             <div class="callout-title">Product state · checked 25 Jul 2026</div>
-            <p><code>AGENTS.md</code> is no longer one vendor's private format: in 2026 it moved to a neutral body — the Agentic AI Foundation, under the Linux Foundation — and is read by a range of different tools (<a href="https://agents.md" target="_blank" rel="noopener noreferrer">agents.md</a>). The practical meaning for a team: picking <code>AGENTS.md</code> as the canonical source of conventions carries less vendor lock-in risk than it used to. <em>The stewarding body and the format details can change — re-check before standardizing an entire organization.</em></p>
+            <p><code>AGENTS.md</code> is no longer one vendor's private format: in 2026 it moved to a neutral body (the Agentic AI Foundation, under the Linux Foundation) and is read by a range of different tools (<a href="https://agents.md" target="_blank" rel="noopener noreferrer">agents.md</a>). The practical meaning for a team: picking <code>AGENTS.md</code> as the canonical source of conventions carries less vendor lock-in risk than it used to. <em>The stewarding body and the format details can change; re-check before standardizing an entire organization.</em></p>
           </div>
 
           <h4>Sandbox · safe execution by default</h4>
-          <p>Codex's distinctive strength: every command runs in a sandbox with declared permissions. Choose the mode by risk — read-only, write-in-workspace, or full-access — instead of trusting the agent to "behave". This is the <em>authorization belongs to the harness</em> principle (Chapter 4) packaged for you: the harness decides what the agent can touch, not the model's judgment.</p>
+          <p>Codex's distinctive strength: every command runs in a sandbox with declared permissions. Choose the mode by risk (read-only, write-in-workspace, or full-access) instead of trusting the agent to "behave". This is the <em>authorization belongs to the harness</em> principle (Chapter 4) packaged for you: the harness decides what the agent can touch, not the model's judgment.</p>
           <p>The part people usually flatten: these are really <strong>two independent dials</strong>, not one "safe ↔ free" slider. One dial says what the agent <em>can</em> do (read-only / write in the workspace / full access); the other says <em>when it must ask</em> you (ask because untrusted / ask on request / never ask). They cross into a grid, and the cell you're standing in is the session's real configuration.</p>
           <figure class="figure">
             <svg viewBox="0 0 700 288" role="img" aria-label="A two-axis grid of Codex configuration: the horizontal axis is sandbox mode with read-only, workspace-write and full-access; the vertical axis is approval policy with untrusted, on-request and never; three cells are marked as reading the repo, the everyday default, and full-access with never ask which has no guardrail left">
@@ -1651,7 +1652,7 @@ description: Use when exporting the weekly client report from the internal
           </figure>
           <div class="callout info">
             <div class="callout-title">Product state · checked 25 Jul 2026</div>
-            <p>Per the Codex docs at the time of checking (07/2026), <strong>network access is off by default in every sandbox mode</strong> — including write-in-workspace; when you turn it on, you can restrict it with a <strong>domain allowlist</strong> instead of opening the whole internet. Worth remembering because the network is the exit route for most exfiltration scenarios after a prompt injection (Chapter 4). <em>Mode names, parameter names and defaults can change — re-check the docs before relying on them.</em></p>
+            <p>Per the Codex docs at the time of checking (07/2026), <strong>network access is off by default in every sandbox mode</strong>, including write-in-workspace; when you turn it on, you can restrict it with a <strong>domain allowlist</strong> instead of opening the whole internet. Worth remembering because the network is the exit route for most exfiltration scenarios after a prompt injection (Chapter 4). <em>Mode names, parameter names and defaults can change — re-check the docs before relying on them.</em></p>
           </div>
 
           <h4>Review workflow · a quality gate, not a rubber stamp</h4>
@@ -1709,7 +1710,7 @@ description: Use when exporting the weekly client report from the internal
               <li>Balance the benefit of parallelism against the reality of cost &amp; merge risk.</li>
             </ul>
           </div>
-          <p>Why <em>combine</em> instead of <em>choose</em>? Because the same model, run twice on the same context, produces two highly correlated answers — even the errors correlate. A <em>different</em> agent (different tool, different system prompt, blind to the original design rationale) is what gives you a genuinely independent view.</p>
+          <p>You ask an agent to design an auth endpoint, then in that same session ask it to security-review what it just wrote. It re-reads its own code and reports "no issues". The same model run twice on the same context produces two highly correlated answers, and the errors correlate too. An independent view only comes from a <em>different</em> agent: different tool, different system prompt, blind to the original design rationale.</p>
 
           <figure class="figure">
             <svg viewBox="0 0 660 250" role="img" aria-label="A decision tree: work that needs step-by-step steering uses a synchronous tool; well-scoped fire-and-forget work goes to the async cloud; always review with a second tool">
@@ -1801,7 +1802,7 @@ description: Use when exporting the weekly client report from the internal
               <li>Use a scout + multi-agent perspective to make a solid PRD before coding.</li>
             </ul>
           </div>
-          <p>In Parts I–II you got the foundations and the tools. Part III applies them to each SDLC phase. Start with the most undervalued phase — and where AI delivers the highest value.</p>
+          <p>You type "build me a dashboard" and let the agent run. It returns a polished-looking page: charts, filters, a table of numbers. None of it tracks the metric your team actually watches, because you never said so and the agent guessed for you. Part III starts at exactly that undervalued phase: the spec.</p>
 
           <div class="compare">
             <div class="compare-col bad"><span class="eyebrow">Failure mode 1 · spec too thin</span><ul><li>"Build me a dashboard" → the agent guesses, producing something that looks right but misses the implicit requirements.</li><li>The faster it goes, the more wrong code there is to clean up.</li></ul></div>
@@ -1892,7 +1893,7 @@ description: Use when exporting the weekly client report from the internal
               <li>Threat-model and draw system diagrams as code with AI.</li>
             </ul>
           </div>
-          <p>Architecture isn't a "correct answer" but finding the best point in a constrained space (cost, team, time, operations). AI is good at <em>widening</em> the space (many options) and playing the expert; you're good at <em>trade-offs</em> against the real context.</p>
+          <p>Your orders system needs one transaction touching three tables at once: orders, payments, inventory. You ask an AI "which database should we use?" and get back an even-handed paragraph, true for every system and therefore useless for yours. The real question is which of <em>your</em> constraints eliminates which option, and who owns what the elimination costs. AI widens the option space and plays the expert; you carry the trade-off against the real context, then write it down as an ADR.</p>
 
           <figure class="figure">
             <svg viewBox="0 0 720 210" role="img" aria-label="An architecture-with-AI flow: AI widens into many options, three persona-subagents (SRE, security, cost) critique against constraints, you arbitrate and hold the trade-offs, then finalize with an ADR">
@@ -1934,7 +1935,7 @@ description: Use when exporting the weekly client report from the internal
 
           <div class="callout insight"><div class="callout-title">The architecture review meeting · with AI in the room</div><p>Have each subagent-persona critique the design <em>before</em> the human meeting. Walk in with a list of risks &amp; questions AI already surfaced — people focus on trade-offs, not on finding basic gaps. Remember Chapter 7: the reviewer must be a <em>different</em> agent from the builder.</p></div>
 
-          <div class="callout info"><div class="callout-title">30-second example · a 5-line condensed ADR</div><p><strong>Context:</strong> an orders system needs multi-table transactions (orders, payments, inventory) with strong consistency constraints. <strong>Decision:</strong> use Postgres as the primary store. <strong>Rejected option:</strong> MongoDB — rejected because it lacks easy multi-document transactions and the order schema is inherently relational. <strong>Consequences:</strong> we gain ACID + JOINs + foreign-key constraints; in exchange we manage schema migrations and accept harder horizontal scaling. These five lines are an entire ADR — AI drafts it fast, you make the final trade-off.</p></div>
+          <div class="callout info"><div class="callout-title">30-second example · a 5-line condensed ADR</div><p><strong>Context:</strong> an orders system needs multi-table transactions (orders, payments, inventory) with strong consistency constraints. <strong>Decision:</strong> use Postgres as the primary store. <strong>Rejected option:</strong> MongoDB, rejected because it lacks easy multi-document transactions and the order schema is inherently relational. <strong>Consequences:</strong> we gain ACID + JOINs + foreign-key constraints; in exchange we manage schema migrations and accept harder horizontal scaling. These five lines are an entire ADR — AI drafts it fast, you make the final trade-off.</p></div>
 
           <div class="exercise">
             <h5>Exercise · An expert panel for a real decision</h5>
@@ -2075,7 +2076,7 @@ description: Use when exporting the weekly client report from the internal
               <li>Know what AI is good/bad at when generating tests, and use evals as regression tests for AI features.</li>
             </ul>
           </div>
-          <p>The structural advantage of an AI reviewer is that it <em>doesn't get tired and doesn't defer</em>: line 800 gets the same attitude as line 1, no "too long to read carefully", no worry about bruising the author's ego. But it still lives under the same attention budget you met in Chapter 2 — a very long diff still suffers context rot, so <strong>split large diffs into coherent change clusters and review them one cluster at a time</strong> instead of dropping 3,000 lines into a single turn. And the advantage evaporates entirely if the reviewer is the same agent that wrote the code — it inherits the exact same blind spots (Chapter 7).</p>
+          <p>Your team wants to add "AI review" to the process, and someone proposes the cheapest version: let the agent that just wrote the code review itself before opening the PR. It sounds reasonable, because an AI reviewer does have a real structural advantage: it <em>doesn't get tired and doesn't defer</em>, line 800 gets the same attitude as line 1, no "too long to read carefully", no worry about bruising the author's ego. That advantage evaporates when the reviewer is the agent that wrote the code: it inherits the exact blind spots that produced the bug (Chapter 7). It also still lives under the Chapter 2 attention budget, so <strong>split large diffs into coherent change clusters and review them one cluster at a time</strong> instead of dropping 3,000 lines into a single turn.</p>
 
           <div class="table-wrap">
             <table>
@@ -2090,7 +2091,7 @@ description: Use when exporting the weekly client report from the internal
 
           <div class="callout info">
             <div class="callout-title">2026 evidence · the clean-context reviewer</div>
-            <p>Cognition reports (04/2026) that a reviewer running on a <em>clean context</em> — blind to the builder's design rationale — catches on average about <strong>2 bugs per PR</strong>, roughly <strong>58% of which they classify as serious</strong>, and works <em>better</em> when it does not share context with the builder. The same team also reversed its 2025 anti-multi-agent advice toward "many agents READ, one agent WRITES" (Chapter 7) — and a reviewer is a textbook READ agent. These are one company's numbers on their own codebase, so read them as a direction. The part worth carrying over is that <strong>the independence lives in the context, not in swapping tool logos</strong>.</p>
+            <p>Cognition reports (04/2026) that a reviewer running on a <em>clean context</em> (blind to the builder's design rationale) catches on average about <strong>2 bugs per PR</strong>, roughly <strong>58% of which they classify as serious</strong>, and works <em>better</em> when it does not share context with the builder. The same team also reversed its 2025 anti-multi-agent advice toward "many agents READ, one agent WRITES" (Chapter 7) — and a reviewer is a textbook READ agent. These are one company's numbers on their own codebase, so read them as a direction. The part worth carrying over is that <strong>the independence lives in the context, not in swapping tool logos</strong>.</p>
           </div>
 
           <figure class="figure">
@@ -2177,7 +2178,7 @@ description: Use when exporting the weekly client report from the internal
               <li>Apply cost &amp; observability discipline to the AI features themselves.</li>
             </ul>
           </div>
-          <p>The general rule: AI shines on work with an <em>objective signal to anchor to</em> — test pass/fail, error logs, diffs. It wobbles on vague work with no feedback. Production operations are full of clear signals, so it's good ground.</p>
+          <p>It is 2 a.m., queue depth is climbing steeply and the oldest message keeps getting older. You paste the error log and the in/out throughput charts to an agent; it reconstructs a four-step frame to work from: confirm the symptom, isolate the cause, relieve pressure, verify. It can do that because everything it needs is an <em>objective signal</em> (logs, measurements, diffs); at the other end of that axis, vague work with no feedback loop, it wobbles. Whether to scale consumers or throttle producers still belongs to the person on call.</p>
 
           <figure class="figure">
             <svg viewBox="0 0 640 210" role="img" aria-label="A signal map: a horizontal axis from a fuzzy signal on the left to a clear signal (diff, log, test) on the right; the AI application points — PR review, runbook, incident triage — sit on the clear-signal side; a human-holds-the-decision zone is marked at the risky actions rollback, merge, on-call">
@@ -2262,7 +2263,7 @@ description: Use when exporting the weekly client report from the internal
               <li>Fight skill atrophy and measure success at the team level, not the individual level.</li>
             </ul>
           </div>
-          <p>This is the L5 chapter: you don't just use it well, you <em>lead</em> others to use it well — and know when to tell the whole team to stop. Adoption failure has a clear pattern, so it's avoidable.</p>
+          <p>Your team opens licenses for everyone, runs one training session off slides, then puts "lines of AI-generated code per week" on a dashboard. A few weeks later everyone prompts a different way, nobody can reuse anyone else's work, and the line count climbs alongside review time. Nobody did any single thing wrong: what is missing is a shared standard, a learn-by-doing pilot, and a metric that measures the thing worth measuring. Adoption failure has a clear pattern, so it's avoidable.</p>
 
           <div class="callout danger"><div class="callout-title">Why adoption fails</div><p>Not because the tools are bad. Because: <strong>(1)</strong> no shared standard (everyone does it their own way, nothing reusable); <strong>(2)</strong> training via slides instead of learn-by-doing; <strong>(3)</strong> measuring success wrong (lines of code/day instead of outcomes); <strong>(4)</strong> forgetting "when NOT to use AI".</p></div>
 
