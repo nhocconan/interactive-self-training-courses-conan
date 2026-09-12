@@ -28,7 +28,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Agentic Decision Systems · Quyết định biết học, không tự mất kiểm soát</title>
-<meta name="description" content="Khoá học tương tác tiếng Việt cho kiến trúc sư và tech lead dựng hệ ra quyết định có học: decision contract và decision rights, kiến trúc 4 plane với kernel không thể bypass, rule receipts và logic ba giá trị, Engine ⟂ LLM copilot, đo trước khi tin (credibility, calibration, forecast ≠ lift), chọn công cụ causal, Thompson sampling và OPE có propensity thật, conformal prediction và drift làm gate, evals và trace đủ để audit. Cập nhật 08/2026.">
+<meta name="description" content="Khoá học tương tác tiếng Việt cho kiến trúc sư và tech lead dựng hệ ra quyết định có học: decision contract và decision rights, kiến trúc 4 plane với kernel không thể bypass, rule receipts và logic ba giá trị, Engine ⟂ LLM copilot, đo trước khi tin (credibility, calibration, forecast ≠ lift), chọn công cụ causal, Thompson sampling và OPE có propensity thật, conformal prediction và drift làm gate, evals và trace đủ để audit. Cập nhật 09/2026.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
@@ -496,7 +496,7 @@ footer.site{border-top:1px solid var(--border);padding:26px 24px;text-align:cent
     <section class="pane" id="overview" data-pane>
       <div class="hero">
         <div class="hero-inner">
-          <span class="hero-kicker">Khoá học tương tác · Decision Intelligence · cập nhật 08/2026</span>
+          <span class="hero-kicker">Khoá học tương tác · Decision Intelligence · cập nhật 09/2026</span>
           <h1><span class="grad-text">Quyết định biết học.</span> Không tự mất kiểm soát.</h1>
           <p class="hero-sub">Cho kiến trúc sư, tech lead và data lead sắp dựng một hệ ra quyết định có học cho vận hành kinh doanh. Từ decision contract và hai thang L0–L5 / A0–A4, qua kiến trúc 4 plane với kernel không thể bypass, rule receipts, Engine ⟂ LLM copilot, tới <strong>đo trước khi tin</strong> (credibility, calibration, forecast ≠ lift), chọn đúng công cụ causal, explore/exploit với propensity thật, uncertainty làm gate, và learning loop promote/rollback như một release. Hệ ví dụ xuyên suốt: một brand e-commerce quyết định mỗi tuần lever nào kéo sell-through.</p>
           <div class="hero-meta">
@@ -542,6 +542,12 @@ footer.site{border-top:1px solid var(--border);padding:26px 24px;text-align:cent
             <tr><td><b>Shadow / canary</b></td><td>Chạy song song không tác động / chạy trên một phần nhỏ traffic có rollback.</td></tr>
             <tr><td><b>Number-grounding fixture</b></td><td>Eval bắt buộc: mọi con số LLM phát ra phải resolve về một receipt của kernel.</td></tr>
             <tr><td><b>pass^k</b></td><td>Xác suất cả k lần chạy đều thành công; thước đo reliability cho agent có side effect.</td></tr>
+            <tr><td><b>Blast radius</b></td><td>Thiệt hại thực tế xấu nhất một lever có thể gây ra: tiền, khả năng đảo ngược, số khách bị chạm.</td></tr>
+            <tr><td><b>Attribution window</b></td><td>Khoảng thời gian mà thay đổi outcome còn được tính cho lever vừa kéo; chốt trước khi chạy.</td></tr>
+            <tr><td><b>Estimand</b></td><td>Đại lượng bạn thật sự muốn ước lượng, viết ra trước khi chọn estimator.</td></tr>
+            <tr><td><b>Interference / SUTVA</b></td><td>Đơn vị này bị ảnh hưởng bởi treatment của đơn vị khác; khi có, «tác động lên đơn vị i» không còn xác định.</td></tr>
+            <tr><td><b>CUPED</b></td><td>Giảm phương sai bằng dữ liệu tiền thí nghiệm theo hệ số (1 − ρ²); rút ngắn thời gian, không đổi giả định.</td></tr>
+            <tr><td><b>Exchangeability</b></td><td>Điểm test là «một điểm calibration nữa»; giả định đỡ toàn bộ bảo đảm của conformal.</td></tr>
           </tbody>
         </table></div>
       </div>
@@ -775,7 +781,7 @@ footer.site{border-top:1px solid var(--border);padding:26px 24px;text-align:cent
 
           <div class="callout warn">
             <div class="callout-title">Lịch áp dụng đã đổi, kiểm lại trước khi dựa vào mốc nào</div>
-            <p>Regulation (EU) 2026/1744 ngày 08/07/2026 (đăng OJ 07/2026) dời ngày áp dụng Chương III mục 1–3 sang 02/12/2027 cho hệ high-risk theo Article 6(2) và Annex III, và sang 02/08/2028 cho hệ high-risk theo Article 6(1) và Annex I. Phạm vi high-risk vẫn đang được sửa, nên đọc văn bản gốc trước khi gắn mốc vào roadmap; bài tổng kết cuối khoá giữ danh sách nguồn.</p>
+            <p><a href="https://eur-lex.europa.eu/legal-content/EN/TXT/?uri=OJ:L_202601744">Regulation (EU) 2026/1744</a> ngày 08/07/2026 (Digital Omnibus on AI), đăng Official Journal 24/07/2026 và hiệu lực 27/07/2026, dời ngày áp dụng Chương III mục 1–3 sang 02/12/2027 cho hệ high-risk theo Article 6(2) và Annex III, và sang 02/08/2028 cho hệ high-risk theo Article 6(1) và Annex I. Phạm vi high-risk vẫn đang được sửa, nên đọc văn bản gốc trước khi gắn mốc vào roadmap; bài tổng kết cuối khoá giữ danh sách nguồn.</p>
           </div>
 
           <div class="takeaway">
@@ -1012,29 +1018,29 @@ escalation:    UNKNOWN, vượt trần tiền, hoặc lever ngoài lever_set →
 
         <rect class="dgm-box" x="110" y="44" width="170" height="34" rx="8"/>
         <text class="dgm-ink" x="195" y="59" text-anchor="middle" font-size="11" font-weight="700">Policy registry</text>
-        <text class="dgm-ink2" x="195" y="72" text-anchor="middle" font-size="9" font-family="IBM Plex Mono">owner · version · expiry</text>
+        <text class="dgm-ink2" x="195" y="72" text-anchor="middle" font-size="11" font-family="IBM Plex Mono">owner · version</text>
         <rect class="dgm-box" x="300" y="44" width="170" height="34" rx="8"/>
         <text class="dgm-ink" x="385" y="59" text-anchor="middle" font-size="11" font-weight="700">Contract registry</text>
-        <text class="dgm-ink2" x="385" y="72" text-anchor="middle" font-size="9" font-family="IBM Plex Mono">feature · action · reward</text>
+        <text class="dgm-ink2" x="385" y="72" text-anchor="middle" font-size="11" font-family="IBM Plex Mono">feature · action</text>
         <rect class="dgm-box" x="490" y="44" width="170" height="34" rx="8"/>
         <text class="dgm-ink" x="575" y="59" text-anchor="middle" font-size="11" font-weight="700">Artifact registry</text>
-        <text class="dgm-ink2" x="575" y="72" text-anchor="middle" font-size="9" font-family="IBM Plex Mono">hash · champion · rollback</text>
+        <text class="dgm-ink2" x="575" y="72" text-anchor="middle" font-size="11" font-family="IBM Plex Mono">hash · champion</text>
 
         <rect class="dgm-box" x="24" y="134" width="124" height="52" rx="10"/>
         <text class="dgm-ink" x="86" y="158" text-anchor="middle" font-size="11.5" font-weight="700">Point-in-time</text>
-        <text class="dgm-ink2" x="86" y="174" text-anchor="middle" font-size="9.5" font-family="IBM Plex Mono">store · as_of</text>
+        <text class="dgm-ink2" x="86" y="174" text-anchor="middle" font-size="11" font-family="IBM Plex Mono">store · as_of</text>
         <rect class="dgm-box" x="168" y="134" width="124" height="52" rx="10"/>
         <text class="dgm-ink" x="230" y="158" text-anchor="middle" font-size="11.5" font-weight="700">Orchestrator</text>
-        <text class="dgm-ink2" x="230" y="174" text-anchor="middle" font-size="9.5" font-family="IBM Plex Mono">retrieve · plan</text>
+        <text class="dgm-ink2" x="230" y="174" text-anchor="middle" font-size="11" font-family="IBM Plex Mono">retrieve · plan</text>
         <rect class="dgm-accent" x="312" y="134" width="124" height="52" rx="10" stroke-width="2"/>
         <text class="dgm-ink" x="374" y="158" text-anchor="middle" font-size="11.5" font-weight="700">Decision kernel</text>
-        <text class="dgm-ink2" x="374" y="174" text-anchor="middle" font-size="9.5" font-family="IBM Plex Mono">math · constraint</text>
+        <text class="dgm-ink2" x="374" y="174" text-anchor="middle" font-size="11" font-family="IBM Plex Mono">math · constraint</text>
         <rect class="dgm-box" x="456" y="134" width="124" height="52" rx="10"/>
         <text class="dgm-ink" x="518" y="158" text-anchor="middle" font-size="11.5" font-weight="700">Approval gate</text>
-        <text class="dgm-ink2" x="518" y="174" text-anchor="middle" font-size="9.5" font-family="IBM Plex Mono">role + context</text>
+        <text class="dgm-ink2" x="518" y="174" text-anchor="middle" font-size="11" font-family="IBM Plex Mono">role + context</text>
         <rect class="dgm-box" x="600" y="134" width="124" height="52" rx="10"/>
         <text class="dgm-ink" x="662" y="158" text-anchor="middle" font-size="11.5" font-weight="700">Action worker</text>
-        <text class="dgm-ink2" x="662" y="174" text-anchor="middle" font-size="9.5" font-family="IBM Plex Mono">attempt+receipt</text>
+        <text class="dgm-ink2" x="662" y="174" text-anchor="middle" font-size="11" font-family="IBM Plex Mono">attempt+receipt</text>
         <path class="dgm-flow" d="M148 160 H168" stroke-width="2" marker-end="url(#m2l1-ah)"/>
         <path class="dgm-flow" d="M292 160 H312" stroke-width="2" marker-end="url(#m2l1-ah)"/>
         <path class="dgm-flow" d="M436 160 H456" stroke-width="2" marker-end="url(#m2l1-ah)"/>
@@ -1042,13 +1048,13 @@ escalation:    UNKNOWN, vượt trần tiền, hoặc lever ngoài lever_set →
 
         <rect class="dgm-box" x="70" y="240" width="180" height="44" rx="8"/>
         <text class="dgm-ink" x="160" y="260" text-anchor="middle" font-size="11" font-weight="700">Decision episode log</text>
-        <text class="dgm-ink2" x="160" y="274" text-anchor="middle" font-size="9" font-family="IBM Plex Mono">input · version · propensity</text>
+        <text class="dgm-ink2" x="160" y="274" text-anchor="middle" font-size="11" font-family="IBM Plex Mono">input · version</text>
         <rect class="dgm-box" x="290" y="240" width="180" height="44" rx="8"/>
         <text class="dgm-ink" x="380" y="260" text-anchor="middle" font-size="11" font-weight="700">Outcome joiner</text>
-        <text class="dgm-ink2" x="380" y="274" text-anchor="middle" font-size="9" font-family="IBM Plex Mono">window · censoring · late</text>
+        <text class="dgm-ink2" x="380" y="274" text-anchor="middle" font-size="11" font-family="IBM Plex Mono">window · censoring · late</text>
         <rect class="dgm-box" x="510" y="240" width="180" height="44" rx="8"/>
         <text class="dgm-ink" x="600" y="260" text-anchor="middle" font-size="11" font-weight="700">Reward ledger</text>
-        <text class="dgm-ink2" x="600" y="274" text-anchor="middle" font-size="9" font-family="IBM Plex Mono">utility + guardrail cost</text>
+        <text class="dgm-ink2" x="600" y="274" text-anchor="middle" font-size="11" font-family="IBM Plex Mono">utility + guardrail cost</text>
         <path class="dgm-flow" d="M250 262 H290" stroke-width="2" marker-end="url(#m2l1-ah)"/>
         <path class="dgm-flow" d="M470 262 H510" stroke-width="2" marker-end="url(#m2l1-ah)"/>
         <path class="dgm-line" d="M374 186 V240" stroke-width="1.6" stroke-dasharray="5 4" marker-end="url(#m2l1-ah)"/>
@@ -1056,16 +1062,16 @@ escalation:    UNKNOWN, vượt trần tiền, hoặc lever ngoài lever_set →
 
         <rect class="dgm-box" x="44" y="338" width="150" height="52" rx="10"/>
         <text class="dgm-ink" x="119" y="362" text-anchor="middle" font-size="11.5" font-weight="700">Dataset builder</text>
-        <text class="dgm-ink2" x="119" y="378" text-anchor="middle" font-size="9.5" font-family="IBM Plex Mono">frozen slice</text>
+        <text class="dgm-ink2" x="119" y="378" text-anchor="middle" font-size="11" font-family="IBM Plex Mono">frozen slice</text>
         <rect class="dgm-box" x="218" y="338" width="150" height="52" rx="10"/>
         <text class="dgm-ink" x="293" y="362" text-anchor="middle" font-size="11.5" font-weight="700">Eval + OPE</text>
-        <text class="dgm-ink2" x="293" y="378" text-anchor="middle" font-size="9.5" font-family="IBM Plex Mono">safety · ESS</text>
+        <text class="dgm-ink2" x="293" y="378" text-anchor="middle" font-size="11" font-family="IBM Plex Mono">safety · ESS</text>
         <rect class="dgm-box" x="392" y="338" width="150" height="52" rx="10"/>
         <text class="dgm-ink" x="467" y="362" text-anchor="middle" font-size="11.5" font-weight="700">Candidate factory</text>
-        <text class="dgm-ink2" x="467" y="378" text-anchor="middle" font-size="9.5" font-family="IBM Plex Mono">one change surface</text>
+        <text class="dgm-ink2" x="467" y="378" text-anchor="middle" font-size="11" font-family="IBM Plex Mono">one change surface</text>
         <rect class="dgm-box" x="566" y="338" width="150" height="52" rx="10"/>
         <text class="dgm-ink" x="641" y="362" text-anchor="middle" font-size="11.5" font-weight="700">Deploy controller</text>
-        <text class="dgm-ink2" x="641" y="378" text-anchor="middle" font-size="9.5" font-family="IBM Plex Mono">shadow · canary</text>
+        <text class="dgm-ink2" x="641" y="378" text-anchor="middle" font-size="11" font-family="IBM Plex Mono">shadow · canary</text>
         <path class="dgm-flow" d="M194 364 H218" stroke-width="2" marker-end="url(#m2l1-ah)"/>
         <path class="dgm-flow" d="M368 364 H392" stroke-width="2" marker-end="url(#m2l1-ah)"/>
         <path class="dgm-flow" d="M542 364 H566" stroke-width="2" marker-end="url(#m2l1-ah)"/>
@@ -1094,37 +1100,37 @@ escalation:    UNKNOWN, vượt trần tiền, hoặc lever ngoài lever_set →
     <p>Giữa Decision kernel và Approval gate, phần lớn hệ chạy thật còn một node nữa mà sơ đồ chưa vẽ: <strong>automated reviewer</strong>, một classifier đọc typed proposal rồi quyết định cho đi thẳng hay đẩy sang người. Nó giữ được tốc độ mà không biến approval thành thao tác cơ học. Nhưng reviewer cũng là artifact chứ không phải một lớp bảo vệ miễn phí: có version, có promotion record, và có metric riêng, quan trọng nhất là false-negative rate trên tập hành động overeager có thật. Bài 4.3 đo đúng con số đó.</p>
 
     <h4>Ba tầng dữ liệu, một cửa vào</h4>
-    <p>Dữ liệu chảy vào kernel không đồng hạng. Đơn hàng, tồn kho và receipt là first-party ground truth. Bảng giá ngành hay share panel mua từ bên thứ ba mang rủi ro sampling và rủi ro phương pháp. Mentions, comment và post của creator thì tới theo phút nhưng bursty, hay khuyết, và có thể bị tác động từ bên ngoài. Ba tầng đó phải đi qua một <strong>point-in-time feature store</strong> trước khi chạm kernel, tức một store trả lời đúng câu “lúc 02:00 sáng thứ Hai chúng ta biết gì”. Tài liệu Feast mô tả cơ chế này: với <code>filter_by_created_timestamp=True</code>, “each entity dataframe row only sees feature values whose created timestamp is at or before its own timestamp”, đủ để “reproduce what the online store would have served at each event time” (Feast docs, truy cập 29/08/2026).</p>
+    <p>Dữ liệu chảy vào kernel không đồng hạng. Đơn hàng, tồn kho và receipt là first-party ground truth. Bảng giá ngành hay share panel mua từ bên thứ ba mang rủi ro sampling và rủi ro phương pháp. Mentions, comment và post của creator thì tới theo phút nhưng bursty, hay khuyết, và có thể bị tác động từ bên ngoài. Ba tầng đó phải đi qua một <strong>point-in-time feature store</strong> trước khi chạm kernel, tức một store trả lời đúng câu “lúc 02:00 sáng thứ Hai chúng ta biết gì”. Tài liệu Feast mô tả cơ chế này: với <code>filter_by_created_timestamp=True</code>, “each entity dataframe row only sees feature values whose created timestamp is at or before its own timestamp”, đủ để “reproduce what the online store would have served at each event time” (<a href="https://docs.feast.dev/getting-started/concepts/point-in-time-joins">Feast docs</a>, truy cập 05/09/2026).</p>
 
     <figure class="figure">
       <svg viewBox="0 0 760 270" role="img" aria-label="Ba tầng dữ liệu với trust weight và freshness cùng đổ vào một point-in-time feature store rồi mới tới decision kernel; một đường biên đứt bao quanh store và kernel mang nhãn tenant_id default deny, với một cửa phụ BYPASSRLS table owner nằm trên đường biên">
         <defs><marker id="m2l1-ah2" markerWidth="9" markerHeight="9" refX="7" refY="4.5" orient="auto"><path d="M0 0 L9 4.5 L0 9 z" fill="var(--accent-2)"/></marker></defs>
         <rect class="dgm-line" x="290" y="68" width="456" height="170" rx="14" stroke-width="1.6" stroke-dasharray="6 5"/>
-        <text class="dgm-ink2" x="298" y="60" font-size="9.5" font-family="IBM Plex Mono">tenant_id · default deny</text>
+        <text class="dgm-ink2" x="298" y="60" font-size="11" font-family="IBM Plex Mono">tenant_id · default deny</text>
 
         <rect class="dgm-box" x="24" y="24" width="210" height="62" rx="10"/>
         <text class="dgm-ink" x="129" y="44" text-anchor="middle" font-size="11.5" font-weight="700">Tier 1 · first-party</text>
-        <text class="dgm-ink2" x="129" y="60" text-anchor="middle" font-size="9.5" font-family="IBM Plex Mono">orders · stock · receipts</text>
-        <text class="dgm-ink2" x="129" y="76" text-anchor="middle" font-size="9.5" font-family="IBM Plex Mono">trust cao · freshness giờ</text>
+        <text class="dgm-ink2" x="129" y="60" text-anchor="middle" font-size="11" font-family="IBM Plex Mono">orders · stock · receipts</text>
+        <text class="dgm-ink2" x="129" y="76" text-anchor="middle" font-size="11" font-family="IBM Plex Mono">trust cao · freshness giờ</text>
 
         <rect class="dgm-box" x="24" y="104" width="210" height="62" rx="10"/>
         <text class="dgm-ink" x="129" y="124" text-anchor="middle" font-size="11.5" font-weight="700">Tier 2 · market intel</text>
-        <text class="dgm-ink2" x="129" y="140" text-anchor="middle" font-size="9.5" font-family="IBM Plex Mono">giá ngành · share panel</text>
-        <text class="dgm-ink2" x="129" y="156" text-anchor="middle" font-size="9.5" font-family="IBM Plex Mono">trust vừa · ngày tới tuần</text>
+        <text class="dgm-ink2" x="129" y="140" text-anchor="middle" font-size="11" font-family="IBM Plex Mono">giá ngành · share panel</text>
+        <text class="dgm-ink2" x="129" y="156" text-anchor="middle" font-size="11" font-family="IBM Plex Mono">trust vừa · ngày tới tuần</text>
 
         <rect class="dgm-box" x="24" y="184" width="210" height="62" rx="10"/>
         <text class="dgm-ink" x="129" y="204" text-anchor="middle" font-size="11.5" font-weight="700">Tier 3 · social</text>
-        <text class="dgm-ink2" x="129" y="220" text-anchor="middle" font-size="9.5" font-family="IBM Plex Mono">mentions · comments</text>
-        <text class="dgm-ink2" x="129" y="236" text-anchor="middle" font-size="9.5" font-family="IBM Plex Mono">trust thấp · hay khuyết</text>
+        <text class="dgm-ink2" x="129" y="220" text-anchor="middle" font-size="11" font-family="IBM Plex Mono">mentions · comments</text>
+        <text class="dgm-ink2" x="129" y="236" text-anchor="middle" font-size="11" font-family="IBM Plex Mono">trust thấp · hay khuyết</text>
 
         <rect class="dgm-box" x="310" y="90" width="180" height="90" rx="12"/>
         <text class="dgm-ink" x="400" y="118" text-anchor="middle" font-size="12" font-weight="700">point-in-time</text>
         <text class="dgm-ink" x="400" y="136" text-anchor="middle" font-size="12" font-weight="700">feature store</text>
-        <text class="dgm-ink2" x="400" y="158" text-anchor="middle" font-size="9.5" font-family="IBM Plex Mono">as_of = 02:00 thứ Hai</text>
+        <text class="dgm-ink2" x="400" y="158" text-anchor="middle" font-size="11" font-family="IBM Plex Mono">as_of = 02:00 thứ Hai</text>
 
         <rect class="dgm-accent" x="576" y="100" width="150" height="70" rx="12" stroke-width="2"/>
         <text class="dgm-ink" x="651" y="130" text-anchor="middle" font-size="12" font-weight="700">decision kernel</text>
-        <text class="dgm-ink2" x="651" y="148" text-anchor="middle" font-size="9" font-family="IBM Plex Mono">typed action · budget</text>
+        <text class="dgm-ink2" x="651" y="148" text-anchor="middle" font-size="11" font-family="IBM Plex Mono">typed action · budget</text>
 
         <path class="dgm-flow" d="M234 55 H272 V118 H310" stroke-width="2" marker-end="url(#m2l1-ah2)"/>
         <path class="dgm-flow" d="M234 135 H310" stroke-width="2" marker-end="url(#m2l1-ah2)"/>
@@ -1132,7 +1138,7 @@ escalation:    UNKNOWN, vượt trần tiền, hoặc lever ngoài lever_set →
         <path class="dgm-flow" d="M490 135 H576" stroke-width="2" marker-end="url(#m2l1-ah2)"/>
 
         <rect class="dgm-warn" x="420" y="222" width="210" height="30" rx="8"/>
-        <text class="dgm-ink" x="525" y="241" text-anchor="middle" font-size="9.5" font-family="IBM Plex Mono">BYPASSRLS · table owner</text>
+        <text class="dgm-ink" x="525" y="241" text-anchor="middle" font-size="11" font-family="IBM Plex Mono">BYPASSRLS · table owner</text>
       </svg>
       <figcaption><b>Hình 2.2</b> — Store trả lời “lúc quyết định chúng ta biết gì”; đường biên tenant là default deny; và job chạy bằng role owner là cái cửa đi vòng qua đường biên đó.</figcaption>
     </figure>
@@ -1254,25 +1260,25 @@ outcome  = action_worker.dispatch(command, idempotency_key)</pre>
         <rect class="dgm-box" x="540" y="76" width="36" height="28"/><text class="dgm-ink" x="558" y="95" text-anchor="middle" font-size="11" font-family="IBM Plex Mono">T</text>
         <rect class="dgm-accent" x="576" y="76" width="36" height="28"/><text class="dgm-ink" x="594" y="95" text-anchor="middle" font-size="11" font-family="IBM Plex Mono">U</text>
         <rect class="dgm-box" x="612" y="76" width="36" height="28"/><text class="dgm-ink" x="630" y="95" text-anchor="middle" font-size="11" font-family="IBM Plex Mono">F</text>
-        <text class="dgm-ink2" x="594" y="124" text-anchor="middle" font-size="9.5" font-family="IBM Plex Mono">phủ định của UNKNOWN</text>
-        <text class="dgm-ink2" x="594" y="140" text-anchor="middle" font-size="9.5" font-family="IBM Plex Mono">vẫn là UNKNOWN</text>
+        <text class="dgm-ink2" x="594" y="124" text-anchor="middle" font-size="11" font-family="IBM Plex Mono">phủ định của UNKNOWN</text>
+        <text class="dgm-ink2" x="594" y="140" text-anchor="middle" font-size="11" font-family="IBM Plex Mono">vẫn là UNKNOWN</text>
 
         <text class="dgm-ink2" x="380" y="186" text-anchor="middle" font-size="10.5">F AND U = F, nhưng T AND U = U: một toán hạng TRUE không cứu được toán hạng thiếu.</text>
 
         <rect class="dgm-accent" x="40" y="214" width="210" height="58" rx="10" stroke-width="2"/>
         <text class="dgm-ink" x="145" y="238" text-anchor="middle" font-size="11" font-weight="700">combiner AND → UNKNOWN</text>
-        <text class="dgm-ink2" x="145" y="256" text-anchor="middle" font-size="9" font-family="IBM Plex Mono">receipt rcp_2026w35_0142</text>
+        <text class="dgm-ink2" x="145" y="256" text-anchor="middle" font-size="11" font-family="IBM Plex Mono">receipt rcp_2026w35_0142</text>
         <path class="dgm-flow" d="M250 243 H330" stroke-width="2" marker-end="url(#m2l2-ah)"/>
         <rect class="dgm-box" x="330" y="214" width="200" height="58" rx="10"/>
         <text class="dgm-ink" x="430" y="238" text-anchor="middle" font-size="11" font-weight="700">abstain + escalate</text>
-        <text class="dgm-ink2" x="430" y="256" text-anchor="middle" font-size="9" font-family="IBM Plex Mono">owner nhận lúc 02:01</text>
+        <text class="dgm-ink2" x="430" y="256" text-anchor="middle" font-size="11" font-family="IBM Plex Mono">owner nhận lúc 02:01</text>
         <rect class="dgm-warn" x="556" y="214" width="170" height="58" rx="10"/>
         <text class="dgm-ink" x="641" y="238" text-anchor="middle" font-size="11" font-weight="700">FALSE · rule không bắn</text>
-        <text class="dgm-ink2" x="641" y="256" text-anchor="middle" font-size="9" font-family="IBM Plex Mono">không có ledger row</text>
+        <text class="dgm-ink2" x="641" y="256" text-anchor="middle" font-size="11" font-family="IBM Plex Mono">không có ledger row</text>
         <path class="dgm-line" d="M145 272 V300 H641 V272" stroke-width="1.6" stroke-dasharray="5 4" marker-end="url(#m2l2-ah)"/>
         <path class="dgm-warn" d="M322 292 L338 308" stroke-width="2.6"/>
         <path class="dgm-warn" d="M338 292 L322 308" stroke-width="2.6"/>
-        <text class="dgm-ink2" x="430" y="326" text-anchor="middle" font-size="9.5">lỗi im lặng: engine đọc dòng khuyết thành 0 rồi kết luận FALSE</text>
+        <text class="dgm-ink2" x="430" y="326" text-anchor="middle" font-size="11">lỗi im lặng: engine đọc dòng khuyết thành 0 rồi kết luận FALSE</text>
       </svg>
       <figcaption><b>Hình 2.3</b> — Chỉ 5 trong 9 ô của AND và OR cho ra UNKNOWN, và mọi ô đó đều dẫn về một đường duy nhất: abstain kèm escalate. Đường còn lại bị gạch vì nó xoá luôn dấu vết của sự cố.</figcaption>
     </figure>
@@ -1315,6 +1321,13 @@ outcome  = action_worker.dispatch(command, idempotency_key)</pre>
     <div class="callout warn">
       <div class="callout-title">Điền giá trị thay thế cũng là phát số</div>
       <p>Thay <code>null</code> bằng trung bình bảy ngày làm rule chạy tiếp, nhưng con số đó không tới từ quan sát nào. Receipt sẽ ghi một giá trị mà không nguồn nào xác nhận, và bài 2.3 chặn đúng loại số này ở phía output của copilot.</p>
+    </div>
+
+    <div>
+      <span class="eyebrow" style="display:block;margin-bottom:10px">Áp dụng</span>
+      <details class="accordion"><summary><span class="chev">▶</span><span class="accordion-tag">Tech lead</span><span>Tìm chỗ NULL đang bị ép thành FALSE</span></summary>
+        <div class="accordion-body">Mở rule engine, tìm chỗ nào đang ép NULL thành FALSE, và cho một rule trả UNKNOWN kèm escalate ngay trong tuần này. Rule đó là mẫu để chuyển các rule còn lại, và nó cho bạn con số đầu tiên về tần suất dữ liệu thiếu.</div>
+      </details>
     </div>
 
     <div class="takeaway">
@@ -1398,15 +1411,15 @@ outcome  = action_worker.dispatch(command, idempotency_key)</pre>
         <path class="dgm-flow" d="M616 124 V144" stroke-width="2" marker-end="url(#m2l3-ah)"/>
         <path class="dgm-flow" d="M616 188 V208" stroke-width="2" marker-end="url(#m2l3-ah)"/>
 
-        <text class="dgm-ink2" x="380" y="152" text-anchor="middle" font-size="9.5" font-family="IBM Plex Mono">typed proposal</text>
-        <text class="dgm-ink2" x="380" y="166" text-anchor="middle" font-size="9.5" font-family="IBM Plex Mono">{lever, size, window}</text>
+        <text class="dgm-ink2" x="380" y="152" text-anchor="middle" font-size="11" font-family="IBM Plex Mono">typed proposal</text>
+        <text class="dgm-ink2" x="380" y="166" text-anchor="middle" font-size="11" font-family="IBM Plex Mono">{lever, size, window}</text>
         <path class="dgm-flow" d="M274 178 H486" stroke-width="2" marker-end="url(#m2l3-ah)"/>
-        <text class="dgm-ink2" x="380" y="228" text-anchor="middle" font-size="9.5" font-family="IBM Plex Mono">receipt_id + số kernel đã tính</text>
+        <text class="dgm-ink2" x="380" y="228" text-anchor="middle" font-size="11" font-family="IBM Plex Mono">receipt_id + số kernel đã tính</text>
         <path class="dgm-flow" d="M486 236 H274" stroke-width="2" marker-end="url(#m2l3-ah)"/>
 
         <path class="dgm-line" d="M144 252 V308 H430" stroke-width="1.6" stroke-dasharray="5 4" marker-end="url(#m2l3-ah)"/>
         <rect class="dgm-warn" x="438" y="290" width="8" height="36"/>
-        <text class="dgm-ink2" x="580" y="313" text-anchor="middle" font-size="9.5">số không resolve về receipt id → fixture fail</text>
+        <text class="dgm-ink2" x="580" y="313" text-anchor="middle" font-size="11">số không resolve về receipt id → fixture fail</text>
       </svg>
       <figcaption><b>Hình 2.4</b> — Hai làn chạy song song và chỉ chạm nhau ở hai điểm: một typed proposal đi sang, một receipt id kèm số đi về. Đường thứ ba, một con số do LLM tự phát, dừng ở thanh chắn.</figcaption>
     </figure>
@@ -1494,11 +1507,11 @@ outcome  = action_worker.dispatch(command, idempotency_key)</pre>
         <polygon class="dgm-accent" points="340,164 402,200 340,236 278,200" stroke-width="2"/>
         <text class="dgm-ink2" x="340" y="196" text-anchor="middle" font-size="10" font-family="IBM Plex Mono">AGENT</text>
         <text class="dgm-ink" x="340" y="213" text-anchor="middle" font-size="10.5" font-weight="700">kernel v7.2</text>
-        <text class="dgm-ink2" x="193" y="70" text-anchor="middle" font-size="9.5" font-family="IBM Plex Mono">used</text>
+        <text class="dgm-ink2" x="193" y="70" text-anchor="middle" font-size="11" font-family="IBM Plex Mono">used</text>
         <path class="dgm-flow" d="M136 80 H250" stroke-width="2" marker-end="url(#m2l4-ah)"/>
-        <text class="dgm-ink2" x="507" y="70" text-anchor="middle" font-size="9.5" font-family="IBM Plex Mono">wasGeneratedBy</text>
+        <text class="dgm-ink2" x="507" y="70" text-anchor="middle" font-size="11" font-family="IBM Plex Mono">wasGeneratedBy</text>
         <path class="dgm-flow" d="M430 80 H584" stroke-width="2" marker-end="url(#m2l4-ah)"/>
-        <text class="dgm-ink2" x="352" y="146" font-size="9.5" font-family="IBM Plex Mono">wasAssociatedWith</text>
+        <text class="dgm-ink2" x="352" y="146" font-size="11" font-family="IBM Plex Mono">wasAssociatedWith</text>
         <path class="dgm-flow" d="M340 164 V118" stroke-width="2" marker-end="url(#m2l4-ah)"/>
         <path class="dgm-line" d="M630 126 V264 H90 V126" stroke-width="1.6" stroke-dasharray="5 4" marker-end="url(#m2l4-ah)"/>
         <text class="dgm-ink" x="380" y="290" text-anchor="middle" font-size="12" font-weight="700">REPLAY = frozen input + đúng version → cùng receipt hash</text>
@@ -1555,7 +1568,7 @@ provider_receipt=p_82 · outcome_window=+7d · reward=+₫3,1M</pre>
       <p>Bài <em>Decision Evidence Maturity Model for Agentic AI</em> (Oleg Solozobov, arXiv 2605.04093, 29/04/2026) đặt tên cho cái bẫy: “an inferential step that treats evidence-container presence as if it implied audit sufficiency, when sufficiency requires per-question per-property checking that container presence does not perform.” Có log không đồng nghĩa với đủ để audit. Bài đó đo completeness trên bộ fixture, thấp nhất ở kiến trúc multi-agent cross-stack với 53,6%, nhưng chính tác giả cảnh báo con số là “implementation behaviour, not external validation”, và trường reasoning trace thì “uniformly opaque across all 140 scenarios”. Dùng để xếp hạng kiến trúc, đừng dùng để nói “ledger của chúng ta đầy đủ 94%”.</p>
     </div>
 
-    <p>Nghĩa vụ pháp lý đi cùng hướng. EU AI Act, Article 12(1): “High-risk AI systems shall technically allow for the automatic recording of events (logs) over the lifetime of the system”, với thời hạn lưu tối thiểu sáu tháng theo Article 19. Regulation (EU) 2026/1744 ngày 08/07/2026 (Digital Omnibus on AI) sửa các quy định liên quan và dời ngày áp dụng: 02/12/2027 cho hệ high-risk theo Article 6(2) và Annex III, 02/08/2028 cho hệ high-risk theo Article 6(1) và Annex I. Bản này đăng Official Journal trong tháng 07/2026. Ngày cụ thể của bản OJ tới nay chỉ có nguồn phụ, nên hãy dùng hai mốc áp dụng ở trên khi lập kế hoạch.</p>
+    <p>Nghĩa vụ pháp lý đi cùng hướng. EU AI Act, Article 12(1): “High-risk AI systems shall technically allow for the automatic recording of events (logs) over the lifetime of the system”, với thời hạn lưu tối thiểu sáu tháng theo Article 19. <a href="https://eur-lex.europa.eu/legal-content/EN/TXT/?uri=OJ:L_202601744">Regulation (EU) 2026/1744</a> ngày 08/07/2026 (Digital Omnibus on AI) sửa các quy định liên quan và dời ngày áp dụng: 02/12/2027 cho hệ high-risk theo Article 6(2) và Annex III, 02/08/2028 cho hệ high-risk theo Article 6(1) và Annex I. Bản này đăng Official Journal ngày 24/07/2026 và có hiệu lực 27/07/2026 (kiểm EUR-Lex 05/09/2026).</p>
 
     <div class="takeaway">
       <span class="eyebrow">
@@ -1835,7 +1848,7 @@ provider_receipt=p_82 · outcome_window=+7d · reward=+₫3,1M</pre>
             <li><h4>0,28 — sau khi co theo credibility</h4><p>Với gate ví dụ ở 0,40, con số này không qua cổng. Cả ba đều phải nằm trong receipt, không chỉ con số đẹp nhất.</p></li>
           </ol>
 
-          <p><b>Calibration</b> (mức khớp giữa xác suất model nói ra và tần suất thật) là cổng thứ ba. Hiệu chuẩn lý tưởng nghĩa là trong 100 lần model nói 0,8 thì đúng 80 lần (Guo và cộng sự, ICML 2017). Trên 400 SKU-tuần chia 5 bin (số minh hoạ), ECE = 0,129 và bin cao nhất, nơi model nói 0,91, chỉ đúng 65%. Một gate dạng “p̂ ≥ 0,9 thì auto-execute” đang mua một sự kiện 65% với giá 91%. Kèm theo là số lượng mẫu mỗi bin, vì reliability diagram một mình không cho biết bin nào đông bin nào thưa.</p>
+          <p><b>Calibration</b> (mức khớp giữa xác suất model nói ra và tần suất thật) là cổng thứ ba. Hiệu chuẩn lý tưởng nghĩa là trong 100 lần model nói 0,8 thì đúng 80 lần (Guo, Pleiss, Sun &amp; Weinberger, <a href="https://arxiv.org/abs/1706.04599">On Calibration of Modern Neural Networks</a>, ICML 2017). Trên 400 SKU-tuần chia 5 bin (số minh hoạ), ECE = 0,129 và bin cao nhất, nơi model nói 0,91, chỉ đúng 65%. Một gate dạng “p̂ ≥ 0,9 thì auto-execute” đang mua một sự kiện 65% với giá 91%. Kèm theo là số lượng mẫu mỗi bin, vì reliability diagram một mình không cho biết bin nào đông bin nào thưa.</p>
 
           <figure class="figure">
             <svg viewBox="0 0 660 380" role="img" aria-label="Reliability diagram năm bin với đường chéo hiệu chuẩn lý tưởng; mọi cột nằm dưới đường chéo và phần chênh lệch được tô riêng, bên dưới là số mẫu của từng bin">
@@ -1871,7 +1884,7 @@ provider_receipt=p_82 · outcome_window=+7d · reward=+₫3,1M</pre>
               <text class="dgm-ink2" x="460" y="186" font-size="12" font-family="IBM Plex Mono">conf = 0,584</text>
               <text class="dgm-ink2" x="460" y="208" font-size="12" font-family="IBM Plex Mono">n = 400 · M = 5</text>
             </svg>
-            <figcaption><b>Hình 3.4</b> — Mọi cột nằm dưới đường chéo, tức model tự tin quá mức một cách có hệ thống, và khoảng chênh lớn dần về phía bên phải nơi nó tự tin nhất. Số mẫu mỗi bin vẽ kèm để không ai đọc quá tay bin thưa nhất. Số minh hoạ; công thức ECE theo Guo và cộng sự, ICML 2017.</figcaption>
+            <figcaption><b>Hình 3.4</b> — Mọi cột nằm dưới đường chéo, tức model tự tin quá mức một cách có hệ thống, và khoảng chênh lớn dần về phía bên phải nơi nó tự tin nhất. Số mẫu mỗi bin vẽ kèm để không ai đọc quá tay bin thưa nhất. Số minh hoạ; công thức ECE theo Guo và cộng sự, ICML 2017 (arXiv 1706.04599).</figcaption>
           </figure>
 
           <p>Cổng cuối là lift. Một thí nghiệm giảm giá ngẫu nhiên 10.000 khách mỗi nhánh, chia theo model dự báo khả năng mua (số minh hoạ), cho thấy vì sao một model dự báo giỏi vẫn chọn sai người.</p>
@@ -1887,7 +1900,19 @@ provider_receipt=p_82 · outcome_window=+7d · reward=+₫3,1M</pre>
             </table>
           </div>
 
-          <p>Model dự báo chọn nhóm High và phát 800 phiếu giảm giá để lấy 20 đơn tăng thêm, tức 40 phiếu cho mỗi đơn. Model <b>uplift</b> (mô hình ước lượng phần tăng thêm do can thiệp gây ra) chọn nhóm Mid, phát 450 phiếu và lấy 120 đơn, tức 3,75 phiếu cho mỗi đơn: chênh 10,7 lần trên cùng một bảng. Nhóm High là “kiểu gì cũng mua”, model dự báo đúng về họ và phiếu giảm giá gần như không mua thêm được gì. Uplift cũng không thắng mọi lúc: khi hiệu ứng yếu và mẫu nhỏ, phương sai của estimator uplift cao hơn nên xếp hạng dự báo vẫn có thể là lựa chọn vận hành đúng (Verhelst và cộng sự, 21/09/2023).</p>
+          <p>Model dự báo chọn nhóm High: 2.000 phiếu giảm giá để lấy 20 đơn tăng thêm, tức 100 phiếu mỗi đơn. Model <b>uplift</b> (mô hình ước lượng phần tăng thêm do can thiệp gây ra) chọn nhóm Mid: 3.000 phiếu, 120 đơn, tức 25 phiếu mỗi đơn, rẻ hơn 4 lần trên cùng một bảng. Nhóm High là “kiểu gì cũng mua”, model dự báo đúng về họ và phiếu giảm giá gần như không mua thêm được gì. Uplift cũng không thắng mọi lúc: khi mutual information giữa feature và outcome thấp và số mẫu được treat ít, phương sai của estimator uplift cao hơn nên xếp hạng dự báo vẫn có thể là lựa chọn vận hành đúng (Verhelst, Petit, Verbeke &amp; Bontempi, <a href="https://arxiv.org/abs/2309.12036"><i>Uplift vs. predictive modeling: a theoretical analysis</i></a>, arXiv 2309.12036, 21/09/2023).</p>
+
+          <div class="callout info">
+            <div class="callout-title">Hướng thứ ba: huấn luyện theo hàm mất mát của quyết định</div>
+            <p>Ngoài forecast và uplift còn một hướng nữa: <strong>decision-focused learning</strong> (còn gọi predict-then-optimize), tức huấn luyện model theo chính hàm mất mát của quyết định thay vì theo sai số dự báo, vì model dự báo chính xác nhất không phải model ra quyết định tốt nhất. Điểm bắt đầu là Elmachtoub &amp; Grigas, <a href="https://arxiv.org/abs/1710.08005"><i>Smart “Predict, then Optimize”</i></a> (arXiv 1710.08005), nơi hàm mất mát SPO đo decision error thay cho prediction error, còn SPO+ là surrogate lồi để huấn luyện được.</p>
+          </div>
+
+          <div>
+            <span class="eyebrow" style="display:block;margin-bottom:10px">Áp dụng</span>
+            <details class="accordion"><summary><span class="chev">▶</span><span class="accordion-tag">Data lead</span><span>In Z cạnh mọi con số trên slide</span></summary>
+              <div class="accordion-body">Ước lượng K = EPV/VHM từ chuỗi tuần bạn đang có, rồi in Z = k/(k+K) cạnh mọi con số trên slide tuần tới. Nếu K chưa ước lượng được thì ghi rõ khoảng giá trị đã dùng, vì bản thân K cũng có sai số.</div>
+            </details>
+          </div>
 
           <div class="takeaway">
             <span class="eyebrow">
@@ -2174,7 +2199,7 @@ provider_receipt=p_82 · outcome_window=+7d · reward=+₫3,1M</pre>
             <p>Khi đơn vị randomization thô hơn đơn vị quan sát, covariate xây ở mức mịn quyết định thí nghiệm chạy bao lâu. Trên 10 thí nghiệm switchback ở mức region-day, CUPED chuẩn theo feature region-day giảm phương sai 5% tới 10%, còn CUPED dựng từ dự đoán ở mức từng đơn hàng rồi gộp lên giảm 18% tới 40%, kéo thời gian chạy xuống khoảng một phần ba (Instacart Engineering, 01/07/2026). Ràng buộc đi kèm: mọi feature phải hoàn toàn tiền-treatment, và cách kiểm là placebo test, chạy đúng phép so sánh trung bình trên chính giá trị dự đoán. Nếu tác động ước lượng trên giá trị dự đoán khác 0 có ý nghĩa, tức là có feature đang bị treatment chạm, và kết quả CUPED của thí nghiệm đó không dùng được.</p>
           </div>
 
-          <p>Quy tắc đứng trên cả cây: chọn design có estimand gần quyết định nhất, không chọn design có sai số nhỏ nhất (Shekhar &amp; Howard, arXiv 2605.25290, 24/05/2026). Cùng bộ chọn design đó chạy trên ba dataset công khai cho ba đáp án khác nhau, nên câu trả lời đổi theo dữ liệu chứ không theo sở thích của người phân tích. Một khoảng tin cậy hẹp trên estimand sai vẫn tệ hơn một khoảng rộng trên estimand đúng.</p>
+          <p>Quy tắc đứng trên cả cây là quy ước của khoá này: chọn design có estimand gần quyết định nhất, không chọn design có sai số nhỏ nhất. Shekhar &amp; Howard (<a href="https://arxiv.org/abs/2605.25290"><i>Choosing Online Experiment Designs under Interference in Ads, Recommendations, and Member-Experience Systems</i></a>, arXiv 2605.25290, 24/05/2026) đi xa hơn một bước: họ chọn design bằng cách cân đồng thời exposure bias, phương sai theo đơn vị gán, MDE, contamination/carryover, chi phí vận hành và estimand mismatch. Cùng bộ chọn đó chạy trên ba dataset công khai (Criteo, Open Bandit, KuaiRand) cho ba đáp án khác nhau, nên câu trả lời đổi theo dữ liệu chứ không theo sở thích của người phân tích. Một khoảng tin cậy hẹp trên estimand sai vẫn tệ hơn một khoảng rộng trên estimand đúng.</p>
 
           <p>Nối lại với bài 1.3: thumbnail và giá có thể cùng ở một mức bằng chứng mà autonomy vẫn khác nhau. Thumbnail randomize được theo user, đảo ngược được, blast radius nhỏ, A/B xong trong vài ngày. Giá vướng interference qua catalogue dùng chung, margin không lấy lại được, và cần một design tốn khoảng bốn lần chi phí kỹ thuật so với A/B cấp user. Công cụ đo là thứ nối hai thang đó với nhau.</p>
 
@@ -2287,16 +2312,16 @@ DR    = reward_model(x, π_new) + w × residual</pre>
             <div class="table-wrap">
               <table>
                 <thead><tr><th>n</th><th>max w</th><th>ESS</th><th>ESS / n</th><th>IPS</th><th>SNIPS</th></tr></thead>
-                <tbody><tr>
+                <tbody aria-live="polite"><tr>
                   <td data-lab-n>10</td><td data-lab-maxw>25,00</td><td data-lab-ess>2,44</td>
                   <td data-lab-share>24%</td><td data-lab-ips>0,3290</td><td data-lab-snips>0,0756</td>
                 </tr></tbody>
               </table>
             </div>
-            <p class="mono" data-lab-verdict>ESS 2,44 trên 10 dòng: hai dòng chiếm gần hết trọng số, gate đọc là abstain.</p>
+            <p class="mono" data-lab-verdict aria-live="polite">ESS 2,44 trên 10 dòng: hai dòng chiếm gần hết trọng số, gate đọc là abstain.</p>
           </div>
 
-          <p>Đọc thẳng từ bảng: IPS nói 32,9% trong khi mức reward thật mà policy cũ đạt được là 4,66%. Một estimator trả về giá trị gấp bảy lần mọi tỉ lệ từng quan sát chưa tìm ra policy tốt, nó tìm ra hai dòng có w = 12 và w = 25. Bỏ hai dòng đó, tức 20% log, thì con số rơi từ 0,329 xuống 0,034. Nếu xoá một phần năm log làm đổi quyết định thì log chưa bao giờ chứa quyết định đó. Khoảng tin cậy bootstrap của IPS là [0,028; 0,781], rộng gấp 17 lần của SNIPS [0,040; 0,084]: các điểm ước lượng cãi nhau, các khoảng thì không.</p>
+          <p>Đọc thẳng từ bảng: IPS nói 32,9% trong khi mức reward thật mà policy cũ đạt được là 4,66%. Một estimator trả về giá trị gấp bảy lần mức reward trung bình của log, và vẫn gấp 3,6 lần cả tỉ lệ cao nhất từng quan sát trong log (9,1%), thì chưa tìm ra policy tốt: nó tìm ra hai dòng có w = 12 và w = 25. Bỏ hai dòng đó, tức 20% log, thì con số rơi từ 0,329 xuống 0,034. Nếu xoá một phần năm log làm đổi quyết định thì log chưa bao giờ chứa quyết định đó. Khoảng tin cậy bootstrap của IPS là [0,028; 0,781], rộng gấp 17 lần của SNIPS [0,040; 0,084]: các điểm ước lượng cãi nhau, các khoảng thì không.</p>
 
           <p>DR trên chính log này ra 0,106 và cũng không cứu được gì, vì double robustness là lời hứa về bias khi có một model đúng, còn nó vẫn nhân với w. DM ra 0,043 với khoảng hẹp nhất, và đó là estimator có thể sai một cách tự tin nhất, vì sai số của nó nằm trong reward model chứ không hiện lên khoảng tin cậy của output. Clip chỉ là một núm xoay giữa bias và variance: w ≤ 5 kéo IPS về 0,111 và nâng ESS lên 4,74, nhìn đẹp hơn mà đã cố ý gây bias, nên mức clip phải nằm trong gate đăng ký trước.</p>
 
@@ -2306,6 +2331,13 @@ DR    = reward_model(x, π_new) + w × residual</pre>
           </div>
 
           <p>Exploration là một artifact, không phải một cú liều. Serving plane giữ một ngân sách exploration có biên rõ, ví dụ ≤2% số episode đủ điều kiện, chỉ trên hành động reversible, dưới một value cap cố định. Sampler phải ghi propensity thật vào episode ngay tại lúc chọn; propensity điền lại sau là số bịa và làm hỏng mọi importance weight ở trên. Bản thân exploration policy cũng là artifact có version và promotion record như champion. Log không phải khí thải của hệ, nó là tài sản được thiết kế trước: không cố ý tạo overlap hôm nay thì tháng sau OPE vẫn phải abstain. Đây chính là điều kiện positivity bạn đã gặp ở bài 3.4, gọi bằng một cái tên khác và đo bằng một dụng cụ khác.</p>
+
+          <div>
+            <span class="eyebrow" style="display:block;margin-bottom:10px">Áp dụng</span>
+            <details class="accordion"><summary><span class="chev">▶</span><span class="accordion-tag">Data lead</span><span>Kiểm log có cột propensity chưa</span></summary>
+              <div class="accordion-body">Grep log tuần trước xem có cột propensity không; nếu không, sửa write path trước khi bàn tới estimator. Không có mẫu số thì mọi IPS, SNIPS và DR chạy trên log đó đều là số bịa.</div>
+            </details>
+          </div>
 
           <div class="takeaway">
             <span class="eyebrow">
@@ -2372,46 +2404,50 @@ DR    = reward_model(x, π_new) + w × residual</pre>
             <p>Mỗi lever giữ một posterior <strong>Beta(α, β)</strong>: α là pseudo-count của conversion, β là pseudo-count của lượt không conversion, cộng prior. Mỗi lượt quyết định, engine <em>rút</em> một θ̂ từ posterior của từng lever rồi chọn lever có θ̂ lớn nhất (Russo, Van Roy, Kazerouni, Osband &amp; Wen, <em>A Tutorial on Thompson Sampling</em>, arXiv 1707.02038; bảo đảm regret cho trường hợp Bernoulli ở Agrawal &amp; Goyal, arXiv 1111.1797, 2011 và arXiv 1209.3353, 2012). Chỗ hay nhầm: θ̂ là một tỷ lệ conversion hợp lý, không phải một lượt mua giả lập.</p>
           </div>
 
-          <p>Công thức cập nhật chỉ chạm lever đã được chọn: <code>(α, β) ← (α + r, β + 1 − r)</code>. Số worked: lever C ngày 1 bắt đầu ở Beta(1, 1), nhận 998 session và 39 conversion (số minh hoạ, mô phỏng có seed), nên α = 1 + 39 = 40 và β = 1 + 998 − 39 = 960, tức Beta(40, 960) với posterior mean 40/1000 = 0,0400. Đọc bằng lời: sau một ngày hệ tin C rơi quanh 4,0%, và biên còn rộng vì mới có nghìn quan sát. Lever không được chọn giữ nguyên α, β của nó.</p>
+          <p>Công thức cập nhật chỉ chạm lever đã được chọn: <code>(α, β) ← (α + r, β + 1 − r)</code>. Số worked, lấy từ đúng lab có seed ở cuối bài: lever C ngày 1 bắt đầu ở Beta(1, 1), nhận 1.021 session và 36 conversion (số minh hoạ), nên α = 1 + 36 = 37 và β = 1 + 1.021 − 36 = 986, tức Beta(37, 986) với posterior mean 37/1023 = 0,0362. Đọc bằng lời: sau một ngày hệ tin C rơi quanh 3,6%, và biên còn rộng vì mới có nghìn quan sát. Lever không được chọn giữ nguyên α, β của nó.</p>
 
           <p>Xác suất TS chơi một lever bằng đúng xác suất posterior rằng lever đó tốt nhất (Lattimore &amp; Szepesvári, <em>Bandit Algorithms</em>, 2020, Eq. 36.1). Tỷ lệ chia traffic vì vậy là readout của phần chồng lấn giữa các posterior, không phải một tham số ai đó chỉnh tay.</p>
 
+          <p>Lab dưới đây là bandit <strong>không có context</strong>: ba lever, một posterior mỗi lever. Hệ thật hầu hết là <strong>contextual</strong>, tức posterior đặt trên một hàm của feature (LinTS, neural TS), nên π ghi vào episode là π(a|x) chứ không phải π(a). Toàn bộ phần propensity, ESS và OPE ở bài 3.5 viết cho dạng có context; cái đổi là posterior, không phải nguyên tắc.</p>
+
           <figure class="figure">
-            <svg viewBox="0 0 760 330" role="img" aria-label="Hai đường mật độ posterior Beta chồng nhau: lever B hẹp và cao quanh 4,4%, lever C thấp và rộng quanh 4,0%, vùng chồng lấn được tô đậm">
-              <path class="dgm-accent" stroke="none" d="M244 250.0 L244 249.7 L252 249.5 L260 248.9 L268 248.0 L276 246.4 L284 243.9 L292 239.9 L300 234.2 L308 226.1 L316 215.5 L324 202.0 L332 185.9 L340 167.7 L348 148.3 L356 146.3 L364 157.2 L372 168.4 L380 179.7 L388 190.4 L396 200.5 L404 209.5 L412 217.5 L420 224.3 L428 230.1 L436 234.8 L444 238.6 L452 241.5 L460 243.8 L468 245.6 L476 246.9 L484 247.8 L492 248.5 L500 249.0 L508 249.3 L516 249.6 L524 249.7 L524 250.0 Z"/>
-              <path class="dgm-line" stroke-width="2" d="M76 250 H700"/>
-              <path class="dgm-flow" stroke-width="2.4" d="M244 249.7 L252 249.5 L260 248.9 L268 248.0 L276 246.4 L284 243.9 L292 239.9 L300 234.2 L308 226.1 L316 215.5 L324 202.0 L332 185.9 L340 167.7 L348 148.3 L356 128.9 L364 111.0 L372 96.1 L380 85.6 L388 80.4 L396 81.0 L404 87.1 L412 98.2 L420 113.0 L428 130.3 L436 148.6 L444 166.8 L452 183.7 L460 198.8 L468 211.6 L476 222.0 L484 230.2 L492 236.3 L500 240.8 L508 244.0 L516 246.2 L524 247.7 L532 248.6 L540 249.2 L548 249.5 L556 249.7"/>
-              <path class="dgm-line" stroke-width="2.4" stroke-dasharray="7 4" d="M140 249.7 L148 249.4 L156 249.0 L164 248.3 L172 247.2 L180 245.7 L188 243.5 L196 240.4 L204 236.3 L212 231.0 L220 224.3 L228 216.2 L236 206.8 L244 196.1 L252 184.4 L260 172.2 L268 159.9 L276 148.1 L284 137.4 L292 128.5 L300 121.7 L308 117.5 L316 116.1 L324 117.5 L332 121.6 L340 128.0 L348 136.4 L356 146.3 L364 157.2 L372 168.4 L380 179.7 L388 190.4 L396 200.5 L404 209.5 L412 217.5 L420 224.3 L428 230.1 L436 234.8 L444 238.6 L452 241.5 L460 243.8 L468 245.6 L476 246.9 L484 247.8 L492 248.5 L500 249.0 L508 249.3 L516 249.6 L524 249.7"/>
-              <text class="dgm-ink" x="404" y="72" font-size="12" font-weight="700">B creator-post · Beta(391, 8523)</text>
-              <text class="dgm-ink2" x="404" y="88" font-size="11" font-family="IBM Plex Mono">P(best) = 0,854</text>
-              <text class="dgm-ink" x="150" y="112" font-size="12" font-weight="700">C bundle-badge · Beta(204, 4873)</text>
-              <text class="dgm-ink2" x="352" y="208" font-size="11" text-anchor="middle" font-family="IBM Plex Mono">vùng chồng lấn · P(C tốt nhất) = 0,146</text>
-              <text class="dgm-ink2" x="116" y="270" font-size="11" text-anchor="middle" font-family="IBM Plex Mono">3,0%</text>
-              <text class="dgm-ink2" x="316" y="270" font-size="11" text-anchor="middle" font-family="IBM Plex Mono">4,0%</text>
-              <text class="dgm-ink2" x="516" y="270" font-size="11" text-anchor="middle" font-family="IBM Plex Mono">5,0%</text>
-              <text class="dgm-ink2" x="640" y="270" font-size="11" font-family="IBM Plex Mono">conversion</text>
-              <path class="dgm-line" stroke-width="1.4" stroke-dasharray="3 3" d="M76 300 H676"/>
-              <text class="dgm-ink2" x="76" y="318" font-size="11">ngày 1: cả ba lever đều là Beta(1, 1), đường phẳng, P(best) ≈ 1/3 mỗi lever</text>
-            </svg>
-            <figcaption><b>Hình 4.1</b> · Sau 5 ngày, posterior của B hẹp hơn posterior của C khoảng 1,3 lần, nên phần chồng lấn còn nhỏ. Chính phần chồng lấn đó là tỷ lệ traffic C vẫn nhận ngày hôm sau: 0,146. Số minh hoạ từ mô phỏng có seed.</figcaption>
+            <svg viewBox="0 0 760 330" role="img" aria-label="Hai đường mật độ posterior Beta sau 5 ngày: lever B hẹp và cao quanh 4,5%, lever C thấp và rộng quanh 3,2%, hai đỉnh đã tách nhau và vùng chồng lấn chỉ còn một dải mỏng quanh 4,1% được tô đậm">
+                <path class="dgm-accent" stroke="none" d="M428 250 L428 249.7 L436 249.2 L444 247.8 L452 244.7 L460 242.6 L468 244.6 L476 246.0 L484 247.2 L492 248.0 L500 248.6 L508 249.0 L516 249.3 L524 249.6 L532 249.7 L532 250 Z"/>
+                <path class="dgm-line" stroke-width="2" d="M76 250 H700"/>
+                <path class="dgm-flow" stroke-width="2.4" d="M420 249.9 L428 249.7 L436 249.2 L444 247.8 L452 244.7 L460 238.3 L468 226.8 L476 208.6 L484 183.3 L492 152.9 L500 121.5 L508 95.4 L516 80.4 L524 80.0 L532 93.9 L540 118.5 L548 148.1 L556 177.2 L564 202.1 L572 220.8 L580 233.5 L588 241.4 L596 245.8 L604 248.1 L612 249.2 L620 249.7 L628 249.9"/>
+                <path class="dgm-line" stroke-width="2.4" stroke-dasharray="7 4" d="M172 249.9 L180 249.8 L188 249.5 L196 249.1 L204 248.4 L212 247.3 L220 245.6 L228 243.1 L236 239.7 L244 235.2 L252 229.6 L260 222.8 L268 215.0 L276 206.4 L284 197.4 L292 188.5 L300 180.0 L308 172.7 L316 166.8 L324 162.9 L332 161.0 L340 161.2 L348 163.5 L356 167.7 L364 173.3 L372 180.1 L380 187.6 L388 195.3 L396 203.1 L404 210.4 L412 217.3 L420 223.4 L428 228.7 L436 233.3 L444 237.1 L452 240.2 L460 242.6 L468 244.6 L476 246.0 L484 247.2 L492 248.0 L500 248.6 L508 249.0 L516 249.3 L524 249.6 L532 249.7 L540 249.8 L548 249.9"/>
+                <text class="dgm-ink" x="560" y="48" font-size="12" font-weight="700" text-anchor="middle">B creator-post · Beta(528, 11181)</text>
+                <text class="dgm-ink2" x="560" y="64" font-size="11" text-anchor="middle" font-family="IBM Plex Mono">P(best) = 0,998</text>
+                <text class="dgm-ink" x="250" y="138" font-size="12" font-weight="700" text-anchor="middle">C bundle-badge · Beta(73, 2194)</text>
+                <text class="dgm-ink2" x="400" y="214" font-size="11" text-anchor="middle" font-family="IBM Plex Mono">vùng chồng lấn còn lại: dải mỏng quanh 4,1%</text>
+                <text class="dgm-ink2" x="400" y="230" font-size="11" text-anchor="middle" font-family="IBM Plex Mono">P(C tốt nhất) = 0,002</text>
+                <text class="dgm-ink2" x="170" y="270" font-size="11" text-anchor="middle" font-family="IBM Plex Mono">2,0%</text>
+                <text class="dgm-ink2" x="310" y="270" font-size="11" text-anchor="middle" font-family="IBM Plex Mono">3,0%</text>
+                <text class="dgm-ink2" x="450" y="270" font-size="11" text-anchor="middle" font-family="IBM Plex Mono">4,0%</text>
+                <text class="dgm-ink2" x="590" y="270" font-size="11" text-anchor="middle" font-family="IBM Plex Mono">5,0%</text>
+                <text class="dgm-ink2" x="648" y="270" font-size="11" font-family="IBM Plex Mono">conversion</text>
+                <path class="dgm-line" stroke-width="1.4" stroke-dasharray="3 3" d="M76 300 H676"/>
+                <text class="dgm-ink2" x="76" y="318" font-size="11">ngày 1: cả ba lever đều là Beta(1, 1), đường phẳng, P(best) ≈ 1/3 mỗi lever</text>
+              </svg>
+            <figcaption><b>Hình 4.1</b> · Posterior sau ngày 5 của đúng lab seed 555 ở cuối bài. Posterior của B hẹp hơn posterior của C khoảng 1,9 lần và hai đỉnh đã tách hẳn, nên phần chồng lấn chỉ còn một dải mỏng quanh 4,1%. Chính dải đó là tỷ lệ traffic C nhận ngày hôm sau: 0,002. Số minh hoạ từ mô phỏng có seed.</figcaption>
           </figure>
 
           <div class="table-wrap">
             <table>
               <thead><tr><th>Ngày</th><th>π_b của A</th><th>π_b của B</th><th>π_b của C</th><th>Session cho B</th><th>Conversion cả ngày</th></tr></thead>
               <tbody>
-                <tr><td>1</td><td>0,332</td><td>0,336</td><td>0,333</td><td>1.008</td><td>100</td></tr>
-                <tr><td>2</td><td><b>0,005</b></td><td>0,437</td><td>0,557</td><td>1.312</td><td>125</td></tr>
-                <tr><td>3</td><td>0,001</td><td>0,668</td><td>0,331</td><td>2.005</td><td>140</td></tr>
-                <tr><td>4</td><td>0,001</td><td>0,739</td><td>0,261</td><td>2.218</td><td>119</td></tr>
-                <tr><td>5</td><td><b>0,000</b></td><td>0,789</td><td>0,211</td><td>2.369</td><td>132</td></tr>
+                <tr><td>1</td><td>0,332</td><td>0,328</td><td>0,341</td><td>984</td><td>100</td></tr>
+                <tr><td>2</td><td><b>0,005</b></td><td>0,731</td><td>0,264</td><td>2.193</td><td>123</td></tr>
+                <tr><td>3</td><td>0,004</td><td>0,860</td><td>0,137</td><td>2.579</td><td>124</td></tr>
+                <tr><td>4</td><td>0,001</td><td>0,988</td><td>0,011</td><td>2.963</td><td>135</td></tr>
+                <tr><td>5</td><td><b>0,001</b></td><td>0,996</td><td>0,004</td><td>2.988</td><td>141</td></tr>
               </tbody>
             </table>
           </div>
 
-          <p>Ngày 2, propensity của A đã còn 0,005: TS bỏ lever thua sau một ngày, không cần significance test và không cần ai bấm duyệt. Ngày 5 propensity của A là 0,000, tức lever đó hết đường đánh giá off-policy vì log không còn dòng nào cho nó. Bạn đã gặp mẫu số này ở bài 3.5: propensity là mẫu số của importance weight, và bandit chạy càng tốt thì nó càng bào mỏng overlap của chính log mình sinh ra.</p>
+          <p>Ngày 2, propensity của A đã còn 0,005: TS bỏ lever thua sau một ngày, không cần significance test và không cần ai bấm duyệt. Ngày 5 propensity của A còn 0,001, tức cả ngày chỉ 2 session rơi vào nó và lever đó gần như hết đường đánh giá off-policy vì log không còn đủ dòng cho nó. Bạn đã gặp mẫu số này ở bài 3.5: propensity là mẫu số của importance weight, và bandit chạy càng tốt thì nó càng bào mỏng overlap của chính log mình sinh ra.</p>
 
-          <p>Giá của việc học có tên là <strong>regret</strong>: <code>R_n = n·µ* − E[Σ reward]</code>, cộng dồn phần conversion đã nhường lại để biết câu trả lời. Số worked trên bảng trên: 1.013 session rơi vào A với khoảng cách 1,5 điểm phần trăm so với B cho 15,2 conversion; 5.075 session rơi vào C với khoảng cách 1,0 điểm cho 50,8. Tổng 65,9 conversion trong 5 ngày, trên nền 616 conversion thu được (số minh hoạ). Đọc bằng lời: tuần đó việc học có giá 66 đơn hàng, và đó là con số đem đi xin duyệt ngân sách exploration.</p>
+          <p>Giá của việc học có tên là <strong>regret</strong>: <code>R_n = n·µ* − E[Σ reward]</code>, cộng dồn phần conversion đã nhường lại để biết câu trả lời. Số worked trên bảng trên: 1.028 session rơi vào A với khoảng cách 1,5 điểm phần trăm so với B cho 15,4 conversion; 2.265 session rơi vào C với khoảng cách 1,0 điểm cho 22,7. Tổng 38,1 conversion trong 5 ngày, trên nền 623 conversion thu được (số minh hoạ). Đọc bằng lời: tuần đó việc học có giá 38 đơn hàng, và đó là con số đem đi xin duyệt ngân sách exploration.</p>
 
           <p>UCB1 giải cùng bài toán bằng optimism: chọn lever lớn nhất theo <code>x̄_j + √(2·ln n / n_j)</code>, bonus lớn khi lever ít được quan sát (Auer, Cesa-Bianchi &amp; Fischer, <em>Machine Learning</em> 47:235–256, 2002). Bound đó viết cho reward trong [0, 1]: với n = 1.000 và n_j = 100, bonus là √(2·6,91/100) ≈ 0,372, gấp hơn chín lần chính tỷ lệ conversion 4%, nên UCB1 nguyên bản sẽ explore gần như đều. TS không có số hạng bonus; exploration đến từ randomisation của posterior và tự tắt dần khi posterior hẹp lại.</p>
 
@@ -2475,8 +2511,8 @@ DR    = reward_model(x, π_new) + w × residual</pre>
             <h4>Bấm một lần là một ngày: rút posterior, chia traffic, cập nhật</h4>
             <p>Ba lever có tỷ lệ conversion thật ẩn 3,0%, 4,5% và 3,5% (số minh hoạ). Mỗi lần bấm là một ngày 3.000 session: ước lượng P(lever tốt nhất) bằng 2.000 draw, chia session theo tỷ lệ đó, cập nhật α và β của riêng lever đã chạy.</p>
             <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:12px">
-              <button type="button" class="copy-btn" data-lab-next>Ngày tiếp theo →</button>
-              <button type="button" class="copy-btn" data-lab-reset>Đặt lại</button>
+              <button type="button" class="btn btn-ghost" data-lab-next>Ngày tiếp theo →</button>
+              <button type="button" class="btn btn-ghost" data-lab-reset>Đặt lại</button>
             </div>
             <div class="table-wrap" style="margin-top:12px">
               <table>
@@ -2488,7 +2524,15 @@ DR    = reward_model(x, π_new) + w × residual</pre>
                 </tbody>
               </table>
             </div>
-            <p class="mono" style="font-size:12px" data-lab-note>Ngày 0 · regret tích luỹ 0,0 conversion</p>
+            <p class="mono" style="font-size:12px" data-lab-note aria-live="polite">Ngày 0 · regret tích luỹ 0,0 conversion</p>
+            <p style="font-size:12px;color:var(--ink-3)">Lab dùng seed 555; bấm «Ngày tiếp theo» đúng 5 lần sẽ ra đúng bảng ở trên.</p>
+          </div>
+
+          <div>
+            <span class="eyebrow" style="display:block;margin-bottom:10px">Áp dụng</span>
+            <details class="accordion"><summary><span class="chev">▶</span><span class="accordion-tag">Tech lead</span><span>Định giá exploration floor</span></summary>
+              <div class="accordion-body">Chọn một lever đảo ngược được và viết exploration floor thành một số phần trăm có người ký. Kèm theo là giá của nó tính bằng conversion, để khoản chi này đi qua đường ngân sách chứ không đi qua đường tranh luận.</div>
+            </details>
           </div>
 
           <div class="takeaway">
@@ -2579,7 +2623,7 @@ DR    = reward_model(x, π_new) + w × residual</pre>
             <li><h4>Candidate</h4><p>Đóng gói change surface, parent artifact hash, training window (event_time và as_of_time), dataset hash, eval suite hash, expected gain, guardrail budget, owner, expiry, rollback target. Fail thì reject candidate, không sửa gate.</p></li>
             <li><h4>Backtest trên replayed episodes</h4><p>RMSE so với giá trị on-policy của giai đoạn đã chạy. Estimator và clip level chốt trước. Fail thì sửa candidate.</p></li>
             <li><h4>Shadow</h4><p>Cùng input thật, không side effect: candidate chỉ nói nó <em>sẽ</em> làm gì, rồi đối chiếu với hành động đã xảy ra. Ngưỡng đặt trước, ví dụ khớp từ 95% trên tối thiểu 2.000 episode, không slice nào dưới 90%, và không mismatch nào rơi vào nhóm hành động không đảo ngược được (số minh hoạ). Ngưỡng viết sau khi đã nhìn kết quả thì không còn là ngưỡng.</p></li>
-            <li><h4>Canary</h4><p>Population có biên, risk budget tính bằng đơn vị irreversible-effect: bao nhiêu tiền đã tiêu, bao nhiêu mail đã gửi, bao nhiêu đơn đã đặt. Nhìn kết quả liên tục rồi dừng khi thấy đẹp sẽ làm hỏng mức ý nghĩa, vì mỗi lần nhìn là thêm một cơ hội báo động giả; cần theo dõi liên tục thì đặt trước lịch kiểm định và ngưỡng dừng theo group-sequential hoặc alpha-spending.</p></li>
+            <li><h4>Canary</h4><p>Population có biên, risk budget tính bằng đơn vị irreversible-effect: bao nhiêu tiền đã tiêu, bao nhiêu mail đã gửi, bao nhiêu đơn đã đặt. Nhìn kết quả liên tục rồi dừng khi thấy đẹp sẽ làm hỏng mức ý nghĩa, vì mỗi lần nhìn là thêm một cơ hội báo động giả; cần theo dõi liên tục thì đặt trước lịch kiểm định và ngưỡng dừng theo group-sequential hoặc alpha-spending. Lựa chọn thứ ba là <strong>anytime-valid inference</strong>: confidence sequence hoặc e-value cho phép nhìn kết quả liên tục mà mức ý nghĩa không hỏng, đổi lại khoảng rộng hơn ở mỗi thời điểm. Nó hợp với canary hơn group-sequential vì bạn không phải chốt trước số lần nhìn.</p></li>
             <li><h4>Promote hoặc rollback</h4><p>Approval, artifact hash, baseline, expiry. Cả hai đều là event được audit; version không bị overwrite. Fail thì giữ champion.</p></li>
           </ol>
 
@@ -2733,7 +2777,7 @@ transition       = UPDATE ... WHERE state = expected_state</pre>
             <p>Với campaign ₫200M ở trên, worker retry cùng idempotency_key hoặc query receipt, và không tạo campaign thứ hai. Khi provider không nhận idempotency key, adapter phải mang một reconciliation contract riêng: cách liệt kê object đã tạo trong cửa sổ thời gian, khoá tự nhiên để đối chiếu, và hành vi khi đối chiếu không kết luận được. Chưa có contract đó thì lever này còn ở mức tự chủ thấp và mỗi lần chạy vẫn cần người xác nhận.</p>
           </div>
 
-          <p>Gate duyệt cũng là một artifact có tỷ lệ lỗi đo được, không phải một bảo đảm. Anthropic báo cáo người dùng Claude Code bấm đồng ý 93% số permission prompt (Anthropic, 25/03/2026); tới lúc auto mode thành mặc định cho Pro, Max và Team ngày 14/08/2026, con số ghi nhận là 97% (nguồn phụ: TechCrunch, 09/08/2026, vì trang chính chặn fetch). Một cổng mà gần như ai cũng bấm đồng ý đã thôi làm chức năng kiểm soát; chữ ký ở đó mất dần giá trị bằng chứng.</p>
+          <p>Gate duyệt cũng là một artifact có tỷ lệ lỗi đo được, không phải một bảo đảm. Anthropic báo cáo người dùng Claude Code bấm đồng ý 93% số permission prompt (<a href="https://www.anthropic.com/engineering/claude-code-auto-mode">Anthropic, 25/03/2026</a>). Một cổng mà gần như ai cũng bấm đồng ý đã thôi làm chức năng kiểm soát; chữ ký ở đó mất dần giá trị bằng chứng.</p>
 
           <figure class="figure">
             <svg viewBox="0 0 640 300" role="img" aria-label="Mặt phẳng FNR theo FPR với hai điểm: stage 1 có FNR 6,6 phần trăm và FPR 8,5 phần trăm, full pipeline có FNR 17 phần trăm và FPR 0,4 phần trăm, nối bằng mũi tên thêm stage 2">
@@ -2763,12 +2807,19 @@ transition       = UPDATE ... WHERE state = expected_state</pre>
               <text class="dgm-ink2" x="26" y="150" font-size="11" text-anchor="middle" transform="rotate(-90 26 150)">FNR: bỏ sót hành động nguy hiểm (%)</text>
               <defs><marker id="m4l3b-ah" markerWidth="9" markerHeight="9" refX="7" refY="4.5" orient="auto"><path d="M0 0 L9 4.5 L0 9 z" fill="var(--accent-2)"/></marker></defs>
             </svg>
-            <figcaption><b>Hình 4.5</b> · Thêm một tầng reasoning kéo FPR từ 8,5% xuống 0,4%, và kéo FNR từ 6,6% lên 17%. Reviewer là một điểm ai đó đã chọn trên đường cong này, nên chọn điểm là việc của owner. Số đo trên 52 hành động overeager thật và 10.000 request nội bộ thật (Anthropic, 25/03/2026).</figcaption>
+            <figcaption><b>Hình 4.5</b> · Thêm một tầng reasoning kéo FPR từ 8,5% xuống 0,4%, và kéo FNR từ 6,6% lên 17%. Reviewer là một điểm ai đó đã chọn trên đường cong này, nên chọn điểm là việc của owner. Số đo trên 52 hành động overeager thật và 10.000 request nội bộ thật (<a href="https://www.anthropic.com/engineering/claude-code-auto-mode">Anthropic, 25/03/2026</a>).</figcaption>
           </figure>
 
-          <p>Thay người bằng classifier không xoá được câu hỏi, nó chỉ đổi chỗ đặt câu hỏi. Cùng báo cáo đó đo hai cấu hình: stage 1 là bộ lọc một token, bỏ sót 6,6% và chặn nhầm 8,5%; thêm stage 2 chain-of-thought thì bỏ sót lên 17% còn chặn nhầm xuống 0,4% (Anthropic, 25/03/2026). Pipeline "tốt hơn" bỏ sót nhiều hơn 2,6 lần. Trong nghiên cứu 1.053 người dùng trả phí của họ, auto mode chặn 89% hành động nguy hiểm so với 13,6% khi để người bấm prompt (Anthropic, 14/08/2026; TechCrunch, 09/08/2026 là nguồn phụ). Đây là số do nhà cung cấp tự báo cáo và chưa có bên thứ ba lặp lại, nên đọc nó như bằng chứng có hướng.</p>
+          <p>Thay người bằng classifier không xoá được câu hỏi, nó chỉ đổi chỗ đặt câu hỏi. Cùng báo cáo đó đo hai cấu hình: stage 1 là bộ lọc một token, bỏ sót 6,6% và chặn nhầm 8,5%; thêm stage 2 chain-of-thought thì bỏ sót lên 17% còn chặn nhầm xuống 0,4% (<a href="https://www.anthropic.com/engineering/claude-code-auto-mode">Anthropic, 25/03/2026</a>). Pipeline "tốt hơn" bỏ sót nhiều hơn 2,6 lần. Đây là số do nhà cung cấp tự báo cáo và chưa có bên thứ ba lặp lại, nên đọc nó như bằng chứng có hướng.</p>
 
           <p>Khuyến nghị mặc định rút ra từ đó: đặt gate ở nơi blast radius lớn và khó đảo ngược, ít lần nhưng thật; những chỗ còn lại siết bằng biên (trần tiền, trần số lượng, allowlist target) và bằng khả năng đảo ngược, thay vì thêm một pop-up nữa. Và dù gate đặt ở đâu, ghi lại operating point đã chọn: FNR bao nhiêu, FPR bao nhiêu, đo trên tập nào, ngày nào.</p>
+
+          <div>
+            <span class="eyebrow" style="display:block;margin-bottom:10px">Áp dụng</span>
+            <details class="accordion"><summary><span class="chev">▶</span><span class="accordion-tag">Tech lead</span><span>Soát idempotency của một adapter</span></summary>
+              <div class="accordion-body">Kiểm adapter của một provider: nó có nhận idempotency key không, và nếu không thì reconciliation contract nằm ở đâu. Chưa trả lời được hai câu đó thì lever chạy qua adapter này chưa được lên A3.</div>
+            </details>
+          </div>
 
           <div class="takeaway">
             <span class="eyebrow">
@@ -2824,6 +2875,8 @@ transition       = UPDATE ... WHERE state = expected_state</pre>
         <li>Đặt LLM judge đúng chỗ và nối gate vào rubric thay vì vào crash.</li>
       </ul>
     </div>
+
+    <p>Bài này chỉ lấy đúng phần eval mà một quyết định cần trước khi promote; phần eval sâu (thiết kế suite, rubric, LLM judge, trace) nằm ở khoá «<a href="agent-reliability-evaluation.html">Agent Reliability &amp; Evaluation</a>».</p>
 
     <p>Chiều thứ Năm, bảng eval của candidate policy hiện 40/40 fixture pass. Người trực release đề nghị promote luôn cho kịp chu kỳ quyết định sáng thứ Hai. Bạn mở replay của một fixture: agent được hỏi sell-through của dòng SKU son, nó trả <b>41,2%</b>, khớp ground truth. Trace kể chuyện khác. Ở bước 2 nó đọc bảng đơn hàng của một tenant khác, thấy con số lệch, rồi gọi lại tool đúng ở bước cuối và sửa thành 41,2%. Đáp số đúng, đường đi thì đã băng qua ranh giới tenant. Suite hiện tại chỉ chấm ô cuối cùng, nên nó báo pass và mở gate.</p>
 
@@ -3130,7 +3183,7 @@ transition       = UPDATE ... WHERE state = expected_state</pre>
         </tbody>
       </table>
     </div>
-    <p>Bảng trên là <b>số minh hoạ</b> cho brand ví dụ, trừ các giá trị PSI vốn tính từ công thức thật ở dưới. Bề rộng tăng 8,0 lên 16,4 pp và toàn bộ mức tăng đến từ <code>q̂</code> (1,0 lên 5,2) trong khi spread của model đứng yên: chính calibration phát hiện model sai thường xuyên hơn. MAPE nhích 1,3 điểm nên không dashboard nào bắn, còn coverage rơi 0,90 xuống 0,71 vì calibration vẫn gộp cả lịch sử cũ. Hai lever cách nhau 2 pp trong khi tới W3 khoảng đã rộng 12,3 pp, nên quyết định chết trước model.</p>
+    <p>Bảng trên là <b>số minh hoạ</b> cho brand ví dụ, trừ PSI của W4 (0,3722), tính từ công thức ở dưới trên vector bin W4 = [0,24 0,18 0,14 0,10 0,08 0,07 0,06 0,05 0,05 0,03]; PSI của W1–W3 lấy từ bin table riêng của từng tuần và không nội suy được từ W4. Bề rộng tăng 8,0 lên 16,4 pp và toàn bộ mức tăng đến từ <code>q̂</code> (1,0 lên 5,2) trong khi spread của model đứng yên: chính calibration phát hiện model sai thường xuyên hơn. MAPE nhích 1,3 điểm nên không dashboard nào bắn, còn coverage rơi 0,90 xuống 0,71 vì calibration vẫn gộp cả lịch sử cũ. Hai lever cách nhau 2 pp trong khi tới W3 khoảng đã rộng 12,3 pp, nên quyết định chết trước model.</p>
 
     <figure class="figure">
       <svg viewBox="0 0 700 352" role="img" aria-label="Bốn làn theo bốn tuần W1 đến W4. Làn MAPE gần phẳng. Làn bề rộng conformal set vượt ngưỡng abstain 12 pp từ W3. Làn PSI vượt 0,25 ở W4. Làn champion có hạn dùng theo lịch ở W8 nhưng bị kéo sớm ở W3.">
@@ -3220,10 +3273,10 @@ transition       = UPDATE ... WHERE state = expected_state</pre>
 
     <figure class="figure">
       <div class="lab" data-lab="drift">
-        <p><b>Lab.</b> Kéo thanh trượt để nội suy tỷ trọng bin của feature quyết định từ baseline (0) tới W4 (100). PSI tính bằng đúng công thức ở trên.</p>
+        <p><b>Lab.</b> Kéo thanh trượt để nội suy tỷ trọng bin của feature quyết định từ baseline (0) tới W4 (100). PSI tính bằng đúng công thức ở trên; ở mức 0 phân phối trùng baseline đều nên PSI = 0.</p>
         <label for="m5l3-shift">Mức shift phân phối feature</label>
         <input id="m5l3-shift" type="range" min="0" max="100" step="1" value="0" style="width:100%;max-width:420px;margin:8px 0 4px">
-        <div class="lab-out">
+        <div class="lab-out" aria-live="polite">
           <span style="display:inline-block;margin-right:20px">PSI <b data-out="psi">0,0000</b></span>
           <span style="display:inline-block;margin-right:20px">q̂ <b data-out="qhat">1,0 pp</b></span>
           <span style="display:inline-block;margin-right:20px">Bề rộng set <b data-out="width">8,0 pp</b></span>
@@ -3252,6 +3305,13 @@ transition       = UPDATE ... WHERE state = expected_state</pre>
     </div>
 
     <p>Ba cấu hình đó chia nhau một hình dạng: một <b>bound</b>, một <b>persistence</b>, một <b>đích known-good</b>. Bound viết trong manifest và version hoá trong git, không do người nhìn dashboard lúc 2 giờ sáng quyết. Persistence tách guardrail khỏi cái chuông reo theo nhiễu. Đích rollback là artifact đã từng qua gate, không phải trạng thái «tắt». Luật thứ tư là của khoá này: <b>rollback không phải hoàn tiền</b>, vì quay về version cũ khôi phục hàm quyết định chứ không khôi phục ngân sách đã tiêu hay email đã gửi. Với lever không hoàn tác được, guardrail phải nằm trước hành động: abstain, hard cap hoặc approval, theo ma trận blast radius ở bài 1.3.</p>
+
+    <div>
+      <span class="eyebrow" style="display:block;margin-bottom:10px">Áp dụng</span>
+      <details class="accordion"><summary><span class="chev">▶</span><span class="accordion-tag">Data lead</span><span>Đưa ngưỡng và hạn dùng vào contract</span></summary>
+        <div class="accordion-body">Ghi ngưỡng bề rộng set và hạn dùng champion vào decision contract trước khi tuần sau bắt đầu.</div>
+      </details>
+    </div>
 
     <div class="takeaway">
       <span class="eyebrow">
@@ -3320,43 +3380,43 @@ transition       = UPDATE ... WHERE state = expected_state</pre>
             <svg viewBox="0 0 800 380" role="img" aria-label="Mười bước của một tuần quyết định, từ ba tầng dữ liệu tới ledger row, với bốn gate và một vòng lặp quay lại tuần sau">
               <rect class="dgm-box" x="40" y="34" width="160" height="62" rx="10"/>
               <text class="dgm-ink" x="52" y="59" font-size="12" font-weight="700">1 · Ba tầng dữ liệu</text>
-              <text class="dgm-ink2" x="52" y="77" font-size="9.5" font-family="IBM Plex Mono">1P · market · social</text>
+              <text class="dgm-ink2" x="52" y="77" font-size="11" font-family="IBM Plex Mono">1P · market · social</text>
 
               <rect class="dgm-box" x="236" y="34" width="160" height="62" rx="10"/>
               <text class="dgm-ink" x="248" y="59" font-size="12" font-weight="700">2 · PIT store</text>
-              <text class="dgm-ink2" x="248" y="77" font-size="9.5" font-family="IBM Plex Mono">biết gì lúc 02:00?</text>
+              <text class="dgm-ink2" x="248" y="77" font-size="11" font-family="IBM Plex Mono">biết gì lúc 02:00?</text>
 
               <rect class="dgm-warn" x="432" y="34" width="160" height="62" rx="10" stroke-width="2"/>
               <text class="dgm-ink" x="444" y="59" font-size="12" font-weight="700">3 · Rule + receipt</text>
-              <text class="dgm-ink2" x="444" y="77" font-size="9.5" font-family="IBM Plex Mono">UNKNOWN → abstain</text>
+              <text class="dgm-ink2" x="444" y="77" font-size="11" font-family="IBM Plex Mono">UNKNOWN → abstain</text>
 
               <rect class="dgm-accent" x="628" y="34" width="160" height="62" rx="10" stroke-width="2"/>
               <text class="dgm-ink" x="640" y="59" font-size="12" font-weight="700">4 · Credibility gate</text>
-              <text class="dgm-ink2" x="640" y="77" font-size="9.5" font-family="IBM Plex Mono">Z = k/(k+K)</text>
+              <text class="dgm-ink2" x="640" y="77" font-size="11" font-family="IBM Plex Mono">Z = k/(k+K)</text>
 
               <rect class="dgm-box" x="628" y="150" width="160" height="62" rx="10"/>
               <text class="dgm-ink" x="640" y="175" font-size="12" font-weight="700">5 · Candidate lever</text>
-              <text class="dgm-ink2" x="640" y="193" font-size="9.5" font-family="IBM Plex Mono">trong lever set đóng</text>
+              <text class="dgm-ink2" x="640" y="193" font-size="11" font-family="IBM Plex Mono">trong lever set đóng</text>
 
               <rect class="dgm-box" x="432" y="150" width="160" height="62" rx="10"/>
               <text class="dgm-ink" x="444" y="175" font-size="12" font-weight="700">6 · Bandit / OPE</text>
-              <text class="dgm-ink2" x="444" y="193" font-size="9.5" font-family="IBM Plex Mono">propensity · ESS · CI</text>
+              <text class="dgm-ink2" x="444" y="193" font-size="11" font-family="IBM Plex Mono">propensity · ESS · CI</text>
 
               <rect class="dgm-accent" x="236" y="150" width="160" height="62" rx="10" stroke-width="2"/>
               <text class="dgm-ink" x="248" y="175" font-size="12" font-weight="700">7 · Conformal gate</text>
-              <text class="dgm-ink2" x="248" y="193" font-size="9.5" font-family="IBM Plex Mono">set rộng → abstain</text>
+              <text class="dgm-ink2" x="248" y="193" font-size="11" font-family="IBM Plex Mono">set rộng → abstain</text>
 
               <rect class="dgm-accent" x="40" y="150" width="160" height="62" rx="10" stroke-width="2"/>
               <text class="dgm-ink" x="52" y="175" font-size="12" font-weight="700">8 · Decision rights</text>
-              <text class="dgm-ink2" x="52" y="193" font-size="9.5" font-family="IBM Plex Mono">A theo blast radius</text>
+              <text class="dgm-ink2" x="52" y="193" font-size="11" font-family="IBM Plex Mono">A theo blast radius</text>
 
               <rect class="dgm-box" x="40" y="266" width="160" height="62" rx="10"/>
               <text class="dgm-ink" x="52" y="291" font-size="12" font-weight="700">9 · Typed action</text>
-              <text class="dgm-ink2" x="52" y="309" font-size="9.5" font-family="IBM Plex Mono">idempotent · receipt</text>
+              <text class="dgm-ink2" x="52" y="309" font-size="11" font-family="IBM Plex Mono">idempotent · receipt</text>
 
               <rect class="dgm-box" x="236" y="266" width="160" height="62" rx="10"/>
               <text class="dgm-ink" x="248" y="291" font-size="12" font-weight="700">10 · Ledger + học</text>
-              <text class="dgm-ink2" x="248" y="309" font-size="9.5" font-family="IBM Plex Mono">episode → candidate</text>
+              <text class="dgm-ink2" x="248" y="309" font-size="11" font-family="IBM Plex Mono">episode → candidate</text>
 
               <path class="dgm-flow" d="M200 65 H236" stroke-width="1.8" marker-end="url(#m6l1-ah)"/>
               <path class="dgm-flow" d="M396 65 H432" stroke-width="1.8" marker-end="url(#m6l1-ah)"/>
@@ -3512,8 +3572,8 @@ transition       = UPDATE ... WHERE state = expected_state</pre>
           </table></div>
 
           <div class="callout warn">
-            <div class="callout-title">Quy định · kiểm tra 29/08/2026</div>
-            <p>Điều 12(1) EU AI Act yêu cầu hệ high-risk cho phép tự động ghi log trong suốt vòng đời của hệ. Nghĩa vụ minh bạch tại Điều 50 có mốc áp dụng 02/08/2026; riêng phần machine-readable marking ở Điều 50(2), hệ đưa ra thị trường trước 02/08/2026 được gia hạn tới 02/12/2026. Regulation (EU) 2026/1744 ngày 08/07/2026 lùi ngày áp dụng cho hệ high-risk theo Điều 6(2) và Annex III sang 02/12/2027, theo Điều 6(1) và Annex I sang 02/08/2028; văn bản đăng Official Journal trong 07/2026 (nguồn phụ, chưa đọc được trực tiếp trên EUR-Lex). Mốc và cách diễn giải vẫn đổi: kiểm Official Journal trước khi dựa vào bất kỳ mốc nào, và coi đoạn này là điểm bắt đầu để hỏi pháp chế chứ không phải kết luận pháp lý.</p>
+            <div class="callout-title">Quy định · kiểm tra 05/09/2026</div>
+            <p>Điều 12(1) EU AI Act yêu cầu hệ high-risk cho phép tự động ghi log trong suốt vòng đời của hệ. Nghĩa vụ minh bạch tại Điều 50 có mốc áp dụng 02/08/2026; riêng phần machine-readable marking ở Điều 50(2), hệ đưa ra thị trường trước 02/08/2026 được gia hạn tới 02/12/2026. <a href="https://eur-lex.europa.eu/legal-content/EN/TXT/?uri=OJ:L_202601744">Regulation (EU) 2026/1744</a> ngày 08/07/2026 (Digital Omnibus on AI) lùi ngày áp dụng cho hệ high-risk theo Điều 6(2) và Annex III sang 02/12/2027, theo Điều 6(1) và Annex I sang 02/08/2028; văn bản đăng Official Journal 24/07/2026, hiệu lực 27/07/2026. Mốc và cách diễn giải vẫn đổi: kiểm Official Journal trước khi dựa vào bất kỳ mốc nào, và coi đoạn này là điểm bắt đầu để hỏi pháp chế chứ không phải kết luận pháp lý.</p>
           </div>
 
           <p>Điều 14 về human oversight ánh xạ khá thẳng lên thang A0–A4 ở bài 1.2: hệ high-risk phải có người hiểu được năng lực và giới hạn của hệ, theo dõi được vận hành, và can thiệp hoặc dừng được. Đọc theo ngôn ngữ của khoá này, kill switch, rollback target và approval context hash là điều kiện để bất kỳ mức tự chủ nào được coi là có giám sát, chứ không phải phần thêm dành riêng cho A4.</p>
@@ -3524,7 +3584,7 @@ transition       = UPDATE ... WHERE state = expected_state</pre>
                 <thead><tr><th style="width:190px">Miền</th><th>Nguồn primary</th></tr></thead>
                 <tbody>
                   <tr><td>Provenance</td><td><a href="https://www.w3.org/TR/prov-o/">W3C PROV-O</a></td></tr>
-                  <tr><td>Risk</td><td><a href="https://www.nist.gov/publications/artificial-intelligence-risk-management-framework-generative-artificial-intelligence">NIST AI 600-1</a> · <a href="https://csrc.nist.gov/Projects/cosais">NIST COSAiS</a> (overlay SP 800-53 cho agentic, series NISTIR 8605x mới ở mức annotated outline 01/2026, chưa phải chuẩn để tuân thủ)</td></tr>
+                  <tr><td>Risk</td><td><a href="https://www.nist.gov/publications/artificial-intelligence-risk-management-framework-generative-artificial-intelligence">NIST AI 600-1</a> · <a href="https://csrc.nist.gov/Projects/cosais">NIST COSAiS</a> (overlay SP 800-53 cho một loạt use case, trong đó có agentic; tới 09/2026 mới có annotated outline dạng discussion draft 01/2026 và concept paper 14/08/2025, chưa phải chuẩn để tuân thủ; kiểm 05/09/2026)</td></tr>
                   <tr><td>Memory</td><td><a href="https://arxiv.org/abs/2309.02427">CoALA</a> · <a href="https://arxiv.org/abs/2410.10813">LongMemEval</a></td></tr>
                   <tr><td>Credibility</td><td><a href="https://openacttexts.github.io/Loss-Data-Analytics/ChapCredibility.html">Loss Data Analytics</a>, ch. 9 «Experience Rating Using Credibility Theory» (open text, đọc 29/08/2026)</td></tr>
                   <tr><td>Causal</td><td>Brodersen, Gallusser, Koehler, Remy &amp; Scott (2015), <a href="https://projecteuclid.org/journals/annals-of-applied-statistics/volume-9/issue-1/Inferring-causal-impact-using-Bayesian-structural-time-series-models/10.1214/14-AOAS788.full">Inferring causal impact using Bayesian structural time-series models</a>, <i>Annals of Applied Statistics</i> 9(1):247–274 · <a href="https://developers.google.com/meridian">Meridian docs</a> · <a href="https://docs.doubleml.org/stable/guide/basics.html">DoubleML docs</a></td></tr>
@@ -3580,7 +3640,7 @@ Estimand + giả định đã mượn · limitations · rollback plan</pre>
       </div>
     </section>
 
-    <footer class="site">Agentic Decision Systems · bản 2026.08 · nguồn dated tại từng bài</footer>
+    <footer class="site">Agentic Decision Systems · bản 2026.09 · nguồn dated tại từng bài</footer>
   </main>
 </div>
 

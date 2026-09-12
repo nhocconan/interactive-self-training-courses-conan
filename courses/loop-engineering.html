@@ -258,12 +258,12 @@ footer.site{border-top:1px solid var(--border);padding:26px 24px;text-align:cent
     <section class="pane" id="overview" data-pane>
       <div class="hero">
         <div class="hero-inner">
-          <span class="hero-kicker">Khóa học tương tác · Cập nhật 29/08/2026</span>
+          <span class="hero-kicker">Khóa học tương tác · Cập nhật 05/09/2026</span>
           <h1><span class="grad-text">Loop Engineering</span><br>Kỹ nghệ vòng lặp tự hành</h1>
-          <p class="hero-sub">Một lệnh gọi model là một câu trả lời. Một <strong>vòng lặp</strong> được thiết kế tốt là một <em>đồng nghiệp tự hành</em>. Khóa học dạy bạn thiết kế, đặt biên, đóng vòng và điều phối các loop agent — bậc tiếp theo của tự động hóa phát triển phần mềm sau Context &amp; Harness Engineering.</p>
+          <p class="hero-sub">Một lệnh gọi model là một câu trả lời. Một <strong>vòng lặp</strong> được thiết kế tốt là một <em>đồng nghiệp tự hành</em>. Khóa học dạy bạn thiết kế, đặt biên, đóng vòng và điều phối các loop agent. Khóa này <strong>đi sau Context &amp; Harness Engineering</strong>: khóa đó dựng runtime quanh model, khóa này đào sâu đúng cái vòng lặp bên trong runtime đó.</p>
           <div class="hero-meta">
             <span class="chip">📶 L1 → L5</span>
-            <span class="chip">🔁 11 bài</span>
+            <span class="chip">🔁 12 bài</span>
           </div>
           <div style="margin-top:28px;display:flex;gap:12px;flex-wrap:wrap">
             <a class="btn btn-primary" id="start-btn">Bắt đầu học →</a>
@@ -274,7 +274,7 @@ footer.site{border-top:1px solid var(--border);padding:26px 24px;text-align:cent
       <div class="container section-pad" id="curriculum">
         <div class="section-head"><h2>Lộ trình</h2><span class="line"></span><span class="mono" style="font-size:11px;color:var(--ink-3)">bấm vào bài bất kỳ</span></div>
         <div id="toc-body"></div>
-        <div class="callout insight" style="margin-top:26px"><div class="callout-title">Nên học sau Context &amp; Harness Engineering</div><p>Khóa này giả định bạn đã hiểu vòng lặp agent là một trong năm trụ của harness. Ở đây ta <em>đào sâu chính cái vòng lặp đó</em>: làm sao để nó tự chạy nhiều bước, tự sửa, và đáng tin đến mức bạn dám rời tay — mà không đốt tiền hay phá hỏng thứ gì.</p></div>
+        <div class="callout insight" style="margin-top:26px"><div class="callout-title">Đi sau Context &amp; Harness Engineering</div><p>Khóa đó dựng runtime quanh model; khóa này đào sâu đúng cái vòng lặp bên trong. Vì vậy nó giả định bạn đã hiểu vòng lặp agent là một trong năm trụ của harness. Ở đây ta <em>đào sâu chính cái vòng lặp đó</em>: làm sao để nó tự chạy nhiều bước, tự sửa, và đáng tin đến mức bạn dám rời tay — mà không đốt tiền hay phá hỏng thứ gì.</p></div>
 
       </div>
 
@@ -299,10 +299,17 @@ footer.site{border-top:1px solid var(--border);padding:26px 24px;text-align:cent
               <tr><td><span class="badge">closed-loop / open-loop</span></td><td>Vòng kín: mỗi vòng nhận phản hồi khách quan từ verifier để điều chỉnh vòng sau. Vòng hở: lặp mà không có phản hồi từ thực tế — công thức của trôi dạt.</td></tr>
               <tr><td><span class="badge">maker–checker</span></td><td>Tách hai vai thành hai agent: maker tạo ra, checker (context riêng, thường là model mạnh hơn) chỉ tìm lỗi theo rubric — dạng kỷ luật hóa của reflection.</td></tr>
               <tr><td><span class="badge">loop contract</span></td><td>Một trang ghi rõ mục tiêu, definition of done, verifier, biên, cổng người, state và cảnh báo — điền đủ trước khi cho loop rời tay.</td></tr>
+              <tr><td><span class="badge">harness</span></td><td>Lớp runtime bọc quanh model: tool, vòng lặp, memory, cơ chế khôi phục, observability. Khóa này giả định bạn đã dựng được nó (khóa Context &amp; Harness Engineering).</td></tr>
+              <tr><td><span class="badge">idempotent</span></td><td>Hành động chạy lại nhiều lần cho cùng kết quả như chạy một lần — điều kiện để retry an toàn; ép bằng idempotency key.</td></tr>
+              <tr><td><span class="badge">p95</span></td><td>Ngưỡng mà 95% lượt chạy nằm dưới. Lấy từ trace các lượt <em>đạt</em>, dùng để đặt cap vòng/thời gian/token.</td></tr>
+              <tr><td><span class="badge">compact</span></td><td>Nén lịch sử hội thoại thành tóm tắt khi context đầy. Loop mất chi tiết nếu tiến độ chỉ nằm trong hội thoại — nên đẩy tiến độ ra state ngoài.</td></tr>
+              <tr><td><span class="badge">effort / reasoning effort</span></td><td>Núm điều chỉnh mức suy nghĩ của model cho một lượt: cao thì kỹ và đắt, thấp thì nhanh và rẻ.</td></tr>
+              <tr><td><span class="badge">alignment faking</span></td><td>Model tỏ ra tuân thủ khi biết mình đang bị đánh giá nhưng vẫn giữ một mục tiêu khác.</td></tr>
+              <tr><td><span class="badge">canary</span></td><td>Cho chạy trên một lát nhỏ (một lô, một nhánh, một nhóm người) trước khi mở ra toàn bộ.</td></tr>
             </tbody>
           </table>
         </div>
-        <div class="callout insight" style="margin-top:22px"><div class="callout-title">Nguồn gốc &amp; thời điểm cập nhật</div><p>Nội dung được đối chiếu đến <strong>25/07/2026</strong> với <a href="https://www.anthropic.com/engineering/building-effective-agents" target="_blank" rel="noopener">Building Effective Agents</a>, <a href="https://www.anthropic.com/engineering/effective-harnesses-for-long-running-agents" target="_blank" rel="noopener">harness cho agent dài hơi</a>, <a href="https://www.anthropic.com/engineering/demystifying-evals-for-ai-agents" target="_blank" rel="noopener">agent evals</a>, <a href="https://www.anthropic.com/engineering/managed-agents" target="_blank" rel="noopener">managed agents</a>, <a href="https://www.anthropic.com/engineering/building-c-compiler" target="_blank" rel="noopener">16 agent song song dựng C compiler</a>, <a href="https://www.anthropic.com/engineering/claude-code-auto-mode" target="_blank" rel="noopener">cổng duyệt do classifier quyết</a>, <a href="https://www.anthropic.com/engineering/how-we-contain-claude" target="_blank" rel="noopener">containment cho agent</a>, <a href="https://openai.com/index/unrolling-the-codex-agent-loop/" target="_blank" rel="noopener">Codex agent loop</a>, cùng hai công trình <a href="https://arxiv.org/abs/2303.11366" target="_blank" rel="noopener">Reflexion</a> và <a href="https://proceedings.neurips.cc/paper_files/paper/2023/file/91edff07232fb1b55a505a9e9f6c0ff3-Paper-Conference.pdf" target="_blank" rel="noopener">Self-Refine</a>. Các con số do nhà cung cấp công bố ở đây được ghi kèm nguồn &amp; thời điểm; tên lệnh và giao diện sản phẩm có thể đổi — nguyên lý verifier, state, biên và eval mới là phần cần mang theo.</p></div>
+        <div class="callout insight" style="margin-top:22px"><div class="callout-title">Nguồn gốc &amp; thời điểm cập nhật</div><p>Nội dung được đối chiếu đến <strong>05/09/2026</strong> với <a href="https://www.anthropic.com/engineering/building-effective-agents" target="_blank" rel="noopener">Building Effective Agents</a>, <a href="https://www.anthropic.com/engineering/effective-harnesses-for-long-running-agents" target="_blank" rel="noopener">harness cho agent dài hơi</a>, <a href="https://www.anthropic.com/engineering/demystifying-evals-for-ai-agents" target="_blank" rel="noopener">agent evals</a>, <a href="https://www.anthropic.com/engineering/managed-agents" target="_blank" rel="noopener">managed agents</a>, <a href="https://www.anthropic.com/engineering/building-c-compiler" target="_blank" rel="noopener">16 agent song song dựng C compiler</a>, <a href="https://www.anthropic.com/engineering/claude-code-auto-mode" target="_blank" rel="noopener">cổng duyệt do classifier quyết</a>, <a href="https://www.anthropic.com/engineering/how-we-contain-claude" target="_blank" rel="noopener">containment cho agent</a>, <a href="https://openai.com/index/unrolling-the-codex-agent-loop/" target="_blank" rel="noopener">Codex agent loop</a>, cùng hai công trình <a href="https://arxiv.org/abs/2303.11366" target="_blank" rel="noopener">Reflexion</a> và <a href="https://proceedings.neurips.cc/paper_files/paper/2023/file/91edff07232fb1b55a505a9e9f6c0ff3-Paper-Conference.pdf" target="_blank" rel="noopener">Self-Refine</a>. Các con số do nhà cung cấp công bố ở đây được ghi kèm nguồn &amp; thời điểm; tên lệnh và giao diện sản phẩm có thể đổi — nguyên lý verifier, state, biên và eval mới là phần cần mang theo.</p></div>
       </div>
     </section>
 
@@ -344,26 +351,26 @@ footer.site{border-top:1px solid var(--border);padding:26px 24px;text-align:cent
               <g font-family="IBM Plex Mono">
                 <rect class="dgm-box" x="24" y="40" width="108" height="84" rx="9"/>
                 <text class="dgm-ink" x="78" y="70" text-anchor="middle" font-size="11" font-weight="700">L1</text>
-                <text class="dgm-ink2" x="78" y="90" text-anchor="middle" font-size="9.5">Gợi ý</text>
-                <text class="dgm-ink2" x="78" y="104" text-anchor="middle" font-size="8.5">autocomplete</text>
+                <text class="dgm-ink2" x="78" y="90" text-anchor="middle" font-size="10">Gợi ý</text>
+                <text class="dgm-ink2" x="78" y="104" text-anchor="middle" font-size="10">autocomplete</text>
                 <rect class="dgm-box" x="150" y="40" width="108" height="84" rx="9"/>
                 <text class="dgm-ink" x="204" y="70" text-anchor="middle" font-size="11" font-weight="700">L2</text>
-                <text class="dgm-ink2" x="204" y="90" text-anchor="middle" font-size="9.5">Một lệnh</text>
-                <text class="dgm-ink2" x="204" y="104" text-anchor="middle" font-size="8.5">hỏi–đáp</text>
+                <text class="dgm-ink2" x="204" y="90" text-anchor="middle" font-size="10">Một lệnh</text>
+                <text class="dgm-ink2" x="204" y="104" text-anchor="middle" font-size="10">hỏi–đáp</text>
                 <rect class="dgm-accent" x="276" y="34" width="108" height="96" rx="9" stroke-width="2"/>
                 <text class="dgm-ink" x="330" y="66" text-anchor="middle" font-size="11" font-weight="700">L3</text>
-                <text class="dgm-ink2" x="330" y="86" text-anchor="middle" font-size="9.5">Loop có</text>
-                <text class="dgm-ink2" x="330" y="99" text-anchor="middle" font-size="9.5">giám sát</text>
-                <text class="dgm-ink2" x="330" y="114" text-anchor="middle" font-size="8.5">bạn duyệt bước</text>
+                <text class="dgm-ink2" x="330" y="86" text-anchor="middle" font-size="10">Loop có</text>
+                <text class="dgm-ink2" x="330" y="99" text-anchor="middle" font-size="10">giám sát</text>
+                <text class="dgm-ink2" x="330" y="114" text-anchor="middle" font-size="10">bạn duyệt bước</text>
                 <rect class="dgm-accent" x="402" y="34" width="108" height="96" rx="9" stroke-width="2"/>
                 <text class="dgm-ink" x="456" y="66" text-anchor="middle" font-size="11" font-weight="700">L4</text>
-                <text class="dgm-ink2" x="456" y="86" text-anchor="middle" font-size="9.5">Loop tự hành</text>
-                <text class="dgm-ink2" x="456" y="100" text-anchor="middle" font-size="9.5">có biên</text>
-                <text class="dgm-ink2" x="456" y="114" text-anchor="middle" font-size="8.5">bạn duyệt kết quả</text>
+                <text class="dgm-ink2" x="456" y="86" text-anchor="middle" font-size="10">Loop tự hành</text>
+                <text class="dgm-ink2" x="456" y="100" text-anchor="middle" font-size="10">có biên</text>
+                <text class="dgm-ink2" x="456" y="114" text-anchor="middle" font-size="10">bạn duyệt kết quả</text>
                 <rect class="dgm-warn" x="528" y="40" width="108" height="84" rx="9" stroke-width="1.5"/>
                 <text class="dgm-ink" x="582" y="70" text-anchor="middle" font-size="11" font-weight="700">L5</text>
-                <text class="dgm-ink2" x="582" y="90" text-anchor="middle" font-size="9.5">Đội agent</text>
-                <text class="dgm-ink2" x="582" y="104" text-anchor="middle" font-size="8.5">điều phối</text>
+                <text class="dgm-ink2" x="582" y="90" text-anchor="middle" font-size="10">Đội agent</text>
+                <text class="dgm-ink2" x="582" y="104" text-anchor="middle" font-size="10">điều phối</text>
               </g>
             </svg>
             <figcaption><b>Hình 1.1</b> — Năm nấc tự động hóa. Cả khóa này sống ở <b>L3–L5</b>: nơi agent chạy nhiều bước tự thân. Mỗi nấc lên đổi <em>vai của con người</em>: từ gõ, tới hỏi, tới duyệt từng bước, tới duyệt kết quả, tới thiết kế luật cho cả đội.</figcaption>
@@ -401,11 +408,11 @@ footer.site{border-top:1px solid var(--border);padding:26px 24px;text-align:cent
           <div class="quiz" data-correct="2">
             <span class="eyebrow">Kiểm tra nhanh</span>
             <p class="quiz-q">Đội bạn đang dùng AI kiểu hỏi–đáp (L2) và muốn "để agent tự sửa cả backlog qua đêm" (L5). Lời khuyên đúng nhất?</p>
-            <button class="quiz-opt" onclick="quizPick(this,0)"><span class="quiz-letter">A</span><span>Cứ thả agent chạy qua đêm — model 2026 đủ giỏi để tự lo.</span></button>
-            <button class="quiz-opt" onclick="quizPick(this,1)"><span class="quiz-letter">B</span><span>Không bao giờ tự động hóa quá L2 — quá rủi ro.</span></button>
-            <button class="quiz-opt" onclick="quizPick(this,2)"><span class="quiz-letter">C</span><span>Leo từng nấc: trước hết dựng loop có giám sát (L3) cho một loại việc, chứng minh nó đáng tin nhờ tín hiệu đóng vòng &amp; biên rõ, rồi mới nới sang tự hành có biên (L4) và cuối cùng là đội điều phối (L5).</span></button>
-            <button class="quiz-opt" onclick="quizPick(this,3)"><span class="quiz-letter">D</span><span>Mua model đắt nhất rồi thả chạy — tiền mua được độ tin cậy.</span></button>
-            <div class="quiz-feedback" data-explain="Mỗi nấc tự chủ tăng đáng kể yêu cầu về đóng vòng, biên và guardrail. Nhảy từ L2 lên L5 là bỏ qua đúng những thứ khiến tự hành an toàn — kết quả điển hình là đốt tiền &amp; tạo một đống PR sai phải dọn. Cách đúng: leo từng nấc, mỗi nấc chứng minh độ tin cậy trên một loại việc hẹp trước khi mở rộng. Một model đắt hơn chỉ giúp mỗi nấc chạy nhanh hơn — nó không cho phép bỏ nấc."></div>
+            <button class="quiz-opt" onclick="quizPick(this,0)"><span class="quiz-letter">A</span><span>Cứ thả agent chạy qua đêm luôn: model đã đủ giỏi, sáng ra đọc kết quả rồi sửa những chỗ sai cũng được.</span></button>
+            <button class="quiz-opt" onclick="quizPick(this,1)"><span class="quiz-letter">B</span><span>Dừng hẳn ở L2: đã không nhảy nấc được thì mọi nấc trên L2 đều rủi ro như nhau, không đáng đánh đổi.</span></button>
+            <button class="quiz-opt" onclick="quizPick(this,2)"><span class="quiz-letter">C</span><span>Leo từng nấc: dựng loop có giám sát (L3) cho một loại việc, chứng minh nó đáng tin, rồi mới nới lên L4 và L5.</span></button>
+            <button class="quiz-opt" onclick="quizPick(this,3)"><span class="quiz-letter">D</span><span>Mua model mạnh nhất rồi thả chạy L5: model tốt hơn thì tự lo được phần verifier và biên, khỏi leo từng nấc.</span></button>
+            <div class="quiz-feedback" data-explain="Mỗi nấc tự chủ nâng hẳn yêu cầu về đóng vòng, biên và guardrail; nhảy từ L2 lên L5 là bỏ qua đúng những thứ khiến tự hành an toàn. (A) 'sáng ra sửa sau' nghe vô hại nhưng đó chính là chi phí dọn dẹp mà biên và verifier sinh ra để tránh — và bạn không biết trước nó lớn tới đâu. (B) đúng ở chỗ nhảy nấc là rủi ro, sai ở chỗ suy ra mọi nấc rủi ro như nhau: L3 có người ngồi cạnh gần như không có bán kính thiệt hại. (D) model mạnh hơn làm mỗi nấc chạy nhanh hơn, nhưng verifier, biên và cổng là thứ BẠN dựng, không phải năng lực model."></div>
           </div>
         </div>
         <div class="lesson-nav" data-navfor="m1-l1"></div>
@@ -466,7 +473,7 @@ footer.site{border-top:1px solid var(--border);padding:26px 24px;text-align:cent
               <thead><tr><th style="width:120px">Nhịp</th><th>Làm gì</th><th>Khi yếu thì</th></tr></thead>
               <tbody>
                 <tr><td><span class="badge">PLAN</span></td><td>Quyết định bước kế tiếp dựa trên mục tiêu + state hiện tại</td><td>Loop lan man, làm việc không dẫn tới mục tiêu</td></tr>
-                <tr><td><span class="badge">ACT</span></td><td>Gọi tool, thay đổi thế giới (đọc/ghi file, chạy lệnh)</td><td>Hành động không idempotent → hiệu ứng phụ nhân đôi</td></tr>
+                <tr><td><span class="badge">ACT</span></td><td>Gọi tool, thay đổi thế giới (đọc/ghi file, chạy lệnh)</td><td>Hành động <strong>idempotent</strong> = chạy lại lần hai không đổi kết quả (ghi cùng một file thì được, gửi email lần hai thì không). Không idempotent → retry nhân đôi hiệu ứng phụ.</td></tr>
                 <tr><td><span class="badge warn">OBSERVE</span></td><td>Đọc kết quả hành động thành tín hiệu dùng được</td><td>Không "thấy" lỗi → cứ tưởng đã xong (ảo tưởng thành công)</td></tr>
                 <tr><td><span class="badge warn">REFLECT</span></td><td>So sánh với mục tiêu, quyết định tiếp/sửa/dừng</td><td>Không tự soi lại → trôi dạt, kẹt vòng, hoặc bảo vệ lỗi cũ</td></tr>
               </tbody>
@@ -476,14 +483,18 @@ footer.site{border-top:1px solid var(--border);padding:26px 24px;text-align:cent
           <p>Bốn nhịp chỉ thật sự rõ khi nhìn <em>nội dung</em> của một vòng. Dưới là vòng thứ ba của chính phiên sửa bug ở đầu bài (ví dụ minh hoạ):</p>
 
           <div class="code-card">
-            <div class="prompt-head"><span>🧪 Một vòng cụ thể · nội dung từng nhịp</span><span>vòng thứ 3 của phiên</span></div>
-            <pre>PLAN    Test shipping.test.ts fail 1 ca. Bước kế: đọc hàm calcShipping, tìm nhánh &gt; 500k.
-ACT     read_file("src/cart/calcShipping.ts") → thấy điều kiện `total &gt; 500000` dùng giá TRƯỚC giảm giá.
-OBSERVE Sửa thành giá SAU giảm giá, chạy `npm test -- shipping` → 12/13 xanh, ca "đơn 520k có voucher 50k" vẫn đỏ:
-        kỳ vọng phí 0đ, nhận 30000đ.
-REFLECT Giả định "chỉ sai ở một nhánh" là sai — còn một chỗ khác đọc total thô. Chưa xong, KHÔNG tuyên bố xong.
+            <div class="prompt-head"><span>🧪 Một vòng cụ thể · nội dung từng nhịp</span><span>hai nhịp Plan→Act→Observe liên tiếp</span></div>
+            <pre>PLAN    Test shipping.test.ts fail 1 ca. Bước kế: đọc calcShipping, tìm nhánh &gt; 500k.
+ACT     read_file("src/cart/calcShipping.ts")
+OBSERVE Điều kiện `total &gt; 500000` đang dùng giá TRƯỚC giảm giá.
+PLAN    Sửa sang giá SAU giảm giá rồi chạy lại test.
+ACT     edit_file(calcShipping.ts) · run("npm test -- shipping")
+OBSERVE 12/13 xanh; ca "đơn 520k có voucher 50k" vẫn đỏ: kỳ vọng phí 0đ, nhận 30000đ.
+REFLECT Giả định "chỉ sai ở một nhánh" là sai — còn một chỗ khác đọc total thô.
         Vòng sau: grep các chỗ dùng `total` trong module cart trước khi sửa tiếp.</pre>
           </div>
+
+          <p>Bốn nhịp này viết ra thành code chỉ mất khoảng hai mươi dòng — bạn sẽ gõ đúng hai mươi dòng đó, rồi chạy nó trên một việc thật, ở <a href="#m5-l2">bài lab cuối Phần II</a>.</p>
 
           <div class="callout insight"><div class="callout-title">Observe &amp; Reflect là nơi loop "thông minh"</div><p>Nhịp Plan–Act có ở cả script tự động thường. Cái khiến một <em>agent</em> khác một <em>script</em> là hai nhịp còn lại: nó <strong>quan sát hệ quả thật</strong> và <strong>tự soi lại để đổi hướng</strong>. Nếu bạn chỉ nhớ một điều từ chương này: đầu tư vào Observe (tín hiệu, Chương 4) và Reflect (tự sửa, Chương 5) hơn là vào việc làm Act nhanh hơn.</p></div>
 
@@ -502,11 +513,11 @@ REFLECT Giả định "chỉ sai ở một nhánh" là sai — còn một chỗ 
           <div class="quiz" data-correct="1">
             <span class="eyebrow">Kiểm tra nhanh</span>
             <p class="quiz-q">Một agent chạy 20 bước rồi báo "đã hoàn thành refactor và mọi thứ hoạt động", nhưng thực tế app bị gãy. Nhịp nào của vòng lặp yếu nhất, và sửa ở đâu?</p>
-            <button class="quiz-opt" onclick="quizPick(this,0)"><span class="quiz-letter">A</span><span>Nhịp PLAN — agent lập kế hoạch sai; cần prompt kế hoạch tốt hơn.</span></button>
-            <button class="quiz-opt" onclick="quizPick(this,1)"><span class="quiz-letter">B</span><span>Nhịp OBSERVE — agent không thật sự quan sát hệ quả (không chạy test/kiểm tra), nên "ảo tưởng thành công". Sửa bằng cách gắn một verifier khách quan (test/typecheck/lint) vào vòng lặp để nhịp quan sát dựa trên bằng chứng, không dựa trên tự nhận.</span></button>
-            <button class="quiz-opt" onclick="quizPick(this,2)"><span class="quiz-letter">C</span><span>Nhịp ACT — cần model mạnh hơn để hành động chính xác hơn.</span></button>
-            <button class="quiz-opt" onclick="quizPick(this,3)"><span class="quiz-letter">D</span><span>Không nhịp nào cả — chỉ là xui, chạy lại là được.</span></button>
-            <div class="quiz-feedback" data-explain="'Tuyên bố xong mà không có bằng chứng' là dấu hiệu kinh điển của nhịp Observe yếu — ảo tưởng thành công. Agent hành động (Act) nhưng không quan sát hệ quả thật; nó tự nhận thay vì kiểm chứng. Kế hoạch có thể ổn, model có thể đủ giỏi — vấn đề là vòng lặp thiếu một tín hiệu khách quan để 'thấy' rằng app đã gãy. Cách sửa: gắn verifier (chạy test/typecheck) vào nhịp quan sát — đúng chủ đề Chương 4."></div>
+            <button class="quiz-opt" onclick="quizPick(this,0)"><span class="quiz-letter">A</span><span>Nhịp PLAN — kế hoạch 20 bước quá dài nên agent lạc hướng; sửa bằng một prompt kế hoạch chi tiết hơn ngay từ đầu.</span></button>
+            <button class="quiz-opt" onclick="quizPick(this,1)"><span class="quiz-letter">B</span><span>Nhịp OBSERVE — agent không quan sát hệ quả thật, chỉ tự nhận. Sửa: gắn verifier khách quan (test/typecheck) vào mỗi vòng.</span></button>
+            <button class="quiz-opt" onclick="quizPick(this,2)"><span class="quiz-letter">C</span><span>Nhịp ACT — model gọi tool chưa đủ chính xác nên hỏng app; đổi sang model mạnh hơn thì các bước sửa sẽ đúng hơn.</span></button>
+            <button class="quiz-opt" onclick="quizPick(this,3)"><span class="quiz-letter">D</span><span>Nhịp REFLECT — agent không tự soi lại; sửa bằng cách bắt nó viết một đoạn tự đánh giá ở cuối mỗi vòng.</span></button>
+            <div class="quiz-feedback" data-explain="'Tuyên bố xong mà không có bằng chứng' là dấu hiệu kinh điển của nhịp Observe yếu — ảo tưởng thành công. (A) kế hoạch có thể vẫn ổn: agent đi đúng hướng nhưng không biết mình đã làm gãy app. (C) model mạnh hơn vẫn không 'thấy' app gãy nếu không ai chạy test — Act không phải chỗ hỏng. (D) gần đúng nhất trong ba cái sai: Reflect quả thật yếu, nhưng tự soi lại mà không có dữ liệu quan sát thì chỉ là suy đoán về suy đoán. Phải có tín hiệu khách quan trước (Chương 4), rồi Reflect mới có gì để soi."></div>
           </div>
         </div>
         <div class="lesson-nav" data-navfor="m2-l1"></div>
@@ -568,12 +579,12 @@ REFLECT Giả định "chỉ sai ở một nhánh" là sai — còn một chỗ 
               <text x="454" y="49" text-anchor="middle" font-size="10" font-family="IBM Plex Mono" fill="var(--success)">xong?</text>
               <rect x="500" y="30" width="138" height="58" rx="10" style="fill:var(--success-bg);stroke:var(--success);stroke-width:2"/>
               <text class="dgm-ink" x="569" y="52" text-anchor="middle" font-size="11.5" font-weight="700">DỪNG THÀNH CÔNG</text>
-              <text class="dgm-ink2" x="569" y="70" text-anchor="middle" font-size="9" font-family="IBM Plex Mono">verifier đạt / task xong</text>
+              <text class="dgm-ink2" x="569" y="70" text-anchor="middle" font-size="10" font-family="IBM Plex Mono">verifier đạt → xong</text>
               <path d="M330 88 V150" fill="none" stroke="var(--danger)" stroke-width="2.5" marker-end="url(#al3d)"/>
               <text x="330" y="112" text-anchor="middle" font-size="10" font-family="IBM Plex Mono" fill="var(--danger)">chạm trần?</text>
               <rect x="196" y="150" width="268" height="46" rx="10" style="fill:var(--danger-bg);stroke:var(--danger);stroke-width:2"/>
               <text class="dgm-ink" x="330" y="170" text-anchor="middle" font-size="11.5" font-weight="700">BIÊN AN TOÀN</text>
-              <text class="dgm-ink2" x="330" y="187" text-anchor="middle" font-size="9" font-family="IBM Plex Mono">chạm trần iter/token/cost → kill + cảnh báo</text>
+              <text class="dgm-ink2" x="330" y="187" text-anchor="middle" font-size="10" font-family="IBM Plex Mono">chạm trần iter/token/cost → kill + cảnh báo</text>
             </svg>
             <figcaption><b>Hình 3.1</b> — Hai loại "dừng". Loop tốt có <b>CẢ HAI</b>: thiếu nhánh xanh (dừng-thành-công) thì loop không biết lúc nào xong; thiếu nhánh đỏ (biên-an-toàn) thì một lỗi sẽ đốt tiền âm thầm tới khi bị phát hiện. Đừng nhầm hai nhánh: một cái là "đã làm được", cái kia là "không được phép chạy tiếp".</figcaption>
           </figure>
@@ -582,22 +593,28 @@ REFLECT Giả định "chỉ sai ở một nhánh" là sai — còn một chỗ 
 
           <div class="callout danger"><div class="callout-title">Quy tắc vàng của tự hành</div><p>Trước khi để một loop chạy mà không có người ngồi cạnh, hãy trả lời: "Nếu nó sai theo cách tệ nhất có thể, thiệt hại tối đa là bao nhiêu — tiền, dữ liệu, thời gian dọn dẹp?" Nếu bạn không trả lời được, <strong>loop chưa sẵn sàng rời tay</strong>. Biên biến câu trả lời đó thành một con số hữu hạn.</p></div>
 
-          <p>Trần chi phí là ngân sách bạn chủ động đặt để một loop hỏng không thể tiêu quá mức đó. Máy tính dưới dùng <strong>số minh họa</strong>; hãy thay bằng token trace và giá model hiện tại của bạn.</p>
+          <p>Trần chi phí là ngân sách bạn chủ động đặt để một loop hỏng không thể tiêu quá mức đó. Đặt được nó thì phải biết chi phí <em>lớn lên theo hình gì</em>. Đây là chỗ trực giác hay sai: mỗi vòng, loop gửi lại toàn bộ hội thoại đã tích lũy rồi mới nối phần mới, nên tiền không tăng tuyến tính theo số vòng mà tăng theo <strong>tổng dồn</strong> — vòng thứ 25 tự nó đắt gấp nhiều lần vòng đầu. Prompt caching đọc lại phần nền với giá rẻ hơn nhiều, nên nó đổi hẳn con số. Máy tính dưới chỉ đếm <em>token đầu vào</em> (phần phình theo vòng); thay bằng trace và giá model của bạn.</p>
 
           <div class="prompt-card" style="background:var(--surface-2)">
             <div class="prompt-head"><span>🧮 Máy tính chi phí loop</span><span>chỉnh số để thấy vì sao cần biên</span></div>
             <div style="padding:16px">
               <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px">
-                <label style="display:block"><span class="mono" style="font-size:11px;color:var(--ink-3)">Số vòng lặp</span><input type="number" id="lcIter" value="25" min="0" oninput="loopCost()" style="width:100%;font-family:var(--font-mono);padding:8px;border:1px solid var(--border);border-radius:8px;background:var(--surface);color:var(--ink)"></label>
-                <label style="display:block"><span class="mono" style="font-size:11px;color:var(--ink-3)">Nghìn token/vòng (in+out)</span><input type="number" id="lcTok" value="40" min="0" oninput="loopCost()" style="width:100%;font-family:var(--font-mono);padding:8px;border:1px solid var(--border);border-radius:8px;background:var(--surface);color:var(--ink)"></label>
-                <label style="display:block"><span class="mono" style="font-size:11px;color:var(--ink-3)">Giá $/1M token (trộn)</span><input type="number" id="lcPrice" value="6" min="0" step="0.5" oninput="loopCost()" style="width:100%;font-family:var(--font-mono);padding:8px;border:1px solid var(--border);border-radius:8px;background:var(--surface);color:var(--ink)"></label>
+                <label style="display:block"><span class="mono" style="font-size:11px;color:var(--ink-3)">Token nền (nghìn)</span><input type="number" id="lcBase" value="20" min="0" oninput="loopCost()" style="width:100%;font-family:var(--font-mono);padding:8px;border:1px solid var(--border);border-radius:8px;background:var(--surface);color:var(--ink)"></label>
+                <label style="display:block"><span class="mono" style="font-size:11px;color:var(--ink-3)">Token mới mỗi vòng (nghìn)</span><input type="number" id="lcNew" value="8" min="0" oninput="loopCost()" style="width:100%;font-family:var(--font-mono);padding:8px;border:1px solid var(--border);border-radius:8px;background:var(--surface);color:var(--ink)"></label>
+                <label style="display:block"><span class="mono" style="font-size:11px;color:var(--ink-3)">Số vòng</span><input type="number" id="lcIter" value="25" min="0" oninput="loopCost()" style="width:100%;font-family:var(--font-mono);padding:8px;border:1px solid var(--border);border-radius:8px;background:var(--surface);color:var(--ink)"></label>
+                <label style="display:block"><span class="mono" style="font-size:11px;color:var(--ink-3)">Giá input $/1M</span><input type="number" id="lcPrice" value="10" min="0" step="0.5" oninput="loopCost()" style="width:100%;font-family:var(--font-mono);padding:8px;border:1px solid var(--border);border-radius:8px;background:var(--surface);color:var(--ink)"></label>
+                <label style="display:block"><span class="mono" style="font-size:11px;color:var(--ink-3)">Giá cache-read $/1M</span><input type="number" id="lcCache" value="0.25" min="0" step="0.05" oninput="loopCost()" style="width:100%;font-family:var(--font-mono);padding:8px;border:1px solid var(--border);border-radius:8px;background:var(--surface);color:var(--ink)"></label>
               </div>
               <div style="margin-top:14px;display:flex;gap:10px;flex-wrap:wrap;align-items:center">
-                <span class="badge" id="lcPerRun">$0.00 / lần chạy</span>
+                <span class="badge bad" id="lcPlain">Không cache: $0.00 / lần chạy</span>
+                <span class="badge ok" id="lcCached">Có cache: $0.00 / lần chạy</span>
               </div>
               <div class="mono" id="lcNote" style="font-size:11px;color:var(--ink-3);margin-top:6px"></div>
             </div>
           </div>
+          <p class="mono" style="font-size:11.5px;color:var(--ink-3);margin-top:8px">Công thức: không cache <span class="mono">Σᵢ (nền + (i−1)·mới) × giá input</span>; có cache <span class="mono">Σᵢ [(nền + (i−1)·mới) × giá cache-read + mới × giá input]</span>. Giá tham chiếu 05/09/2026 — Claude Fable 5.1: input $10 / cache-read $0,25 / output $50 mỗi MTok; Claude Sonnet 5: $2 / $0,20 / $10. Thay bằng giá model của bạn.</p>
+
+          <p>Chạy thử với số mặc định — 25 vòng, 20k token nền, 8k token mới mỗi vòng, giá Fable 5.1: <strong>không cache $29,00 mỗi lần chạy; có cache $2,73</strong>. Cùng một loop, cùng một model, chênh 10,6 lần. Bài học cho việc đặt biên: một trần chi phí phải nói rõ nó đang giả định <em>có</em> hay <em>không</em> có prompt caching — nếu không, con số bạn đặt chỉ đúng cho một trong hai thế giới. Và vì tổng là tổng dồn chứ không tuyến tính, cắt số vòng từ 25 xuống 15 tiết kiệm nhiều hơn tỉ lệ bạn tưởng.</p>
 
           <div class="exercise">
             <h5>Bài tập · Audit bốn biên</h5>
@@ -612,11 +629,11 @@ REFLECT Giả định "chỉ sai ở một nhánh" là sai — còn một chỗ 
           <div class="quiz" data-correct="0">
             <span class="eyebrow">Kiểm tra nhanh</span>
             <p class="quiz-q">Bạn muốn để một agent tự dọn dẹp code qua đêm. Điều kiện tối thiểu để "rời tay" một cách có trách nhiệm là gì?</p>
-            <button class="quiz-opt" onclick="quizPick(this,0)"><span class="quiz-letter">A</span><span>Có điều kiện thành công bằng verifier; biên vòng/thời gian, token, chi phí và chống lặp; chạy trong quyền hạn/sandbox hẹp; lưu bằng chứng và cảnh báo; biết trước thiệt hại tối đa nếu sai.</span></button>
-            <button class="quiz-opt" onclick="quizPick(this,1)"><span class="quiz-letter">B</span><span>Chỉ cần đặt max iteration là đủ.</span></button>
-            <button class="quiz-opt" onclick="quizPick(this,2)"><span class="quiz-letter">C</span><span>Chỉ cần model đủ giỏi thì không cần biên.</span></button>
-            <button class="quiz-opt" onclick="quizPick(this,3)"><span class="quiz-letter">D</span><span>Cứ chạy và sáng mai xem — có gì sửa sau.</span></button>
-            <div class="quiz-feedback" data-explain="Rời tay có trách nhiệm không chỉ là đặt một con số max iteration. Loop cần biết thế nào là xong bằng verifier, bị giới hạn tài nguyên và hành động, chạy trong quyền hạn hẹp, để lại bằng chứng và phát cảnh báo. Các ngưỡng lấy từ trace/eval và mức thiệt hại chấp nhận được; model giỏi hơn không thay các kiểm soát này."></div>
+            <button class="quiz-opt" onclick="quizPick(this,0)"><span class="quiz-letter">A</span><span>Verifier đóng vòng, đủ bốn biên runtime, quyền hạn hẹp, bằng chứng &amp; cảnh báo — và biết trước thiệt hại tối đa nếu nó sai.</span></button>
+            <button class="quiz-opt" onclick="quizPick(this,1)"><span class="quiz-letter">B</span><span>Đặt max iteration và trần chi phí; verifier để sau vì test đang chưa ổn định — biên đã chặn được thiệt hại tối đa rồi.</span></button>
+            <button class="quiz-opt" onclick="quizPick(this,2)"><span class="quiz-letter">C</span><span>Chạy trong sandbox với quyền tối thiểu là đủ: bán kính đã nhỏ thì khỏi cần verifier hay trần chi phí nữa.</span></button>
+            <button class="quiz-opt" onclick="quizPick(this,3)"><span class="quiz-letter">D</span><span>Cứ chạy rồi sáng mai đọc diff: dọn lint mà sai thì cùng lắm mất thêm chút công review.</span></button>
+            <div class="quiz-feedback" data-explain="Rời tay có trách nhiệm là cả gói, không phải một con số. (B) là cái bẫy hay gặp nhất: biên chặn được thiệt hại về TIỀN, nhưng không chặn được thiệt hại về KẾT QUẢ — thiếu verifier, loop vẫn chạy hết 25 vòng rồi giao một đống thay đổi không ai biết đúng hay sai. (C) sandbox thu nhỏ bán kính nhưng không cho loop biết khi nào xong, và một loop kẹt trong sandbox vẫn đốt tiền tới sáng. (D) 'cùng lắm mất chút công review' chính là câu chưa trả lời được 'thiệt hại tối đa là bao nhiêu' — dọn lint cũng có thể chạm vào file sinh code hay đổi hành vi."></div>
           </div>
         </div>
         <div class="lesson-nav" data-navfor="m3-l1"></div>
@@ -646,7 +663,7 @@ REFLECT Giả định "chỉ sai ở một nhánh" là sai — còn một chỗ 
           </div>
           <p>Bạn bảo agent: "viết hàm parse ngày tháng, tự cải thiện tới khi tốt". Nó chạy 15 vòng, vòng nào cũng kết luận "giờ đã đúng hơn", và các ca biên vẫn sai y như vòng đầu. Loop có đủ vòng, đủ token, đủ thiện chí; thứ nó không có là một nguồn khách quan nói cho nó biết "đúng" nghĩa là gì. Chỗ trống đó chính là chỗ verifier ngồi vào.</p>
 
-          <div class="callout danger"><div class="callout-title">Heuristic mạnh nhất của Loop Engineering</div><p>Một vòng lặp tự sửa chỉ tốt bằng cái verifier đóng nó lại. <strong>Không có verifier khách quan, thêm vòng lặp thường là thêm trôi dạt chứ không phải cải thiện.</strong> Agent sẽ "sửa" theo hướng nó <em>nghĩ</em> là đúng, và không có gì kéo nó về thực tế. Đây là một trong những nguyên nhân phổ biến nhất chúng tôi quan sát khi một loop tự hành thất bại. Ý này họ hàng với "verifier's law" của Jason Wei (07/2025: dễ train AI làm một việc tỉ lệ thuận với độ dễ verify việc đó), nhưng cách áp vào loop và drift là tổng hợp của khóa này; khóa này coi nó là một heuristic rất mạnh — đủ để dùng làm mặc định, chưa phải một quy luật đã được chứng minh.</p></div>
+          <div class="callout danger"><div class="callout-title">Heuristic mạnh nhất của Loop Engineering</div><p>Một vòng lặp tự sửa chỉ tốt bằng cái verifier đóng nó lại. <strong>Không có verifier khách quan, thêm vòng lặp thường là thêm trôi dạt chứ không phải cải thiện.</strong> Agent sẽ "sửa" theo hướng nó <em>nghĩ</em> là đúng, và không có gì kéo nó về thực tế. Đây là một trong những nguyên nhân phổ biến nhất chúng tôi quan sát khi một loop tự hành thất bại. Ý này họ hàng với <a href="https://www.jasonwei.net/blog/asymmetry-of-verification-and-verifiers-law" target="_blank" rel="noopener">"verifier's rule" của Jason Wei</a> (bài "Asymmetry of verification and verifier's rule", 15/07/2025; nguyên văn: <em>"The ease of training AI to solve a task is proportional to how verifiable the task is"</em>), nhưng cách áp vào loop và drift là tổng hợp của khóa này; khóa này coi nó là một heuristic rất mạnh — đủ để dùng làm mặc định, chưa phải một quy luật đã được chứng minh.</p></div>
 
           <div class="concept">
             <span class="eyebrow">Gọi tên bằng ngôn ngữ điều khiển: closed-loop vs open-loop</span>
@@ -663,8 +680,8 @@ REFLECT Giả định "chỉ sai ở một nhánh" là sai — còn một chỗ 
               <path class="dgm-flow" d="M174 95 H236" stroke-width="2.5" marker-end="url(#al4)"/>
               <rect x="236" y="60" width="170" height="70" rx="10" style="fill:color-mix(in srgb,var(--brand-gold) 16%,var(--surface));stroke:var(--warning);stroke-width:2"/>
               <text class="dgm-ink" x="321" y="86" text-anchor="middle" font-size="13" font-weight="700">VERIFIER</text>
-              <text class="dgm-ink2" x="321" y="104" text-anchor="middle" font-size="9.5" font-family="IBM Plex Mono">test · typecheck · eval</text>
-              <text class="dgm-ink2" x="321" y="118" text-anchor="middle" font-size="9.5" font-family="IBM Plex Mono">khách quan, tự động</text>
+              <text class="dgm-ink2" x="321" y="104" text-anchor="middle" font-size="10" font-family="IBM Plex Mono">test · typecheck · eval</text>
+              <text class="dgm-ink2" x="321" y="118" text-anchor="middle" font-size="10" font-family="IBM Plex Mono">khách quan, tự động</text>
               <path d="M406 82 H520" fill="none" stroke="var(--success)" stroke-width="2.5" marker-end="url(#al4g)"/>
               <text x="463" y="74" text-anchor="middle" font-size="10" font-family="IBM Plex Mono" fill="var(--success)">đạt</text>
               <rect x="520" y="60" width="116" height="44" rx="10" style="fill:var(--success-bg);stroke:var(--success)"/>
@@ -681,6 +698,7 @@ REFLECT Giả định "chỉ sai ở một nhánh" là sai — còn một chỗ 
               <tbody>
                 <tr><td><span class="badge ok">Compiler / typecheck</span></td><td>Tất định · rất rẻ</td><td>Kiểm kiểu/cú pháp; không chứng minh hành vi nghiệp vụ đúng</td></tr>
                 <tr><td><span class="badge ok">Test tự động</span></td><td>Cao · rẻ</td><td>Hành vi — spec thực thi được</td></tr>
+                <tr><td><span class="badge ok">Oracle / đối chiếu (differential)</span></td><td>Cao · vừa</td><td>So kết quả với một hiện thực đã tin được (compiler cũ, hệ thống cũ, API cũ) — dùng khi không viết nổi test cho mọi ca: port, migration, rewrite</td></tr>
                 <tr><td><span class="badge ok">Linter / schema validate</span></td><td>Cao · rất rẻ</td><td>Định dạng, quy ước, cấu trúc output</td></tr>
                 <tr><td><span class="badge warn">Eval (bộ ví dụ chấm điểm)</span></td><td>Trung bình · vừa</td><td>Tính năng AI, output ngôn ngữ</td></tr>
                 <tr><td><span class="badge warn">LLM-as-judge</span></td><td>Thấp–trung bình · vừa</td><td>Khi không có verifier cứng (Chương 5)</td></tr>
@@ -691,8 +709,14 @@ REFLECT Giả định "chỉ sai ở một nhánh" là sai — còn một chỗ 
 
           <div class="callout insight"><div class="callout-title">Verifier tốt: rẻ, nhanh, sát tiêu chí</div><p>Verifier càng rẻ &amp; nhanh, bạn càng có thể chạy nó thường xuyên. Nhưng tín hiệu phải <em>sát điều cần chứng minh</em>: typecheck xanh không chứng minh màn hình dùng được; unit test xanh không chứng minh luồng đăng nhập thật. Hãy xếp tầng từ schema/typecheck đến test hành vi, browser/eval và cổng người theo rủi ro.</p></div>
 
+          <div class="concept">
+            <span class="eyebrow">Tầng oracle: verifier cho việc không viết nổi test</span>
+            <p>Đừng đọc tầng này thành "thay được test". Khi Anthropic cho agent dựng một trình biên dịch C (<a href="https://www.anthropic.com/engineering/building-c-compiler" target="_blank" rel="noopener">Nicholas Carlini, 05/02/2026</a>), verifier chính vẫn là <strong>test viết tay</strong>: tác giả đi tìm các bộ test compiler chất lượng cao, viết verifier và build script cho từng gói nguồn mở, rồi dựng một CI pipeline để commit mới không phá được code cũ. Kết quả là 99% pass trên hầu hết các bộ test compiler, gồm cả GCC torture test suite.</p></div>
+
+          <div class="callout insight"><div class="callout-title">Oracle vào cuộc ở chỗ test không với tới</div><p>Khi cần biên dịch trọn nhân Linux, không có bộ test nào bao hết, nên tác giả viết một test harness mới: biên dịch phần lớn nhân bằng <strong>GCC</strong> và chỉ một tập file ngẫu nhiên bằng compiler của Claude. Nhân chạy được nghĩa là lỗi không nằm trong tập file đó. Ở đây hiện thực đã tin được đóng vai phần còn lại của hệ thống, và nó dùng để <em>khoanh vùng</em> lỗi chứ không để chấm điểm từng file.</p></div>
+
           <h4>Verifier cũng bị game</h4>
-          <p>Một khi verifier trở thành thứ quyết định "xong", nó cũng trở thành thứ agent tối ưu vào. Ba dạng hay gặp: <strong>sửa test</strong> cho khớp với code sai, <strong>xoá hoặc skip</strong> ca test đang đỏ, và <strong>thoả mãn rubric một cách hình thức</strong> (đủ mục, đúng từ khoá, nội dung rỗng). Đây là <em>reward hacking</em> (tối ưu vào thước đo thay vì vào điều thước đo định đo); một nghiên cứu công bố năm 2026 (và bản tái lập độc lập) ghi nhận xu hướng hack rubric tăng dần theo thời gian huấn luyện. Hãy giả định rằng verifier càng quan trọng thì càng bị nhắm, và thiết kế cho tình huống đó. Mức độ nghiêm trọng còn vượt khỏi phạm vi cái thước bị hack: trong <a href="https://arxiv.org/abs/2511.18397" target="_blank" rel="noopener">Natural Emergent Misalignment from Reward Hacking in Production RL</a> (Anthropic, 11/2025), việc để model học cách hack thưởng trên chính các môi trường RL lập trình đang chạy thật đã lan thành lệch chuẩn diện rộng — alignment faking, và ở khoảng <strong>12%</strong> số lần chạy đánh giá là hành vi tìm cách phá hoại chính bộ code nghiên cứu. Vì vậy quy tắc của chương này (<em>verifier là read-only với agent, mọi thay đổi verifier phải qua cổng người</em>) không chỉ để giữ số liệu sạch, mà là một biên an toàn.</p>
+          <p>Một khi verifier trở thành thứ quyết định "xong", nó cũng trở thành thứ agent tối ưu vào. Ba dạng hay gặp: <strong>sửa test</strong> cho khớp với code sai, <strong>xoá hoặc skip</strong> ca test đang đỏ, và <strong>thoả mãn rubric một cách hình thức</strong> (đủ mục, đúng từ khoá, nội dung rỗng). Đây là <em>reward hacking</em> (tối ưu vào thước đo thay vì vào điều thước đo định đo), và nó đã được đo bằng số. <a href="https://metr.org/blog/2025-06-05-recent-reward-hacking/" target="_blank" rel="noopener">METR</a> (05/06/2025) ghi nhận o3 hack thưởng ở <strong>30,4%</strong> số lượt chạy RE-Bench — <strong>39 trên 128 lượt</strong>; kỹ thuật gồm monkey-patch hàm chấm để nó luôn trả điểm tuyệt đối, và ghi đè đồng hồ đo thời gian của grader. <a href="https://www.nist.gov/caisi/cheating-ai-agent-evaluations/2-examples-cheating-caisis-agent-evaluations" target="_blank" rel="noopener">NIST CAISI</a> (28/11/2025) chạy SWE-bench Verified với năm model và thấy cả năm đều có lúc sửa chính code test. Mỗi model chỉ rơi vào một tới hai tác vụ, riêng o4-mini nhiều lần nhất với <strong>8 lần</strong>. Có ca nó comment-out thẳng assertion đang fail thay vì sửa lỗi gốc. Hãy giả định rằng verifier càng quan trọng thì càng bị nhắm, và thiết kế cho tình huống đó. Mức độ nghiêm trọng còn vượt khỏi phạm vi cái thước bị hack: trong <a href="https://arxiv.org/abs/2511.18397" target="_blank" rel="noopener">Natural Emergent Misalignment from Reward Hacking in Production RL</a> (Anthropic, <a href="https://www.anthropic.com/research/emergent-misalignment-reward-hacking" target="_blank" rel="noopener">21/11/2025</a>), việc để model học cách hack thưởng trên chính các môi trường RL lập trình đang chạy thật đã lan thành lệch chuẩn diện rộng: lý lẽ <em>alignment faking</em> xuất hiện ở <strong>50%</strong> câu trả lời cho một câu hỏi đơn giản như "What are your goals?", và trong bài đánh giá "phá hoại nghiên cứu an toàn AI" — model chạy qua Claude Code trên chính codebase nghiên cứu của nhóm tác giả — có khoảng <strong>12%</strong> số lượt model chủ động tìm cách phá hoại code theo hướng làm giảm khả năng phát hiện reward hacking. Vì vậy quy tắc của chương này (<em>verifier là read-only với agent, mọi thay đổi verifier phải qua cổng người</em>) không chỉ để giữ số liệu sạch, mà là một biên an toàn.</p>
 
           <div class="compare">
             <div class="compare-col bad"><span class="eyebrow">Verifier bị vô hiệu</span><ul><li>Agent có quyền ghi vào chính file test / rubric nó phải vượt qua</li><li>Chỉ đọc dòng "tests passed" agent tự thuật lại, không đọc output gốc</li><li>Không ai kiểm xem số ca test có giảm đi giữa các vòng không</li></ul></div>
@@ -712,21 +736,21 @@ REFLECT Giả định "chỉ sai ở một nhánh" là sai — còn một chỗ 
           <div class="quiz" data-correct="2">
             <span class="eyebrow">Kiểm tra nhanh</span>
             <p class="quiz-q">Bạn cho agent lặp "viết một hàm parse ngày tháng, tự cải thiện tới khi tốt". Sau 15 vòng nó vẫn sai các ca biên, dù mỗi vòng nó tự khen "giờ đã đúng hơn". Vấn đề gốc?</p>
-            <button class="quiz-opt" onclick="quizPick(this,0)"><span class="quiz-letter">A</span><span>Cần nhiều vòng lặp hơn — 15 chưa đủ.</span></button>
-            <button class="quiz-opt" onclick="quizPick(this,1)"><span class="quiz-letter">B</span><span>Model chưa đủ giỏi parse ngày tháng.</span></button>
-            <button class="quiz-opt" onclick="quizPick(this,2)"><span class="quiz-letter">C</span><span>Vòng lặp không có verifier khách quan — nó tự đánh giá bằng cảm nhận ("đúng hơn") thay vì một bộ test ca biên chạy được. Thêm vòng chỉ thêm trôi dạt. Sửa: viết test cho các ca biên trước, đóng vòng bằng test đó; feedback khi fail là ca test cụ thể.</span></button>
-            <button class="quiz-opt" onclick="quizPick(this,3)"><span class="quiz-letter">D</span><span>Nên bỏ vòng lặp, viết tay.</span></button>
-            <div class="quiz-feedback" data-explain="Đây là heuristic của chương này tại hiện trường: loop tự đánh giá bằng cảm nhận ('đúng hơn') không có ground-truth. 15 vòng hay 150 vòng đều vô ích vì không có gì kéo agent về thực tế — nó trôi dạt theo hướng nó NGHĨ là đúng. Cách sửa không phải thêm vòng hay đổi model, mà là gắn một verifier khách quan: viết test cho các ca biên, đóng vòng bằng test đó, và trả lỗi cụ thể mỗi khi fail."></div>
+            <button class="quiz-opt" onclick="quizPick(this,0)"><span class="quiz-letter">A</span><span>Vòng lặp bị cắt sớm — nâng cap lên 50 vòng và cho nó ngân sách token lớn hơn để đi tới cùng.</span></button>
+            <button class="quiz-opt" onclick="quizPick(this,1)"><span class="quiz-letter">B</span><span>Model chưa đủ giỏi mảng ngày tháng; đổi sang model mạnh hơn thì các ca biên sẽ được xử đúng.</span></button>
+            <button class="quiz-opt" onclick="quizPick(this,2)"><span class="quiz-letter">C</span><span>Loop không có verifier khách quan — nó tự chấm bằng cảm nhận. Sửa: viết test cho các ca biên trước, đóng vòng bằng test đó.</span></button>
+            <button class="quiz-opt" onclick="quizPick(this,3)"><span class="quiz-letter">D</span><span>Prompt chưa đủ rõ — mô tả kỹ hơn thế nào là "tốt" thì agent sẽ tự biết đường tự cải thiện đúng hướng.</span></button>
+            <div class="quiz-feedback" data-explain="Đây là heuristic của chương này tại hiện trường: loop tự đánh giá bằng cảm nhận ('đúng hơn') không có ground-truth. (A) 15 vòng hay 150 vòng đều vô ích vì không có gì kéo agent về thực tế — thêm vòng chỉ thêm trôi dạt, và tiền thì tăng theo tổng dồn (Chương 3). (B) model mạnh hơn vẫn tự chấm chính mình: nó sẽ sai tự tin hơn, không đúng hơn. (D) là cái bẫy tinh nhất — mô tả 'tốt' kỹ tới đâu thì nó vẫn là văn bản để model tự diễn giải; một ca test chạy được thì không diễn giải nổi. Cách sửa: viết test cho các ca biên, đóng vòng bằng test đó, và trả lỗi cụ thể mỗi khi fail."></div>
           </div>
 
           <div class="quiz" data-correct="1">
             <span class="eyebrow">Kiểm tra nhanh · chọn verifier</span>
             <p class="quiz-q">Task: một agent tự động cập nhật các bản dịch UI tiếng Việt mỗi khi string tiếng Anh nguồn thay đổi. Verifier nào đóng vòng tốt nhất?</p>
-            <button class="quiz-opt" onclick="quizPick(this,0)"><span class="quiz-letter">A</span><span>Chỉ dùng một LLM tự chấm "bản dịch đã hay chưa" sau mỗi vòng.</span></button>
-            <button class="quiz-opt" onclick="quizPick(this,1)"><span class="quiz-letter">B</span><span>Verifier lai: chạy schema/lint cứng trước để kiểm cấu trúc và bắt khóa dịch bị thiếu (rẻ, tất định, chạy mỗi vòng); chỉ khi qua tầng cứng mới cho LLM-as-judge chấm chất lượng ngôn ngữ theo rubric ở bước sau.</span></button>
-            <button class="quiz-opt" onclick="quizPick(this,2)"><span class="quiz-letter">C</span><span>Cho người duyệt tay từng string mỗi lần string nguồn đổi.</span></button>
-            <button class="quiz-opt" onclick="quizPick(this,3)"><span class="quiz-letter">D</span><span>Task đơn giản nên không cần verifier — cứ ghi đè bản dịch mới.</span></button>
-            <div class="quiz-feedback" data-explain="Nhớ thang verifier: cứng > mềm. Cấu trúc (đủ khóa dịch, đúng placeholder, hợp schema) là thứ KIỂM ĐƯỢC CỨNG — schema/lint bắt ngay lỗi 'thiếu khóa' hay 'sai {biến}' với chi phí gần bằng 0, chạy mỗi vòng. Chỉ chất lượng ngôn ngữ (tự nhiên, đúng ngữ cảnh) mới cần LLM-as-judge, và chỉ nên chạy SAU khi qua tầng cứng. Đó là verifier lai: cứng lọc rẻ trước, mềm chấm tinh sau. (A) chỉ LLM tự chấm là verifier mềm đơn độc — không bắt nổi khóa thiếu và dễ trôi dạt. (C) con người duyệt từng string thì đắt/chậm và làm mất chính mục đích tự động. (D) 'không cần verifier' đúng công thức trôi dạt thầm lặng của Chương này."></div>
+            <button class="quiz-opt" onclick="quizPick(this,0)"><span class="quiz-letter">A</span><span>Một LLM-as-judge chấm "bản dịch đã tự nhiên chưa" theo rubric sau mỗi vòng — chất lượng ngôn ngữ mới là thứ đáng đo ở đây.</span></button>
+            <button class="quiz-opt" onclick="quizPick(this,1)"><span class="quiz-letter">B</span><span>Verifier lai: schema/lint cứng bắt khóa thiếu và sai placeholder mỗi vòng; qua được tầng cứng mới cho LLM-as-judge chấm ngôn ngữ.</span></button>
+            <button class="quiz-opt" onclick="quizPick(this,2)"><span class="quiz-letter">C</span><span>Người duyệt tay từng string mỗi lần string nguồn đổi — chỉ con người mới phán được bản dịch nào nghe đúng tiếng Việt.</span></button>
+            <button class="quiz-opt" onclick="quizPick(this,3)"><span class="quiz-letter">D</span><span>So khớp số ký tự và số dòng giữa bản nguồn với bản dịch; lệch quá ngưỡng thì fail, còn lại thì cho qua.</span></button>
+            <div class="quiz-feedback" data-explain="Nhớ thang verifier: cứng trước, mềm sau. Cấu trúc (đủ khóa dịch, đúng placeholder, hợp schema) là thứ KIỂM ĐƯỢC CỨNG — schema/lint bắt ngay lỗi 'thiếu khóa' hay 'sai {biến}' với chi phí gần bằng 0. (A) đúng một nửa: chất lượng ngôn ngữ quả thật cần judge, nhưng judge đơn độc không bắt nổi một khóa dịch bị mất — mà khóa mất thì màn hình trống, nặng hơn câu văn hơi cứng. (C) con người phán ngôn ngữ tốt hơn thật, nhưng duyệt từng string mỗi lần nguồn đổi thì đắt, chậm và xoá luôn mục đích tự động; để người ở tầng cuối, không ở mỗi vòng. (D) đếm ký tự là verifier cứng nhưng KHÔNG SÁT tiêu chí: một bản dịch sai nghĩa hoàn toàn vẫn có thể đúng độ dài — đúng dạng 'verifier hình thức' ở Chương 9."></div>
           </div>
         </div>
         <div class="lesson-nav" data-navfor="m4-l1"></div>
@@ -763,16 +787,16 @@ REFLECT Giả định "chỉ sai ở một nhánh" là sai — còn một chỗ 
               <defs><marker id="al5" markerWidth="9" markerHeight="9" refX="7" refY="4.5" orient="auto"><path d="M0 0 L9 4.5 L0 9 z" fill="var(--accent-2)"/></marker></defs>
               <rect class="dgm-accent" x="24" y="58" width="140" height="54" rx="10" stroke-width="2"/>
               <text class="dgm-ink" x="94" y="82" text-anchor="middle" font-size="12.5" font-weight="700">GENERATE</text>
-              <text class="dgm-ink2" x="94" y="99" text-anchor="middle" font-size="9.5" font-family="IBM Plex Mono">bản nháp</text>
+              <text class="dgm-ink2" x="94" y="99" text-anchor="middle" font-size="10" font-family="IBM Plex Mono">bản nháp</text>
               <path class="dgm-flow" d="M164 85 H228" stroke-width="2.5" marker-end="url(#al5)"/>
               <rect x="228" y="52" width="170" height="66" rx="10" style="fill:color-mix(in srgb,var(--brand-gold) 16%,var(--surface));stroke:var(--warning);stroke-width:2"/>
               <text class="dgm-ink" x="313" y="76" text-anchor="middle" font-size="12.5" font-weight="700">CRITIQUE</text>
-              <text class="dgm-ink2" x="313" y="93" text-anchor="middle" font-size="9" font-family="IBM Plex Mono">phê bình ĐỘC LẬP</text>
-              <text class="dgm-ink2" x="313" y="106" text-anchor="middle" font-size="9" font-family="IBM Plex Mono">lỗi cụ thể</text>
+              <text class="dgm-ink2" x="313" y="93" text-anchor="middle" font-size="10" font-family="IBM Plex Mono">phê bình ĐỘC LẬP</text>
+              <text class="dgm-ink2" x="313" y="106" text-anchor="middle" font-size="10" font-family="IBM Plex Mono">lỗi cụ thể</text>
               <path class="dgm-flow" d="M398 85 H462" stroke-width="2.5" marker-end="url(#al5)"/>
               <rect class="dgm-accent" x="462" y="58" width="140" height="54" rx="10" stroke-width="2"/>
               <text class="dgm-ink" x="532" y="82" text-anchor="middle" font-size="12.5" font-weight="700">REVISE</text>
-              <text class="dgm-ink2" x="532" y="99" text-anchor="middle" font-size="9.5" font-family="IBM Plex Mono">sửa theo phê bình</text>
+              <text class="dgm-ink2" x="532" y="99" text-anchor="middle" font-size="10" font-family="IBM Plex Mono">sửa theo phê bình</text>
               <path class="dgm-flow" d="M532 112 V140 H94 V112" stroke-width="2.5" marker-end="url(#al5)"/>
               <text class="dgm-ink2" x="313" y="156" text-anchor="middle" font-size="10" font-family="IBM Plex Mono">lặp khi điểm eval còn tăng · dừng khi plateau / chạm ngân sách</text>
             </svg>
@@ -780,8 +804,8 @@ REFLECT Giả định "chỉ sai ở một nhánh" là sai — còn một chỗ 
           </figure>
 
           <div class="compare">
-            <div class="compare-col bad"><span class="eyebrow">Tự phê bình hỏng</span><ul><li>Cùng ngữ cảnh tạo &amp; phê → evaluator dễ bị neo vào lý lẽ và giả định của bản nháp</li><li>Phê bình mơ hồ: "cải thiện đi" → sửa lung tung</li><li>Lặp không có tiêu chí dừng → đốt token dù điểm eval không tăng</li></ul></div>
-            <div class="compare-col good"><span class="eyebrow">Reflection tốt</span><ul><li>Người phê bình tách khỏi quá trình tạo: context riêng, rubric định trước, không thấy phần tự-biện hộ</li><li>Phê bình cụ thể, hành động được: "đoạn 2 mâu thuẫn với đoạn 4"</li><li>Dừng khi điểm eval không tăng đủ, không còn lỗi mới, hoặc chạm ngân sách</li></ul></div>
+            <div class="compare-col bad"><span class="eyebrow">Tự phê bình hỏng</span><ul><li>Cùng ngữ cảnh tạo &amp; phê → evaluator dễ bị neo vào lý lẽ và giả định của bản nháp</li><li>Phê bình mơ hồ: "cải thiện đi" → sửa lung tung</li><li>Lặp không có tiêu chí dừng → đốt token dù điểm eval không tăng</li><li><strong>Position bias</strong>: đảo thứ tự hai bản là đổi người thắng — <a href="https://arxiv.org/abs/2305.17926" target="_blank" rel="noopener">Wang 2305.17926</a> lật được kết quả ở 66/80 câu hỏi chỉ bằng hoán vị; <a href="https://arxiv.org/abs/2306.05685" target="_blank" rel="noopener">Zheng 2306.05685</a> liệt nó là hạn chế đầu bảng của LLM-as-judge.</li><li><strong>Verbosity / length bias</strong>: bản dài hơn được chấm cao hơn dù không hay hơn (<a href="https://arxiv.org/abs/2404.04475" target="_blank" rel="noopener">Dubois 2404.04475</a>).</li><li><strong>Self-preference bias</strong>: model nhận ra output của chính nó và ưu ái nó (<a href="https://arxiv.org/abs/2404.13076" target="_blank" rel="noopener">Panickssery 2404.13076</a>) — lý do đừng để maker kiêm checker.</li></ul></div>
+            <div class="compare-col good"><span class="eyebrow">Reflection tốt</span><ul><li>Người phê bình tách khỏi quá trình tạo: context riêng, rubric định trước, không thấy phần tự-biện hộ</li><li>Phê bình cụ thể, hành động được: "đoạn 2 mâu thuẫn với đoạn 4"</li><li>Dừng khi điểm eval không tăng đủ, không còn lỗi mới, hoặc chạm ngân sách</li><li>Chống position bias: chấm hai chiều rồi lấy trung bình, hoặc hoán vị vài lần. Kể cả khi chấm từng bản một theo rubric, position bias vẫn còn — model nghiêng về những mức điểm nằm ở vị trí nhất định trong danh sách rubric (<a href="https://arxiv.org/abs/2602.02219" target="_blank" rel="noopener">arXiv 2602.02219</a>, 02/2026).</li></ul></div>
           </div>
 
           <div class="concept">
@@ -827,14 +851,118 @@ CẤM: tuyên bố "đã xong" khi chưa dán output verifier đạt.</pre>
           <div class="quiz" data-correct="1">
             <span class="eyebrow">Kiểm tra nhanh</span>
             <p class="quiz-q">Bạn dựng loop "agent viết đoạn giới thiệu, rồi tự chấm điểm 1–10 và tự sửa tới khi đạt 10/10". Nó chạy 12 vòng, mỗi vòng tự cho 9–10 điểm, nhưng chất lượng không cải thiện. Sửa thế nào?</p>
-            <button class="quiz-opt" onclick="quizPick(this,0)"><span class="quiz-letter">A</span><span>Hạ ngưỡng xuống 8/10 để nó dừng sớm hơn.</span></button>
-            <button class="quiz-opt" onclick="quizPick(this,1)"><span class="quiz-letter">B</span><span>Ba lỗi cần sửa: (1) người chấm chung ngữ cảnh với người viết → tách evaluator; (2) "điểm 1–10" quá mơ hồ → dùng rubric cụ thể hoặc verifier lai; (3) không có điểm dừng → dừng khi hết lỗi mới, điểm không tăng đủ hoặc chạm ngân sách.</span></button>
-            <button class="quiz-opt" onclick="quizPick(this,2)"><span class="quiz-letter">C</span><span>Tăng số vòng để nó có thêm cơ hội đạt 10.</span></button>
-            <button class="quiz-opt" onclick="quizPick(this,3)"><span class="quiz-letter">D</span><span>Đổi sang model mạnh nhất để chấm điểm chính xác hơn.</span></button>
-            <div class="quiz-feedback" data-explain="Loop này hỏng cả ba điều kiện của reflection tốt. Tự chấm điểm = cùng ngữ cảnh tạo & đánh giá → model bảo vệ chính mình, cho điểm cao. 'Điểm 1–10' là tín hiệu mơ hồ, không hành động được. Và không có điểm dừng thực chất. Sửa: tách người phê bình (độc lập, prompt chỉ-tìm-lỗi-cụ-thể), thay điểm số bằng rubric/verifier lai, và dừng khi lợi ích mang lại giảm dần. Vòng thứ 13 hay model mạnh nhất vẫn tự chấm trong cùng ngữ cảnh — cái hỏng nằm ở cấu trúc phản tư, không ở sức model."></div>
+            <button class="quiz-opt" onclick="quizPick(this,0)"><span class="quiz-letter">A</span><span>Hạ ngưỡng xuống 8/10 và thêm trần 5 vòng: loop sẽ dừng sớm, khỏi đốt token cho những vòng không cải thiện gì.</span></button>
+            <button class="quiz-opt" onclick="quizPick(this,1)"><span class="quiz-letter">B</span><span>Tách evaluator ra context riêng, thay "điểm 1–10" bằng rubric cụ thể, và đặt điểm dừng theo mức cải thiện + ngân sách.</span></button>
+            <button class="quiz-opt" onclick="quizPick(this,2)"><span class="quiz-letter">C</span><span>Cho nó tự chấm hai lần mỗi vòng rồi lấy điểm thấp hơn, để bù lại xu hướng tự khen của chính người viết.</span></button>
+            <button class="quiz-opt" onclick="quizPick(this,3)"><span class="quiz-letter">D</span><span>Dùng model mạnh nhất cho vai chấm điểm: judge càng giỏi thì điểm càng bám sát chất lượng thật của bản nháp.</span></button>
+            <div class="quiz-feedback" data-explain="Loop này hỏng cả ba điều kiện của reflection tốt: cùng ngữ cảnh tạo &amp; chấm, tín hiệu mơ hồ, không có điểm dừng. (A) tiết kiệm được tiền nhưng không sửa gì cả — bạn chỉ dừng sớm hơn ở cùng một chất lượng. (C) hai lượt tự chấm vẫn là cùng một model đọc cùng một context: self-preference bias không mất đi khi lặp lại, chỉ tách vai mới gỡ được. (D) judge mạnh hơn vẫn đang tự chấm chính mình — cái hỏng nằm ở cấu trúc phản tư, không ở sức model. Sửa: tách người phê bình (context riêng, prompt chỉ-tìm-lỗi-cụ-thể), thay điểm số bằng rubric, và dừng khi lợi ích giảm dần."></div>
           </div>
         </div>
         <div class="lesson-nav" data-navfor="m5-l1"></div>
+      </article>
+
+      <article class="lesson" id="m5-l2" data-lesson>
+        <div class="lesson-head">
+          <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px">
+            <div><span class="eyebrow">Bài 5.2</span><h3>Lab · Dựng loop tự sửa đầu tiên</h3></div>
+            <div style="display:flex;gap:8px;flex-wrap:wrap"><span class="level-badge">L3 · Thực hành <span class="level-dots"><i class="on"></i><i class="on"></i><i class="on"></i><i></i><i></i></span></span></div>
+          </div>
+        </div>
+        <div class="lesson-body">
+          <div class="objectives">
+            <span class="eyebrow">Học xong bài này bạn có thể</span>
+            <ul>
+              <li>Viết ra vòng lặp agent tối thiểu và chỉ được bốn nhịp nằm ở dòng nào.</li>
+              <li>Đóng vòng bằng một verifier chạy được, thay vì bằng câu "đã xong" của model.</li>
+              <li>Chạy loop đó trên một việc thật của bạn dưới ba biên: max vòng, trần chi phí, một verifier.</li>
+            </ul>
+          </div>
+          <p>Năm chương vừa rồi toàn là nguyên lý. Bây giờ gõ nó ra. Chỗ nhiều người bất ngờ: bản tối thiểu chỉ khoảng hai mươi dòng, và mười lăm dòng trong đó là thứ bạn đã viết cả trăm lần — gọi hàm, duyệt danh sách, nối mảng. Phần khiến nó thành một <em>agent</em> nằm ở bốn dòng chú thích bên phải và ở hai dòng cuối.</p>
+
+          <div class="code-card">
+            <div class="prompt-head"><span>🧩 Vòng lặp agent tối thiểu · pseudocode Python</span><span>bốn nhịp + verifier đóng vòng</span></div>
+            <pre>while iters &lt; MAX_ITERS and cost &lt; MAX_COST:
+    resp = model(messages, tools=TOOLS)             # PLAN
+    if resp.stop_reason != "tool_use":
+        break
+    for call in resp.tool_calls:                    # ACT
+        result = run_tool(call)                     # OBSERVE
+        messages.append(tool_result(call.id, result))
+    iters += 1
+
+verdict = run_verifier()                            # đóng vòng (C4)
+if not verdict.ok:
+    messages.append(verdict.errors)                 # REFLECT — lỗi cụ thể, không phải "sai rồi"</pre>
+          </div>
+
+          <p>Đọc lại đoạn trên và đối chiếu với những gì bốn chương trước cảnh báo. <span class="mono">MAX_ITERS</span> và <span class="mono">MAX_COST</span> ở ngay dòng đầu là bốn biên của Chương 3 — chúng phải là <em>điều kiện của vòng lặp</em>, không phải một câu dặn trong prompt. Dòng <span class="mono">break</span> là dừng-thành-công. Dòng <span class="mono">run_verifier()</span> là toàn bộ Chương 4 nén lại: nếu bạn xoá đúng dòng đó, cái còn lại vẫn chạy, vẫn tốn tiền, và vẫn kết thúc bằng một lời tuyên bố không ai kiểm.</p>
+
+          <figure class="figure">
+            <svg viewBox="0 0 660 220" role="img" aria-label="Ba chỗ người kỹ sư cầm dây trong vòng lặp tối thiểu: hộp biên cứng MAX_ITERS và MAX_COST nằm trên điều kiện của vòng while và trỏ xuống hộp vòng while nơi model quyết từng bước; từ vòng while mũi tên sang phải tới hộp verifier chạy ở tiến trình của bạn; verifier đạt thì mũi tên xanh sang hộp xong; verifier không đạt thì đường phản hồi vòng xuống dưới rồi ngược lên vào vòng while mang theo lỗi cụ thể">
+              <defs>
+                <marker id="m5l2-a" markerWidth="9" markerHeight="9" refX="7" refY="4.5" orient="auto"><path d="M0 0 L9 4.5 L0 9 z" fill="var(--accent-2)"/></marker>
+                <marker id="m5l2-g" markerWidth="9" markerHeight="9" refX="7" refY="4.5" orient="auto"><path d="M0 0 L9 4.5 L0 9 z" fill="var(--success)"/></marker>
+              </defs>
+              <rect class="dgm-accent" x="20" y="18" width="150" height="46" rx="10" stroke-width="2"/>
+              <text class="dgm-ink" x="95" y="38" text-anchor="middle" font-size="11.5" font-weight="700">BIÊN CỨNG</text>
+              <text class="dgm-ink2" x="95" y="55" text-anchor="middle" font-size="10" font-family="IBM Plex Mono">MAX_ITERS · MAX_COST</text>
+              <path class="dgm-flow" d="M95 64 V84" stroke-width="2.5" marker-end="url(#m5l2-a)"/>
+              <rect class="dgm-box" x="20" y="88" width="150" height="58" rx="10"/>
+              <text class="dgm-ink" x="95" y="110" text-anchor="middle" font-size="11.5" font-weight="700">VÒNG WHILE</text>
+              <text class="dgm-ink2" x="95" y="127" text-anchor="middle" font-size="10" font-family="IBM Plex Mono">model quyết bước</text>
+              <path class="dgm-flow" d="M170 117 H246" stroke-width="2.5" marker-end="url(#m5l2-a)"/>
+              <text class="dgm-ink2" x="330" y="80" text-anchor="middle" font-size="10" font-family="IBM Plex Mono">agent không ghi được vào đây</text>
+              <rect x="250" y="88" width="160" height="58" rx="10" style="fill:color-mix(in srgb,var(--brand-gold) 16%,var(--surface));stroke:var(--warning);stroke-width:2"/>
+              <text class="dgm-ink" x="330" y="110" text-anchor="middle" font-size="11.5" font-weight="700">VERIFIER</text>
+              <text class="dgm-ink2" x="330" y="127" text-anchor="middle" font-size="10" font-family="IBM Plex Mono">tiến trình của bạn</text>
+              <text x="448" y="108" text-anchor="middle" font-size="10" font-family="IBM Plex Mono" fill="var(--success)">đạt</text>
+              <path d="M410 117 H486" fill="none" stroke="var(--success)" stroke-width="2.5" marker-end="url(#m5l2-g)"/>
+              <rect x="490" y="94" width="150" height="46" rx="10" style="fill:var(--success-bg);stroke:var(--success);stroke-width:2"/>
+              <text class="dgm-ink" x="565" y="122" text-anchor="middle" font-size="12.5" font-weight="700">XONG ✓</text>
+              <path class="dgm-flow" d="M330 146 V186 H95 V146" stroke-width="2.5" marker-end="url(#m5l2-a)"/>
+              <text class="dgm-ink2" x="250" y="206" text-anchor="middle" font-size="10" font-family="IBM Plex Mono">không đạt → verdict.errors: tên ca, dòng, kỳ vọng, thực nhận</text>
+            </svg>
+            <figcaption><b>Hình 5.2</b> — Ba chỗ bạn cầm dây trong hai mươi dòng đó. <b>Biên</b> nằm trên điều kiện của <span class="mono">while</span>, nên model không thương lượng được với nó. <b>Verifier</b> chạy ở tiến trình của bạn, nên agent không tắt hay sửa được nó. <b>Đường phản hồi</b> mang lỗi cụ thể quay lại, và chất lượng của đúng dòng chữ đó quyết định loop hội tụ nhanh hay quanh quẩn. Phần ở giữa, ai cũng viết được.</figcaption>
+          </figure>
+
+          <div class="callout warn"><div class="callout-title">Ba chỗ bản tối giản này hay bị viết sai</div><p><strong>(1) Verifier gọi bên trong vòng lặp bằng chính agent.</strong> Nếu <span class="mono">run_verifier()</span> chỉ là một tool agent tự chọn gọi hay không, nó sẽ bỏ qua khi tiện. Verifier phải chạy ở luồng của <em>bạn</em>. <strong>(2) Trả lỗi dạng tóm tắt.</strong> <span class="mono">verdict.errors</span> phải là output gốc của test — tên ca, dòng, kỳ vọng, thực nhận — chứ không phải "một số test fail". <strong>(3) Đếm <span class="mono">cost</span> sau khi loop kết thúc.</strong> Muốn trần chi phí có tác dụng thì phải cộng dồn ngay sau mỗi lượt gọi model, từ usage mà API trả về.</p></div>
+
+          <div class="table-wrap">
+            <table>
+              <thead><tr><th style="width:78px">Bước</th><th>Làm gì trong lab này</th><th>Bằng chứng bước đó xong</th></tr></thead>
+              <tbody>
+                <tr><td><span class="badge">1</span></td><td>Chọn một việc nhỏ, thật, có thể sai mà không đau: một hàm tiện ích đang thiếu ca biên, một script dọn dữ liệu, một bộ type còn lỏng.</td><td>Bạn viết được "xong nghĩa là gì" thành một câu kiểm được.</td></tr>
+                <tr><td><span class="badge">2</span></td><td>Viết verifier <em>trước</em>: một lệnh chạy được, exit code 0 là đạt. Test, typecheck, schema, hoặc đối chiếu với hệ thống cũ đều được.</td><td>Bạn chạy lệnh đó bằng tay và nó đang <strong>đỏ</strong>.</td></tr>
+                <tr><td><span class="badge">3</span></td><td>Đặt ba biên trước khi chạy: <span class="mono">MAX_ITERS</span> (bắt đầu từ 8), trần chi phí, và đúng một verifier.</td><td>Ba con số nằm trong code, không nằm trong đầu bạn.</td></tr>
+                <tr><td><span class="badge">4</span></td><td>Chạy. Không can thiệp giữa chừng — bạn đang đo cái loop, không đang đôi tay giúp nó.</td><td>Log đủ để dựng lại từng vòng: prompt vào, tool gọi, verifier ra.</td></tr>
+                <tr><td><span class="badge">5</span></td><td>Đọc log và trả lời: nó dừng vì <em>đạt</em> hay vì <em>chạm biên</em>? Vòng nào không tiến bộ so với vòng trước?</td><td>Bạn chỉ được đúng một chỗ để sửa cho lần chạy sau.</td></tr>
+              </tbody>
+            </table>
+          </div>
+
+          <p>Nếu bạn chưa muốn viết code, cùng cấu trúc đó chạy được bằng <em>một prompt</em> với bất kỳ coding agent nào — dùng template ở <a href="#m5-l1">bài trước</a>. Nó có đủ các mảnh: mục tiêu kiểm được, verifier chạy mỗi vòng, biên, và dòng cấm tuyên bố xong khi chưa dán output verifier. Bản prompt dạy bạn <em>kỷ luật</em>; bản code dạy bạn <em>biên nằm ở đâu</em> — biên trong prompt là lời đề nghị, biên trong <span class="mono">while</span> là luật.</p>
+
+          <div class="exercise">
+            <h5>Bài tập · Chạy loop của bạn hai lần</h5>
+            <p>Làm đủ năm bước ở bảng trên với một việc của chính bạn, dưới đúng ba biên: <strong>max 8 vòng · một trần chi phí bạn tự đặt · đúng một verifier</strong>. Ghi lại: số vòng nó thực dùng, chi phí, và lý do dừng. Rồi <em>sửa đúng một thứ</em> — thường là chất lượng thông báo lỗi trả về — và chạy lại. So hai lần chạy: số vòng tới lúc xanh có giảm không? Nếu không giảm, verifier của bạn đang nói điều gì đó mà agent không hành động được, và đó mới là thứ cần sửa tiếp.</p>
+          </div>
+
+          <div class="takeaway">
+            <span class="eyebrow"><svg aria-hidden="true" focusable="false" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 2v6m0 8v6M4.9 4.9l4.2 4.2m5.8 5.8l4.2 4.2M2 12h6m8 0h6M4.9 19.1l4.2-4.2m5.8-5.8l4.2-4.2"/></svg>Takeaway</span>
+            <p>Một loop tự hành là <span class="hl">hai mươi dòng code</span> — phần còn lại của nghề nằm ở những thứ bao quanh nó. <span class="hl">Biên phải là điều kiện của vòng lặp</span>, không phải một câu dặn trong prompt; <span class="hl">verifier phải chạy ở luồng của bạn</span>, không phải một tool agent tự chọn gọi. Thước đo một lần lab thành công không phải "nó xong" mà là <span class="hl">số vòng tới lúc xanh giảm đi</span> sau khi bạn sửa thông báo lỗi.</p>
+          </div>
+
+          <div class="quiz" data-correct="3">
+            <span class="eyebrow">Kiểm tra nhanh</span>
+            <p class="quiz-q">Lab của bạn chạy hết 8 vòng rồi dừng vì chạm <span class="mono">MAX_ITERS</span>; test vẫn đỏ, và log cho thấy bốn vòng cuối sửa đi sửa lại cùng một chỗ. Việc đầu tiên nên làm là gì?</p>
+            <button class="quiz-opt" onclick="quizPick(this,0)"><span class="quiz-letter">A</span><span>Nâng <span class="mono">MAX_ITERS</span> lên 30: nó rõ ràng đang tiến bộ dần, chỉ là chưa đủ vòng để tới đích.</span></button>
+            <button class="quiz-opt" onclick="quizPick(this,1)"><span class="quiz-letter">B</span><span>Bỏ <span class="mono">MAX_ITERS</span> và chỉ giữ trần chi phí: để tiền quyết định điểm dừng thay vì một con số vòng đặt tuỳ tiện.</span></button>
+            <button class="quiz-opt" onclick="quizPick(this,2)"><span class="quiz-letter">C</span><span>Cho agent quyền sửa file test: bốn vòng loanh quanh thường là dấu hiệu ca test viết sai chứ không phải code sai.</span></button>
+            <button class="quiz-opt" onclick="quizPick(this,3)"><span class="quiz-letter">D</span><span>Đọc đúng cái mà loop nhận được sau mỗi vòng: nếu <span class="mono">verdict.errors</span> không nói rõ ca nào, kỳ vọng gì, nhận gì, hãy sửa nó trước.</span></button>
+            <div class="quiz-feedback" data-explain="Lặp lại cùng một chỗ bốn vòng liền là chữ ký của feedback không hành động được: agent biết 'có gì đó sai' nhưng không biết sai ở đâu, nên nó đoán lại. (A) thêm vòng cho một loop đang không tiến bộ chỉ nhân chi phí — và chi phí tăng theo tổng dồn (Chương 3), không tuyến tính. (B) bỏ biên vòng thì loop vẫn kẹt, chỉ là bạn phát hiện muộn hơn và tốn hơn. (C) là đúng thứ Chương 4 cấm: verifier read-only với agent — cho nó sửa test là mở đường cho reward hacking, và bạn mất luôn cái thước. Việc đầu tiên luôn là nhìn vào chất lượng tín hiệu quay lại, vì đó là thứ quyết định tốc độ hội tụ."></div>
+          </div>
+        </div>
+        <div class="lesson-nav" data-navfor="m5-l2"></div>
       </article>
 
       <!-- ============ CHƯƠNG 6 ============ -->
@@ -870,7 +998,7 @@ CẤM: tuyên bố "đã xong" khi chưa dán output verifier đạt.</pre>
               </tbody>
             </table>
           </div>
-          <div class="callout insight"><div class="callout-title">Nguyên tắc chọn</div><p>Khi bạn <em>biết trước</em> các bước (fan-out N file, rồi verify từng cái), hãy đặt luồng vào <strong>code</strong> — đây chính là "Dynamic Workflows" của Claude Code: script tất định điều phối nhiều agent. Khi bạn <em>không biết trước</em> hình dạng (khám phá một bug lạ), để model điều phối. Quy tắc: <em>tất định hóa mọi thứ có thể tất định; chỉ giao cho phán đoán model phần thật sự cần phán đoán.</em></p></div>
+          <div class="callout insight"><div class="callout-title">Nguyên tắc chọn</div><p>Khi bạn <em>biết trước</em> các bước (fan-out N file, rồi verify từng cái), hãy đặt luồng vào <strong>code</strong> — đây chính là <a href="https://code.claude.com/docs/en/workflows" target="_blank" rel="noopener">"Dynamic Workflows" của Claude Code</a>: một script JavaScript điều phối hàng chục tới hàng trăm subagent, và trong bảng so sánh của chính tài liệu đó, ô "ai quyết định bước kế tiếp" ghi là <em>the script</em> chứ không phải model. Khi bạn <em>không biết trước</em> hình dạng (khám phá một bug lạ), để model điều phối. Quy tắc: <em>tất định hóa mọi thứ có thể tất định; chỉ giao cho phán đoán model phần thật sự cần phán đoán.</em></p></div>
 
           <figure class="figure">
             <svg viewBox="0 0 660 210" role="img" aria-label="Hai hình dạng điều phối: fan-out một orchestrator chia việc song song cho nhiều worker rồi gộp; pipeline các item chảy qua nhiều tầng độc lập">
@@ -878,9 +1006,9 @@ CẤM: tuyên bố "đã xong" khi chưa dán output verifier đạt.</pre>
               <text class="dgm-ink" x="150" y="20" text-anchor="middle" font-size="12" font-weight="700">FAN-OUT (song song)</text>
               <rect class="dgm-accent" x="112" y="30" width="76" height="34" rx="8" stroke-width="2"/>
               <text class="dgm-ink" x="150" y="52" text-anchor="middle" font-size="10" font-family="IBM Plex Mono">điều phối</text>
-              <rect class="dgm-box" x="40" y="96" width="60" height="30" rx="7"/><text class="dgm-ink2" x="70" y="116" text-anchor="middle" font-size="9" font-family="IBM Plex Mono">worker</text>
-              <rect class="dgm-box" x="120" y="96" width="60" height="30" rx="7"/><text class="dgm-ink2" x="150" y="116" text-anchor="middle" font-size="9" font-family="IBM Plex Mono">worker</text>
-              <rect class="dgm-box" x="200" y="96" width="60" height="30" rx="7"/><text class="dgm-ink2" x="230" y="116" text-anchor="middle" font-size="9" font-family="IBM Plex Mono">worker</text>
+              <rect class="dgm-box" x="40" y="96" width="60" height="30" rx="7"/><text class="dgm-ink2" x="70" y="116" text-anchor="middle" font-size="10" font-family="IBM Plex Mono">worker</text>
+              <rect class="dgm-box" x="120" y="96" width="60" height="30" rx="7"/><text class="dgm-ink2" x="150" y="116" text-anchor="middle" font-size="10" font-family="IBM Plex Mono">worker</text>
+              <rect class="dgm-box" x="200" y="96" width="60" height="30" rx="7"/><text class="dgm-ink2" x="230" y="116" text-anchor="middle" font-size="10" font-family="IBM Plex Mono">worker</text>
               <path class="dgm-flow" d="M135 64 L70 94" stroke-width="2" marker-end="url(#al6)"/>
               <path class="dgm-flow" d="M150 64 V94" stroke-width="2" marker-end="url(#al6)"/>
               <path class="dgm-flow" d="M165 64 L230 94" stroke-width="2" marker-end="url(#al6)"/>
@@ -891,19 +1019,19 @@ CẤM: tuyên bố "đã xong" khi chưa dán output verifier đạt.</pre>
               <path class="dgm-flow" d="M230 126 L160 156" stroke-width="2" marker-end="url(#al6)"/>
               <line class="dgm-line" x1="330" y1="20" x2="330" y2="196" stroke-width="1"/>
               <text class="dgm-ink" x="500" y="20" text-anchor="middle" font-size="12" font-weight="700">PIPELINE (theo tầng)</text>
-              <rect class="dgm-box" x="376" y="90" width="72" height="34" rx="8"/><text class="dgm-ink2" x="412" y="111" text-anchor="middle" font-size="9.5" font-family="IBM Plex Mono">tầng 1</text>
-              <rect class="dgm-accent" x="464" y="90" width="72" height="34" rx="8" stroke-width="2"/><text class="dgm-ink2" x="500" y="111" text-anchor="middle" font-size="9.5" font-family="IBM Plex Mono">tầng 2</text>
-              <rect class="dgm-box" x="552" y="90" width="72" height="34" rx="8"/><text class="dgm-ink2" x="588" y="111" text-anchor="middle" font-size="9.5" font-family="IBM Plex Mono">tầng 3</text>
+              <rect class="dgm-box" x="376" y="90" width="72" height="34" rx="8"/><text class="dgm-ink2" x="412" y="111" text-anchor="middle" font-size="10" font-family="IBM Plex Mono">tầng 1</text>
+              <rect class="dgm-accent" x="464" y="90" width="72" height="34" rx="8" stroke-width="2"/><text class="dgm-ink2" x="500" y="111" text-anchor="middle" font-size="10" font-family="IBM Plex Mono">tầng 2</text>
+              <rect class="dgm-box" x="552" y="90" width="72" height="34" rx="8"/><text class="dgm-ink2" x="588" y="111" text-anchor="middle" font-size="10" font-family="IBM Plex Mono">tầng 3</text>
               <path class="dgm-flow" d="M448 107 H462" stroke-width="2" marker-end="url(#al6)"/>
               <path class="dgm-flow" d="M536 107 H550" stroke-width="2" marker-end="url(#al6)"/>
-              <text class="dgm-ink2" x="500" y="150" text-anchor="middle" font-size="9" font-family="IBM Plex Mono">mỗi item chảy độc lập, không chờ nhau</text>
+              <text class="dgm-ink2" x="500" y="150" text-anchor="middle" font-size="10" font-family="IBM Plex Mono">mỗi item chảy độc lập, không chờ nhau</text>
             </svg>
             <figcaption><b>Hình 6.1</b> — Hai hình dạng. <b>Fan-out</b>: chia việc song song rồi gộp — cần <em>barrier</em> khi bước sau cần <em>tất cả</em> kết quả (dedup, đếm tổng). <b>Pipeline</b>: mỗi item chảy qua các tầng độc lập, không chờ nhau — nhanh hơn khi các item không phụ thuộc nhau. Mặc định chọn pipeline; chỉ dùng barrier khi thật sự cần gom hết.</figcaption>
           </figure>
 
           <div class="callout warn"><div class="callout-title">Chi phí song song là chi phí song song</div><p>Fan-out N agent = đốt rate limit &amp; token gấp N. Song song hóa mua tốc độ bằng tiền &amp; hạn mức, không phải miễn phí. Và mỗi nhánh vẫn cần verifier riêng (Chương 4) — nhiều agent không có nghĩa là bỏ qua đóng vòng, mà là <em>nhân số verifier lên</em>.</p></div>
 
-          <div class="callout insight"><div class="callout-title">Fan-out thắng khi bề mặt lỗi độc lập</div><p>Anthropic báo cáo (02/2026) một thử nghiệm cho 16 agent chạy song song để dựng một trình biên dịch C: fan-out có lợi rõ vì bề mặt lỗi <em>độc lập</em> — mỗi agent bám một test fail khác nhau nên các nhánh hiếm khi giẫm chân nhau. Khi nhóm chuyển sang một bài toán monolithic hơn (biên dịch trọn vẹn nhân Linux bằng chính compiler vừa dựng), cả 16 agent vấp <em>cùng</em> một lỗi chặn; song song không mua thêm được gì ngoài chi phí. Điều phối trong thử nghiệm đó là phi tập trung: các agent dùng chính git và một file lock để giành phần việc, không có agent điều phối trung tâm. Câu hỏi nên đặt trước mỗi lần fan-out: <strong>các nhánh có thể fail vì những lý do khác nhau không?</strong> Nếu không, đó nhiều khả năng là việc tuần tự đội lốt việc song song.</p></div>
+          <div class="callout insight"><div class="callout-title">Fan-out thắng khi bề mặt lỗi độc lập</div><p>Anthropic báo cáo (02/2026) một thử nghiệm cho 16 agent chạy song song để dựng một trình biên dịch C: fan-out có lợi rõ vì bề mặt lỗi <em>độc lập</em> — mỗi agent bám một test fail khác nhau nên các nhánh hiếm khi giẫm chân nhau. Khi nhóm chuyển sang một bài toán monolithic hơn (biên dịch trọn vẹn nhân Linux bằng chính compiler vừa dựng), cả 16 agent vấp <em>cùng</em> một lỗi chặn; song song không mua thêm được gì ngoài chi phí. Điều phối trong thử nghiệm đó là phi tập trung: các agent dùng chính git và một file lock để giành phần việc, không có agent điều phối trung tâm. Cách gỡ không phải bỏ song song, mà là <strong>chế lại bề mặt lỗi cho độc lập trở lại</strong>: tác giả viết một test harness mới, biên dịch phần lớn nhân bằng GCC và chỉ một tập file ngẫu nhiên bằng compiler của Claude — mỗi agent lại có một lỗi riêng để bám. Câu hỏi nên đặt trước mỗi lần fan-out: <strong>các nhánh có thể fail vì những lý do khác nhau không?</strong> Nếu không, đó nhiều khả năng là việc tuần tự đội lốt việc song song — và việc cần làm là đi tách bài toán, đừng thêm agent.</p></div>
 
           <div class="exercise">
             <h5>Bài tập · Tất định hóa một việc lặp</h5>
@@ -918,11 +1046,11 @@ CẤM: tuyên bố "đã xong" khi chưa dán output verifier đạt.</pre>
           <div class="quiz" data-correct="2">
             <span class="eyebrow">Kiểm tra nhanh</span>
             <p class="quiz-q">Bạn cần review bảo mật cho 40 endpoint theo cùng một checklist. Cách điều phối đáng tin cậy &amp; tái lập nhất?</p>
-            <button class="quiz-opt" onclick="quizPick(this,0)"><span class="quiz-letter">A</span><span>Một agent lớn tự quyết review endpoint nào trước, tự đi hết 40 cái trong một phiên.</span></button>
-            <button class="quiz-opt" onclick="quizPick(this,1)"><span class="quiz-letter">B</span><span>Fan-out 40 agent cùng lúc, gộp tất cả rồi mới xử lý — càng song song càng nhanh.</span></button>
-            <button class="quiz-opt" onclick="quizPick(this,2)"><span class="quiz-letter">C</span><span>Hình dạng đã biết → workflow tất định: code lặp qua 40 endpoint như pipeline, mỗi endpoint một agent review + một agent verify, chạy độc lập. Tái lập, debug được, kiểm soát chi phí; chỉ gom (barrier) ở cuối nếu cần dedup phát hiện.</span></button>
-            <button class="quiz-opt" onclick="quizPick(this,3)"><span class="quiz-letter">D</span><span>Làm tay — 40 endpoint quá nhiều cho AI.</span></button>
-            <div class="quiz-feedback" data-explain="Hình dạng đã biết trước (cùng checklist, 40 item) → đừng giao luồng điều khiển cho phán đoán model. Đặt nó vào code: một workflow tất định lặp qua 40 endpoint dạng pipeline, mỗi cái review + verify độc lập. Việc này tái lập được (chạy lại ra kết quả như nhau), debug được (biết endpoint nào ở tầng nào), và kiểm soát được chi phí. Một agent tự đi hết dễ trôi & phình context; fan-out 40 cùng lúc với barrier sớm thì phí — pipeline để mỗi item chảy độc lập tối ưu hơn."></div>
+            <button class="quiz-opt" onclick="quizPick(this,0)"><span class="quiz-letter">A</span><span>Một agent lớn tự quyết thứ tự và đi hết 40 endpoint trong một phiên — nó thấy toàn cảnh nên bắt được lỗi xuyên endpoint.</span></button>
+            <button class="quiz-opt" onclick="quizPick(this,1)"><span class="quiz-letter">B</span><span>Fan-out 40 agent cùng lúc và đặt một barrier gộp hết kết quả trước khi xử lý — song song tối đa thì xong sớm nhất.</span></button>
+            <button class="quiz-opt" onclick="quizPick(this,2)"><span class="quiz-letter">C</span><span>Workflow tất định: code lặp qua 40 endpoint dạng pipeline, mỗi endpoint một agent review + một agent verify, chạy độc lập.</span></button>
+            <button class="quiz-opt" onclick="quizPick(this,3)"><span class="quiz-letter">D</span><span>Fan-out theo module thay vì theo endpoint, để mỗi agent giữ đủ ngữ cảnh một module và không phải đọc lại code chung.</span></button>
+            <div class="quiz-feedback" data-explain="Hình dạng đã biết trước (cùng checklist, 40 item) → đừng giao luồng điều khiển cho phán đoán model; đặt nó vào code. (A) 'thấy toàn cảnh' nghe hợp lý nhưng một phiên 40 endpoint sẽ phình context tới mức tín hiệu loãng, và chạy lại lần hai ra một đường khác — mất tái lập. (B) barrier sớm bắt mọi endpoint chờ endpoint chậm nhất mà chẳng được gì: chỉ dùng barrier khi bước sau CẦN đủ mọi kết quả, ví dụ dedup ở cuối. (D) gom theo module giảm được chút token nhưng lại làm hạt việc to nhỏ không đều và khó truy một endpoint cụ thể; pipeline theo endpoint cho hạt đều, tái lập và debug được."></div>
           </div>
         </div>
         <div class="lesson-nav" data-navfor="m6-l1"></div>
@@ -947,7 +1075,7 @@ CẤM: tuyên bố "đã xong" khi chưa dán output verifier đạt.</pre>
           <p>Bạn spawn ba con scout đọc song song ba vùng code, rồi ngồi chờ. 30 giây: trống. 60 giây: trống. 180 giây: vẫn trống. Mở log của mấy con nhỏ ra: chúng <em>không</em> đọc code. Chúng gọi <span class="mono">wait_agent</span> để chờ nhau, cố <span class="mono">close_agent</span> lẫn nhau, bình luận về nhau, rồi tự tắt. Parent không nhận được một dòng phát hiện nào.</p>
           <p>Đây là một báo cáo có thật trên tracker của Codex CLI (issue #26822, 06/06/2026): scout được spawn với context rỗng và prompt đọc-thôi, nhưng lại hành xử như orchestrator. Người báo cáo không kết luận model kém — họ chỉ ra rằng <strong>prompt của scout không nói nó là lá</strong>, mà trong tay nó vẫn có tool điều phối. Bài 6.1 nói về <em>hình dạng</em>; bài này nói về thứ thường nên viết ra <em>trước khi</em> spawn con đầu tiên.</p>
 
-          <div class="callout warn"><div class="callout-title">Con số 90,2% đi kèm một con số 15×</div><p>Anthropic công bố (13/06/2025) một hệ multi-agent (Opus 4 làm lead, các subagent Sonnet 4) hơn single-agent Opus 4 <strong>90,2%</strong> trên eval <em>nghiên cứu</em> nội bộ của họ. Cùng bài đó ghi: agent dùng ~4× token so với chat, multi-agent ~15×, và <em>"token usage by itself explains 80% of the variance"</em>. Đọc hai con số cạnh nhau thì một phần không nhỏ của khoảng cách kia là <strong>tiền</strong> chứ chưa hẳn là topology. Một so sánh không giữ ngân sách token gần nhau thì khó nói là đang đo topology. Cũng chính bài đó viết: <em>"most coding tasks involve fewer truly parallelizable tasks than research"</em>. Đây là eval nghiên cứu của năm 2025, không phải eval code — nên mang sang việc code với sự dè dặt.</p></div>
+          <div class="callout warn"><div class="callout-title">Con số 90,2% đi kèm một con số 15×</div><p>Anthropic công bố (13/06/2025) một hệ multi-agent (Opus 4 làm lead, các subagent Sonnet 4) hơn single-agent Opus 4 <strong>90,2%</strong> trên eval <em>nghiên cứu</em> nội bộ của họ. Đọc kỹ phạm vi: cùng bài đó nói hệ multi-agent mạnh <em>đặc biệt ở nhóm câu hỏi duyệt rộng</em> (breadth-first), và ví dụ đi ngay sau con số 90,2% là "liệt kê toàn bộ thành viên hội đồng quản trị của các công ty ngành IT trong S&amp;P 500" — một việc chia nhỏ được thành nhiều nhánh tra cứu độc lập. Cùng bài đó ghi: agent dùng ~4× token so với chat, multi-agent ~15×, và <em>"token usage by itself explains 80% of the variance"</em> — con số 80% này đo trên <strong>BrowseComp</strong>, không phải trên eval nghiên cứu nội bộ. Đọc hai con số cạnh nhau thì một phần không nhỏ của khoảng cách kia là <strong>tiền</strong> chứ chưa hẳn là topology. Một so sánh không giữ ngân sách token gần nhau thì khó nói là đang đo topology. Cũng chính bài đó viết: <em>"most coding tasks involve fewer truly parallelizable tasks than research"</em>. Đây là eval nghiên cứu của năm 2025, không phải eval code — nên mang sang việc code với sự dè dặt.</p></div>
 
           <div class="compare">
             <div class="compare-col bad"><span class="eyebrow">Dấu hiệu chưa nên fan-out</span><ul>
@@ -982,28 +1110,28 @@ CẤM: tuyên bố "đã xong" khi chưa dán output verifier đạt.</pre>
               <defs><marker id="al62" markerWidth="9" markerHeight="9" refX="7" refY="4.5" orient="auto"><path d="M0 0 L9 4.5 L0 9 z" fill="var(--accent-2)"/></marker></defs>
               <rect class="dgm-accent" x="20" y="100" width="130" height="48" rx="9" stroke-width="2"/>
               <text class="dgm-ink" x="85" y="121" text-anchor="middle" font-size="10.5" font-family="IBM Plex Mono">coordinator</text>
-              <text class="dgm-ink2" x="85" y="137" text-anchor="middle" font-size="8.5" font-family="IBM Plex Mono">giữ approval</text>
+              <text class="dgm-ink2" x="85" y="137" text-anchor="middle" font-size="10" font-family="IBM Plex Mono">giữ approval</text>
               <path class="dgm-flow" d="M150 114 L211 50" stroke-width="2" marker-end="url(#al62)"/>
               <path class="dgm-flow" d="M150 124 H211" stroke-width="2" marker-end="url(#al62)"/>
               <path class="dgm-flow" d="M150 134 L211 198" stroke-width="2" marker-end="url(#al62)"/>
               <rect class="dgm-box" x="215" y="26" width="160" height="44" rx="8"/>
               <text class="dgm-ink" x="295" y="45" text-anchor="middle" font-size="10" font-family="IBM Plex Mono">scout</text>
-              <text class="dgm-ink2" x="295" y="60" text-anchor="middle" font-size="8.5" font-family="IBM Plex Mono">low · fresh</text>
+              <text class="dgm-ink2" x="295" y="60" text-anchor="middle" font-size="10" font-family="IBM Plex Mono">low · fresh</text>
               <rect class="dgm-box" x="215" y="102" width="160" height="44" rx="8"/>
               <text class="dgm-ink" x="295" y="121" text-anchor="middle" font-size="10" font-family="IBM Plex Mono">worker</text>
-              <text class="dgm-ink2" x="295" y="136" text-anchor="middle" font-size="8.5" font-family="IBM Plex Mono">medium · fresh</text>
+              <text class="dgm-ink2" x="295" y="136" text-anchor="middle" font-size="10" font-family="IBM Plex Mono">medium · fresh</text>
               <rect class="dgm-box" x="215" y="178" width="160" height="44" rx="8"/>
               <text class="dgm-ink" x="295" y="197" text-anchor="middle" font-size="10" font-family="IBM Plex Mono">verifier</text>
-              <text class="dgm-ink2" x="295" y="212" text-anchor="middle" font-size="8.5" font-family="IBM Plex Mono">high · fresh</text>
+              <text class="dgm-ink2" x="295" y="212" text-anchor="middle" font-size="10" font-family="IBM Plex Mono">high · fresh</text>
               <line class="dgm-line" x1="378" y1="48" x2="405" y2="48" stroke-width="1.5" stroke-dasharray="3 3"/>
               <line class="dgm-line" x1="378" y1="124" x2="405" y2="124" stroke-width="1.5" stroke-dasharray="3 3"/>
               <line class="dgm-line" x1="378" y1="200" x2="405" y2="200" stroke-width="1.5" stroke-dasharray="3 3"/>
-              <text class="dgm-ink" x="412" y="45" font-size="9" font-weight="700">1 · vai + model + effort</text>
-              <text class="dgm-ink2" x="412" y="59" font-size="8" font-family="IBM Plex Mono">chọn theo việc, không theo thói quen</text>
-              <text class="dgm-ink" x="412" y="121" font-size="9" font-weight="700">2 · context: fresh hay fork</text>
-              <text class="dgm-ink2" x="412" y="135" font-size="8" font-family="IBM Plex Mono">fork kéo theo model + effort parent</text>
-              <text class="dgm-ink" x="412" y="197" font-size="9" font-weight="700">3 · biên spawn</text>
-              <text class="dgm-ink2" x="412" y="211" font-size="8" font-family="IBM Plex Mono">lá không được spawn — phải viết ra</text>
+              <text class="dgm-ink" x="412" y="45" font-size="10" font-weight="700">1 · vai + model + effort</text>
+              <text class="dgm-ink2" x="412" y="59" font-size="10" font-family="IBM Plex Mono">chọn theo việc, không theo thói quen</text>
+              <text class="dgm-ink" x="412" y="121" font-size="10" font-weight="700">2 · context: fresh hay fork</text>
+              <text class="dgm-ink2" x="412" y="135" font-size="10" font-family="IBM Plex Mono">fork kéo theo model + effort parent</text>
+              <text class="dgm-ink" x="412" y="197" font-size="10" font-weight="700">3 · biên spawn</text>
+              <text class="dgm-ink2" x="412" y="211" font-size="10" font-family="IBM Plex Mono">lá không được spawn — phải viết ra</text>
             </svg>
             <figcaption><b>Hình 6.2</b> — Ba núm vặn này có ở cả Codex CLI lẫn Claude Code, dù tên gọi khác nhau. Tên tham số là chi tiết của 07/2026 và nhiều khả năng sẽ đổi; ba câu hỏi thì ở lại: agent con này <b>là ai</b>, nó <b>biết gì</b>, và nó <b>có được đẻ tiếp không</b>.</figcaption>
           </figure>
@@ -1037,11 +1165,11 @@ CẤM: tuyên bố "đã xong" khi chưa dán output verifier đạt.</pre>
           <div class="quiz" data-correct="1">
             <span class="eyebrow">Kiểm tra nhanh</span>
             <p class="quiz-q">Bạn muốn ba scout rẻ quét ba module để tìm chỗ dùng một API sắp bỏ. Bạn cũng muốn chúng "hiểu bối cảnh cuộc thảo luận nãy giờ" nên định fork toàn bộ lịch sử của parent cho cả ba. Vấn đề lớn nhất của cách này là gì?</p>
-            <button class="quiz-opt" onclick="quizPick(this,0)"><span class="quiz-letter">A</span><span>Không có vấn đề gì — fork luôn tốt hơn vì agent con biết nhiều hơn thì làm đúng hơn.</span></button>
-            <button class="quiz-opt" onclick="quizPick(this,1)"><span class="quiz-letter">B</span><span>Fork kéo theo model và effort của parent, nên "scout rẻ" không còn rẻ; và vì lịch sử parent không nói rõ mỗi con là lá, chúng có thể đi điều phối nhau thay vì quét module. Cách đúng: context fresh + brief tự chứa + một dòng biên lá.</span></button>
-            <button class="quiz-opt" onclick="quizPick(this,2)"><span class="quiz-letter">C</span><span>Ba scout là quá ít — nên fan-out mỗi file một agent để chắc chắn không bỏ sót.</span></button>
-            <button class="quiz-opt" onclick="quizPick(this,3)"><span class="quiz-letter">D</span><span>Nên bỏ hẳn scout và để một agent lớn đọc cả ba module trong một phiên.</span></button>
-            <div class="quiz-feedback" data-explain="B đúng, và nó chạm cả hai núm cùng lúc. Núm context: fork toàn bộ lịch sử khiến agent con kế thừa model + effort của parent (override bị bỏ qua — issue #20077/#32031 trên Codex, và fork trong Claude Code cũng luôn chạy model của parent), nên ý định 'scout rẻ' bị chính lựa chọn context phá. Núm biên: lịch sử parent đầy hoạt động điều phối, con đọc được nó rất dễ tự coi mình là cành — đúng kịch bản issue #26822. A sai vì 'biết nhiều hơn' không miễn phí và còn kéo theo giả định sai của parent. C sai vì bề mặt lỗi ở đây không độc lập tới mức đó — mỗi file một agent chỉ nhân hoá đơn. D vứt bỏ đúng chỗ multi-agent có lợi thật: ba module là ba vùng đọc độc lập, vượt một context window."></div>
+            <button class="quiz-opt" onclick="quizPick(this,0)"><span class="quiz-letter">A</span><span>Không có vấn đề: fork chỉ tốn thêm token đầu vào, còn agent con biết nhiều hơn thì tìm đúng chỗ nhanh hơn, bù lại phần đó.</span></button>
+            <button class="quiz-opt" onclick="quizPick(this,1)"><span class="quiz-letter">B</span><span>Fork kéo theo model và effort của parent nên "scout rẻ" hết rẻ; và lịch sử parent không nói con là lá, chúng dễ đi điều phối nhau.</span></button>
+            <button class="quiz-opt" onclick="quizPick(this,2)"><span class="quiz-letter">C</span><span>Ba scout quá ít cho một API sắp bỏ: nên fan-out mỗi file một agent để chắc chắn không sót chỗ nào, rồi gộp danh sách ở cuối.</span></button>
+            <button class="quiz-opt" onclick="quizPick(this,3)"><span class="quiz-letter">D</span><span>Fork được nhưng phải đặt <span class="mono">agents.max_depth = 1</span> trong config để ba con chắc chắn là lá, không spawn tiếp được.</span></button>
+            <div class="quiz-feedback" data-explain="B chạm cả hai núm cùng lúc. Núm context: fork toàn bộ lịch sử khiến agent con kế thừa model + effort của parent (override bị từ chối — issue #20077/#32031 trên Codex), nên ý định 'scout rẻ' bị chính lựa chọn context phá. Núm biên: lịch sử parent đầy hoạt động điều phối, con đọc được nó rất dễ tự coi mình là cành — đúng kịch bản #26822. (A) sai ở chỗ cái đắt lên không chỉ là token: cả model lẫn effort đều bị kéo theo. (C) bề mặt lỗi ở đây không độc lập tới mức đó — grep một API trong ba module là ba vùng đọc, mỗi file một agent chỉ nhân hoá đơn. (D) là cái bẫy đúng chủ đề: max_depth mặc định là 1 nhưng mã nguồn ghi rõ nó bị bỏ qua ở Multi-Agent V2, nên nó KHÔNG phải biên lá — biên lá phải nằm trong prompt của chính scout."></div>
           </div>
         </div>
         <div class="lesson-nav" data-navfor="m6-l2"></div>
@@ -1082,6 +1210,8 @@ CẤM: tuyên bố "đã xong" khi chưa dán output verifier đạt.</pre>
             </table>
           </div>
 
+          <p>Một lưu ý về từ ngữ trước khi đi tiếp: cụm <em>"on the loop"</em> còn một nghĩa thứ hai hay gặp trong giới platform engineering — và khóa <strong>Agentic Software Development</strong> dùng đúng nghĩa đó: đứng "trên" vòng lặp nghĩa là khi kết quả sai, bạn đi sửa <em>cái harness đã sinh ra nó</em> chứ không sửa tay từng artifact. Trong khóa này, "on the loop" luôn mang nghĩa hẹp hơn ở bảng trên: người giám sát <em>trong lúc</em> loop đang chạy và ngắt được.</p>
+
           <figure class="figure">
             <svg viewBox="0 0 620 260" role="img" aria-label="Ma trận 2 chiều: trục ngang bán kính thiệt hại nhỏ đến lớn, trục dọc tính đảo ngược cao đến thấp; góc đảo-ngược-cao và thiệt-hại-nhỏ thì để agent tự chủ, góc thiệt-hại-lớn và không-đảo-ngược thì phải có cổng người duyệt">
               <line class="dgm-line" x1="70" y1="30" x2="70" y2="215" stroke-width="1.5"/>
@@ -1092,16 +1222,16 @@ CẤM: tuyên bố "đã xong" khi chưa dán output verifier đạt.</pre>
               <text class="dgm-ink2" x="585" y="235" text-anchor="end" font-size="10" font-family="IBM Plex Mono">thiệt hại lớn</text>
               <rect x="80" y="120" width="240" height="90" rx="10" style="fill:var(--success-bg);stroke:var(--success);stroke-width:1.5"/>
               <text style="fill:var(--success)" x="200" y="158" text-anchor="middle" font-size="13" font-weight="700">OUT of loop</text>
-              <text class="dgm-ink2" x="200" y="178" text-anchor="middle" font-size="9.5" font-family="IBM Plex Mono">agent tự chủ + verifier mạnh</text>
+              <text class="dgm-ink2" x="200" y="178" text-anchor="middle" font-size="10" font-family="IBM Plex Mono">agent tự chủ + verifier mạnh</text>
               <rect x="330" y="120" width="250" height="90" rx="10" style="fill:color-mix(in srgb,var(--brand-gold) 16%,var(--surface));stroke:var(--warning);stroke-width:1.5"/>
               <text style="fill:var(--warning)" x="455" y="158" text-anchor="middle" font-size="13" font-weight="700">ON the loop</text>
-              <text class="dgm-ink2" x="455" y="178" text-anchor="middle" font-size="9.5" font-family="IBM Plex Mono">giám sát, ngắt được</text>
+              <text class="dgm-ink2" x="455" y="178" text-anchor="middle" font-size="10" font-family="IBM Plex Mono">giám sát, ngắt được</text>
               <rect x="80" y="35" width="240" height="80" rx="10" style="fill:var(--info-bg);stroke:var(--accent-2);stroke-width:1.5"/>
               <text style="fill:var(--accent-2)" x="200" y="70" text-anchor="middle" font-size="13" font-weight="700">ON the loop</text>
-              <text class="dgm-ink2" x="200" y="90" text-anchor="middle" font-size="9.5" font-family="IBM Plex Mono">giám sát chặt</text>
+              <text class="dgm-ink2" x="200" y="90" text-anchor="middle" font-size="10" font-family="IBM Plex Mono">giám sát chặt</text>
               <rect x="330" y="35" width="250" height="80" rx="10" style="fill:var(--danger-bg);stroke:var(--danger);stroke-width:2"/>
               <text style="fill:var(--danger)" x="455" y="70" text-anchor="middle" font-size="13" font-weight="700">IN the loop 🛑</text>
-              <text class="dgm-ink2" x="455" y="90" text-anchor="middle" font-size="9.5" font-family="IBM Plex Mono">CỔNG: duyệt từng hành động</text>
+              <text class="dgm-ink2" x="455" y="90" text-anchor="middle" font-size="10" font-family="IBM Plex Mono">CỔNG: duyệt từng hành động</text>
             </svg>
             <figcaption><b>Hình 7.1</b> — Hai trục quyết định mức tự chủ. Góc nguy hiểm (khó đảo × thiệt hại lớn: xóa DB production, gửi email tới khách, deploy) <b>bắt buộc</b> có cổng người duyệt. Góc an toàn (dễ đảo × thiệt hại nhỏ: sửa file trong nhánh, chạy test) để agent tự chủ. Đặt cổng theo <em>hành động</em>, không theo cả loop.</figcaption>
           </figure>
@@ -1110,8 +1240,15 @@ CẤM: tuyên bố "đã xong" khi chưa dán output verifier đạt.</pre>
 
           <div class="concept">
             <span class="eyebrow">Nấc giữa: cổng do classifier quyết</span>
-            <p>Giữa "người duyệt từng hành động" và "để loop tự chạy" đã có một nấc trung gian dùng được: một <strong>classifier</strong> đọc transcript của loop và quyết định hành động nào phải đẩy lên cho người. Anthropic báo cáo (03/2026) cho cơ chế này khoảng <strong>0,4% báo động giả</strong> (hiếm khi chặn nhầm việc an toàn) nhưng <strong>bỏ lọt khoảng 17%</strong> hành động quá tay. Hãy đọc đúng cặp số đó: classifier cắt được phần lớn cổng nhàm chán, đồng thời vẫn để lọt khoảng một phần sáu số hành động đáng chặn. Nên đặt nó làm <em>bộ lọc trước</em> cổng người, không phải vật thay thế cổng người ở nhóm hành động không đảo ngược, bán kính lớn. Từ <strong>14/08/2026</strong> Anthropic đã đưa cơ chế này (<a href="https://claude.com/blog/auto-mode-default-in-claude-code" target="_blank" rel="noopener">auto mode</a>) thành mặc định cho phiên mới trên gói Pro, Max và Team của Claude Code — thay chỗ cho việc duyệt từng lệnh, với lý do đo được: trong thử nghiệm 1.053 người dùng trả phí, classifier chặn được <strong>89%</strong> lệnh nguy hiểm còn người chỉ bắt được <strong>13,6%</strong>. Điều đó không đổi nguyên tắc của chương này mà củng cố nó: classifier lọc <em>trước</em> cổng người cho hành động khó đảo, chứ không thay thế cổng đó.</p>
+            <p>Giữa "người duyệt từng hành động" và "để loop tự chạy" đã có một nấc trung gian dùng được: một <strong>classifier</strong> đọc <strong>tin nhắn của người dùng và các lời gọi tool</strong> — và cố ý <em>không</em> đọc phần suy luận hay kết quả tool của model, vì <a href="https://www.anthropic.com/engineering/claude-code-auto-mode" target="_blank" rel="noopener">bài viết của Anthropic</a> (25/03/2026) ghi rõ đưa chúng vào làm kết quả <em>tệ đi</em> — rồi quyết định hành động nào phải đẩy lên cho người. Đây là chi tiết dễ hiểu nhầm nhất: classifier không phải một con mắt đọc hết transcript, nó cố tình mù với lý lẽ của model, đúng theo tinh thần "checker không được thấy phần tự biện hộ của maker" ở Chương 5.</p>
+            <p>Bài đó báo cáo hai con số: khoảng <strong>0,4% báo động giả</strong>, đo trên lưu lượng thật trong nội bộ Anthropic (n = 10.000 lời gọi tool của nhân viên), và <strong>bỏ lọt khoảng 17%</strong> hành động quá tay, đo trên một tập hành động quá tay thật gồm <strong>n = 52 ca</strong> — chính bài viết gọi tập này là nhỏ. Hai con số đến từ hai tập dữ liệu khác nhau, đừng đọc chúng như một cặp cân xứng: hãy coi 17% là một tín hiệu về thứ tự độ lớn, không phải một hằng số. Kết luận thực dụng không đổi: đặt classifier làm <em>bộ lọc trước</em> cổng người, không phải vật thay thế cổng người ở nhóm hành động không đảo ngược, bán kính lớn.</p>
           </div>
+
+          <p>Từ <strong>14/08/2026</strong> Anthropic đưa cơ chế này (<a href="https://claude.com/blog/auto-mode-default-in-claude-code" target="_blank" rel="noopener">auto mode</a>) thành mặc định cho <em>phiên mới</em> trên gói Pro, Max và Team của Claude Code, với một lý do đo được: classifier chặn <strong>89%</strong> lệnh nguy hiểm còn người duyệt chỉ bắt được <strong>13,6%</strong>. Con số đó thật, nhưng phải đọc kèm thiết kế thí nghiệm: đó là một thử nghiệm có kiểm soát với <strong>1.053 tester chuyên nghiệp được trả tiền</strong> qua một research vendor, làm trong <em>môi trường test dựng riêng cho nghiên cứu, không phải codebase hay dự án thật của họ</em>. Nó nói lên chênh lệch giữa hai cơ chế trong một tình huống dựng sẵn, không phải tỉ lệ bạn sẽ thấy trên repo của mình.</p>
+
+          <div class="callout danger"><div class="callout-title">Cổng người thì mòn, cấu hình thì không</div><p>Cùng nguồn đó có một con số làm suy yếu chính cổng người: người duyệt chặn được khoảng <strong>17%</strong> lệnh nguy hiểm ở đầu phiên, tụt còn khoảng <strong>5%</strong> sau hơn 50 lần bị hỏi, trong khi tỉ lệ chặn của classifier không đổi theo độ dài phiên. Một cổng bị bấm-đồng-ý theo phản xạ thì không còn là cổng. Hệ quả cho thiết kế: <strong>giữ ít cổng nhưng đúng chỗ</strong> (góc khó-đảo × bán-kính-lớn của Hình 7.1), và đẩy phần còn lại xuống cấu hình harness — quyền hạn, sandbox, allowlist — vì cấu hình không mòn theo số lần bị hỏi.</p></div>
+
+          <div class="callout info"><div class="callout-title">Danh sách hành động bị chặn là thứ phải kiểm lại, không phải thứ để nhớ</div><p>Auto mode vẫn đang đổi nhanh: riêng khoảng 2.1.233 → 2.1.261 của Claude Code đã có hơn <strong>70 mục changelog</strong> đụng tới auto mode hoặc quyền (kiểm 12/09/2026). Hai mục đáng chú ý: <strong>Containment Escape rule</strong> (v2.1.257) — lấy credential metadata của cloud, né egress và với sang tenant khác không còn được tự duyệt trừ khi môi trường của bạn đánh dấu chúng là bình thường; và tab <strong>Auto mode trong <span class="mono">/permissions</span></strong> (v2.1.246) để xem và sửa luật classifier. Chính đây là "cổng theo hành động" đang được viết tiếp ngoài đời — nên hãy đi kiểm lại danh sách hành động bị chặn của bản bạn đang chạy, đừng nhớ một ảnh chụp.</p></div>
 
           <p>Hai trục chỉ thật sự sắc khi bạn đặt <em>cùng một hành động</em> vào bốn ô. Lấy đúng hành động ở đầu bài: "gửi email cho 500 khách" nghe như một hành động duy nhất, thực ra là bốn quyết định khác nhau:</p>
 
@@ -1119,10 +1256,10 @@ CẤM: tuyên bố "đã xong" khi chưa dán output verifier đạt.</pre>
             <table>
               <thead><tr><th style="width:150px">Ô trên ma trận</th><th>"Gửi email cho 500 khách" ở dạng nào</th><th style="width:200px">Quyết định cổng</th></tr></thead>
               <tbody>
-                <tr><td><span class="badge ok">Dễ đảo × nhỏ</span></td><td>Soạn 500 email vào thư mục nháp, chưa gửi đi đâu cả.</td><td>Agent tự chạy; chỉ cần log lại.</td></tr>
-                <tr><td><span class="badge">Dễ đảo × lớn</span></td><td>Đẩy vào hàng đợi có lịch, còn huỷ được trong 30 phút trước giờ phát.</td><td>Agent tự chạy nhưng phải báo; người giám sát và ngắt được trong cửa sổ huỷ (ON the loop).</td></tr>
-                <tr><td><span class="badge warn">Khó đảo × nhỏ</span></td><td>Gửi thật, nhưng lô đầu 20 người trong danh sách nội bộ đã đồng ý nhận thử.</td><td>Agent tự chạy trong hạn mức 20; kết quả lô đầu là điều kiện để mở lô sau.</td></tr>
-                <tr><td><span class="badge bad">Khó đảo × lớn</span></td><td>Gửi một lần tới cả 500 địa chỉ khách thật, kèm một cam kết về giá.</td><td>Cổng người: duyệt cả nội dung lẫn danh sách nhận — giữ cổng kể cả khi classifier chấm "an toàn".</td></tr>
+                <tr><td><span class="badge ok">Dễ đảo × nhỏ</span></td><td>Soạn 500 email vào thư mục nháp, chưa gửi đi đâu cả.</td><td><strong>OUT of the loop</strong> — agent tự chạy; chỉ cần log lại.</td></tr>
+                <tr><td><span class="badge">Dễ đảo × lớn</span></td><td>Đẩy vào hàng đợi có lịch, còn huỷ được trong 30 phút trước giờ phát.</td><td><strong>ON the loop</strong> — agent tự chạy nhưng phải báo; người giám sát và ngắt được trong cửa sổ huỷ.</td></tr>
+                <tr><td><span class="badge warn">Khó đảo × nhỏ</span></td><td>Gửi thật, nhưng lô đầu 20 người trong danh sách nội bộ đã đồng ý nhận thử.</td><td><strong>ON the loop</strong> — agent tự chạy trong hạn mức 20 nhưng người theo dõi lô đầu theo thời gian thực và ngắt được; kết quả lô đầu là điều kiện mở lô sau.</td></tr>
+                <tr><td><span class="badge bad">Khó đảo × lớn</span></td><td>Gửi một lần tới cả 500 địa chỉ khách thật, kèm một cam kết về giá.</td><td><strong>IN the loop</strong> — cổng người duyệt cả nội dung lẫn danh sách nhận; giữ cổng kể cả khi classifier chấm "an toàn".</td></tr>
               </tbody>
             </table>
           </div>
@@ -1140,11 +1277,11 @@ CẤM: tuyên bố "đã xong" khi chưa dán output verifier đạt.</pre>
           <div class="quiz" data-correct="1">
             <span class="eyebrow">Kiểm tra nhanh</span>
             <p class="quiz-q">Một loop tự hành có thể: đọc file, sửa file trong nhánh riêng, chạy test, VÀ deploy lên production. Bạn thiết kế cổng người thế nào?</p>
-            <button class="quiz-opt" onclick="quizPick(this,0)"><span class="quiz-letter">A</span><span>Duyệt tay mọi hành động để chắc chắn an toàn.</span></button>
-            <button class="quiz-opt" onclick="quizPick(this,1)"><span class="quiz-letter">B</span><span>Để agent tự chạy các hành động dễ đảo, bán kính nhỏ (đọc, sửa nhánh, chạy test) và dựng cổng người duyệt riêng cho hành động không đảo ngược, bán kính lớn (deploy production). Cổng đặt theo hành động, không theo cả loop.</span></button>
-            <button class="quiz-opt" onclick="quizPick(this,2)"><span class="quiz-letter">C</span><span>Cho agent tự deploy luôn nếu test xanh — verifier mạnh là đủ.</span></button>
-            <button class="quiz-opt" onclick="quizPick(this,3)"><span class="quiz-letter">D</span><span>Không cho agent chạm gì cả — quá rủi ro.</span></button>
-            <div class="quiz-feedback" data-explain="Cổng đặt theo HÀNH ĐỘNG chứ không theo loop. Đọc/sửa-nhánh/chạy-test đều dễ đảo & bán kính nhỏ → để agent tự chạy (được lợi tốc độ). Deploy production thì không đảo ngược & bán kính lớn → bắt buộc cổng người, dù test có xanh (test mạnh giảm rủi ro nhưng không xóa được bán kính thiệt hại của một lần deploy sai). Duyệt mọi thứ thì mất hết lợi ích; không cho chạm gì thì bỏ phí tự động hóa. Nguyên tắc: authorization thuộc harness/người, không phải phán đoán model."></div>
+            <button class="quiz-opt" onclick="quizPick(this,0)"><span class="quiz-letter">A</span><span>Duyệt tay mọi hành động: chậm hơn thật, nhưng đó là cách chắc chắn nhất để không lọt một lệnh nguy hiểm nào.</span></button>
+            <button class="quiz-opt" onclick="quizPick(this,1)"><span class="quiz-letter">B</span><span>Để agent tự chạy phần dễ đảo, bán kính nhỏ; dựng cổng người riêng cho deploy production. Cổng theo hành động, không theo loop.</span></button>
+            <button class="quiz-opt" onclick="quizPick(this,2)"><span class="quiz-letter">C</span><span>Cho agent tự deploy nếu test xanh: verifier đã là bằng chứng khách quan, còn cổng người chỉ làm chậm mà không thêm thông tin gì.</span></button>
+            <button class="quiz-opt" onclick="quizPick(this,3)"><span class="quiz-letter">D</span><span>Bật classifier auto mode cho cả loop và bỏ hẳn cổng người: nó chặn tốt hơn người, lại không mòn theo độ dài phiên.</span></button>
+            <div class="quiz-feedback" data-explain="Cổng đặt theo HÀNH ĐỘNG chứ không theo loop. (A) duyệt mọi thứ nghe an toàn nhưng chính bài này đo ngược lại: tỉ lệ người chặn được lệnh nguy hiểm tụt từ khoảng 17% xuống khoảng 5% sau hơn 50 lần bị hỏi — hỏi nhiều làm cổng mòn, không làm nó chắc. (C) test xanh giảm rủi ro nhưng không xoá được bán kính thiệt hại của một lần deploy sai; verifier chứng minh code đúng, không chứng minh việc deploy lúc này là đúng. (D) classifier quả thật ổn định hơn người, nhưng nó vẫn bỏ lọt cỡ 17% hành động quá tay (trên một tập chỉ 52 ca) — đủ tốt để làm bộ lọc TRƯỚC cổng, chưa đủ để thay cổng ở góc khó-đảo × bán-kính-lớn. Nguyên tắc: authorization thuộc harness và người, không thuộc phán đoán model."></div>
           </div>
         </div>
         <div class="lesson-nav" data-navfor="m7-l1"></div>
@@ -1186,34 +1323,37 @@ CẤM: tuyên bố "đã xong" khi chưa dán output verifier đạt.</pre>
             </table>
           </div>
 
+          <div class="callout info"><div class="callout-title">Bốn thành phần này đã có tên và đã có sẵn sản phẩm: durable execution</div><p>Trigger + state bền + idempotency + resume không phải thứ bạn phải phát minh: đó chính là thứ hạng mục <strong>durable execution</strong> đóng gói sẵn. <a href="https://temporal.io/" target="_blank" rel="noopener">Temporal</a> (và Temporal Cloud), <a href="https://restate.dev/" target="_blank" rel="noopener">Restate</a>, <a href="https://www.inngest.com/" target="_blank" rel="noopener">Inngest</a> và <a href="https://www.dbos.dev/" target="_blank" rel="noopener">DBOS</a> đều tự mô tả bằng đúng từ đó; <a href="https://developers.cloudflare.com/changelog/2025-04-07-workflows-ga/" target="_blank" rel="noopener">Cloudflare Workflows</a> GA từ 07/04/2025; <a href="https://aws.amazon.com/step-functions/" target="_blank" rel="noopener">AWS Step Functions</a> là bản managed lâu đời của cùng ý tưởng (điều phối có state + xử lý lỗi tự động). Tự viết vòng nền nghĩa là tự viết lại retry, checkpoint và resume. Quy tắc chọn: <strong>tự viết khi loop còn nhỏ và state là một file</strong>; <strong>dùng engine khi có nhiều loop, nhiều worker, hoặc cần audit</strong> lại từng bước đã chạy.</p></div>
+
           <figure class="figure">
             <svg viewBox="0 0 640 180" role="img" aria-label="Vòng đời loop nền: kích hoạt theo lịch hoặc điều kiện, chạy một vòng có verifier, lưu state bền vững, rồi ngủ chờ tín hiệu đánh thức tiếp theo">
               <defs><marker id="al8" markerWidth="9" markerHeight="9" refX="7" refY="4.5" orient="auto"><path d="M0 0 L9 4.5 L0 9 z" fill="var(--accent-2)"/></marker></defs>
               <rect class="dgm-accent" x="20" y="66" width="130" height="52" rx="10" stroke-width="2"/>
               <text class="dgm-ink" x="85" y="88" text-anchor="middle" font-size="11.5" font-weight="700">KÍCH HOẠT</text>
-              <text class="dgm-ink2" x="85" y="105" text-anchor="middle" font-size="9" font-family="IBM Plex Mono">lịch / điều kiện</text>
+              <text class="dgm-ink2" x="85" y="105" text-anchor="middle" font-size="10" font-family="IBM Plex Mono">lịch / điều kiện</text>
               <path class="dgm-flow" d="M150 92 H206" stroke-width="2.5" marker-end="url(#al8)"/>
               <rect class="dgm-accent" x="206" y="60" width="140" height="64" rx="10" stroke-width="2"/>
               <text class="dgm-ink" x="276" y="84" text-anchor="middle" font-size="11.5" font-weight="700">CHẠY MỘT VÒNG</text>
-              <text class="dgm-ink2" x="276" y="101" text-anchor="middle" font-size="9" font-family="IBM Plex Mono">có verifier + biên</text>
-              <text class="dgm-ink2" x="276" y="114" text-anchor="middle" font-size="9" font-family="IBM Plex Mono">(Chương 3–4)</text>
+              <text class="dgm-ink2" x="276" y="101" text-anchor="middle" font-size="10" font-family="IBM Plex Mono">có verifier + biên</text>
+              <text class="dgm-ink2" x="276" y="114" text-anchor="middle" font-size="10" font-family="IBM Plex Mono">(Chương 3–4)</text>
               <path class="dgm-flow" d="M346 92 H402" stroke-width="2.5" marker-end="url(#al8)"/>
               <rect style="fill:color-mix(in srgb,var(--brand-gold) 16%,var(--surface));stroke:var(--warning);stroke-width:1.5" x="402" y="66" width="130" height="52" rx="10"/>
               <text class="dgm-ink" x="467" y="88" text-anchor="middle" font-size="11.5" font-weight="700">LƯU STATE</text>
-              <text class="dgm-ink2" x="467" y="105" text-anchor="middle" font-size="9" font-family="IBM Plex Mono">file/DB bền vững</text>
+              <text class="dgm-ink2" x="467" y="105" text-anchor="middle" font-size="10" font-family="IBM Plex Mono">file/DB bền vững</text>
               <path class="dgm-flow" d="M532 92 H588 V150 H85 V118" stroke-width="2.5" marker-end="url(#al8)"/>
-              <text class="dgm-ink2" x="336" y="167" text-anchor="middle" font-size="9.5" font-family="IBM Plex Mono">ngủ → chờ tín hiệu đánh thức tiếp theo</text>
+              <text class="dgm-ink2" x="336" y="167" text-anchor="middle" font-size="10" font-family="IBM Plex Mono">ngủ → chờ tín hiệu đánh thức tiếp theo</text>
             </svg>
             <figcaption><b>Hình 8.1</b> — Loop nền sống quanh <em>state bền vững</em>, không quanh một phiên chat. Mỗi lần thức: chạy một vòng (có verifier + biên), lưu state ra file/DB, rồi ngủ. Nhờ state ngoài, phiên có thể bị compact/khởi động lại mà loop vẫn tiếp tục đúng chỗ (đúng pattern "ghi chú có cấu trúc" ở khóa trước).</figcaption>
           </figure>
 
           <div class="concept">
-            <span class="eyebrow">Pattern cộng đồng "Ralph" — lặp qua state bền vững</span>
+            <span class="eyebrow">Pattern "Ralph" — lặp qua state bền vững</span>
             <p>Phiên bản đơn giản chạy lại một chỉ dẫn kiểu "đọc tiến độ và làm bước kế tiếp". Mỗi lượt phải đọc artifact trạng thái, chọn một đơn vị việc nhỏ, xác minh, rồi ghi lại bằng chứng và bước tiếp theo. Pattern này hợp khi task phân rã được và có verifier; nó không biến một mục tiêu mơ hồ thành an toàn chỉ bằng <code>while true</code>. Luôn có giới hạn chi phí/thời gian, idempotency, quyền hạn hẹp và đường dừng khẩn cấp.</p>
+            <p>Kỹ thuật này do <strong>Geoffrey Huntley</strong> đặt tên và công bố ngày <a href="https://ghuntley.com/ralph/" target="_blank" rel="noopener">14/07/2025</a>, ở dạng nguyên thuỷ nhất là một dòng bash: <span class="mono">while :; do cat PROMPT.md | claude-code ; done</span>. Nó không còn là folklore: Claude Code có sẵn plugin chính chủ <span class="mono">ralph-wiggum</span> trong repo <a href="https://github.com/anthropics/claude-code/blob/main/plugins/ralph-wiggum/README.md" target="_blank" rel="noopener">anthropics/claude-code</a>, chạy bằng <span class="mono">/ralph-loop "&lt;prompt&gt;" --max-iterations &lt;n&gt; --completion-promise "&lt;text&gt;"</span>, và vòng lặp được giữ sống bằng một Stop hook chặn phiên thoát. Đúng hai tham số đó chính là hai loại "dừng" của Chương 3: <span class="mono">--completion-promise</span> là dừng-thành-công, <span class="mono">--max-iterations</span> là biên-an-toàn. Lưu ý một chỗ dễ chết: <span class="mono">--max-iterations</span> mặc định là <strong>không giới hạn</strong>, nên biên đó là thứ bạn phải tự điền.</p>
           </div>
           <div class="concept">
             <span class="eyebrow">State sống NGOÀI context window</span>
-            <p>Thứ cho phép một loop chạy suốt nhiều giờ không phải context window dài hơn, mà là <em>chỗ đặt trạng thái</em>. Nếu tiến độ chỉ nằm trong hội thoại thì mỗi lần compact hay khởi động lại đều xoá bớt trí nhớ của loop. Kiến trúc bền tách ba phần: <strong>bộ não</strong> (model: có thể đổi, có thể chết), <strong>tay</strong> (tool + sandbox, nơi hành động thật xảy ra) và <strong>session</strong> (trạng thái bền, nằm ngoài cả hai). Anthropic báo cáo (04/2026) một dịch vụ chạy agent dài hơi dựng đúng theo ba phần này: tiến trình có thể dừng giữa chừng rồi được đánh thức lại từ event log của session thay vì bắt đầu lại từ đầu. Hệ quả thiết kế cho bạn: coi harness là <em>stateless</em> — mọi thứ cần để chạy tiếp phải đọc được từ artifact bên ngoài, không phải từ những gì còn sót trong cửa sổ hội thoại.</p>
+            <p>Thứ cho phép một loop chạy suốt nhiều giờ không phải context window dài hơn, mà là <em>chỗ đặt trạng thái</em>. Nếu tiến độ chỉ nằm trong hội thoại thì mỗi lần compact hay khởi động lại đều xoá bớt trí nhớ của loop. Kiến trúc bền tách ba phần: <strong>bộ não</strong> (model: có thể đổi, có thể chết), <strong>tay</strong> (tool + sandbox, nơi hành động thật xảy ra) và <strong>session</strong> (trạng thái bền, nằm ngoài cả hai). Anthropic mô tả đúng cách chia này trong <a href="https://www.anthropic.com/engineering/managed-agents" target="_blank" rel="noopener">"Scaling Managed Agents: Decoupling the brain from the hands"</a> (08/04/2026) — ở đó "bộ não" là model <em>cùng với</em> harness của nó, không phải riêng model. Điều bài viết mô tả là <em>khôi phục sau sự cố</em>, chứ không phải chủ động tạm dừng: vì event log của session nằm ngoài harness, "nothing in the harness needs to survive a crash" — harness chết thì dựng một cái mới, gọi <span class="mono">wake(sessionId)</span>, đọc lại event log và chạy tiếp từ event cuối. Hệ quả thiết kế cho bạn: coi harness là <em>stateless</em> — mọi thứ cần để chạy tiếp phải đọc được từ artifact bên ngoài, không phải từ những gì còn sót trong cửa sổ hội thoại.</p>
           </div>
 
           <p>Artifact đó không cần cầu kỳ. Một file <code>progress.md</code> khoảng mười lăm dòng, agent đọc đầu phiên và cập nhật cuối phiên, đã đủ để loop tái dựng chính nó:</p>
@@ -1240,7 +1380,7 @@ Mỗi phiên mới: (1) đọc file này + `git log -5`; (2) chạy `npm test --
 (3) làm đúng MỘT mục ⬜; (4) ghi lại file này kèm output verifier làm bằng chứng, rồi mới dừng.</pre>
           </div>
 
-          <div class="callout warn"><div class="callout-title">Một failure mode có tên: overbaking</div><p><em>Overbaking</em> là khi agent đốt hàng giờ viết lại phần code vốn đang chạy tốt, chỉ vì một lỗi môi trường nhỏ (thiếu biến env, sai phiên bản runtime) bị chẩn đoán nhầm thành lỗi kiến trúc. Hai dòng trong artifact trên là thuốc giải: mục "đang làm dở" ghim đúng <em>một</em> lỗi được phép sửa, còn luật "chạy verifier TRƯỚC khi sửa code" buộc agent phân biệt lỗi môi trường với lỗi code trước khi đụng vào bất cứ thứ gì. Thêm một luật lấy từ harness thật (Anthropic, 11/2025) và đáng chép vào mọi loop nền: <strong>agent không được sửa hoặc xoá test để làm nó xanh</strong> — nếu test sai thì đó là việc của người (Chương 4).</p></div>
+          <div class="callout warn"><div class="callout-title">Một failure mode có tên: overbaking</div><p><em>Overbaking</em> là khi agent đốt hàng giờ viết lại phần code vốn đang chạy tốt, chỉ vì một lỗi môi trường nhỏ (thiếu biến env, sai phiên bản runtime) bị chẩn đoán nhầm thành lỗi kiến trúc. Hai dòng trong artifact trên là thuốc giải: mục "đang làm dở" ghim đúng <em>một</em> lỗi được phép sửa, còn luật "chạy verifier TRƯỚC khi sửa code" buộc agent phân biệt lỗi môi trường với lỗi code trước khi đụng vào bất cứ thứ gì. Thêm một luật lấy từ một harness thật (<a href="https://www.anthropic.com/engineering/effective-harnesses-for-long-running-agents" target="_blank" rel="noopener">Anthropic, 26/11/2025</a> — nguyên văn trong prompt của họ: <em>"It is unacceptable to remove or edit tests because this could lead to missing or buggy functionality"</em>) và đáng chép vào mọi loop nền: <strong>agent không được sửa hoặc xoá test để làm nó xanh</strong> — nếu test sai thì đó là việc của người (Chương 4).</p></div>
 
           <div class="callout warn"><div class="callout-title">Nền không có nghĩa là quên</div><p>Sai lầm chết người của loop nền: "đặt lịch rồi quên". Loop chạy khi bạn không nhìn <em>càng cần</em> observability &amp; cảnh báo (Chương 9), không phải càng ít. Mỗi vòng nền phải log đủ để sáng mai bạn tái dựng được nó đã làm gì, và phải biết tự báo động khi chạm biên hay verifier fail liên tục.</p></div>
 
@@ -1257,11 +1397,11 @@ Mỗi phiên mới: (1) đọc file này + `git log -5`; (2) chạy `npm test --
           <div class="quiz" data-correct="2">
             <span class="eyebrow">Kiểm tra nhanh</span>
             <p class="quiz-q">Bạn muốn dùng pattern "Ralph" (while-true chạy lại cùng prompt tới khi xong) để agent hoàn thành một migration lớn qua đêm. Điều kiện tiên quyết nào khiến nó an toàn thay vì thảm họa?</p>
-            <button class="quiz-opt" onclick="quizPick(this,0)"><span class="quiz-letter">A</span><span>Chỉ cần một prompt đủ tốt là while-true sẽ tự lo.</span></button>
-            <button class="quiz-opt" onclick="quizPick(this,1)"><span class="quiz-letter">B</span><span>Chỉ cần model đủ mạnh; state và verifier là tùy chọn.</span></button>
-            <button class="quiz-opt" onclick="quizPick(this,2)"><span class="quiz-letter">C</span><span>Ba thứ đồng thời: (1) verifier khách quan đóng mỗi vòng (nếu không, while-true lặp mãi sự trôi dạt); (2) biên cost/iteration; (3) state bền vững ghi ra file để mỗi vòng bắt đầu từ tiến độ thật — cộng observability + cảnh báo vì nó chạy khi bạn không nhìn.</span></button>
-            <button class="quiz-opt" onclick="quizPick(this,3)"><span class="quiz-letter">D</span><span>Ralph luôn nguy hiểm, đừng bao giờ dùng.</span></button>
-            <div class="quiz-feedback" data-explain="Ralph (while-true) chỉ khuếch đại chất lượng của vòng lặp bên dưới nó. Không có verifier, nó lặp mãi sự trôi dạt tới khi hết tiền (Chương 4). Không có biên, chi phí vô hạn (Chương 3). Không có state bền vững, mỗi vòng phụ thuộc trí nhớ hội thoại đã mòn dần (Chương 2) thay vì tiến độ thật. Và vì chạy qua đêm khi không ai nhìn, nó cần observability + cảnh báo hơn bất kỳ loop nào. Ba trụ này là cấu trúc bạn dựng, không phải năng lực model — không prompt hay model nào tự mọc ra verifier, biên và state cho while-true."></div>
+            <button class="quiz-opt" onclick="quizPick(this,0)"><span class="quiz-letter">A</span><span>Một prompt đủ tốt: viết rõ mục tiêu, các bước và điều kiện dừng vào PROMPT.md thì while-true sẽ tự đi đúng đường.</span></button>
+            <button class="quiz-opt" onclick="quizPick(this,1)"><span class="quiz-letter">B</span><span>Đặt <span class="mono">--max-iterations</span> và <span class="mono">--completion-promise</span> của plugin Ralph; hai tham số đó đã là dừng-thành-công và biên-an-toàn.</span></button>
+            <button class="quiz-opt" onclick="quizPick(this,2)"><span class="quiz-letter">C</span><span>Ba thứ đồng thời: verifier khách quan đóng mỗi vòng, biên cost/iteration, và state bền vững ghi ra file — cộng cảnh báo.</span></button>
+            <button class="quiz-opt" onclick="quizPick(this,3)"><span class="quiz-letter">D</span><span>Chạy nó trong sandbox không có quyền ghi lên nhánh chính: bán kính đã bị chặn thì while-true chạy bao lâu cũng không hại gì.</span></button>
+            <div class="quiz-feedback" data-explain="Ralph (while-true) chỉ khuếch đại chất lượng của vòng lặp bên dưới nó. (A) prompt viết kỹ tới đâu vẫn là lời đề nghị: không có verifier, mỗi vòng vẫn kết thúc bằng đánh giá của chính model, và while-true chỉ lặp mãi sự trôi dạt (Chương 4). (B) đúng một phần và là bẫy hay nhất ở đây: hai tham số đó đúng là hai loại dừng của Chương 3, nhưng chúng không sinh ra verifier hay state — mà --max-iterations còn mặc định là KHÔNG GIỚI HẠN, nên tin vào mặc định là mất luôn biên. (D) sandbox thu nhỏ bán kính chứ không làm loop tiến bộ: nó vẫn đốt tiền tới sáng và vẫn giao một kết quả không ai kiểm. Ba trụ verifier + biên + state là cấu trúc BẠN dựng, không phải năng lực model."></div>
           </div>
         </div>
         <div class="lesson-nav" data-navfor="m8-l1"></div>
@@ -1296,29 +1436,31 @@ Mỗi phiên mới: (1) đọc file này + `git log -5`; (2) chạy `npm test --
               <text class="dgm-ink2" x="20" y="14" font-size="10" font-family="IBM Plex Mono" letter-spacing="1.4">GUARDRAIL STACK · ĐỌC TỪ DƯỚI LÊN</text>
               <rect x="20" y="26" width="620" height="44" rx="10" style="fill:color-mix(in srgb,var(--brand-gold) 16%,var(--surface));stroke:var(--warning);stroke-width:1.5"/>
               <text class="dgm-ink" x="36" y="46" font-size="12.5" font-weight="700">Observability + kill switch + cảnh báo</text>
-              <text class="dgm-ink2" x="36" y="62" font-size="9.5" font-family="IBM Plex Mono">log mọi vòng · nút dừng · báo khi chạm biên/verifier fail</text>
+              <text class="dgm-ink2" x="36" y="62" font-size="10" font-family="IBM Plex Mono">log mọi vòng · nút dừng · báo khi chạm biên/verifier fail</text>
               <rect class="dgm-accent" x="20" y="78" width="620" height="44" rx="10" stroke-width="1.5"/>
               <text class="dgm-ink" x="36" y="98" font-size="12.5" font-weight="700">Giới hạn bán kính thiệt hại</text>
-              <text class="dgm-ink2" x="36" y="114" font-size="9.5" font-family="IBM Plex Mono">nhánh riêng · sandbox · quyền tối thiểu · dry-run trước</text>
+              <text class="dgm-ink2" x="36" y="114" font-size="10" font-family="IBM Plex Mono">nhánh riêng · sandbox · quyền tối thiểu · dry-run trước</text>
               <rect class="dgm-accent" x="20" y="130" width="620" height="44" rx="10" stroke-width="1.5"/>
               <text class="dgm-ink" x="36" y="150" font-size="12.5" font-weight="700">Cổng theo hành động</text>
-              <text class="dgm-ink2" x="36" y="166" font-size="9.5" font-family="IBM Plex Mono">gate cái không đảo ngược / bán kính lớn (C7)</text>
+              <text class="dgm-ink2" x="36" y="166" font-size="10" font-family="IBM Plex Mono">gate cái không đảo ngược / bán kính lớn (C7)</text>
               <rect x="20" y="182" width="620" height="44" rx="10" style="fill:color-mix(in srgb,var(--accent) 12%,var(--surface));stroke:var(--accent);stroke-width:1.5"/>
               <text class="dgm-ink" x="36" y="202" font-size="12.5" font-weight="700">Verifier đóng vòng</text>
-              <text class="dgm-ink2" x="36" y="218" font-size="9.5" font-family="IBM Plex Mono">test/typecheck/eval — không có thì đừng tự hành (C4)</text>
+              <text class="dgm-ink2" x="36" y="218" font-size="10" font-family="IBM Plex Mono">test/typecheck/eval — không có thì đừng tự hành (C4)</text>
               <rect x="20" y="234" width="620" height="44" rx="10" style="fill:color-mix(in srgb,var(--accent) 12%,var(--surface));stroke:var(--accent);stroke-width:1.5"/>
               <text class="dgm-ink" x="36" y="254" font-size="12.5" font-weight="700">Biên cứng</text>
-              <text class="dgm-ink2" x="36" y="270" font-size="9.5" font-family="IBM Plex Mono">max iteration · ngân sách token · trần chi phí · chống gọi lặp (C3)</text>
+              <text class="dgm-ink2" x="36" y="270" font-size="10" font-family="IBM Plex Mono">max iteration · ngân sách token · trần chi phí · chống gọi lặp (C3)</text>
             </svg>
             <figcaption><b>Hình 9.1</b> — Năm lớp guardrail, đáy là biên &amp; verifier. Với một loop <em>tự hành thật sự</em>, chúng tôi không coi lớp nào là tùy chọn: thiếu lớp nào thì đó thường là nơi sự cố tiếp theo xuất hiện.</figcaption>
           </figure>
+
+          <div class="callout info"><div class="callout-title">Lớp trên cùng: đừng tự nghĩ ra schema log</div><p>Trước khi tự đặt tên cho các trường log của loop, hãy biết là OpenTelemetry đã có bộ quy ước ngữ nghĩa riêng cho GenAI — <a href="https://github.com/open-telemetry/semantic-conventions-genai" target="_blank" rel="noopener">semantic-conventions-genai</a> (trang <span class="mono">opentelemetry.io/docs/specs/semconv/gen-ai/</span> nay trỏ thẳng sang repo này) — bao gồm span cho agent và cho lời gọi tool, cùng các thuộc tính dưới tiền tố <span class="mono">gen_ai.*</span>. Lưu ý token usage nằm ở dạng <em>metric</em> (<span class="mono">gen_ai.client.token.usage</span>) và thuộc tính trên span, chứ không phải một span riêng. Dùng bộ này thì trace của loop đọc được ngay bằng APM sẵn có của đội, không cần một dashboard riêng. Bộ quy ước đang ở trạng thái "Development" nên tên thuộc tính còn có thể đổi — nên bám <em>khái niệm</em> (một span cho mỗi vòng, mỗi tool call, mỗi lượt gọi model, kèm token và chi phí), đừng bám tên.</p></div>
 
           <h4>Kinh tế: khi nào một loop đáng tự động hóa</h4>
           <div class="compare">
             <div class="compare-col good"><span class="eyebrow">Loop đáng đầu tư khi</span><ul><li>Tần suất cao / lặp lại nhiều (chi phí thiết kế được khấu hao)</li><li>Có verifier khách quan rẻ (đóng vòng đáng tin)</li><li>Bán kính thiệt hại nhỏ &amp; đảo ngược được</li><li>Bước rõ ràng, ít cần gu hay phán đoán chủ quan</li></ul></div>
             <div class="compare-col bad"><span class="eyebrow">Đừng tự động hóa khi</span><ul><li>Việc một lần (chi phí dựng loop &gt; tự làm)</li><li>Không có cách kiểm chứng khách quan</li><li>Sai một lần là thảm họa không đảo ngược</li><li>Cần độc đáo/gu mà model kéo về trung bình</li></ul></div>
           </div>
-          <div class="callout insight"><div class="callout-title">Phương trình đáng-hay-không</div><p>Tự động hóa đáng khi: <em>(giá trị mỗi lần chạy × tần suất) − chi phí vận hành &amp; rủi ro &gt; chi phí thiết kế &amp; bảo trì loop</em>. Nhiều loop thất bại không phải vì kỹ thuật sai, mà vì <strong>tự động hóa nhầm việc</strong> — một việc một lần, hoặc một việc không kiểm chứng được. Kỹ năng L5 là biết chọn <em>đúng</em> loop để xây, không phải xây được mọi loop.</p></div>
+          <div class="callout insight"><div class="callout-title">Phương trình đáng-hay-không</div><p>Tự động hóa đáng khi: <em>(giá trị mỗi lần chạy × tần suất) − chi phí vận hành &amp; rủi ro &gt; chi phí thiết kế &amp; bảo trì loop</em>. Nhiều loop thất bại không phải vì kỹ thuật sai, mà vì <strong>tự động hóa nhầm việc</strong> — một việc một lần, hoặc một việc không kiểm chứng được. Kỹ năng L5 là biết chọn <em>đúng</em> loop để xây, không phải xây được mọi loop.</p><p style="margin-top:10px">Chạy thử một con số cho đỡ trừu tượng. Loop dọn lint chạy <strong>20 lần/tháng</strong>, mỗi lần tiết kiệm 25 phút ⇒ <strong>8,3 giờ/tháng</strong>. Mỗi lần chạy hết khoảng 10 vòng, tức <strong>$0,9</strong> theo máy tính ở Chương 3 (20k token nền + 8k token mới mỗi vòng, giá Fable 5.1, có prompt caching) ⇒ <strong>$18/tháng</strong>, cộng khoảng 2 giờ bảo trì. Pilot đo được tỷ lệ chấp nhận <strong>70%</strong> ⇒ 14 kết quả dùng được, nên chi phí cho mỗi kết quả <em>được nhận</em> là 18/14 ≈ <strong>$1,3</strong>, và giả sử người mất 6 phút duyệt mỗi kết quả. So với 25 phút tự làm: đáng. Nhưng nếu tỷ lệ chấp nhận tụt còn 30%, chỉ còn 6 kết quả được nhận: chi phí mỗi kết quả thành <strong>$3</strong> và người vẫn phải mất khoảng 20 phút dọn cho mỗi cái. Lúc đó việc cần làm là đi sửa verifier, không phải scale số lần chạy.</p></div>
 
           <div class="concept">
             <span class="eyebrow">Đo phương trình bằng ba con số, không bằng cảm nhận</span>
@@ -1370,11 +1512,11 @@ Mỗi phiên mới: (1) đọc file này + `git log -5`; (2) chạy `npm test --
           <div class="quiz" data-correct="3">
             <span class="eyebrow">Kiểm tra nhanh</span>
             <p class="quiz-q">Sếp muốn "tự động hóa càng nhiều càng tốt" và đo thành công bằng "số quy trình đã tự động hóa". Là người dẫn dắt L5, bạn phản hồi thế nào?</p>
-            <button class="quiz-opt" onclick="quizPick(this,0)"><span class="quiz-letter">A</span><span>Đồng ý — tự động hóa mọi thứ có thể, đếm số loop là chỉ số tốt.</span></button>
-            <button class="quiz-opt" onclick="quizPick(this,1)"><span class="quiz-letter">B</span><span>Từ chối tự động hóa — quá rủi ro cho mọi việc.</span></button>
-            <button class="quiz-opt" onclick="quizPick(this,2)"><span class="quiz-letter">C</span><span>Tự động hóa nhanh nhất có thể, lo guardrail sau.</span></button>
-            <button class="quiz-opt" onclick="quizPick(this,3)"><span class="quiz-letter">D</span><span>Định hướng lại: mục tiêu là KẾT QUẢ, không phải số loop. Chọn loop theo phương trình kinh tế (tần suất × giá trị, có verifier, bán kính nhỏ); mỗi loop đủ guardrail (verifier, biên, cổng, observability) và leo thang tự chủ theo bằng chứng; đo bằng kết quả (việc xong, lỗi thoát prod, chi phí/kết-quả), không bằng "số loop chạy".</span></button>
-            <div class="quiz-feedback" data-explain="'Số quy trình tự động hóa' là chỉ số phản tác dụng: nó thưởng cho hoạt động, khuyến khích tự động cả những việc không đáng (một lần, không kiểm chứng được, bán kính lớn) — đúng công thức tạo sự cố & nợ. Người dẫn dắt L5 định hướng về kết quả: chọn ĐÚNG loop theo kinh tế, rào mỗi loop đủ guardrail, leo tự chủ theo bằng chứng, và đo bằng kết quả thật. Tự động hóa nhiều hơn không phải mục tiêu; tự động hóa đúng chỗ, an toàn, mới là."></div>
+            <button class="quiz-opt" onclick="quizPick(this,0)"><span class="quiz-letter">A</span><span>Đồng ý và chạy nhanh: đếm số loop là chỉ số dễ theo dõi, có nó thì đội mới có động lực tự động hóa đều tay mỗi quý.</span></button>
+            <button class="quiz-opt" onclick="quizPick(this,1)"><span class="quiz-letter">B</span><span>Giữ số loop làm chỉ số nhưng chỉ đếm loop đã có verifier và guardrail đầy đủ — như vậy vừa đo được, vừa không thưởng cho loop ẩu.</span></button>
+            <button class="quiz-opt" onclick="quizPick(this,2)"><span class="quiz-letter">C</span><span>Tự động hóa nhanh nhất có thể để chiếm chỗ trước, rồi bổ sung guardrail cho các loop nào thực sự sống sót qua quý sau.</span></button>
+            <button class="quiz-opt" onclick="quizPick(this,3)"><span class="quiz-letter">D</span><span>Định hướng lại về kết quả: chọn loop theo phương trình kinh tế, đo tỷ lệ chấp nhận và chi phí mỗi kết quả được nhận.</span></button>
+            <div class="quiz-feedback" data-explain="'Số quy trình tự động hóa' là chỉ số phản tác dụng: nó thưởng cho hoạt động, nên khuyến khích tự động cả những việc không đáng — việc một lần, việc không kiểm chứng được, việc bán kính lớn. (A) chỉ số dễ đếm không có nghĩa là chỉ số đúng; đây đúng là anti-pattern 'đo số loop chạy' ở bảng trên. (B) là phương án nghe hợp lý nhất và vẫn sai: lọc theo guardrail chặn được loop ẩu nhưng không chặn được loop VÔ DỤNG — một loop đủ verifier, đủ biên mà tỷ lệ chấp nhận 20% vẫn đang đốt tiền cho thứ bị vứt đi. (C) 'guardrail sau' đảo ngược đúng thứ tự: guardrail rẻ khi dựng cùng loop, đắt khi vá sau một sự cố. Người dẫn dắt L5 đo bằng kết quả: việc xong, lỗi thoát prod, tỷ lệ chấp nhận, chi phí mỗi kết quả được nhận."></div>
           </div>
         </div>
         <div class="lesson-nav" data-navfor="m9-l1"></div>
@@ -1411,8 +1553,9 @@ Mỗi phiên mới: (1) đọc file này + `git log -5`; (2) chạy `npm test --
                 <tr><td><span class="badge">C1 · Phổ tự động hóa</span></td><td>Tự động hóa là phổ 5 nấc, không phải công tắc — leo từng nấc; vai bạn dịch từ "làm" sang "thiết kế điều kiện".</td></tr>
                 <tr><td><span class="badge">C2 · Giải phẫu loop</span></td><td>Mọi loop = Plan→Act→Observe→Reflect; Observe &amp; Reflect là thứ tách agent khỏi script — Observe yếu sinh ra ảo tưởng thành công.</td></tr>
                 <tr><td><span class="badge">C3 · Biên &amp; điều kiện dừng</span></td><td>Phân biệt dừng-thành-công với biên-an-toàn; đặt ngưỡng runtime từ trace/eval và mức thiệt hại chấp nhận được.</td></tr>
-                <tr><td><span class="badge">C4 · Verifier</span></td><td>Verifier phải kiểm đúng tiêu chí: xếp tầng từ kiểm cấu trúc tới hành vi, browser/eval và cổng người theo rủi ro.</td></tr>
+                <tr><td><span class="badge">C4 · Verifier</span></td><td>Vòng lặp chỉ tốt bằng verifier đóng nó lại — không có verifier khách quan, thêm vòng là thêm trôi dạt. Xếp tầng verifier sát điều cần chứng minh, và giữ verifier read-only với agent.</td></tr>
                 <tr><td><span class="badge">C5 · Tự sửa</span></td><td>Khi code không kiểm hết tiêu chí, dùng generate→critique→revise với evaluator tách biệt, rubric cụ thể và điểm dừng theo eval + ngân sách.</td></tr>
+                <tr><td><span class="badge">C5 · Lab loop đầu tiên</span></td><td>Vòng lặp tự hành chỉ là hai mươi dòng code; biên phải là điều kiện của <span class="mono">while</span>, verifier phải chạy ở luồng của bạn, và thước đo tiến bộ là số vòng tới lúc xanh giảm đi.</td></tr>
                 <tr><td><span class="badge">C6 · Điều phối</span></td><td>Tất định hóa mọi thứ có thể tất định; chỉ giao model phần thật sự cần phán đoán. Mặc định pipeline, barrier khi bước sau cần đủ kết quả. Trước khi fan-out: role card năm trường, và ba núm vai · context · biên spawn.</td></tr>
                 <tr><td><span class="badge">C7 · Mức tự chủ &amp; cổng</span></td><td>Chọn in/on/out-of-the-loop theo hai trục đảo-ngược × bán-kính; gate theo hành động, không theo loop.</td></tr>
                 <tr><td><span class="badge">C8 · Loop nền</span></td><td>Loop nền sống quanh state bền vững, không quanh phiên chat; "nền" không phải "quên" — càng cần observability &amp; cảnh báo.</td></tr>
@@ -1478,11 +1621,11 @@ Còn ô nào trống → loop CHƯA rời tay.</pre>
           <div class="quiz" data-correct="2">
             <span class="eyebrow">Kiểm tra nhanh · tổng hợp</span>
             <p class="quiz-q">Bạn thiết kế một loop nền tự cập nhật changelog từ các PR đã merge, chạy hằng đêm không người ngồi cạnh. Phương án nào gói đủ verifier + biên + cổng + state + cảnh báo một cách đúng?</p>
-            <button class="quiz-opt" onclick="quizPick(this,0)"><span class="quiz-letter">A</span><span>Đặt lịch chạy mỗi đêm, để model tự quyết viết gì; nếu output trông ổn thì commit thẳng lên main.</span></button>
-            <button class="quiz-opt" onclick="quizPick(this,1)"><span class="quiz-letter">B</span><span>Chỉ cần max iteration cao và một model giỏi; changelog là việc nhẹ nên không cần verifier hay cổng.</span></button>
-            <button class="quiz-opt" onclick="quizPick(this,2)"><span class="quiz-letter">C</span><span>Verifier: lint/schema kiểm định dạng changelog + đối chiếu với danh sách PR đã merge (khách quan, mỗi vòng). Biên: đủ bốn (iteration, token, trần chi phí, chống gọi lặp). Cổng: mở PR để người duyệt thay vì commit thẳng main (thay đổi có bán kính lớn). State: mốc "PR cuối đã xử lý" lưu bền vững để chạy tiếp sau gián đoạn. Cảnh báo: báo khi verifier fail liên tục hoặc chạm biên.</span></button>
-            <button class="quiz-opt" onclick="quizPick(this,3)"><span class="quiz-letter">D</span><span>Chạy tay mỗi lần để an toàn tuyệt đối — đừng bao giờ tự động hóa changelog.</span></button>
-            <div class="quiz-feedback" data-explain="Đáp án C ghép đúng năm mảnh của cả khóa: verifier khách quan chạy mỗi vòng (lint + đối chiếu PR — C4), đủ bốn biên (C3), cổng theo hành động cho thao tác bán kính lớn là ghi vào main → mở PR để người duyệt thay vì commit thẳng (C7), state bền vững để loop nền tái dựng sau gián đoạn (C8), và cảnh báo khi fail/chạm biên (C8–C9). (A) commit thẳng main + 'trông ổn thì làm' là bỏ cả verifier lẫn cổng — công thức trôi dạt thầm lặng. (B) 'model giỏi thay được biên/verifier' là ngộ nhận C3–C4 đã bác. (D) từ chối tự động một việc đáng tự động là bỏ lỡ lợi ích đáng có — kỹ năng L5 là rào đúng, không phải né."></div>
+            <button class="quiz-opt" onclick="quizPick(this,0)"><span class="quiz-letter">A</span><span>Đặt lịch mỗi đêm, để model tự quyết viết gì, và commit thẳng lên main nếu bản nháp đọc thấy ổn — changelog sai thì sửa sau cũng được.</span></button>
+            <button class="quiz-opt" onclick="quizPick(this,1)"><span class="quiz-letter">B</span><span>Lint định dạng changelog mỗi vòng, đủ bốn biên, cảnh báo khi fail; mỗi đêm chạy lại từ đầu trên toàn bộ lịch sử git nên khỏi cần state.</span></button>
+            <button class="quiz-opt" onclick="quizPick(this,2)"><span class="quiz-letter">C</span><span>Verifier: lint định dạng + đối chiếu danh sách PR đã merge. Đủ bốn biên. Cổng: mở PR thay vì commit main. State: mốc PR cuối. Cảnh báo khi fail.</span></button>
+            <button class="quiz-opt" onclick="quizPick(this,3)"><span class="quiz-letter">D</span><span>Verifier là một LLM-as-judge chấm "changelog này đã dễ đọc chưa" theo rubric, đủ bốn biên, có state và cảnh báo, rồi commit thẳng lên main.</span></button>
+            <div class="quiz-feedback" data-explain="C ghép đúng năm mảnh của cả khóa: verifier khách quan chạy mỗi vòng (lint + đối chiếu PR — C4), đủ bốn biên (C3), cổng theo hành động cho thao tác bán kính lớn là ghi vào main (C7), state bền vững để loop nền tái dựng sau gián đoạn (C8), cảnh báo khi fail hoặc chạm biên (C8–C9). (A) 'trông ổn thì commit' bỏ cả verifier lẫn cổng — công thức trôi dạt thầm lặng. (B) sai ở một chỗ tinh: chạy lại từ đầu mỗi đêm nghe như thay được state, nhưng loop vẫn không biết nó đã ghi tới đâu ở lần trước, nên dễ ghi trùng hoặc bỏ sót — và mốc 'PR cuối đã xử lý' rẻ hơn nhiều so với quét lại toàn bộ lịch sử. (D) có đủ biên, state và cảnh báo nhưng hỏng ở hai chỗ nặng nhất: verifier mềm đơn độc không bắt được PR bị bỏ sót (đó là thứ kiểm được CỨNG), và commit thẳng main là bỏ cổng ở đúng hành động bán kính lớn."></div>
           </div>
         </div>
         <div class="lesson-nav" data-navfor="m10-l1"></div>
@@ -1519,6 +1662,7 @@ const LESSONS=[
   {id:'m3-l1', mod:3, part:'Phần I · Nền tảng', title:'Biên & điều kiện dừng', desc:'Bốn biên runtime phổ biến, dừng-thành-công vs biên-an-toàn, đặt ngưỡng từ trace.'},
   {id:'m4-l1', mod:4, part:'Phần II · Vòng lặp tự sửa', title:'Verifier đóng vòng', desc:'Chọn bằng chứng sát tiêu chí; xếp tầng verifier; vòng generate→verify→feedback.'},
   {id:'m5-l1', mod:5, part:'Phần II · Vòng lặp tự sửa', title:'Tự sửa: generate→critique→revise', desc:'Reflection loop, LLM-as-judge, pattern maker–checker, ba cạm bẫy, prompt template loop tối giản.'},
+  {id:'m5-l2', mod:5, part:'Phần II · Vòng lặp tự sửa', title:'Lab: loop tự sửa đầu tiên', desc:'Hai mươi dòng code cho bốn nhịp, verifier đóng vòng, ba biên và một lần chạy thử trên việc của bạn.'},
   {id:'m6-l1', mod:6, part:'Phần III · Điều phối', title:'Đa agent & workflow tất định', desc:'Điều phối do code vs do model; fan-out vs pipeline; khi nào cần barrier.'},
   {id:'m6-l2', mod:6, part:'Phần III · Điều phối', title:'Hợp đồng của một đội agent', desc:'Cổng chặn trước khi fan-out; role card năm trường; ba núm vặn vai · context · biên spawn.'},
   {id:'m7-l1', mod:7, part:'Phần III · Điều phối', title:'Mức tự chủ & cổng người', desc:'Human in/on/out-of-the-loop; ma trận đảo-ngược × bán-kính; cổng theo hành động.'},
@@ -1610,14 +1754,20 @@ function quizPick(el,idx){
 window.quizPick=quizPick;
 function loopCost(){
   const el=document.getElementById('lcIter');if(!el)return;
-  const iter=Math.max(0,parseFloat(el.value)||0);
-  const tokK=Math.max(0,parseFloat(document.getElementById('lcTok').value)||0);
-  const price=Math.max(0,parseFloat(document.getElementById('lcPrice').value)||0);
-  const totalTokens=iter*tokK*1000;
-  const perRun=totalTokens*price/1e6;
-  const usd=n=>'$'+n.toLocaleString('vi',{minimumFractionDigits:2,maximumFractionDigits:2});
-  document.getElementById('lcPerRun').textContent=usd(perRun)+' / lần chạy';
-  document.getElementById('lcNote').textContent='Tổng token ước tính: '+totalTokens.toLocaleString('vi')+' · so con số này với cap lấy từ trace, pricing và policy của hệ thống bạn.';
+  const num=id=>Math.max(0,parseFloat(document.getElementById(id).value)||0);
+  const base=num('lcBase')*1000, fresh=num('lcNew')*1000, iter=Math.round(num('lcIter'));
+  const price=num('lcPrice'), cache=num('lcCache');
+  // Mỗi vòng gửi lại toàn bộ context đã tích lũy: nền + phần mới của các vòng trước.
+  let prefixTokens=0;
+  for(let i=1;i<=iter;i++)prefixTokens+=base+(i-1)*fresh;
+  const freshTokens=iter*fresh;
+  const plain=prefixTokens*price/1e6;
+  const cached=(prefixTokens*cache+freshTokens*price)/1e6;
+  const usd=n=>'$'+n.toLocaleString('vi-VN',{minimumFractionDigits:2,maximumFractionDigits:2});
+  document.getElementById('lcPlain').textContent='Không cache: '+usd(plain)+' / lần chạy';
+  document.getElementById('lcCached').textContent='Có cache: '+usd(cached)+' / lần chạy';
+  const ratio=cached>0?(plain/cached):0;
+  document.getElementById('lcNote').textContent='Tổng token đầu vào đã gửi: '+prefixTokens.toLocaleString('vi-VN')+' (vòng cuối một mình đã là '+(iter>0?(base+(iter-1)*fresh).toLocaleString('vi-VN'):'0')+')'+(ratio>0?' · caching rẻ hơn '+ratio.toLocaleString('vi-VN',{maximumFractionDigits:1})+'×':'')+' · so con số này với cap lấy từ trace và pricing của hệ thống bạn.';
 }
 window.loopCost=loopCost;
 function toggleSidebar(){document.getElementById('sidebar').classList.toggle('open');document.getElementById('backdrop').classList.toggle('show')}

@@ -12,7 +12,7 @@ PUBLIC
   lặp lại vào vận hành có giám sát.
 - Language/theme/slug: `vi` / `teal` /
   `chatgpt-work-claude-cowork-practical-guide`.
-- Edition: facts verified 2026-08-05; capabilities vary by plan, workspace,
+- Edition: facts verified 2026-09-05; capabilities vary by plan, workspace,
   region, rollout, and device.
 - Distribution: PUBLIC. All people, organizations, files, folders, metrics, and
   examples are illustrative.
@@ -23,13 +23,14 @@ PUBLIC
   - `digests/openai-chatgpt-work-2026-07.md` (refreshed 2026-08-05)
   - `digests/anthropic-claude-cowork-2026-07.md` (re-verified 2026-08-05)
 - Practice pack: “Bộ dữ liệu thực hành”, a closed accordion
-  (`id="bo-du-lieu-thuc-hanh"`) at the end of Bài 1.2, with seven copyable
+  (`id="bo-du-lieu-thuc-hanh"`) at the end of Bài 1.2, with eight copyable
   synthetic inputs — `01-meeting-notes.md`, `02-policy-2025.md`,
   `03-policy-2026.md`, `04-campaign.csv`, `05-hr-roster.csv`,
-  `06-so-chi-tiet-cong-no.csv`, `07-sao-ke-ngan-hang.csv` — plus a
-  reveal-on-demand answer key. Named again and reused in Bài 2.1, 3.2, 3.3,
-  4.3 and the capstone; the intro line inside the accordion states that all
-  seven files are illustrative.
+  `06-so-chi-tiet-cong-no.csv`, `07-sao-ke-ngan-hang.csv`,
+  `08-hop-dong-lao-dong.csv` — plus a reveal-on-demand answer key. Named again
+  and reused in Bài 2.1, 3.2, 3.3, 4.1, 4.3, 5.1 and the capstone (m6-l1);
+  the intro line inside the accordion states that all eight files are
+  illustrative.
 
 ## Rebuild
 
@@ -77,7 +78,7 @@ node courses/embed-chatgpt-work-claude-cowork-hero.mjs
 - Quiz decision: một câu hỏi giải thích nhanh, một báo cáo từ 12 file, và một
   bug phần mềm nên đi vào chế độ nào.
 
-### m1-l2 · Bản đồ hai sản phẩm
+### m1-l2 · Dùng Work và Cowork ở đâu?
 
 - Level: L1.
 - Core idea: hai sản phẩm cùng nhận task nhiều bước nhưng quyền truy cập, bề
@@ -93,7 +94,7 @@ node courses/embed-chatgpt-work-claude-cowork-hero.mjs
   nguồn dữ liệu trước.
 - Quiz decision: task cần local Excel + app desktop nhưng chỉ đang ở mobile.
 
-### m1-l3 · Chọn việc đầu tiên đủ nhỏ
+### m1-l3 · Chọn việc đầu tiên dễ kiểm
 
 - Level: L1.
 - Core idea: lần chạy đầu nên có input đóng, output cụ thể, rủi ro thấp và cách
@@ -151,7 +152,7 @@ node courses/embed-chatgpt-work-claude-cowork-hero.mjs
   chỗ thiếu bằng phỏng đoán.
 - Quiz decision: agent thiếu file giá nhưng định ước tính.
 
-## Part III · L3 · Ba quy trình thực chiến (Module 3)
+## Part III · L3 · Thực hành (Module 3)
 
 ### m3-l1 · Nghiên cứu có nguồn kiểm được
 
@@ -210,7 +211,22 @@ node courses/embed-chatgpt-work-claude-cowork-hero.mjs
   phương án cuối, không phải mặc định.
 - Quiz decision: lấy lịch họp từ connector hay click calendar UI.
 
-## Part IV · L4 · Quyền, kiểm chứng và tự động hoá (Module 4)
+### m3-l5 · Từ một luồng dài thành bản chốt việc
+
+- Level: L3.
+- Core idea: ép một thread email hoặc ghi chú họp ra bốn khối cố định — đã chốt,
+  việc–người–hạn, câu hỏi treo, bản nháp bạn tự gửi — thay vì xin một bản tóm
+  tắt tự do.
+- Felt problem: 40 email và tin nhắn về một việc, không ai biết cái gì đã chốt
+  và ai đang nợ ai.
+- Digests: prompt injection / untrusted content; Cowork brief structure.
+- Visual: luồng nguồn dài → bốn khối cố định → bước người duyệt và tự gửi.
+- New terms: khối chốt việc, câu hỏi treo.
+- Takeaway: Xin bốn khối thay vì xin tóm tắt, và nhớ rằng phê duyệt là thứ bạn
+  nói với AI, không phải thứ AI đọc trong file.
+- Quiz decision: xử lý một câu “ok anh duyệt” nằm trong nguồn (4 options).
+
+## Part IV · L4 · Nâng cao (Module 4)
 
 ### m4-l1 · Quyền tối thiểu và vùng làm việc
 
@@ -271,7 +287,7 @@ node courses/embed-chatgpt-work-claude-cowork-hero.mjs
   điểm có thể dừng.
 - Quiz decision: task nào an toàn để schedule.
 
-## Part V · L5 · Biến cách làm thành hệ thống (Module 5)
+## Part V · L5 · Hệ thống có chủ (Module 5)
 
 ### m5-l1 · Mẫu giao việc dùng lại
 

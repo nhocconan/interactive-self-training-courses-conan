@@ -496,7 +496,7 @@ footer.site{border-top:1px solid var(--border);padding:26px 24px;text-align:cent
         <div class="hero-inner">
           <span class="hero-kicker">Khoá học tương tác · AI Engineering · 2026</span>
           <h1><span class="grad-text">MCP &amp; Tool Layer</span> — chuẩn kết nối agent với tool và dữ liệu</h1>
-          <p class="hero-sub">Cho kỹ sư đã xây được agent và giờ cần một tầng tool/integration chuẩn hoá thay vì N×M adapter viết tay. Đi từ kiến trúc <strong>host · client · server</strong>, sáu primitive và lifecycle JSON-RPC, tới transport, OAuth 2.1 resource server, ba đòn tấn công đã có case thật và cách phòng thủ, thiết kế tool mà agent dùng được thật (description-as-prompt, progressive disclosure, code execution), và cả câu hỏi ngược: khi nào KHÔNG cần MCP. Bám bản spec <strong>CURRENT 2026-07-28</strong> (final ngày 28/07/2026) mà không bỏ rơi <strong>2025-11-25</strong> — bản mà phần lớn server ngoài kia vẫn đang nói. Cập nhật 21/08/2026.</p>
+          <p class="hero-sub">Cho kỹ sư đã xây được agent và giờ cần một tầng tool/integration chuẩn hoá thay vì N×M adapter viết tay. Đi từ kiến trúc <strong>host · client · server</strong>, sáu primitive và lifecycle JSON-RPC, tới transport, OAuth 2.1 resource server, ba đòn tấn công đã có case thật và cách phòng thủ, thiết kế tool mà agent dùng được thật (description-as-prompt, progressive disclosure, code execution), và cả câu hỏi ngược: khi nào KHÔNG cần MCP. Bám bản spec <strong>CURRENT 2026-07-28</strong> (final ngày 28/07/2026) mà không bỏ rơi <strong>2025-11-25</strong> — bản mà phần lớn server ngoài kia vẫn đang nói. Cập nhật 05/09/2026.</p>
           <div class="hero-meta">
             <span class="chip">📶 L1 → L5</span>
             <span class="chip">🧩 18 bài</span>
@@ -520,12 +520,12 @@ footer.site{border-top:1px solid var(--border);padding:26px 24px;text-align:cent
           <tbody>
             <tr><td><b>MCP (Model Context Protocol)</b></td><td>Chuẩn mở kết nối AI assistant với tool và nguồn dữ liệu — biến N×M tích hợp viết tay thành N+M qua một protocol chung. Anthropic công bố 11/2024, nay do Agentic AI Foundation quản trị.</td></tr>
             <tr><td><b>Host / Client / Server</b></td><td>Host = tiến trình điều phối, nơi duy nhất thấy toàn bộ hội thoại; mỗi client giữ đúng 1 kết nối với 1 server; server chỉ nhận ngữ cảnh cần thiết, không nhìn được server khác.</td></tr>
-            <tr><td><b>Primitive</b></td><td>Sáu khối tương tác của MCP: server expose tools/resources/prompts, client expose sampling/roots/elicitation. Từ bản 2026-07-28, roots và sampling bị đánh dấu <em>Deprecated</em> (SEP-2577) — elicitation là primitive phía client duy nhất còn hiệu lực.</td></tr>
+            <tr><td><b>Primitive</b></td><td>Sáu khối tương tác của MCP: server expose tools/resources/prompts, client expose sampling/roots/elicitation. Từ bản 2026-07-28, roots, sampling (và tiện ích <em>logging</em> phía server) bị đánh dấu <em>Deprecated</em> (SEP-2577) — elicitation là primitive phía client duy nhất còn hiệu lực.</td></tr>
             <tr><td><b>Tool vs Prompt vs Resource</b></td><td>Khác nhau ở người cầm lái: tool do model quyết (model-controlled), prompt do user chọn (user-controlled), resource do application đưa vào ngữ cảnh (application-driven).</td></tr>
             <tr><td><b>Sampling</b></td><td>Server «mượn» LLM của client — xin client chạy completion hộ, không cần API key riêng; client giữ quyền duyệt prompt và response.</td></tr>
             <tr><td><b>Elicitation</b></td><td>Server xin thêm input từ user giữa chừng qua form phẳng (accept/decline/cancel); spec CẤM dùng để xin thông tin nhạy cảm.</td></tr>
             <tr><td><b>Capability negotiation</b></td><td>Hai bên khai báo tính năng hỗ trợ lúc initialize và chỉ được dùng những gì đã khai — nền của lifecycle MCP.</td></tr>
-            <tr><td><b>Streamable HTTP</b></td><td>Transport remote hiện hành (thay HTTP+SSE cũ từ 2025-03-26): một endpoint duy nhất nhận POST/GET, resume qua Last-Event-ID. Session qua header Mcp-Session-Id là cơ chế của bản 2025-11-25 trở về trước; bản 2026-07-28 bỏ session ở tầng protocol, mỗi request tự khai phiên bản trong _meta.</td></tr>
+            <tr><td><b>Streamable HTTP</b></td><td>Transport remote hiện hành (thay HTTP+SSE cũ từ 2025-03-26): một endpoint duy nhất, bản 2025-11-25 trở về trước nhận POST/GET và resume được qua Last-Event-ID. Bản 2026-07-28 bỏ cả session lẫn resumability (và bỏ luôn GET endpoint); mỗi request tự khai phiên bản trong _meta.</td></tr>
             <tr><td><b>structuredContent / outputSchema</b></td><td>Từ bản 2025-06-18: tool khai schema đầu ra và trả JSON có kiểu song song với text — downstream code hết phải parse text mù.</td></tr>
             <tr><td><b>Annotation (hint)</b></td><td>Bốn cờ readOnly/destructive/idempotent/openWorld mô tả hành vi tool — chỉ là hint do server tự khai, spec bắt client coi là untrusted; default là giá trị «nguy hiểm nhất».</td></tr>
             <tr><td><b>Resource server vs Authorization server</b></td><td>MCP server chỉ validate token (resource server); login/consent/phát token thuộc authorization server tách biệt — không tự chế OAuth trong MCP server.</td></tr>
@@ -852,7 +852,7 @@ footer.site{border-top:1px solid var(--border);padding:26px 24px;text-align:cent
         <text class="dgm-ink2" x="360" y="284" text-anchor="middle" font-size="11" font-style="italic">Cùng “có mặt trên bàn” nhưng người cầm lái khác nhau — nhầm vai là nhầm UX</text>
         <text class="dgm-ink2" x="360" y="302" text-anchor="middle" font-size="10">Nhãn trạng thái theo bản spec 2026-07-28 (SEP-2577) — ba primitive phía server không đổi</text>
       </svg>
-      <figcaption><b>Hình 1.3</b> — Sáu primitive chia theo bên expose; nhãn dưới mỗi ô là <em>ai được quyết định dùng nó</em>. Đọc theo cột phải nhớ: server đưa ba, client đưa ba; đọc theo nhãn để không bao giờ để model bật cái vốn là của user.</figcaption>
+      <figcaption><b>Hình 1.3</b> — Sáu primitive chia theo bên expose; nhãn dưới mỗi ô là <em>ai được quyết định dùng nó</em>. Đọc theo cột phải nhớ: server đưa ba, client đưa ba; đọc theo nhãn để không bao giờ để model bật cái vốn là của user. Một lưu ý khi đọc dòng chú thích trong hình: ba <strong>primitive</strong> phía server (<code>tools</code>/<code>resources</code>/<code>prompts</code>) không đổi — riêng <em>utility</em> <code>logging</code> phía server thì cũng đã Deprecated cùng đợt SEP-2577.</figcaption>
     </figure>
 
     <p>Hai primitive phía client đáng nhớ riêng. <strong>Sampling</strong> là cách server “mượn” LLM của client: server xin client chạy completion hộ, nguyên văn <em>“with no server API keys necessary”</em> (server không cần API key riêng), và client luôn giữ quyền duyệt prompt lẫn response trước khi trả lại. <strong>Elicitation</strong> là server xin thêm input từ user giữa chừng (ví dụ xác nhận địa chỉ), nhưng spec cấm tuyệt đối: <em>“Servers MUST NOT use elicitation to request sensitive information.”</em> — không được dùng để xin thông tin nhạy cảm (mật khẩu, thẻ tín dụng…).</p>
@@ -861,6 +861,7 @@ footer.site{border-top:1px solid var(--border);padding:26px 24px;text-align:cent
       <div class="callout-title">Trạng thái sáu primitive tính đến bản 2026-07-28</div>
       <p>Bản spec CURRENT <strong>2026-07-28</strong> đánh dấu <strong>Deprecated</strong> (SEP-2577) hai trong ba primitive phía client: <code>roots</code> (chuyển sang truyền thư mục/file qua tham số tool, resource URI hoặc cấu hình server) và <code>sampling</code> (chuyển sang tích hợp thẳng API của LLM provider). Cùng đợt, tiện ích <code>logging</code> phía server cũng vào diện deprecated (ghi ra <code>stderr</code> với stdio, hoặc dùng OpenTelemetry để quan sát). <strong><code>elicitation</code> là primitive phía client duy nhất còn hiệu lực</strong>; ba primitive phía server (<code>tools</code>, <code>resources</code>, <code>prompts</code>) không đổi.</p>
       <p>Deprecated <em>không</em> phải đã gỡ: tính năng vẫn nằm trong spec, chỉ là đã lên lịch. Bản đầu tiên được phép gỡ chúng là bản phát hành từ 28/07/2027 trở đi. Nghĩa thực dụng: code đang chạy trên roots/sampling chưa hỏng và bạn còn cả năm để chuyển; nhưng đừng xây thứ <em>mới</em> lên hai primitive đó. (Riêng <code>tasks</code>, thứ bạn sẽ thấy ở bài 3.2, không bị bỏ mà chuyển ra thành extension <code>io.modelcontextprotocol/tasks</code>.)</p>
+      <p>Một đính chính về <em>cách</em> elicitation chạy trên bản CURRENT: server không còn gửi request <code>elicitation/create</code> nữa. Theo pattern <strong>Multi Round-Trip Requests (MRTR, SEP-2322)</strong>, server trả một <code>InputRequiredResult</code> (<code>resultType: "input_required"</code>) mang <code>inputRequests</code>; client thu thập input rồi <strong>gửi lại chính request cũ</strong> (với một JSON-RPC <code>id</code> mới) kèm <code>inputResponses</code>. Spec nói thẳng đây là breaking change, và áp cho cả ba: <code>elicitation/create</code>, <code>sampling/createMessage</code>, <code>roots/list</code>. Cùng đợt, <code>notifications/elicitation/complete</code> và field <code>elicitationId</code> (mới thêm ở 2025-11-25) bị gỡ. Viết server 2026-07-28 mà implement <code>elicitation/create</code> như một request server→client thì nó không bao giờ tới đích. (Kiểm 05/09/2026 trên <code>/specification/2026-07-28/basic/patterns/mrtr</code>.)</p>
     </div>
 
     <div class="callout danger">
@@ -1013,6 +1014,7 @@ footer.site{border-top:1px solid var(--border);padding:26px 24px;text-align:cent
   "result": {
     "protocolVersion": "2025-06-18",
     "capabilities": {
+      <span class="tok-c">// logging: capability của bản 2025-06-18 — từ 2026-07-28 đã Deprecated cùng roots/sampling (SEP-2577)</span>
       "logging": {},
       "prompts": { "listChanged": true },
       "resources": { "subscribe": true, "listChanged": true },
@@ -1028,7 +1030,7 @@ footer.site{border-top:1px solid var(--border);padding:26px 24px;text-align:cent
 
     <div class="callout info">
       <div class="callout-title">protocolVersion cũng phải "hợp" nhau</div>
-      <p>Cùng lúc negotiate capabilities, hai bên chốt <code>protocolVersion</code>: <em>"If the server supports the requested protocol version, it MUST respond with the same version"</em> (trùng thì server đáp lại đúng version đó); nếu không, server đề nghị một version khác nó hỗ trợ, và nếu client không nhận được thì <em>"SHOULD disconnect"</em>. Version không khớp trả lỗi JSON-RPC <code>-32602</code> ("Unsupported protocol version") kèm <code>data: {supported: ["2024-11-05"], requested: "1.0.0"}</code> — nhớ mã <code>-32602</code> này, bài sau ta gặp lại nó.</p>
+      <p>Cùng lúc negotiate capabilities, hai bên chốt <code>protocolVersion</code>: <em>"If the server supports the requested protocol version, it MUST respond with the same version"</em> (trùng thì server đáp lại đúng version đó); nếu không, server đề nghị một version khác nó hỗ trợ, và nếu client không nhận được thì <em>"SHOULD disconnect"</em>. Version không khớp trả lỗi JSON-RPC <code>-32602</code> ("Unsupported protocol version") kèm <code>data: {supported: ["2024-11-05"], requested: "1.0.0"}</code> — nhớ mã <code>-32602</code> này, bài sau ta gặp lại nó. (Trên bản 2026-07-28 mã này đã đổi: version không hỗ trợ trả <code>-32022</code> <code>UnsupportedProtocolVersionError</code>, còn <code>-32602</code> được tái dùng cho <em>resource not found</em> — trước đó là <code>-32002</code>. Spec 2026-07-28 chia dải rõ: <code>-32000..-32019</code> để cho implementation tự định nghĩa, <code>-32020..-32099</code> dành riêng cho spec.)</p>
     </div>
 
     <div>
@@ -1096,6 +1098,7 @@ footer.site{border-top:1px solid var(--border);padding:26px 24px;text-align:cent
       <h4>inputSchema (bắt buộc) và outputSchema (từ 2025-06-18)</h4>
       <p>Mỗi tool luôn có <strong><code>inputSchema</code></strong>: một JSON Schema mô tả tham số đầu vào, để client biết phải truyền gì, kiểu gì. Từ bản <strong>2025-06-18</strong>, tool có thể khai thêm <strong><code>outputSchema</code></strong> (tùy chọn) cho <em>đầu ra</em>: <em>"Tools may also provide an output schema for validation of structured results."</em> Khi đã khai, ràng buộc là hai chiều — <em>"Servers MUST provide structured results that conform to this schema"</em> (server bắt buộc trả kết quả đúng schema) và <em>"Clients SHOULD validate structured results against this schema"</em> (client nên kiểm chứng lại).</p>
       <p>Kết quả có kiểu đó nằm ở field <strong><code>structuredContent</code></strong> của <code>CallToolResult</code>. Để không phá vỡ client cũ, spec yêu cầu trả <em>song song</em>: <em>"a tool that returns structured content SHOULD also return the serialized JSON in a TextContent block"</em>. Tức là vừa có <code>content</code> dạng text (JSON đã serialize thành chuỗi), vừa có <code>structuredContent</code> dạng object có kiểu.</p>
+      <p>Mô tả trên là theo bản <strong>2025-06-18</strong>. Bản <strong>2026-07-28</strong> nới ràng buộc (SEP-2106): <code>inputSchema</code>/<code>outputSchema</code> được dùng mọi keyword JSON Schema 2020-12, và <code>structuredContent</code> được là <em>bất kỳ</em> giá trị JSON chứ không bắt buộc là object, kèm theo yêu cầu resolve <code>$ref</code> và giới hạn tài nguyên cho các keyword composition (<code>oneOf</code>/<code>anyOf</code>/<code>allOf</code>). (Kiểm 05/09/2026.)</p>
     </div>
 
     <figure class="figure">
@@ -1154,6 +1157,7 @@ footer.site{border-top:1px solid var(--border);padding:26px 24px;text-align:cent
       <div class="callout-title">Cặp song song này bạn trả tiền hai lần</div>
       <p>Bản sao text tồn tại vì <em>tương thích ngược</em> với client chưa biết đọc <code>structuredContent</code>, và spec dùng chữ <strong>SHOULD</strong> cho nó, không phải MUST. Trên client hiện đại, mỗi lần gọi tool bạn nhồi cùng một dữ liệu vào context <em>hai lượt</em>.</p>
       <p>Với payload nhỏ như ví dụ thời tiết ở trên thì kệ, không đáng tối ưu. Với payload lớn (danh sách 200 đơn hàng, một tài liệu, một bảng dài), hãy đặt <strong>bản tóm tắt</strong> ở block <code>text</code> («12 đơn quá hạn, tổng 48,2 triệu; chi tiết đầy đủ ở structuredContent») và giữ <strong>object đầy đủ có kiểu</strong> trong <code>structuredContent</code>. Vẫn tương thích ngược, mà không trả giá gấp đôi mỗi lần gọi.</p>
+      <p>Đây là chỗ chính spec biết mình chưa ổn: roadmap MCP (cập nhật 22/08/2026, kiểm 05/09/2026) đưa <strong>"Tool result shape"</strong> thành một hạng mục ưu tiên, nguyên văn <em>"<code>tools/call</code> allows returning both <code>content</code> and <code>structuredContent</code> at the same time, which has confused server and client authors alike and produced diverging implementations"</em>. Nghĩa thực dụng: chuẩn hoá <strong>một</strong> đường trong code của bạn ngay bây giờ, để lần redesign tới không phải sửa hai chỗ.</p>
     </div>
 
     <p>Nãy giờ ta lo đầu <em>ra</em>. Nhưng đầu <em>vào</em> cũng hỏng theo đúng một kiểu: model đọc <code>inputSchema</code>, hiểu gần đúng, rồi gửi <code>passengers: "2"</code> thay vì <code>2</code>, hoặc quên hẳn một field mà schema đã đánh dấu required. Bạn viết code phòng thủ, retry, rồi tự thuyết phục mình rằng "model nó thế". Không hẳn — có hai cần gạt ở tầng API model xử lý đúng hai nửa của vấn đề đó, và cả hai đều là <em>schema tooling</em> chứ không phải mẹo prompt.</p>
@@ -1169,6 +1173,7 @@ footer.site{border-top:1px solid var(--border);padding:26px 24px;text-align:cent
       <div class="callout-title">Hai cần gạt này sống ở tầng nào, và MCP có gì tương ứng</div>
       <p>Nói cho sòng phẳng: <code>strict</code> và <code>input_examples</code> là field của <em>Claude API</em>, <strong>không</strong> phải của spec MCP. Một tool MCP chỉ khai <code>inputSchema</code>; chính <strong>host</strong> mới là chỗ dịch định nghĩa MCP đó thành tool definition của model API, và đó cũng là chỗ duy nhất bạn gắn được hai field này. Hệ quả thực dụng: nếu bạn <em>viết server</em>, thứ bạn kiểm soát là chất lượng <code>inputSchema</code>. Khai <code>additionalProperties: false</code>, liệt kê đủ <code>required</code>, đặt <code>enum</code> ở đâu tập giá trị đóng, để host nào muốn bật <code>strict</code> cũng bật được ngay. Nếu bạn <em>viết host</em>, hãy bật nó. Còn ví dụ gọi tool thì server vẫn đưa được, chỉ là qua ngả khác: nhét thẳng vào <code>description</code> — kém gọn hơn một field riêng, nhưng cùng đích đến.</p>
       <p>Một cảnh báo tương thích để khỏi mất buổi chiều: <code>strict: true</code> <strong>không</strong> dùng chung được với programmatic tool calling (bài 5.2): API từ chối. Bật <code>strict</code> cho nhánh tool gọi trực tiếp, và chấp nhận nhánh chạy trong code execution không có nó.</p>
+      <p>Cập nhật 09/2026: trên <strong>Claude Fable 5.1</strong> và <strong>Claude Mythos 5.1</strong>, <code>tool_choice</code> kiểu <code>any</code> và <code>tool</code> không còn được hỗ trợ — API trả 400 (<code>auto</code> và <code>none</code> giữ nguyên), còn tài liệu chỉ thẳng sang <em>strict tool use</em> hoặc <em>structured outputs</em> làm đường thay thế. Nghĩa là <code>strict</code> từ chỗ "nên bật" đã thành cơ chế chính để ép hình dáng input trên hai model đó. (Claude API docs, «Define tools» §Forcing tool use — kiểm 05/09/2026.)</p>
     </div>
 
     <p>Nửa còn lại của "agent dùng được" là <strong>lỗi</strong>. MCP tách lỗi làm hai tầng — nhầm tầng là một lý do phổ biến khiến agent kẹt vòng lặp:</p>
@@ -1371,11 +1376,11 @@ footer.site{border-top:1px solid var(--border);padding:26px 24px;text-align:cent
     <div class="concept">
       <span class="eyebrow">Đặt tên hai transport chuẩn</span>
       <h4>stdio và Streamable HTTP</h4>
-      <p>Spec MCP định nghĩa đúng "two standard transport mechanisms" và khuyên "Clients SHOULD support stdio whenever possible". <strong>stdio transport</strong>: client <em>spawn</em> server làm subprocess, server đọc JSON-RPC từ <code>stdin</code>, ghi ra <code>stdout</code> (mỗi message một dòng, "MUST NOT contain embedded newlines"), dùng <code>stderr</code> để log, dành cho server chạy <em>local</em>. <strong>Streamable HTTP</strong>: một endpoint HTTP duy nhất nhận cả POST lẫn GET, dành cho server <em>remote</em>, và nó "replaces the HTTP+SSE transport from protocol version 2024-11-05".</p>
+      <p>Spec MCP định nghĩa đúng "two standard transport mechanisms" và khuyên "Clients SHOULD support stdio whenever possible". <strong>stdio transport</strong>: client <em>spawn</em> server làm subprocess, server đọc JSON-RPC từ <code>stdin</code>, ghi ra <code>stdout</code> (mỗi message một dòng, "MUST NOT contain embedded newlines"), dùng <code>stderr</code> để log, dành cho server chạy <em>local</em>. <strong>Streamable HTTP</strong>: một endpoint HTTP duy nhất — bản 2025-03-26→2025-11-25 nhận cả POST và GET; <strong>bản 2026-07-28 gỡ hẳn GET endpoint</strong>, mọi message client gửi là một POST riêng, còn stream thông báo dài hạn nay mở bằng một request <code>subscriptions/listen</code>. Dành cho server <em>remote</em>, và nó "replaces the HTTP+SSE transport from protocol version 2024-11-05".</p>
     </div>
 
     <figure class="figure">
-      <svg viewBox="0 0 700 260" role="img" aria-label="So sánh transport cũ HTTP+SSE dùng hai endpoint riêng với Streamable HTTP dùng một endpoint duy nhất nhận cả POST và GET">
+      <svg viewBox="0 0 700 272" role="img" aria-label="So sánh transport cũ HTTP+SSE dùng hai endpoint riêng với Streamable HTTP gom về một endpoint duy nhất; chú thích dưới cột phải ghi rằng bản 2026-07-28 đã bỏ GET endpoint và bỏ resume qua Last-Event-ID">
         <line class="dgm-line" x1="350" y1="16" x2="350" y2="212" stroke-width="1" stroke-dasharray="5 5"/>
 
         <text class="dgm-ink" x="30" y="30" font-size="13" font-weight="700">HTTP+SSE · cũ (2024-11-05)</text>
@@ -1399,14 +1404,15 @@ footer.site{border-top:1px solid var(--border);padding:26px 24px;text-align:cent
         <text class="dgm-ink2" x="525" y="182" text-anchor="middle" font-size="10">POST + GET · 1 endpoint</text>
         <path class="dgm-flow" d="M519 90 L519 140" stroke-width="2" marker-end="url(#m3l1-ah)"/>
         <path class="dgm-line" d="M531 140 L531 90" stroke-width="2" marker-end="url(#m3l1-ah)"/>
-        <text class="dgm-ink2" x="380" y="228" font-size="11">1 endpoint · SSE mở-rồi-đóng · resume qua Last-Event-ID</text>
+        <text class="dgm-ink2" x="380" y="228" font-size="11">1 endpoint · SSE mở-rồi-đóng</text>
+        <text class="dgm-ink2" x="380" y="246" font-size="10">2026-07-28: bỏ GET endpoint, bỏ resume Last-Event-ID</text>
 
         <defs><marker id="m3l1-ah" markerWidth="9" markerHeight="9" refX="7" refY="4.5" orient="auto"><path d="M0 0 L9 4.5 L0 9 z" fill="var(--accent-2)"/></marker></defs>
       </svg>
-      <figcaption><b>Hình 3.1</b> — Bản cũ cần <b>hai</b> endpoint và một kết nối SSE giữ mở suốt phiên (rụng ngay sau load balancer). Streamable HTTP gom về <b>một</b> endpoint: mỗi POST được trả bằng một JSON đơn hoặc một SSE mở-rồi-đóng, thêm <code>Mcp-Session-Id</code> để quản session và <code>Last-Event-ID</code> để resume — hợp với serverless/load-balancer.</figcaption>
+      <figcaption><b>Hình 3.1</b> — Bản cũ cần <b>hai</b> endpoint và một kết nối SSE giữ mở suốt phiên (rụng ngay sau load balancer). Streamable HTTP gom về <b>một</b> endpoint: mỗi POST được trả bằng một JSON đơn hoặc một SSE mở-rồi-đóng, thêm <code>Mcp-Session-Id</code> để quản session — hợp với serverless/load-balancer. Lưu ý: <code>Mcp-Session-Id</code> và resume qua <code>Last-Event-ID</code> là hai cơ chế mà bản 2026-07-28 đã gỡ bỏ.</figcaption>
     </figure>
 
-    <p>Callback bài 2.1: nhớ header <code>MCP-Protocol-Version</code> phải đi kèm <em>mọi</em> request HTTP sau bước <code>initialize</code>? Đó chính là hợp đồng chỉ tồn tại trên transport HTTP — stdio spawn subprocess thì không có khái niệm header này.</p>
+    <p>Callback bài 2.1: nhớ header <code>MCP-Protocol-Version</code>? Trên bản 2026-07-28 nó phải đi kèm <strong>mọi</strong> POST tới MCP endpoint, và giá trị của nó <strong>phải khớp</strong> <code>io.modelcontextprotocol/protocolVersion</code> trong <code>_meta</code> của body — lệch nhau thì server trả <code>400</code> kèm lỗi <code>-32020</code> <code>HeaderMismatch</code>. Trên các bản 2025-06-18→2025-11-25 thì header này đi kèm mọi request sau bước <code>initialize</code>. Cả hai cách đều là hợp đồng chỉ tồn tại trên transport HTTP — stdio spawn subprocess thì không có khái niệm header này.</p>
 
     <div class="callout danger">
       <div class="callout-title">DNS rebinding — cảnh báo lý thuyết đã thành CVE thật</div>
@@ -1424,7 +1430,7 @@ footer.site{border-top:1px solid var(--border);padding:26px 24px;text-align:cent
         <div class="accordion-body">Dùng <strong>stdio</strong>: client spawn server làm subprocess, giao tiếp qua stdin/stdout. Không cần mở cổng mạng, không cần Origin check, credential lấy từ environment. Đây là mặc định spec khuyến khích ("SHOULD support stdio whenever possible").</div>
       </details>
       <details class="accordion"><summary><span class="chev">▶</span><span class="accordion-tag">Server remote</span><span>Nhiều agent gọi chung, chạy sau load balancer</span></summary>
-        <div class="accordion-body">Dùng <strong>Streamable HTTP</strong> một-endpoint. Bật <em>ngay</em> Origin validation, bind localhost nếu chỉ nội bộ, kiểm SDK ≥ 1.24.0 nếu là stack TypeScript. Dùng <code>Mcp-Session-Id</code> để quản session và <code>Last-Event-ID</code> để resume khi kết nối đứt, chính hai thứ transport SSE cũ thiếu. (Lưu ý phiên bản: <code>Mcp-Session-Id</code> là cơ chế của bản 2025-11-25 trở về trước; bản 2026-07-28 bỏ session ở tầng protocol — xem bài 3.2. <code>Last-Event-ID</code> thì vẫn còn.)</div>
+        <div class="accordion-body">Dùng <strong>Streamable HTTP</strong> một-endpoint. Bật <em>ngay</em> Origin validation, bind localhost nếu chỉ nội bộ. Về SDK thì tách bạch hai chuyện. <em>Vá bảo mật</em>: bản vá DNS rebinding của TypeScript SDK nằm ở <strong>1.24.0</strong> trên dòng 1.x, nên stack TypeScript còn ở 1.x phải ≥ 1.24.0. <em>Nói được bản 2026-07-28</em>: phải lên dòng <strong>v2</strong> — TypeScript là hai gói mới <code>@modelcontextprotocol/server</code> và <code>@modelcontextprotocol/client</code> (README: <em>"v2 is the stable release line, released alongside the 2026-07-28 spec"</em>), Python là <strong>SDK ≥ 2.0.0</strong> (quickstart MCP: <em>"You must use the Python MCP SDK 2.0.0 or higher"</em>). Dòng 1.x của cả hai nay là legacy: còn nhận bug fix và bản vá bảo mật, nhưng không nói bản 2026-07-28. Trên các bản 2025-11-25 trở về trước, bạn dùng <code>Mcp-Session-Id</code> để quản session và <code>Last-Event-ID</code> để resume khi kết nối đứt, chính hai thứ transport SSE cũ thiếu. (Lưu ý phiên bản: cả <code>Mcp-Session-Id</code> lẫn <code>Last-Event-ID</code> đều là cơ chế của bản 2025-11-25 trở về trước. Bản 2026-07-28 bỏ session ở tầng protocol VÀ bỏ luôn resumability — spec ghi nguyên văn "Resumable SSE streams via <code>Last-Event-ID</code> are not supported": stream đứt là mất request, client phải gửi lại như một request mới với <code>id</code> mới. Xem bài 3.2.)</div>
       </details>
     </div>
 
@@ -1508,7 +1514,8 @@ footer.site{border-top:1px solid var(--border);padding:26px 24px;text-align:cent
         <circle class="dgm-accent" cx="635" cy="150" r="9" stroke-width="2"/>
         <text class="dgm-ink" x="635" y="176" text-anchor="middle" font-size="11" font-weight="700" font-family="IBM Plex Mono">2026-07-28</text>
         <text x="635" y="192" text-anchor="middle" font-size="10" font-weight="700" fill="var(--success)">CURRENT · đã final</text>
-        <text class="dgm-ink2" x="635" y="206" text-anchor="middle" font-size="10">bỏ session · Extensions</text>
+        <text class="dgm-ink2" x="635" y="206" text-anchor="middle" font-size="10">stateless · MRTR</text>
+        <text class="dgm-ink2" x="635" y="220" text-anchor="middle" font-size="10">Extensions · bỏ resume</text>
 
         <defs><marker id="m3l2-ah" markerWidth="9" markerHeight="9" refX="7" refY="4.5" orient="auto"><path d="M0 0 L9 4.5 L0 9 z" fill="var(--accent-2)"/></marker></defs>
       </svg>
@@ -1525,15 +1532,27 @@ footer.site{border-top:1px solid var(--border);padding:26px 24px;text-align:cent
           <tr><td class="mono">2025-03-26</td><td class="mono">2025-03-26</td><td>OAuth 2.1; Streamable HTTP <b>thay</b> HTTP+SSE; tool annotations; <b>thêm</b> JSON-RPC batching</td></tr>
           <tr><td class="mono">2025-06-18</td><td class="mono">2025-06-18</td><td><b>Bỏ</b> batching; structured output; MCP server = OAuth Resource Server</td></tr>
           <tr><td class="mono">2025-11-25</td><td class="mono">2025-11-25</td><td><b>Bản trước</b> — vẫn là bản phần lớn server đang chạy; OIDC discovery; tasks (thử nghiệm)</td></tr>
-          <tr><td class="mono">2026-07-28</td><td class="mono">2026-07-28<br>(RC: 2026-05-29)</td><td><b>CURRENT — final 28/07/2026</b>; bỏ <code>initialize</code>/<code>initialized</code> và <code>Mcp-Session-Id</code>, thay bằng <code>server/discover</code> + <code>_meta</code> trên từng request; Extensions; Roots/Sampling/Logging và Dynamic Client Registration vào diện Deprecated, cửa sổ ≥ 12 tháng</td></tr>
+          <tr><td class="mono">2026-07-28</td><td class="mono">2026-07-28<br>(RC: 2026-05-29)</td><td><b>CURRENT — final 28/07/2026</b>; bỏ <code>initialize</code>/<code>initialized</code> và <code>Mcp-Session-Id</code>, thay bằng <code>server/discover</code> + <code>_meta</code> trên từng request; Extensions; Roots/Sampling/Logging và Dynamic Client Registration vào diện Deprecated, cửa sổ ≥ 12 tháng; <b>MRTR</b> thay request server→client (sampling/elicitation/roots giờ đi qua <code>InputRequiredResult</code> + <code>inputResponses</code>, SEP-2322); mọi result mang field bắt buộc <code>resultType</code>; <b><code>subscriptions/listen</code></b> thay GET endpoint và <code>resources/subscribe</code>; <b>bỏ SSE resumability</b> (<code>Last-Event-ID</code>); bỏ <code>ping</code>, <code>logging/setLevel</code>, <code>notifications/roots/list_changed</code>; bắt buộc header <code>Mcp-Method</code> trên mọi request, và <code>Mcp-Name</code> trên <code>tools/call</code>/<code>resources/read</code>/<code>prompts/get</code> (lệch header↔body → <code>-32020 HeaderMismatch</code>); <code>ttlMs</code> + <code>cacheScope</code> bắt buộc trên mọi list result và cả <code>resources/read</code>, qua interface <code>CacheableResult</code> (SEP-2549); dải error code mới <code>-32020..-32099</code></td></tr>
         </tbody>
       </table>
     </div>
 
     <div class="callout warn">
       <div class="callout-title">Bản 2026-07-28 đã final — và nó đổi rất lớn</div>
-      <p>Tính đến <strong>21/08/2026</strong>, bản <strong>CURRENT</strong> là <strong>2026-07-28</strong>, chốt final ngày <strong>28/07/2026</strong> (RC gắn tag 29/05/2026). Nó bỏ hẳn session: "The initialize/initialized handshake is removed", "The Mcp-Session-Id header and the protocol-level session... are also removed". Thay vào đó mỗi request tự khai phiên bản qua khoá <code>io.modelcontextprotocol/protocolVersion</code> trong <code>_meta</code>, và client muốn biết trước năng lực server thì gọi RPC <code>server/discover</code> — hợp hẳn với server round-robin sau load balancer. Kèm theo là <strong>Extensions framework</strong> (định danh reverse-DNS), nơi <code>tasks</code> chuyển tới sống dưới tên <code>io.modelcontextprotocol/tasks</code> thay vì nằm trong core.</p>
+      <p>Tính đến <strong>05/09/2026</strong>, bản <strong>CURRENT</strong> là <strong>2026-07-28</strong>, chốt final ngày <strong>28/07/2026</strong> (RC gắn tag 29/05/2026). Nó bỏ hẳn session: "The initialize/initialized handshake is removed", "The Mcp-Session-Id header and the protocol-level session... are also removed". Thay vào đó mỗi request tự khai phiên bản qua khoá <code>io.modelcontextprotocol/protocolVersion</code> trong <code>_meta</code>, và client muốn biết trước năng lực server thì gọi RPC <code>server/discover</code> — hợp hẳn với server round-robin sau load balancer. Kèm theo là <strong>Extensions framework</strong> (định danh reverse-DNS), nơi <code>tasks</code> chuyển tới sống dưới tên <code>io.modelcontextprotocol/tasks</code> thay vì nằm trong core.</p>
       <p>Đi cùng là <strong>deprecation policy</strong> chính thức. Roots, Sampling, Logging (SEP-2577) và <strong>Dynamic Client Registration</strong> vào diện <em>Deprecated</em>: vẫn nằm trong spec, nhưng bản đầu tiên được phép gỡ chúng là bản phát hành từ <strong>28/07/2027</strong> trở đi — đúng cam kết "at least twelve months". Nói cách khác, 2025-11-25 không chết: nó là bản <em>Final</em>, vẫn negotiate được, và spec mới có hẳn mục "Backward Compatibility with initialization-based versions". Bạn sẽ debug song song hai kiểu bắt tay trong một thời gian dài.</p>
+      <p><strong>Extensions framework có gì trong đó?</strong> Extension luôn <strong>tắt mặc định</strong>, phải opt-in ("Extensions are always disabled by default and require explicit opt-in from the developer"); hai bên khai qua field <code>extensions</code> trong capabilities — client trong <code>_meta["io.modelcontextprotocol/clientCapabilities"]</code>, server trong response của <code>server/discover</code>. Danh sách extension chính thức tính đến 05/09/2026:</p>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Extension</th><th>Nó giải bài toán gì</th></tr></thead>
+          <tbody>
+            <tr><td class="mono">io.modelcontextprotocol/tasks</td><td>Việc chạy dài: polling bằng <code>tasks/get</code>, nhận input giữa chừng bằng <code>tasks/update</code>, task handle bền (durable)</td></tr>
+            <tr><td><b>MCP Apps</b> (repo <span class="mono">ext-apps</span>)</td><td>Server render UI tương tác — chart, form, video player — inline ngay trong hội thoại</td></tr>
+            <tr><td><b>OAuth Client Credentials</b></td><td>Luồng client credentials cho machine-to-machine: không có người ở thời điểm consent</td></tr>
+            <tr><td><b>Enterprise-Managed Authorization</b></td><td>Kiểm soát truy cập tập trung cho môi trường doanh nghiệp (dùng ID-JAG)</td></tr>
+          </tbody>
+        </table>
+      </div>
     </div>
 
     <div class="callout insight">
@@ -1546,7 +1565,7 @@ footer.site{border-top:1px solid var(--border);padding:26px 24px;text-align:cent
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true" focusable="false"><path d="M12 2v6m0 8v6M4.9 4.9l4.2 4.2m5.8 5.8l4.2 4.2M2 12h6m8 0h6M4.9 19.1l4.2-4.2m5.8-5.8l4.2-4.2"/></svg>
         Takeaway
       </span>
-      <p>Đừng học thuộc một bản spec — <span class="hl">pin protocol version và đọc changelog</span> trước khi nâng SDK. Tính đến 21/08/2026: bản CURRENT là 2026-07-28 (final 28/07/2026, bỏ bắt tay <code>initialize</code>), còn 2025-11-25 vẫn là bản phần lớn server đang nói; bạn cần đọc được cả hai, và cần biết SDK của mình đang nói bản nào.</p>
+      <p>Đừng học thuộc một bản spec — <span class="hl">pin protocol version và đọc changelog</span> trước khi nâng SDK. Tính đến 05/09/2026: bản CURRENT là 2026-07-28 (final 28/07/2026, bỏ bắt tay <code>initialize</code>), còn 2025-11-25 vẫn là bản phần lớn server đang nói; bạn cần đọc được cả hai, và cần biết SDK của mình đang nói bản nào.</p>
     </div>
 
     <div class="quiz" data-correct="1">
@@ -1692,6 +1711,11 @@ footer.site{border-top:1px solid var(--border);padding:26px 24px;text-align:cent
     <div class="callout warn">
       <div class="callout-title">Cập nhật 2026-07-28: cơ chế đăng ký client đã đổi</div>
       <p>Luồng chín bước ở trên (401 → Protected Resource Metadata → PKCE → token có audience) vẫn đúng nguyên ở bản spec CURRENT. Cái đổi là <em>phần ống nước đăng ký client</em>: <strong>Dynamic Client Registration</strong> (RFC 7591) vào diện <em>Deprecated</em> từ 2026-07-28, thay bằng <strong>Client ID Metadata Documents (CIMD)</strong>: client tự công bố metadata của mình tại một URL và chính URL đó là <code>client_id</code>, nên authorization server không phải cấp phát ID động nữa. Bản mới cũng bắt buộc <strong>validate <code>iss</code> theo RFC 9207</strong> trong response của authorization server. Cơ chế confused deputy ở bài 4.2 và các lệnh MUST ở bài 4.3 không hề thay đổi vì việc này — chỉ có cách client lấy được <code>client_id</code> là khác.</p>
+      <p>Cùng đợt còn hai lệnh MUST nữa mà client thật sẽ vấp:</p>
+      <ul>
+        <li><strong>Credential gắn với issuer (SEP-2352)</strong>: client <strong>MUST</strong> lưu client credential theo <code>issuer</code> của authorization server đã cấp, <strong>MUST NOT</strong> dùng lại với AS khác, và <strong>MUST</strong> đăng ký lại khi AS đổi (phát hiện qua Protected Resource Metadata cập nhật). <code>client_id</code> kiểu CIMD miễn khoản này, vì nó là URL tự host nên portable qua mọi AS, không cần đăng ký lại.</li>
+        <li><strong><code>application_type</code> khi còn dùng DCR (SEP-837)</strong>: client <strong>MUST</strong> khai <code>application_type</code>; bỏ trống thì OIDC mặc định <code>"web"</code>, và mặc định đó <em>có thể</em> chọi với redirect URI kiểu <code>localhost</code> (server không dùng OIDC thì bỏ qua tham số này). Desktop, mobile, CLI và web app chạy local nên khai <code>"native"</code>; app browser-based ở host từ xa khai <code>"web"</code>.</li>
+      </ul>
     </div>
 
     <div class="callout info">
@@ -1708,6 +1732,11 @@ footer.site{border-top:1px solid var(--border);padding:26px 24px;text-align:cent
       <details class="accordion"><summary><span class="chev">▶</span><span class="accordion-tag">Review · duyệt PR</span><span>Đồng nghiệp mở PR thêm MCP server mới</span></summary>
         <div class="accordion-body">Câu hỏi review đầu tiên: "Server này tự phát token hay validate token của authorization server ngoài?" Nếu thấy code sinh JWT / lưu password / có bảng user ngay trong MCP server → dừng lại: nó đang lấn vai authorization server, sẽ không tích hợp nổi SSO và không audit được về sau.</div>
       </details>
+    </div>
+
+    <div class="callout insight">
+      <div class="callout-title">Cái đang được xây, để bạn không thiết kế nhầm hướng</div>
+      <p>Toàn bộ luồng trên giả định <em>có một con người, có một trình duyệt, tại thời điểm consent</em>. Ngày càng nhiều caller là agent: workload cloud có danh tính riêng, hoặc sub-agent cần quyền hẹp hơn cha nó. Roadmap MCP (cập nhật 22/08/2026, kiểm 05/09/2026) đặt đây là <strong>ưu tiên số 3</strong> với hai deliverable có tên: <strong>DPoP</strong> (Demonstrating Proof of Possession — token gắn với khoá, chống replay) và <strong>agent identity/delegation</strong> qua Workload Identity Federation (SEP-1933), ID-JAG, và RFC 8693 token exchange, chính RFC 8693 bạn sẽ gặp ở bài 4.3. Cả hai chưa vào spec. Nghĩa thực dụng: đừng tự chế cơ chế danh tính agent lúc này; hãy chừa chỗ cho nó.</p>
     </div>
 
     <div class="takeaway">
@@ -1985,6 +2014,10 @@ footer.site{border-top:1px solid var(--border);padding:26px 24px;text-align:cent
 [ ] Có pin publisher+version của tools/list, re-approve khi delta NGỮ NGHĨA
     (tool mới / required param mới / annotation hạ cấp / đổi command-args)
     và chỉ log khi delta hình thức (typo, khoảng trắng)?
+[ ] Nếu là CLIENT: client credential lưu theo issuer của AS đã cấp, KHÔNG
+    tái dùng với AS khác, và đăng ký lại khi AS đổi (SEP-2352)?
+[ ] Nếu là CLIENT còn dùng DCR: có khai application_type ("native" cho
+    desktop/CLI/app local, "web" cho app browser từ xa) chứ không bỏ trống?
 [ ] Có pin luôn ENTRY CONFIG của server (command + args + env), không chỉ tools/list?
 [ ] Tool inputs được validate (path/args) trước khi thực thi?
 [ ] KÊNH RUNTIME: tool result được đóng khung là dữ liệu; tool trả nội dung bên
@@ -2188,7 +2221,11 @@ footer.site{border-top:1px solid var(--border);padding:26px 24px;text-align:cent
       <div class="callout-title">Cập nhật 2026: bạn không còn phải tự viết <code>search_tools</code> nữa</div>
       <p>Bài viết gốc mô tả progressive disclosure như thứ bạn tự dựng ở tầng ứng dụng. Từ đó tới nay nó đã thành <em>tính năng nền tảng</em>: <strong>Tool Search Tool</strong> lên public beta 24/11/2025 và <strong>GA trên Claude API ngày 17/02/2026</strong> (không cần beta header). Cơ chế: bạn vẫn gửi <em>toàn bộ</em> định nghĩa tool trong mảng <code>tools</code> mỗi request, nhưng đánh <code>defer_loading: true</code> lên những tool không cần nạp sẵn. Những tool đó bị loại khỏi prefix system prompt, và chỉ được nạp vào context khi model chủ động tìm thấy. Hai biến thể có sẵn: <code>tool_search_tool_regex_20251119</code> (model viết pattern <code>re.search()</code> của Python, tối đa 200 ký tự) và <code>tool_search_tool_bm25_20251119</code> (model hỏi bằng ngôn ngữ tự nhiên, tối đa 500 ký tự). Cả hai tìm trên tên, description, tên tham số <em>và</em> mô tả tham số — nên bài 5.1 vừa lãi thêm một lý do: description viết tốt giờ còn quyết định tool của bạn có <em>được tìm thấy</em> hay không.</p>
       <p>Con số Anthropic công bố trên một setup <strong>50+ MCP tool</strong>: cách cũ tốn ~72K token chỉ riêng định nghĩa tool, tổng ~<strong>77K</strong> token trước khi làm bất cứ việc gì; bật tool search thì còn ~<strong>8,7K</strong> (bản thân search tool ~500 token, cộng 3–5 tool thật sự cần ~3K) — <strong>giảm 85%</strong> token, giữ lại 95% cửa sổ context. Và nó không chỉ rẻ hơn mà còn <em>đúng hơn</em>, vì độ chính xác chọn tool tụt khi bộ tool phình: trên eval MCP nội bộ, Opus 4 đi từ <strong>49% lên 74%</strong>, Opus 4.5 từ <strong>79,5% lên 88,1%</strong> khi bật tool search.</p>
-      <p>Hai cái bẫy cấu hình, cả hai đều trả về HTTP 400. <strong>Một</strong>: đừng bao giờ đặt <code>defer_loading: true</code> lên chính search tool. <strong>Hai</strong>: phải còn ít nhất một tool không bị defer. API nói thẳng <em>"At least one tool must have defer_loading=false. All tools cannot be deferred."</em> Thông lệ tốt là để 3–5 tool dùng nhiều nhất ở lại. Với tool đến từ MCP connector thì không gắn <code>defer_loading</code> lên từng định nghĩa: đặt một lần trên <code>default_config</code> của <code>mcp_toolset</code> cho cả server, rồi mở ngoại lệ cho từng tool trong <code>configs</code>.</p>
+    </div>
+
+    <div class="callout warn">
+      <div class="callout-title">Hai cái bẫy cấu hình, cả hai đều trả về HTTP 400</div>
+      <p><strong>Một</strong>: đừng bao giờ đặt <code>defer_loading: true</code> lên chính search tool. <strong>Hai</strong>: phải còn ít nhất một tool không bị defer. API nói thẳng <em>"At least one tool must have defer_loading=false. All tools cannot be deferred."</em> Thông lệ tốt là để 3–5 tool dùng nhiều nhất ở lại. Với tool đến từ MCP connector thì không gắn <code>defer_loading</code> lên từng định nghĩa: đặt một lần trên <code>default_config</code> của <code>mcp_toolset</code> cho cả server, rồi mở ngoại lệ cho từng tool trong <code>configs</code>.</p>
     </div>
 
     <div>
@@ -2214,7 +2251,8 @@ footer.site{border-top:1px solid var(--border);padding:26px 24px;text-align:cent
       </details>
       <details class="accordion"><summary><span class="chev">▶</span><span class="accordion-tag">pagination</span><span>Cursor-based cho list lớn, nhưng KHÔNG phải cần gạt token</span></summary>
         <div class="accordion-body"><p>Với <code>tools/list</code>, <code>resources/list</code>, <code>prompts/list</code>… MCP dùng cursor-based pagination: "The cursor is an opaque string token." Page size do server quyết, client <strong>MUST NOT</strong> giả định cỡ trang cố định và <strong>MUST</strong> coi cursor là opaque (không parse, không lưu qua session). Cursor không hợp lệ → trả đúng lỗi JSON-RPC <code>-32602</code> (Invalid params) thay vì crash.</p>
-        <p style="margin-top:10px">Đừng nhầm nó với việc giảm số tool mà <em>model</em> phải đọc. Pagination phân trang cho <strong>client</strong>, để client không phải nuốt một response khổng lồ trong một lần. Model thì vẫn cần đủ schema của <em>mọi</em> tool mà nó được phép gọi, và protocol <strong>vẫn không có</strong> RPC kiểu <code>tools/search</code> để nó tự tra khi cần. Điều đáng nói ở đây: tool search mà bạn vừa đọc ở trên là tính năng của <em>model API</em>, nằm ngoài MCP hoàn toàn. Nó lọc ở chỗ định nghĩa tool đi vào context, không phải ở chỗ server trả danh sách. Muốn cắt ngân sách token thật thì phải dùng tool search ở tầng host hoặc chuyển sang code execution — pagination không làm hộ bạn việc đó.</p></div>
+        <p style="margin-top:10px">Đừng nhầm nó với việc giảm số tool mà <em>model</em> phải đọc. Pagination phân trang cho <strong>client</strong>, để client không phải nuốt một response khổng lồ trong một lần. Model thì vẫn cần đủ schema của <em>mọi</em> tool mà nó được phép gọi, và protocol <strong>vẫn không có</strong> RPC kiểu <code>tools/search</code> để nó tự tra khi cần. Điều đáng nói ở đây: tool search mà bạn vừa đọc ở trên là tính năng của <em>model API</em>, nằm ngoài MCP hoàn toàn. Nó lọc ở chỗ định nghĩa tool đi vào context, không phải ở chỗ server trả danh sách. Muốn cắt ngân sách token thật thì phải dùng tool search ở tầng host hoặc chuyển sang code execution — pagination không làm hộ bạn việc đó.</p>
+        <p style="margin-top:10px">Tính đến <strong>05/09/2026</strong> điều này vẫn đúng — nhưng đã có tên và có người làm: roadmap MCP đặt <strong>"Progressive discovery"</strong> cho Core Primitives WG, mục tiêu <em>"clients learn a server's tools and resources as they need them instead of ingesting the full catalog up front"</em>, gắn với công việc caching (<code>ttlMs</code>/<code>cacheScope</code>, tiến tới ETags). Nghĩa là: giải pháp tầng host bạn dựng hôm nay là đúng, nhưng đừng khoá cứng, vì 12 tháng nữa có thể có cơ chế tầng protocol.</p></div>
       </details>
     </div>
 
@@ -2229,6 +2267,10 @@ footer.site{border-top:1px solid var(--border);padding:26px 24px;text-align:cent
         <li><h4>Mọi tool call phát ra từ sandbox đi qua đúng cổng duyệt + audit như call trực tiếp</h4><p>Đây là điều dễ mất nhất, vì cảm giác «đã duyệt cái script rồi». Không: duyệt script <em>không</em> phải duyệt trọn gói mọi tool call mà nó gọi lúc chạy. MCP client best practices nói thẳng: broker vẫn là MCP host về mặt spec, nên chính sách human-in-the-loop áp y nguyên cho call sinh ra từ sandbox. Bạn được phép duyệt theo <em>nhóm</em> («cho phép <code>orders_search</code> trong lần chạy script này») để khỏi hỏi mỗi vòng lặp, nhưng broker vẫn phải soi từng call vào cái quyền đã cấp đó.</p></li>
         <li><h4>Kết quả từ server A là input <em>không tin cậy</em> với server B</h4><p>Sandbox làm cho dữ liệu chảy ngang giữa các server mà không qua mắt model — tiện, và cũng có nghĩa là không ai đọc. Cắt bớt output không phải kiểm soát exfiltration.</p></li>
       </ol>
+    </div>
+
+    <div class="callout warn">
+      <div class="callout-title">Không có đường tắt qua API — và <code>roots</code> đi đâu rồi</div>
       <p><strong>Và đây là điều phải nói thẳng, kẻo bạn đi tìm một nút bấm không tồn tại:</strong> <em>programmatic tool calling</em> có sẵn của Claude API (<code>code_execution</code> + <code>allowed_callers</code>) <strong>không dùng được với tool đến từ MCP connector</strong>: tài liệu liệt kê chúng trong mục «tools that cannot be called programmatically». Nó cũng không đi cùng <code>strict: true</code> (bài 2.2), không đi cùng <code>disable_parallel_tool_use: true</code>, và bạn không ép được nó qua <code>tool_choice</code>. Nghĩa là: <span class="hl">code-execution-over-MCP là một pattern bạn tự dựng và tự host ở tầng harness</span> — kể cả sandbox. Không có đường tắt qua API. Nếu bạn không sẵn sàng vận hành sáu ràng buộc trên, hãy dừng ở tool search (tầng 2): nó lấy phần lớn khoản tiết kiệm context mà không mở thêm bề mặt thực thi nào.</p>
       <p>Còn <strong>ranh giới filesystem</strong> thì nhớ nó từng ở đâu: MCP có primitive <code>roots</code> để client nói cho server biết «anh chỉ được đụng tới những cây thư mục này». Ở bài 1.3 bạn đã học rằng <code>roots</code> đã vào diện <em>Deprecated</em> từ 2026-07-28. Đọc cho đúng: cơ chế bị bỏ, <em>ranh giới thì không</em>. Nó chỉ đổi chỗ ở — từ một primitive của protocol xuống config của sandbox mà harness bạn dựng. Đây cũng là câu trả lời <em>cấu trúc</em> cho <strong>CVE-2025-68145</strong> (bài 4.3): path traversal trên <code>mcp-server-git</code> vá được bằng validate chuỗi cho đúng, nhưng validate chuỗi là một cuộc đua bạn phải thắng mọi lần, còn kẻ tấn công chỉ cần thắng một lần. Nhốt tiến trình lại thì một đường dẫn thoát khỏi <code>--repository</code> cũng chẳng đi tới đâu, vì phần còn lại của filesystem không tồn tại đối với nó. <span class="hl">Validate input để báo lỗi cho tử tế; confine process để khi validate thủng thì vẫn không mất gì.</span></p>
     </div>
@@ -2242,7 +2284,8 @@ footer.site{border-top:1px solid var(--border);padding:26px 24px;text-align:cent
       <div class="callout-title">Một tool list ổn định là tài sản cache</div>
       <p>Cả bài này bảo bạn «bớt tool definitions đi». Có một lực kéo ngược cần biết, kẻo tối ưu cái này làm hỏng cái kia. Trong prompt caching, thứ tự dựng prefix là <strong>tools → system → messages</strong>: tool definitions nằm ở <em>đầu</em> prefix được cache. Mà cache là <em>prefix match</em> — đổi một byte ở đầu thì mọi thứ phía sau mất cache. Nên hoán tool giữa chừng một cuộc hội thoại không chỉ tốn lại phần tool: nó <strong>đập vỡ toàn bộ prefix</strong>, kể cả lịch sử hội thoại dài phía sau.</p>
       <p>Tin tốt cho tầng 2 ở trên: tool search <em>được thiết kế để không phá cache</em>. Tool bị defer bị loại khỏi prefix system prompt ngay từ đầu, và khi model tìm thấy một cái, API chèn <code>tool_reference</code> <em>trong dòng hội thoại</em> rồi mới bung thành định nghĩa đầy đủ; prefix không bị đụng tới. Đổi lại có một luật nhỏ dễ vấp: một tool đã <code>defer_loading: true</code> thì <strong>không</strong> được mang <code>cache_control</code> (API trả 400) — đặt breakpoint cache lên một tool không defer.</p>
-      <p>Ba hệ quả thực dụng. <strong>Một</strong>: cho progressive disclosure chạy <em>append-only</em>, thêm tool khi cần, đừng tráo qua tráo lại. <strong>Hai</strong>: nếu bạn thật sự cần đổi bộ tool giữa chừng, đó chính là lý do tồn tại của beta <em>mid-conversation tool changes</em> (<code>mid-conversation-tool-changes-2026-07-01</code>, từ Claude Opus 5) — nó cho thêm/bớt tool mà không giết prefix cache. <strong>Ba</strong>: đo chứ đừng đoán, nhìn <code>usage.cache_read_input_tokens</code> trước và sau khi đổi; nếu nó về 0 giữa các request giống nhau, có một thứ đang âm thầm phá cache.</p>
+      <p>(Cơ chế prefix cache và cách đọc <code>usage.*</code> dạy kỹ ở «Context &amp; Harness Engineering» bài 2.2; ở đây ta chỉ lấy phần riêng của tầng tool: tool definitions nằm ở đầu prefix.)</p>
+      <p>Ba hệ quả thực dụng. <strong>Một</strong>: cho progressive disclosure chạy <em>append-only</em>, thêm tool khi cần, đừng tráo qua tráo lại. <strong>Hai</strong>: nếu bạn thật sự cần đổi bộ tool giữa chừng thì đừng sửa mảng <code>tools</code> — tài liệu ghi thẳng rằng <em>"Modifying tool definitions"</em> làm mất <em>"Entire cache (tools, system, messages)"</em>. Đường đúng chính là cơ chế vừa mô tả ở đoạn trên: <code>defer_loading</code> + tool search, nơi tool tìm thấy đi vào hội thoại dưới dạng <code>tool_reference</code>, nguyên văn <em>"adding tools dynamically through tool search does not break your cache"</em>. (Claude API docs, "Tool use with prompt caching" — kiểm 12/09/2026.) <strong>Ba</strong>: đo chứ đừng đoán, nhìn <code>usage.cache_read_input_tokens</code> trước và sau khi đổi; nếu nó về 0 giữa các request giống nhau, có một thứ đang âm thầm phá cache.</p>
       <p>Và phân biệt hai cần gạt khác hẳn nhau: <strong>giảm định nghĩa tool</strong> (bài này) là chuyện đầu prefix; <strong>context editing</strong> (dọn các <em>kết quả</em> tool đã cũ ra khỏi hội thoại) là chuyện đuôi prefix. Chúng giải hai vấn đề khác nhau, đừng dùng cái này thay cái kia.</p>
     </div>
 
@@ -2355,7 +2398,7 @@ footer.site{border-top:1px solid var(--border);padding:26px 24px;text-align:cent
 
     <div class="callout warn">
       <div class="callout-title">Nếu chọn MCP: Registry vẫn ở preview</div>
-      <p>Tính đến <strong>21/08/2026</strong> (kiểm lại trực tiếp trên README của <code>modelcontextprotocol/registry</code>), MCP Registry chính thức <em>vẫn</em> "in preview": tài liệu nói rõ "this is still a preview release and breaking changes or data resets may occur", và "a general availability (GA) release will follow later". Gần một năm sau khi ra mắt (08/09/2025) mà vẫn chưa GA — con số đó tự nó là dữ kiện để bạn cân rủi ro. Đừng để hệ production phụ thuộc cứng vào registry.modelcontextprotocol.io như nguồn discovery ổn định duy nhất; nếu cần ổn định, pin version hoặc dùng downstream <strong>aggregator</strong> đã có SLA riêng.</p>
+      <p>Tính đến <strong>05/09/2026</strong> (kiểm lại trực tiếp trên README của <code>modelcontextprotocol/registry</code>), MCP Registry chính thức <em>vẫn</em> "in preview": tài liệu nói rõ "this is still a preview release and breaking changes or data resets may occur", và "a general availability (GA) release will follow later". Gần một năm sau khi ra mắt (08/09/2025) mà vẫn chưa GA — con số đó tự nó là dữ kiện để bạn cân rủi ro. Đừng để hệ production phụ thuộc cứng vào registry.modelcontextprotocol.io như nguồn discovery ổn định duy nhất; nếu cần ổn định, pin version hoặc dùng downstream <strong>aggregator</strong> đã có SLA riêng.</p>
     </div>
 
     <div class="callout info">
@@ -2412,6 +2455,8 @@ footer.site{border-top:1px solid var(--border);padding:26px 24px;text-align:cent
     <p>Bạn sửa một dòng description để agent thôi gọi nhầm <code>orders_update</code> khi nó chỉ cần tra cứu. Thử tay ba ca — ổn cả ba. Merge. Hai tuần sau, support báo agent «dạo này lười», không còn tự tra tình trạng vận chuyển nữa. Bạn mở lại diff và nhìn vào đúng câu mình đã viết, và câu hỏi thật sự là: <em>câu này làm hỏng, hay là cái commit khác cùng ngày?</em> Bạn không trả lời được, không phải vì thiếu năng lực mà vì chưa bao giờ có một con số trước-và-sau để so. Ba ca thử tay không phải là phép đo; đó là ba giai thoại.</p>
 
     <p>Cả bốn bài của Phần V đến giờ đều là <em>thiết kế</em>: viết description thế nào, cắt tool ra sao, tiêu bao nhiêu context, có nên dựng server không. Mỗi quyết định đó đều có thể sai. Bài này là phần còn thiếu — cách biết mình sai, sớm, và bằng con số.</p>
+
+    <p>Ba bước đầu (lấy task từ lỗi thật · verifier bằng code chứ không LLM judge · CI gate chặn regression) là nền chung của mọi eval agent, dạy kỹ ở «Agent Reliability &amp; Evaluation» bài 2.1, 2.3, 5.1–5.2. Bài này chỉ giữ phần <em>riêng của tầng tool</em>: bốn con số tool-layer và vòng model-tự-viết-lại-description.</p>
 
     <div class="concept">
       <span class="eyebrow">Đặt tên</span>
@@ -2472,7 +2517,7 @@ footer.site{border-top:1px solid var(--border);padding:26px 24px;text-align:cent
     <p>Bốn bước, theo đúng thứ tự đó — bỏ bước một là ba bước sau đo nhầm thứ:</p>
     <ol class="steps">
       <li><h4>Lấy 20–40 task từ transcript thật</h4><p>Số lượng đủ để một thay đổi có ý nghĩa nhô lên khỏi nhiễu, mà vẫn chạy được trong vài phút — nếu bộ eval chạy nửa tiếng, bạn sẽ ngừng chạy nó. Nguồn phải là <em>log thật</em>: những lượt agent làm sai, những lượt người dùng phải hỏi lại, những lượt bị bỏ dở. Task tự nghĩ ra chỉ phủ được vùng bạn đã hiểu; vùng đó không phải chỗ bug đang sống.</p></li>
-      <li><h4>Mỗi task một verifier <em>bằng code</em>, không phải LLM judge</h4><p>Đây là chỗ hầu hết bộ eval hỏng ngay từ ngày đầu. Verifier phải là một hàm trả về true/false theo trạng thái quan sát được: <em>có gọi <code>orders_search</code> chứ không phải <code>orders_update</code>?</em> · <em>tham số <code>order_id</code> có đúng giá trị đó không?</em> · <em>đơn hàng trong DB test có sang trạng thái shipped không?</em> Rẻ, tất định, chạy lại bao nhiêu lần cũng ra một kết quả. LLM judge thì đắt, nhiễu, và trớ trêu là nó lệch <em>theo cùng hướng</em> với hệ thống bạn đang chấm — bạn dùng một model để chấm một model, và bug của nó lặng lẽ triệt tiêu bug của kia. Để dành LLM judge cho phần thật sự không code được (chất lượng văn bản tóm tắt), và chỉ dùng như lớp thứ hai.</p></li>
+      <li><h4>Mỗi task một verifier <em>bằng code</em>, không phải LLM judge</h4><p>Đây là chỗ hầu hết bộ eval hỏng ngay từ ngày đầu. Verifier phải là một hàm trả về true/false theo trạng thái quan sát được: <em>có gọi <code>orders_search</code> chứ không phải <code>orders_update</code>?</em> · <em>tham số <code>order_id</code> có đúng giá trị đó không?</em> · <em>đơn hàng trong DB test có sang trạng thái shipped không?</em> Rẻ, tất định, chạy lại bao nhiêu lần cũng ra một kết quả. LLM judge chỉ để dành cho phần thật sự không code được (chất lượng văn bản tóm tắt), và luôn là lớp thứ hai; lý do đầy đủ ở «Agent Reliability &amp; Evaluation» bài 2.3.</p></li>
       <li><h4>Đo bốn con số, không phải một</h4><p>Chỉ theo dõi «làm xong việc không» thì bạn không thấy được mình đang tiến hay chỉ đang ăn may đắt tiền. Bốn con số ở dưới; đọc chúng <em>cùng nhau</em> mới ra chẩn đoán.</p></li>
       <li><h4>Log trọn transcript, không chỉ log kết quả</h4><p>Với mỗi lần chạy, lưu đủ chuỗi: mọi tool call, mọi tham số, mọi kết quả trả về, theo thứ tự. Con số cho bạn biết <em>có</em> hỏng; transcript cho bạn biết hỏng <em>ở đâu</em>. Và như bước tiếp theo cho thấy, transcript còn là nguyên liệu đầu vào cho việc tự sửa.</p></li>
     </ol>
@@ -2578,7 +2623,7 @@ footer.site{border-top:1px solid var(--border);padding:26px 24px;text-align:cent
       <ul>
         <li>Trả lời câu hỏi «ai đứng sau MCP» bằng mốc verify được, không bằng cảm tính lock-in.</li>
         <li>Dựng lại đường adoption 2024→2025 với đúng ngày của từng hãng.</li>
-        <li>Giải thích vì sao 9 SDK chính thức và MCP Registry là bằng chứng adoption khác nhau — và vì sao Registry vẫn chưa nên phụ thuộc cứng.</li>
+        <li>Giải thích vì sao 10 SDK chính thức và MCP Registry là bằng chứng adoption khác nhau — và vì sao Registry vẫn chưa nên phụ thuộc cứng.</li>
       </ul>
     </div>
 
@@ -2587,7 +2632,7 @@ footer.site{border-top:1px solid var(--border);padding:26px 24px;text-align:cent
     <div class="concept">
       <span class="eyebrow">Đặt tên</span>
       <h4>Ai đứng sau MCP hôm nay</h4>
-      <p>MCP do <strong>Anthropic</strong> khởi xướng và công bố ngày <strong>2024-11-25</strong>. Nhưng tính đến 07/2026, quyền quản trị đã chuyển sang <strong>Agentic AI Foundation (AAIF)</strong>, một tổ chức phi lợi nhuận thuộc Linux Foundation, kể từ <strong>2025-12-09</strong>. Đồng sáng lập AAIF: Anthropic, Block, OpenAI; các bên hỗ trợ: Google, Microsoft, AWS, Cloudflare, Bloomberg. Quan trọng cho câu hỏi lock-in: Anthropic nói rõ mô hình quản trị của MCP <em>«remains unchanged»</em> (giữ nguyên) sau khi donate — «the project's maintainers will continue to prioritize community input and transparent decision-making».</p>
+      <p>MCP do <strong>Anthropic</strong> khởi xướng và công bố ngày <strong>2024-11-25</strong>. Nhưng tính đến 09/2026, quyền quản trị đã chuyển sang <strong>Agentic AI Foundation (AAIF)</strong>, một tổ chức phi lợi nhuận thuộc Linux Foundation, kể từ <strong>2025-12-09</strong>. Đồng sáng lập AAIF: Anthropic, Block, OpenAI; các bên hỗ trợ: Google, Microsoft, AWS, Cloudflare, Bloomberg. Quan trọng cho câu hỏi lock-in: Anthropic nói rõ mô hình quản trị của MCP <em>«remains unchanged»</em> (giữ nguyên) sau khi donate — «the project's maintainers will continue to prioritize community input and transparent decision-making».</p>
     </div>
 
     <figure class="figure">
@@ -2651,7 +2696,7 @@ footer.site{border-top:1px solid var(--border);padding:26px 24px;text-align:cent
       <figcaption><b>Hình 6.1</b> — Trong đúng <b>13 tháng</b>, MCP đi từ công bố của một hãng (chấm accent bên trái) tới một dự án do foundation trung lập quản trị (chấm accent bên phải). Chuỗi mốc — Microsoft, OpenAI (ghi cả hai mốc Agents SDK và Responses API), Google — là bằng chứng adoption đa nhà, không phải một hãng đơn độc.</figcaption>
     </figure>
 
-    <p>Ngoài các mốc «hãng lớn tuyên bố dùng», có một bằng chứng adoption ít ồn hơn nhưng nặng ký hơn: <strong>9 SDK ngôn ngữ chính thức</strong>, và phần lớn <em>không phải Anthropic tự viết một mình</em> — mỗi SDK được đồng maintain với chính tổ chức sở hữu ngôn ngữ đó. Đây là adoption ở tầng hạ tầng: các hãng không chỉ «dùng» MCP mà còn đồng vận hành công cụ để người khác dùng.</p>
+    <p>Ngoài các mốc «hãng lớn tuyên bố dùng», có một bằng chứng adoption ít ồn hơn nhưng nặng ký hơn: <strong>10 SDK ngôn ngữ chính thức</strong>, và <em>không phải Anthropic tự viết một mình</em> — năm trong mười SDK được đồng maintain với chính tổ chức sở hữu ngôn ngữ (bảng dưới). Đây là adoption ở tầng hạ tầng: các hãng không chỉ «dùng» MCP mà còn đồng vận hành công cụ để người khác dùng.</p>
 
     <div class="table-wrap">
       <table>
@@ -2662,11 +2707,12 @@ footer.site{border-top:1px solid var(--border);padding:26px 24px;text-align:cent
           <tr><td>kotlin-sdk</td><td>JetBrains</td></tr>
           <tr><td>java-sdk</td><td>Spring AI</td></tr>
           <tr><td>php-sdk</td><td>The PHP Foundation</td></tr>
+          <tr><td>swift-sdk</td><td>maintainer MCP</td></tr>
           <tr><td>typescript-sdk · python-sdk · rust-sdk · ruby-sdk</td><td>maintainer MCP (không nêu đồng-maintainer hãng ngôn ngữ)</td></tr>
         </tbody>
       </table>
     </div>
-    <p style="font-size:13px;color:var(--ink-3)">Danh sách 9 SDK verify trực tiếp từ các repo trong tổ chức <span class="mono">github.com/modelcontextprotocol</span>, ngày truy cập 2026-07-17. Một số nguồn thứ cấp (Wikipedia) có kể thêm Swift/Perl SDK, nhưng hai repo này không xuất hiện trong tổ chức tại thời điểm truy cập — nên không tính vào 9 SDK chính thức.</p>
+    <p style="font-size:13px;color:var(--ink-3)">Danh sách 10 SDK verify trực tiếp từ các repo trong tổ chức <span class="mono">github.com/modelcontextprotocol</span>, ngày truy cập 05/09/2026.</p>
 
     <p>Quy mô tại thời điểm donate (2025-12-09, ~13 tháng sau khi ra mắt), trích nguyên văn từ thông báo của Anthropic: <strong>«more than 10,000 active public MCP servers»</strong> (hơn 10.000 MCP server công khai đang hoạt động) và <strong>«97M+ monthly SDK downloads across Python and TypeScript»</strong> (hơn 97 triệu lượt tải SDK mỗi tháng cho riêng Python và TypeScript).</p>
 
@@ -2677,7 +2723,7 @@ footer.site{border-top:1px solid var(--border);padding:26px 24px;text-align:cent
 
     <div class="callout warn">
       <div class="callout-title">MCP Registry vẫn «in preview» — nhắc lại từ Bài 5.3</div>
-      <p><strong>MCP Registry</strong> (ra mắt preview 2025-09-08) là một catalog + API công khai để khám phá các MCP server công khai, lưu <em>metadata</em> (không lưu code) và định danh bằng <strong>reverse-DNS namespace</strong>: cách đặt tên đảo ngược tên miền để xác thực chủ sở hữu, ví dụ <span class="mono">io.github.user/server-name</span>. Nhưng đúng như Bài 5.3 đã cảnh báo: <strong>tính đến 21/08/2026 nó vẫn chưa GA</strong>. Kiểm lại trên README của repo <code>modelcontextprotocol/registry</code>, trạng thái vẫn là preview release với câu <em>«breaking changes or data resets may occur»</em> và lời hứa <em>«a general availability (GA) release will follow later»</em>. Mốc gần nhất trên đường tới GA là <em>API freeze v0.1</em> (24/10/2025) — API đóng băng để bên tích hợp yên tâm cài đặt, nhưng đóng băng API không phải GA. Đừng để hệ production phụ thuộc cứng vào nó như nguồn discovery ổn định duy nhất.</p>
+      <p><strong>MCP Registry</strong> (ra mắt preview 2025-09-08) là một catalog + API công khai để khám phá các MCP server công khai, lưu <em>metadata</em> (không lưu code) và định danh bằng <strong>reverse-DNS namespace</strong>: cách đặt tên đảo ngược tên miền để xác thực chủ sở hữu, ví dụ <span class="mono">io.github.user/server-name</span>. Nhưng đúng như Bài 5.3 đã cảnh báo: <strong>tính đến 05/09/2026 nó vẫn chưa GA</strong>. Kiểm lại trên README của repo <code>modelcontextprotocol/registry</code>, trạng thái vẫn là preview release với câu <em>«breaking changes or data resets may occur»</em> và lời hứa <em>«a general availability (GA) release will follow later»</em>. Mốc gần nhất trên đường tới GA là <em>API freeze v0.1</em> (24/10/2025) — API đóng băng để bên tích hợp yên tâm cài đặt, nhưng đóng băng API không phải GA. Đừng để hệ production phụ thuộc cứng vào nó như nguồn discovery ổn định duy nhất.</p>
     </div>
 
     <div>
@@ -2703,7 +2749,7 @@ footer.site{border-top:1px solid var(--border);padding:26px 24px;text-align:cent
       <p class="quiz-q">Sếp hỏi: «MCP là chuẩn riêng của Anthropic, dùng vào có bị lock-in không?» Câu trả lời nào đúng và verify được tính đến thời điểm khoá học?</p>
       <button class="quiz-opt" onclick="quizPick(this,0)"><span class="quiz-letter">A</span><span>«Đúng vậy — MCP do Anthropic sở hữu và kiểm soát hoàn toàn, nên phải tính rủi ro phụ thuộc một nhà cung cấp.»</span></button>
       <button class="quiz-opt" onclick="quizPick(this,1)"><span class="quiz-letter">B</span><span>«Yên tâm, Anthropic đã bán MCP cho Linux Foundation rồi nên không còn rủi ro gì nữa.»</span></button>
-      <button class="quiz-opt" onclick="quizPick(this,2)"><span class="quiz-letter">C</span><span>«Anthropic khởi xướng 11/2024, nhưng từ 09/12/2025 MCP thuộc Agentic AI Foundation (Linux Foundation), đồng sáng lập cùng Block/OpenAI, có Google/Microsoft/AWS hỗ trợ; governance giữ nguyên và 9 SDK phần lớn do chính hãng ngôn ngữ đồng maintain.»</span></button>
+      <button class="quiz-opt" onclick="quizPick(this,2)"><span class="quiz-letter">C</span><span>«Anthropic khởi xướng 11/2024, nhưng từ 09/12/2025 MCP thuộc Agentic AI Foundation (Linux Foundation), đồng sáng lập cùng Block/OpenAI, có Google/Microsoft/AWS hỗ trợ; governance giữ nguyên và một nửa trong 10 SDK do chính hãng ngôn ngữ đồng maintain.»</span></button>
       <div class="quiz-feedback" role="status" data-explain="A sai vì kể từ 2025-12-09 quyền quản trị đã chuyển sang một foundation trung lập — không còn là «sở hữu hoàn toàn của Anthropic». B sai vì đây là donate cho một foundation phi lợi nhuận, không phải «bán», và Anthropic nói rõ governance «remains unchanged» — mô hình quyết định cộng đồng giữ nguyên. C dựng câu trả lời từ mốc verify được, đúng cách xử lý câu hỏi lock-in."></div>
     </div>
   </div>
@@ -2962,12 +3008,12 @@ footer.site{border-top:1px solid var(--border);padding:26px 24px;text-align:cent
         <tbody>
           <tr><td><strong>1.1</strong></td><td>MCP không thêm tính năng — nó đổi độ phức tạp tích hợp từ N×M adapter viết tay sang N+M qua một protocol chung; đáng giá đúng khi có nhiều bên gọi phải nối nhiều nguồn dùng chung.</td></tr>
           <tr><td><strong>1.2</strong></td><td>Ranh giới bảo mật nằm ở host — nơi duy nhất thấy toàn hội thoại; mỗi client là một dây 1-1 tới một server, nên server không đọc được hội thoại hay ngó sang server khác vì đường dây đó không tồn tại, chứ không phải vì tự nguyện.</td></tr>
-          <tr><td><strong>1.3</strong></td><td>Sáu primitive khác nhau ở người cầm lái: tool do model quyết, prompt do user chọn, resource do application đưa vào — thiết kế client là gán đúng vai, đừng để model bật thứ vốn thuộc quyền user. Trạng thái 2026-07-28: roots và sampling đã Deprecated (SEP-2577), elicitation là primitive client duy nhất còn hiệu lực.</td></tr>
+          <tr><td><strong>1.3</strong></td><td>Sáu primitive khác nhau ở người cầm lái: tool do model quyết, prompt do user chọn, resource do application đưa vào — thiết kế client là gán đúng vai, đừng để model bật thứ vốn thuộc quyền user. Trạng thái 2026-07-28: roots, sampling (và utility logging phía server) đã Deprecated (SEP-2577), elicitation là primitive client duy nhất còn hiệu lực — nhưng chạy qua MRTR chứ không còn là request server→client.</td></tr>
           <tr><td><strong>2.1</strong></td><td>Mọi message là JSON-RPC 2.0; trên các bản có bắt tay (2025-11-25 trở về trước) initialize là bản hợp đồng capability của cả phiên — phát một tính năng chưa khai báo thì bên kia có quyền phớt lờ. Bản 2026-07-28 chuyển hợp đồng đó xuống từng request (_meta + server/discover), nhưng phản xạ debug không đổi: bắt đầu từ khung capabilities, không từ code gửi.</td></tr>
           <tr><td><strong>2.2</strong></td><td>Khai outputSchema và trả structuredContent để code hạ nguồn nhận JSON có kiểu thay vì regex bới text; tool hỏng thì báo bằng isError với message model tự-sửa-được — đừng ném stack trace, đừng nhầm sang lỗi protocol.</td></tr>
           <tr><td><strong>2.3</strong></td><td>Annotation là hint server tự khai để cải thiện UX, không phải cam kết an toàn — spec bắt client coi annotation là untrusted trừ khi tới từ server đã tin cậy; mặc định luôn ở mức nguy hiểm nhất (destructive=true, openWorld=true).</td></tr>
           <tr><td><strong>3.1</strong></td><td>stdio cho server local, Streamable HTTP một-endpoint cho remote — và mọi server HTTP phải validate Origin, nếu không DNS rebinding biến một website bất kỳ thành kẻ gọi tool local (đúng như CVE-2025-66414).</td></tr>
-          <tr><td><strong>3.2</strong></td><td>Đừng học thuộc một bản spec — pin protocol version và đọc changelog trước khi nâng SDK. Tính đến 21/08/2026: CURRENT là 2026-07-28 (final 28/07/2026, bỏ bắt tay initialize và Mcp-Session-Id), còn 2025-11-25 vẫn là bản phần lớn server đang nói — phải đọc được cả hai.</td></tr>
+          <tr><td><strong>3.2</strong></td><td>Đừng học thuộc một bản spec — pin protocol version và đọc changelog trước khi nâng SDK. Tính đến 05/09/2026: CURRENT là 2026-07-28 (final 28/07/2026, bỏ bắt tay initialize và Mcp-Session-Id), còn 2025-11-25 vẫn là bản phần lớn server đang nói — phải đọc được cả hai.</td></tr>
           <tr><td><strong>4.1</strong></td><td>MCP server là resource server — chỉ validate token có đúng audience; login, consent và phát token giao cho một authorization server tách biệt. Tự chế lò phát token trong MCP server là tự khoá mình khỏi SSO và khỏi audit.</td></tr>
           <tr><td><strong>4.2</strong></td><td>Bề mặt tấn công đặc trưng của MCP là khoảng cách visibility: model đọc toàn bộ mô tả tool, user chỉ thấy tên. Chỉ thị ẩn ở đó là tool poisoning; đổi ngầm thứ đã approve là rug pull (CVE-2025-54136 xảy ra ở file config của Cursor, không ở tools/list); consent cookie dùng chung biến proxy thành confused deputy.</td></tr>
           <tr><td><strong>4.3</strong></td><td>Hai MUST của spec — validate audience mọi token, không forward token client xuống downstream — cộng một lớp client tự thêm (spec không đòi): pin publisher+version của tools/list và của entry config, re-approve theo delta ngữ nghĩa chứ không theo từng khoảng trắng, kẻo tự chế ra approval fatigue.</td></tr>
@@ -3053,7 +3099,7 @@ const LESSONS = [
   {id:'m1-l1', mod:1, part:'Phần I · Nền tảng', title:'Bài toán N×M: vì sao mỗi tích hợp lại viết tay một lần', desc:'Không có chuẩn chung, N bên gọi × M nguồn = N×M adapter viết tay; MCP đổi nó về N+M qua một protocol mở.'},
   {id:'m1-l2', mod:1, part:'Phần I · Nền tảng', title:'Host · client · server — ranh giới bảo mật nằm ở host', desc:'Mỗi client giữ đúng 1 kết nối với 1 server; chỉ host thấy toàn hội thoại, nên server không ngó được sang server khác.'},
   {id:'m1-l3', mod:1, part:'Phần I · Nền tảng', title:'Sáu primitive, ba người cầm lái', desc:'Server expose tools/resources/prompts, client expose sampling/roots/elicitation — mỗi primitive một người cầm lái, và từ bản 2026-07-28 chỉ còn elicitation là primitive client chưa deprecated.'},
-  {id:'m2-l1', mod:2, part:'Phần II · Giải phẫu protocol', title:'JSON-RPC và lifecycle: initialize → operate → shutdown', desc:'Ba loại message JSON-RPC 2.0, ba pha vòng đời, và vì sao bắt tay initialize là bản hợp đồng capability của cả phiên.'},
+  {id:'m2-l1', mod:2, part:'Phần II · Giải phẫu protocol', title:'JSON-RPC và lifecycle: initialize → operate → shutdown', desc:'Ba loại message JSON-RPC 2.0, ba pha vòng đời của các bản có bắt tay (2025-11-25 trở về trước) — và vì sao phản xạ debug vẫn đúng sau khi 2026-07-28 bỏ initialize.'},
   {id:'m2-l2', mod:2, part:'Phần II · Giải phẫu protocol', title:'Tool schema: từ text mù sang structured output', desc:'inputSchema/outputSchema, structuredContent trả song song với text, và tách đúng hai tầng lỗi để agent tự sửa được.'},
   {id:'m2-l3', mod:2, part:'Phần II · Giải phẫu protocol', title:'Annotations là hint, không phải hợp đồng', desc:'Bốn annotation với mặc định nguy hiểm nhất, và vì sao spec bắt client coi annotation là untrusted trừ khi tới từ server tin cậy.'},
   {id:'m3-l1', mod:3, part:'Phần III · Transport & phiên bản', title:'stdio và Streamable HTTP — vì sao HTTP+SSE bị thay', desc:'Chọn transport theo cảnh deploy: stdio cho local, Streamable HTTP một-endpoint cho remote — và bắt buộc validate Origin để chặn DNS rebinding.'},
@@ -3065,7 +3111,7 @@ const LESSONS = [
   {id:'m5-l2', mod:5, part:'Phần V · Thiết kế server tốt', title:'Ngân sách context: progressive disclosure và code execution', desc:'Nhồi hết tool definitions không scale; lộ tool dần + để code giữ kết quả trung gian ngoài context (150.000 → 2.000 token).'},
   {id:'m5-l3', mod:5, part:'Phần V · Thiết kế server tốt', title:'Khi nào KHÔNG cần MCP', desc:'Hỏi đúng thứ tự: khác process/trust domain/ngôn ngữ → caller bạn không kiểm soát → mới tới nhiều model; CLI compose tốt, native function gate tốt — đội trưởng thành chạy cả ba.'},
   {id:'m5-l4', mod:5, part:'Phần V · Thiết kế server tốt', title:'Đo tầng tool: eval, 4 con số, và cổng CI', desc:'Tool surface là code nên phải có test: 20–40 task từ transcript thật, verifier bằng code, bốn con số đọc cùng nhau, và CI chặn mọi regression.'},
-  {id:'m6-l1', mod:6, part:'Phần VI · Hệ sinh thái & tổng hợp', title:'Từ chuẩn của một hãng thành chuẩn trung lập', desc:'Adoption và governance 2024→2025: ai thực sự đứng sau MCP, trả lời bằng mốc verify được.'},
+  {id:'m6-l1', mod:6, part:'Phần VI · Hệ sinh thái & tổng hợp', title:'Từ chuẩn của một hãng thành chuẩn trung lập', desc:'Adoption và governance 2024→2026: ai thực sự đứng sau MCP, trả lời bằng mốc verify được.'},
   {id:'m6-l2', mod:6, part:'Phần VI · Hệ sinh thái & tổng hợp', title:'Ghép hết: một MCP server ví dụ đạt chuẩn', desc:'Trên một server đơn hàng minh hoạ, mọi mảnh đã học khớp thành checklist sống — mỗi quyết định trỏ về đúng bài đã dạy nó.'},
   {id:'m7-l1', mod:7, part:'Tổng kết', title:'Tổng kết · Cheat sheet 1 trang', desc:'Cả khoá nén thành một trang mang đi: 17 dòng distill mỗi bài một takeaway, checklist theo thứ tự khi dựng MCP server mới, và một bản đồ host·client·server ba lớp.'},
 ];
