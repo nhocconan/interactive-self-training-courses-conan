@@ -496,7 +496,7 @@ footer.site{border-top:1px solid var(--border);padding:26px 24px;text-align:cent
         <div class="hero-inner">
           <span class="hero-kicker">Khoá học tương tác · AI Engineering · 2026</span>
           <h1><span class="grad-text">LLM Fine-tuning</span> — tuỳ biến model trên dữ liệu riêng</h1>
-          <p class="hero-sub">Cho kỹ sư đã dùng thành thạo LLM API và giờ cần quyết định fine-tune cho đúng: khung hai trục <strong>context vs hành vi</strong>, LoRA/QLoRA (65B trên một GPU 48GB), DPO/GRPO thay RLHF, data curation kiểu LIMA (1.000 ví dụ chất thắng 50.000 ví dụ thô), eval ba lớp chống điểm số nói dối, toolchain và managed platform 2026 đúng trạng thái thật (kể cả những cái đang bị khai tử), license open-weight, và serving multi-LoRA. Cập nhật tháng 7/2026.</p>
+          <p class="hero-sub">Cho kỹ sư đã dùng thành thạo LLM API và giờ cần quyết định fine-tune cho đúng: khung hai trục <strong>context vs hành vi</strong>, LoRA/QLoRA (65B trên một GPU 48GB), DPO/GRPO thay RLHF, data curation kiểu LIMA (1.000 ví dụ chất thắng 50.000 ví dụ thô), eval ba lớp chống điểm số nói dối, toolchain và managed platform 2026 đúng trạng thái thật (kể cả những cái đang bị khai tử), license open-weight, và serving multi-LoRA. Cập nhật 05/09/2026.</p>
           <div class="hero-meta">
             <span class="chip">📶 L1 → L5</span>
             <span class="chip">🧩 17 bài</span>
@@ -522,16 +522,21 @@ footer.site{border-top:1px solid var(--border);padding:26px 24px;text-align:cent
             <tr><td><b>Context vs LLM optimization</b></td><td>Khung hai trục của OpenAI: model thiếu kiến thức/context → RAG/prompt; model hành xử không nhất quán → fine-tune. Cộng dồn được, không loại trừ nhau.</td></tr>
             <tr><td><b>SFT (Supervised Fine-Tuning)</b></td><td>Fine-tune có giám sát trên cặp instruction–output; dạy format, phong cách, tuân chỉ dẫn.</td></tr>
             <tr><td><b>Preference tuning</b></td><td>Giai đoạn align theo sở thích con người (RLHF/DPO/GRPO) — làm model hữu ích và đúng giọng hơn, sau SFT.</td></tr>
+            <tr><td><b>PEFT (parameter-efficient fine-tuning)</b></td><td>Họ phương pháp chỉ huấn luyện một tập nhỏ tham số và đóng băng phần lớn trọng số gốc; LoRA/QLoRA/DoRA là thành viên. Cũng là tên thư viện Hugging Face hiện thực họ này (bài 5.1).</td></tr>
             <tr><td><b>LoRA / rank / adapter</b></td><td>Đóng băng trọng số gốc, học ΔW = B·A hạng thấp (rank r) — giảm trainable params tới 10.000 lần; adapter là cặp ma trận nhẹ có thể tháo lắp.</td></tr>
             <tr><td><b>QLoRA / NF4</b></td><td>LoRA trên base model đã quantize 4-bit NormalFloat + double quantization + paged optimizers — fine-tune 65B trên một GPU 48GB (paper 2023).</td></tr>
+            <tr><td><b>DoRA</b></td><td>Tách trọng số thành magnitude và direction rồi để LoRA lo phần hướng; trong khoá này là nấc 3 của thang sửa accuracy gap, sau <span class="mono">target_modules</span> và rank (bài 2.2).</td></tr>
             <tr><td><b>RLHF / reward model</b></td><td>Pipeline 3 giai đoạn: SFT → reward model học từ preference ranking → vòng RL (PPO) có KL penalty; mạnh nhưng phức tạp và dễ mất ổn định.</td></tr>
             <tr><td><b>DPO</b></td><td>Direct Preference Optimization — đổi biến để bỏ reward model + vòng RL, tối ưu trực tiếp trên cặp (preferred, rejected) bằng classification loss.</td></tr>
             <tr><td><b>GRPO</b></td><td>Variant PPO bỏ critic model: baseline lấy từ thống kê nhóm output cùng câu hỏi — cách DeepSeekMath huấn luyện reasoning tiết kiệm tài nguyên.</td></tr>
+            <tr><td><b>GSPO</b></td><td>Biến thể GRPO chuyển importance ratio và clipping từ mức token lên mức cả chuỗi, nhằm ổn định RL trên model MoE (bài 3.2).</td></tr>
+            <tr><td><b>RFT (reinforcement fine-tuning)</b></td><td>Fine-tune bằng tín hiệu reward chấm được đúng/sai, chỉ dành cho reasoning model; khác SFT/DPO ở chỗ cần một hàm chấm chứ không cần cặp preferred/rejected (bài 1.2, 5.2).</td></tr>
             <tr><td><b>Distillation (teacher/student)</b></td><td>Dùng model lớn (teacher) sinh nhãn cho traffic thật, rồi fine-tune một model nhỏ (student) trên tập nhãn đó để rẻ/nhanh hơn ở cùng mức chất lượng — lý do fine-tune khi chất lượng đã đủ mà chi phí hoặc độ trễ thì không. Chỉ đổi sang student khi nó qua cổng chất lượng đặt trước trên holdout.</td></tr>
             <tr><td><b>Data curation (LIMA)</b></td><td>Nguyên tắc «less is more»: 1.000 ví dụ đa dạng + chất lượng cao thắng hàng chục nghìn ví dụ thô; tăng số lượng ×16 thì chất lượng plateau.</td></tr>
             <tr><td><b>Chat template</b></td><td>Khuôn token hoá hội thoại (control token như <|user|>) mà model đã học; format dữ liệu train lệch template gốc → hiệu năng suy giảm.</td></tr>
             <tr><td><b>Holdout / early stopping</b></td><td>Tập giữ riêng khỏi training để đo trước/sau; dừng train tại điểm validation loss bắt đầu tăng trong khi training loss vẫn giảm.</td></tr>
             <tr><td><b>Benchmark contamination</b></td><td>Dữ liệu eval/benchmark lọt vào training data → điểm số thổi phồng, không phản ánh năng lực thật.</td></tr>
+            <tr><td><b>Shortcut learning</b></td><td>Model bám vào tương quan giả trong dữ liệu, cho điểm eval đẹp mà không tổng quát hoá; một trong ba cách điểm số nói dối ở bài 4.3.</td></tr>
             <tr><td><b>Catastrophic forgetting</b></td><td>Model quên năng lực cũ khi fine-tune tiếp cho task mới — quan sát nặng hơn khi model lớn hơn trong dải 1B–7B.</td></tr>
             <tr><td><b>GGUF / GPTQ / AWQ</b></td><td>GGUF = format đóng gói cho llama.cpp (CPU/edge); GPTQ/AWQ = thuật toán post-training quantization cho GPU serving.</td></tr>
             <tr><td><b>Multi-LoRA serving</b></td><td>Một base model trên GPU + nhiều adapter nhẹ hot-swap theo request (vLLM/SGLang) — N tenant không cần N GPU.</td></tr>
@@ -611,10 +616,10 @@ footer.site{border-top:1px solid var(--border);padding:26px 24px;text-align:cent
         <text class="dgm-ink2" x="484" y="162" text-anchor="middle" font-size="11" font-family="IBM Plex Mono">nhau</text>
         <defs><marker id="m1l1-ah" markerWidth="9" markerHeight="9" refX="7" refY="4.5" orient="auto"><path d="M0 0 L9 4.5 L0 9 z" fill="var(--accent-2)"/></marker></defs>
       </svg>
-      <figcaption><b>Hình 1.1</b> — Bạn không "leo thang" từ prompt lên fine-tune. Bạn định vị lỗi trên hai trục: thiếu kiến thức thì đi <em>lên</em> (RAG), hành vi lệch thì đi <em>sang phải</em> (fine-tune) — và một hệ production thường ở góc trên-phải, cần cả hai cùng lúc. Nguồn: khung hai trục của OpenAI trong tài liệu "Optimizing LLM accuracy / Model optimization" bản 2024–2025; trang gốc đã đổi nội dung sau khi OpenAI wind-down fine-tuning platform (bài 5.2) nên hiện không còn chở khung này — kiểm lại 08/2026.</figcaption>
+      <figcaption><b>Hình 1.1</b> — Bạn không "leo thang" từ prompt lên fine-tune. Bạn định vị lỗi trên hai trục: thiếu kiến thức thì đi <em>lên</em> (RAG), hành vi lệch thì đi <em>sang phải</em> (fine-tune) — và một hệ production thường ở góc trên-phải, cần cả hai cùng lúc. Nguồn: khung hai trục của OpenAI, bản docs 2024–2025 (ghi chú nguồn ngay dưới).</figcaption>
     </figure>
 
-    <p>Cách nhanh nhất để đặt đúng trục là đọc chính triệu chứng. Danh sách dưới đây là các câu <em>verbatim</em> trong tài liệu OpenAI bản 2024–2025, kèm bản dịch về đúng cột của nó. Nói rõ để bạn không hụt hẫng khi tra nguồn: trang OpenAI hiện tại <strong>không còn</strong> danh sách này (nó đã được viết lại quanh evals + prompting + thông báo wind-down), nên đây là khung <em>đã từng được nhà cung cấp phát biểu</em>, giá trị nằm ở chỗ nó phân loại đúng, không phải ở chỗ nó vẫn đang nằm trên web:</p>
+    <p>Cách nhanh nhất để đặt đúng trục là đọc chính triệu chứng. Danh sách dưới đây là các câu <em>verbatim</em> trong tài liệu OpenAI bản 2024–2025, kèm bản dịch về đúng cột của nó. Nói rõ để bạn không hụt hẫng khi tra nguồn: trang OpenAI hiện tại <strong>không còn</strong> danh sách này (nó đã được viết lại quanh evals + prompting + thông báo wind-down; kiểm 05/09/2026), nên đây là khung <em>đã từng được nhà cung cấp phát biểu</em>, giá trị nằm ở chỗ nó phân loại đúng, không phải ở chỗ nó vẫn đang nằm trên web:</p>
 
     <div class="table-wrap">
       <table>
@@ -658,7 +663,7 @@ footer.site{border-top:1px solid var(--border);padding:26px 24px;text-align:cent
       <span class="eyebrow">Kiểm tra nhanh</span>
       <p class="quiz-q">Chatbot nội bộ biết đúng nội dung chính sách, nhưng khoảng 1/3 số lần nó trả về JSON thiếu field <code>ticket_id</code> khiến hệ thống hạ nguồn gãy. Team nên làm gì trước tiên?</p>
       <button class="quiz-opt" onclick="quizPick(this,0)"><span class="quiz-letter">A</span><span>Đẩy toàn bộ tài liệu chính sách vào RAG để model có nhiều ngữ cảnh hơn.</span></button>
-      <button class="quiz-opt" onclick="quizPick(this,1)"><span class="quiz-letter">B</span><span>Đây là lỗi trục LLM (format không nhất quán) — đúng use case của fine-tune để model luôn xuất đúng schema; kiến thức đã đủ nên RAG không giải được.</span></button>
+      <button class="quiz-opt" onclick="quizPick(this,1)"><span class="quiz-letter">B</span><span>Xếp nó vào trục LLM (format không nhất quán) và fine-tune để model luôn xuất đúng schema.</span></button>
       <button class="quiz-opt" onclick="quizPick(this,2)"><span class="quiz-letter">C</span><span>Không phải lỗi model — cứ viết code vá lại mọi JSON hỏng ở phía sau là xong.</span></button>
       <div class="quiz-feedback" role="status" data-explain="B đúng: model đã có kiến thức, chỉ trình bày sai định dạng — đó là trục LLM optimization, việc mà fine-tune sinh ra để làm. A sai vì thêm ngữ cảnh không sửa được thói quen xuất sai format (thiếu kiến thức mới cần RAG). C là workaround che triệu chứng, không sửa gốc và sẽ vỡ khi format lỗi theo kiểu mới."></div>
     </div>
@@ -696,7 +701,7 @@ footer.site{border-top:1px solid var(--border);padding:26px 24px;text-align:cent
     <div class="concept">
       <span class="eyebrow">Khái niệm</span>
       <h4>Eval-first: không có eval thì không thể fine-tune hiệu quả</h4>
-      <p>Hamel Husain nói thẳng: <em>"It's impossible to fine-tune effectively without an eval system."</em> Không thể fine-tune hiệu quả nếu không có hệ <strong>eval</strong> (một tập ví dụ giữ riêng + cách chấm điểm để đo model trước/sau). Ông chỉ ra: rất nhiều người kết luận "fine-tuning hết giá trị" thực ra chỉ vì họ chưa có eval để thấy nó có tác dụng hay không. OpenAI đặt cùng nguyên tắc thành một câu lệnh: <em>"Good evals first! Only invest in fine-tuning after setting up evals."</em> Có eval trước đã, rồi mới đầu tư fine-tune.</p>
+      <p>Hamel Husain nói thẳng: <em>"It's impossible to fine-tune effectively without an eval system."</em> Không thể fine-tune hiệu quả nếu không có hệ <strong>eval</strong> (một tập ví dụ giữ riêng + cách chấm điểm để đo model trước/sau). Ông chỉ ra: rất nhiều người kết luận "fine-tuning hết giá trị" thực ra chỉ vì họ chưa có eval để thấy nó có tác dụng hay không. OpenAI đặt cùng nguyên tắc thành một câu lệnh: <em>"Good evals first! Only invest in fine-tuning after setting up evals."</em> Có eval trước đã, rồi mới đầu tư fine-tune — câu này thuộc bản docs 2024–2025; trang OpenAI hiện tại đã viết lại quanh thông báo wind-down và không còn chở nó (kiểm 05/09/2026). Giá trị nằm ở nguyên tắc, không ở chỗ nó còn trên web (xem ghi chú bài 1.1).</p>
     </div>
 
     <figure class="figure">
@@ -764,13 +769,14 @@ footer.site{border-top:1px solid var(--border);padding:26px 24px;text-align:cent
 
     <div class="callout success">
       <div class="callout-title">Khi nào fine-tune thật sự thắng: hai ví dụ của Hamel</div>
-      <p>Fine-tune mạnh nhất khi cần model học "syntax, style and rules" của một domain hẹp, không phải để cấp dữ kiện. Hamel dẫn hai case: <strong>Honeycomb</strong> query assistant, nơi fine-tune giúp model học "the syntax and rules of this niche domain-specific language" (cú pháp và luật của một DSL hẹp) tốt hơn chỉ prompt; và <strong>ReChat's Lucy</strong>, nơi fine-tune là thiết yếu để sinh "idiosyncratic format that weaves together structured and unstructured data" (định dạng đặc thù đan xen dữ liệu có cấu trúc và phi cấu trúc). Cả hai đều là bài toán <em>hành vi/format</em>, không phải bài toán kiến thức. Nguồn: Hamel Husain, truy cập 07/2026.</p>
+      <p>Fine-tune mạnh nhất khi cần model học "syntax, style and rules" của một domain hẹp, không phải để cấp dữ kiện. Hamel dẫn hai case: <strong>Honeycomb</strong> query assistant, nơi fine-tune giúp model học "the syntax and rules of this niche domain-specific language" (cú pháp và luật của một DSL hẹp) tốt hơn chỉ prompt; và <strong>ReChat's Lucy</strong>, nơi fine-tune là thiết yếu để sinh "idiosyncratic format that weaves together structured and unstructured data" (định dạng đặc thù đan xen dữ liệu có cấu trúc và phi cấu trúc). Cả hai đều là bài toán <em>hành vi/format</em>, không phải bài toán kiến thức. Nguồn: Hamel Husain, truy cập 05/09/2026.</p>
     </div>
 
     <div class="callout insight">
       <div class="callout-title">Nhánh thứ ba của cây: chất lượng đã đủ, nhưng đắt hoặc chậm → distillation</div>
       <p>Cây trên có hai nhánh vì nó phân loại theo <em>lỗi chất lượng</em>. Nhưng có một lý do chính đáng để fine-tune khi <strong>không</strong> có lỗi chất lượng nào cả: model frontier trả lời đúng, chỉ là quá đắt hoặc quá chậm cho lưu lượng của bạn. Lối ra là <strong>distillation</strong>: dùng model lớn ("teacher") sinh nhãn cho chính traffic của bạn, rồi fine-tune một model nhỏ 4–8B ("student") trên tập nhãn đó, và chỉ đổi sang student khi nó qua được một cổng đặt trước, ví dụ <em>student ≥ ~95% điểm teacher trên holdout</em> (ngưỡng bạn tự chọn theo mức rủi ro, rồi giữ đúng nó).</p>
       <p><strong>Tính điểm hoà vốn trước khi làm</strong>, bằng ký hiệu chứ đừng bằng con số ai đó nhớ mang máng. Gọi <span class="mono">P</span> = giá $/1M output token của model frontier, <span class="mono">V</span> = số triệu output token mỗi tháng, <span class="mono">T</span> = chi phí một lần cho sinh nhãn + train, <span class="mono">S</span> = chi phí serve student mỗi tháng. Bạn đang trả <span class="mono">P × V</span> mỗi tháng; sau khi distill bạn trả <span class="mono">S</span> mỗi tháng cộng <span class="mono">T</span> trả một lần. Thời gian hoàn vốn là <span class="mono">T / (P × V − S)</span> tháng. Nếu mẫu số ≤ 0 thì dự án không bao giờ hoà vốn. Hệ quả cần nói thẳng: <strong>dưới một mức lưu lượng nào đó, việc đúng đắn là không fine-tune gì cả</strong>. Cắm giá hiện hành của nhà cung cấp bạn đang dùng vào công thức trước khi mở một dự án distillation, đừng cắm giá trong một bài blog.</p>
+      <p><strong>Đọc bằng con số (số minh hoạ, tự thay giá của bạn):</strong> P = 10 $/1M output token, V = 20 triệu token/tháng → bạn đang trả P × V = <strong>200 $/tháng</strong>. Student serve hết S = 40 $/tháng; sinh nhãn + train tốn T = 1.200 $ một lần. Hoàn vốn = 1.200 / (200 − 40) = <strong>7,5 tháng</strong>. Hạ V xuống 5 triệu token/tháng thì mẫu số chỉ còn 50 − 40 = 10 $ và thời gian hoàn vốn nhảy lên <strong>120 tháng</strong> — tức là đừng làm.</p>
     </div>
 
     <div class="callout info">
@@ -791,7 +797,7 @@ footer.site{border-top:1px solid var(--border);padding:26px 24px;text-align:cent
       <p class="quiz-q">Trong sprint, một đề xuất là "fine-tune model cho đội support". Chưa ai xây tập đo, và cũng chưa thử chỉnh prompt nghiêm túc. Bước hợp lý nhất tiếp theo là gì?</p>
       <button class="quiz-opt" onclick="quizPick(this,0)"><span class="quiz-letter">A</span><span>Chạy job fine-tune ngay — càng sớm có model tuỳ biến càng tốt, đo sau cũng được.</span></button>
       <button class="quiz-opt" onclick="quizPick(this,1)"><span class="quiz-letter">B</span><span>Bỏ hẳn ý định fine-tune — nếu prompt chưa đủ thì chắc chắn fine-tune cũng vô ích.</span></button>
-      <button class="quiz-opt" onclick="quizPick(this,2)"><span class="quiz-letter">C</span><span>Dựng một tập eval giữ riêng để đo, rồi lặp prompt engineering trên nó trước; chỉ tiến tới fine-tune nếu prompt vẫn không đạt và lỗi thuộc trục hành vi.</span></button>
+      <button class="quiz-opt" onclick="quizPick(this,2)"><span class="quiz-letter">C</span><span>Dựng một tập eval giữ riêng để đo, rồi lặp prompt engineering trên nó trước khi xét fine-tune.</span></button>
       <div class="quiz-feedback" role="status" data-explain="C đúng: eval-first mở khoá mọi bước sau — có tập đo rồi mới biết prompt đã đủ chưa và fine-tune sau đó có cải thiện thật không. A đốt tài nguyên cho thứ không chứng minh được ('không có eval thì không thể fine-tune hiệu quả'). B sai chiều ngược lại: prompt chưa đủ KHÔNG suy ra fine-tune vô ích — nhiều bài toán format/DSL hẹp chỉ fine-tune mới giải, như case Honeycomb."></div>
     </div>
   </div>
@@ -906,7 +912,7 @@ footer.site{border-top:1px solid var(--border);padding:26px 24px;text-align:cent
     <div class="quiz" data-correct="0">
       <span class="eyebrow">Kiểm tra nhanh</span>
       <p class="quiz-q">Bot nội bộ trả lời sai vì không nắm được bảng giá và điều khoản khuyến mãi <em>thay đổi hằng tuần</em>. Team đề xuất continued pretraining trên toàn bộ wiki nội bộ. Đánh giá đúng nhất?</p>
-      <button class="quiz-opt" onclick="quizPick(this,0)"><span class="quiz-letter">A</span><span>Dùng nhầm công cụ: đây là recent facts thay đổi liên tục — việc của RAG, giải rẻ hơn nhiều; continued pretraining hợp cho từ vựng/lý luận miền, không phải dữ kiện cập nhật.</span></button>
+      <button class="quiz-opt" onclick="quizPick(this,0)"><span class="quiz-letter">A</span><span>Dùng nhầm công cụ: bảng giá đổi hằng tuần là recent facts — việc của RAG, không phải continued pretraining.</span></button>
       <button class="quiz-opt" onclick="quizPick(this,1)"><span class="quiz-letter">B</span><span>Hợp lý: continued pretraining trên wiki sẽ giúp model nhớ mọi dữ kiện mới nhất một cách bền vững.</span></button>
       <button class="quiz-opt" onclick="quizPick(this,2)"><span class="quiz-letter">C</span><span>Nên nhảy sang preference tuning (DPO) để model trả lời "đúng" hơn về giá.</span></button>
       <div class="quiz-feedback" role="status" data-explain="A đúng: dữ kiện đổi hằng tuần là recent facts — RAG kéo bản mới lúc suy luận, rẻ và luôn cập nhật; continued pretraining lo từ vựng/lý luận miền chứ không phải nhồi dữ kiện. B sai vì mỗi lần bảng giá đổi lại phải train lại — bất khả về chi phí/độ trễ, và fine-tune vốn không phải để nhồi kiến thức (Bài 1.1). C lạc trục: DPO chỉnh giọng/style, không cấp được con số giá đúng."></div>
@@ -984,8 +990,8 @@ footer.site{border-top:1px solid var(--border);padding:26px 24px;text-align:cent
         <text class="dgm-ink" x="475" y="173" text-anchor="middle" font-size="12" font-weight="700">optimizer states · 12 byte/param</text>
         <text class="dgm-ink" x="330" y="222" font-size="13" font-weight="700">7B × 16 byte ≈ 112GB</text>
 
-        <text class="dgm-ink2" x="137" y="242" text-anchor="middle" font-size="9.5" font-family="IBM Plex Mono">trọng số</text>
-        <text class="dgm-ink2" x="212" y="242" text-anchor="middle" font-size="9.5" font-family="IBM Plex Mono">gradient</text>
+        <text class="dgm-ink2" x="137" y="242" text-anchor="middle" font-size="10" font-family="IBM Plex Mono">trọng số</text>
+        <text class="dgm-ink2" x="212" y="242" text-anchor="middle" font-size="10" font-family="IBM Plex Mono">gradient</text>
       </svg>
       <figcaption><b>Hình 2.1</b> — Cùng model 7B, cùng đơn vị byte/param: <b>optimizer states của Adam (12/16 ≈ 75% thanh)</b> mới là thủ phạm, không phải trọng số. Nguồn công thức: EleutherAI "Transformer Math 101".</figcaption>
     </figure>
@@ -1024,9 +1030,9 @@ footer.site{border-top:1px solid var(--border);padding:26px 24px;text-align:cent
     <div class="quiz" data-correct="2">
       <span class="eyebrow">Kiểm tra nhanh</span>
       <p class="quiz-q">Bạn định full fine-tune một model 13B bằng Adam trên một GPU 48GB, ước lượng "13B × 2 byte ≈ 26GB, vẫn dư". Điều gì nhiều khả năng xảy ra?</p>
-      <button class="quiz-opt" onclick="quizPick(this,0)"><span class="quiz-letter">A</span><span>Chạy tốt — 26GB &lt; 48GB nên GPU thừa chỗ.</span></button>
-      <button class="quiz-opt" onclick="quizPick(this,1)"><span class="quiz-letter">B</span><span>OOM, vì riêng activation memory đã vượt 48GB.</span></button>
-      <button class="quiz-opt" onclick="quizPick(this,2)"><span class="quiz-letter">C</span><span>OOM: trọng số + gradient + optimizer ≈ 16 byte/param × 13B ≈ 208GB, gấp hơn 4 lần GPU.</span></button>
+      <button class="quiz-opt" onclick="quizPick(this,0)"><span class="quiz-letter">A</span><span>Chạy tốt — 26GB &lt; 48GB nên GPU vẫn còn thừa chỗ cho batch.</span></button>
+      <button class="quiz-opt" onclick="quizPick(this,1)"><span class="quiz-letter">B</span><span>OOM, nhưng vì riêng activation memory của 13B đã vượt 48GB.</span></button>
+      <button class="quiz-opt" onclick="quizPick(this,2)"><span class="quiz-letter">C</span><span>OOM: ~16 byte/param × 13B ≈ 208GB, gấp hơn 4 lần GPU.</span></button>
       <div class="quiz-feedback" role="status" data-explain="A chỉ tính trọng số fp16 (2 byte), bỏ quên gradient (2) và optimizer states của Adam (12) — đúng cái bẫy của bài. B đổ lỗi nhầm: thủ phạm chính là optimizer states, còn activation thậm chí chưa nằm trong công thức 16 byte/param. Ước lượng đúng là ~16 byte/param × 13B ≈ 208GB."></div>
     </div>
   </div>
@@ -1082,10 +1088,10 @@ footer.site{border-top:1px solid var(--border);padding:26px 24px;text-align:cent
         <text class="dgm-ink2" x="505" y="150" text-anchor="middle" font-size="11" font-family="IBM Plex Mono">🔒 đóng băng</text>
         <rect class="dgm-accent" x="610" y="60" width="72" height="38" rx="6" stroke-width="2"/>
         <text class="dgm-ink" x="646" y="84" text-anchor="middle" font-size="14" font-weight="700">A</text>
-        <text class="dgm-ink2" x="646" y="112" text-anchor="middle" font-size="9.5" font-family="IBM Plex Mono">r × k</text>
+        <text class="dgm-ink2" x="646" y="112" text-anchor="middle" font-size="10" font-family="IBM Plex Mono">r × k</text>
         <rect class="dgm-accent" x="610" y="132" width="72" height="38" rx="6" stroke-width="2"/>
         <text class="dgm-ink" x="646" y="156" text-anchor="middle" font-size="14" font-weight="700">B</text>
-        <text class="dgm-ink2" x="646" y="184" text-anchor="middle" font-size="9.5" font-family="IBM Plex Mono">d × r</text>
+        <text class="dgm-ink2" x="646" y="184" text-anchor="middle" font-size="10" font-family="IBM Plex Mono">d × r</text>
         <path class="dgm-flow" d="M580 127 H606" stroke-width="2" marker-end="url(#m2l2-ah)"/>
         <text class="dgm-ink" x="505" y="232" text-anchor="middle" font-size="13" font-weight="700" font-family="IBM Plex Mono">ΔW = B·A ,  r ≪ d,k</text>
         <defs><marker id="m2l2-ah" markerWidth="9" markerHeight="9" refX="7" refY="4.5" orient="auto"><path d="M0 0 L9 4.5 L0 9 z" fill="var(--accent-2)"/></marker></defs>
@@ -1136,7 +1142,7 @@ cfg = LoraConfig(
     <div class="quiz" data-correct="0">
       <span class="eyebrow">Kiểm tra nhanh</span>
       <p class="quiz-q">Fine-tune LoRA cho một domain pháp lý xong, accuracy vẫn kém full fine-tuning một khoảng nhỏ. Config đang là <span class="mono">target_modules=["q_proj","v_proj"]</span>. Nước đi hợp lý <em>đầu tiên</em> là gì?</p>
-      <button class="quiz-opt" onclick="quizPick(this,0)"><span class="quiz-letter">A</span><span>Gắn adapter lên mọi lớp linear (thêm MLP/MoE, không chỉ attention) và kiểm lại learning rate — nguyên nhân phổ biến nhất của gap là cấu hình, không phải trần của LoRA.</span></button>
+      <button class="quiz-opt" onclick="quizPick(this,0)"><span class="quiz-letter">A</span><span>Gắn adapter lên mọi lớp linear (thêm MLP/MoE, không chỉ attention) và kiểm lại learning rate.</span></button>
       <button class="quiz-opt" onclick="quizPick(this,1)"><span class="quiz-letter">B</span><span>Bật ngay <span class="mono">use_dora=True</span>, vì DoRA là nấc thu hẹp gap rẻ nhất nên phải thử trước tiên.</span></button>
       <button class="quiz-opt" onclick="quizPick(this,2)"><span class="quiz-letter">C</span><span>Bỏ LoRA, quay lại full fine-tuning ngay — gap nghĩa là PEFT không hợp.</span></button>
       <div class="quiz-feedback" role="status" data-explain="A đúng: adapter chỉ nằm trên q/v là ca kinh điển — 'attention-only LoRA significantly underperforms MLP-only LoRA' ở cùng số tham số, và LR tối ưu của LoRA cao hơn full FT ~10× nên bê LR full-FT sang cũng tạo ra gap giả. B đúng công cụ nhưng sai thứ tự: DoRA không cứu được một adapter gắn thiếu lớp, nó là nấc 3 sau target_modules và rank. C sai vì một gap nhỏ chưa biện minh cho việc trả lại toàn bộ cái giá 16 byte/param của full FT — và gap này nhiều khả năng biến mất sau khi sửa config."></div>
@@ -1227,7 +1233,7 @@ cfg = LoraConfig(
         </tbody>
       </table>
     </div>
-    <p style="font-size:12.5px;color:var(--ink-3)" class="mono">Nguồn: Unsloth requirements docs, truy cập 07/2026; claim của vendor, chưa đo độc lập.</p>
+    <p style="font-size:12.5px;color:var(--ink-3)" class="mono">Nguồn: Unsloth requirements docs, truy cập 05/09/2026; claim của vendor, chưa đo độc lập.</p>
 
     <div class="callout insight">
       <div class="callout-title">Nối lại: QLoRA = LoRA đặt lên nền đã nén</div>
@@ -1256,8 +1262,8 @@ cfg = LoraConfig(
       <span class="eyebrow">Kiểm tra nhanh</span>
       <p class="quiz-q">Bạn có một GPU 24GB và muốn fine-tune một model ~14B. Kết luận nào đúng?</p>
       <button class="quiz-opt" onclick="quizPick(this,0)"><span class="quiz-letter">A</span><span>Không thể — 14B cần tối thiểu 14B × 16 byte ≈ 224GB dù dùng phương pháp nào.</span></button>
-      <button class="quiz-opt" onclick="quizPick(this,1)"><span class="quiz-letter">B</span><span>QLoRA khả thi: base nén 4-bit + adapter, Unsloth ước ~8,5GB cho 14B (claim vendor, cần tự benchmark) — vừa 24GB.</span></button>
-      <button class="quiz-opt" onclick="quizPick(this,2)"><span class="quiz-letter">C</span><span>Chỉ cần LoRA 16-bit là đủ, không cần quantize gì cả.</span></button>
+      <button class="quiz-opt" onclick="quizPick(this,1)"><span class="quiz-letter">B</span><span>QLoRA khả thi: base nén 4-bit + adapter, Unsloth ước ~8,5GB cho 14B — vừa 24GB.</span></button>
+      <button class="quiz-opt" onclick="quizPick(this,2)"><span class="quiz-letter">C</span><span>Chỉ cần LoRA 16-bit là đủ cho 14B trên 24GB, không cần quantize gì cả.</span></button>
       <div class="quiz-feedback" role="status" data-explain="A áp nhầm công thức 16 byte/param của FULL fine-tuning (bài 2.1) cho mọi phương pháp — QLoRA nén base xuống 4-bit nên không còn 224GB. C sai vì LoRA 16-bit cho 14B ≈ 33GB (bảng Unsloth) vượt 24GB — chính vì thế mới cần 4-bit. B đúng, và nhớ: số Unsloth là claim vendor, phải tự đo lại."></div>
     </div>
   </div>
@@ -1328,7 +1334,7 @@ cfg = LoraConfig(
         <text class="dgm-ink2" x="513" y="105" text-anchor="middle" font-size="10">sample → chấm bằng reward</text>
         <text class="dgm-ink2" x="513" y="119" text-anchor="middle" font-size="10">+ KL penalty → update policy</text>
         <path class="dgm-line" d="M432 150 q81 26 162 0" stroke-width="2" marker-end="url(#m3l1-ah)"/>
-        <text class="dgm-ink2" x="513" y="162" text-anchor="middle" font-size="9" font-family="IBM Plex Mono">lặp lại — vòng RL tốn kém</text>
+        <text class="dgm-ink2" x="513" y="162" text-anchor="middle" font-size="10" font-family="IBM Plex Mono">lặp lại — vòng RL tốn kém</text>
 
         <defs><marker id="m3l1-ah" markerWidth="9" markerHeight="9" refX="7" refY="4.5" orient="auto"><path d="M0 0 L9 4.5 L0 9 z" fill="var(--accent-2)"/></marker></defs>
       </svg>
@@ -1370,7 +1376,7 @@ cfg = LoraConfig(
       <p class="quiz-q">Nhóm bạn chỉ cần chatbot trả lời đúng giọng thương hiệu và đang định "làm RLHF cho giống ChatGPT". Điều gì là thực tế vận hành quan trọng nhất cần cân nhắc trước?</p>
       <button class="quiz-opt" onclick="quizPick(this,0)"><span class="quiz-letter">A</span><span>Reward model đủ lớn thì tự chấm được, nên không cần thu dữ liệu preference của người.</span></button>
       <button class="quiz-opt" onclick="quizPick(this,1)"><span class="quiz-letter">B</span><span>Bỏ KL penalty đi để policy tối ưu điểm reward nhanh hơn.</span></button>
-      <button class="quiz-opt" onclick="quizPick(this,2)"><span class="quiz-letter">C</span><span>RLHF phải chạy đồng thời nhiều model (policy + reward + vòng sampling) và dễ mất ổn định — chi phí vận hành, không chỉ chất lượng lý thuyết, mới là yếu tố quyết định có nên chọn nó.</span></button>
+      <button class="quiz-opt" onclick="quizPick(this,2)"><span class="quiz-letter">C</span><span>RLHF phải chạy đồng thời nhiều model (policy + reward + vòng sampling) và dễ mất ổn định.</span></button>
       <div class="quiz-feedback" role="status" data-explain="C đúng: RLHF là 'complex and often unstable' vì có nhiều model động cùng lúc — đó là rào cản thật cần cân trước khi chọn. A sai: reward model được huấn luyện TỪ preference ranking của người, không tự sinh ra tín hiệu sở thích. B sai: bỏ KL penalty thì policy có thể trượt tới chỗ 'gibberish but fools the reward model' — sinh chữ vô nghĩa mà vẫn ăn điểm cao."></div>
     </div>
   </div>
@@ -1418,11 +1424,11 @@ cfg = LoraConfig(
         <path class="dgm-flow" d="M160 60 H196" stroke-width="2" marker-end="url(#m3l2-ah)"/>
         <rect class="dgm-warn" x="196" y="34" width="180" height="52" rx="9"/>
         <text class="dgm-ink" x="286" y="58" text-anchor="middle" font-size="12" font-weight="700">Reward model</text>
-        <text class="dgm-ink2" x="286" y="76" text-anchor="middle" font-size="9" font-family="IBM Plex Mono">bộ phận riêng</text>
+        <text class="dgm-ink2" x="286" y="76" text-anchor="middle" font-size="10" font-family="IBM Plex Mono">bộ phận riêng</text>
         <path class="dgm-flow" d="M376 60 H412" stroke-width="2" marker-end="url(#m3l2-ah)"/>
         <rect class="dgm-warn" x="412" y="34" width="200" height="52" rx="9"/>
         <text class="dgm-ink" x="512" y="58" text-anchor="middle" font-size="12" font-weight="700">Vòng PPO (RL)</text>
-        <text class="dgm-ink2" x="512" y="76" text-anchor="middle" font-size="9" font-family="IBM Plex Mono">sampling + KL penalty</text>
+        <text class="dgm-ink2" x="512" y="76" text-anchor="middle" font-size="10" font-family="IBM Plex Mono">sampling + KL penalty</text>
         <path d="M196 88 L376 32" stroke="var(--danger)" stroke-width="3"/>
         <path d="M412 88 L612 32" stroke="var(--danger)" stroke-width="3"/>
         <text x="470" y="106" text-anchor="middle" font-size="11" font-family="IBM Plex Mono" fill="var(--danger)">DPO bỏ hẳn hai bộ phận này</text>
@@ -1457,17 +1463,17 @@ cfg = LoraConfig(
         <rect class="dgm-warn" x="20" y="40" width="250" height="170" rx="10" stroke-width="2"/>
         <rect class="dgm-box" x="44" y="70" width="90" height="80" rx="8"/>
         <text class="dgm-ink" x="89" y="104" text-anchor="middle" font-size="12" font-weight="700">Policy</text>
-        <text class="dgm-ink2" x="89" y="122" text-anchor="middle" font-size="9" font-family="IBM Plex Mono">model lớn</text>
+        <text class="dgm-ink2" x="89" y="122" text-anchor="middle" font-size="10" font-family="IBM Plex Mono">model lớn</text>
         <rect class="dgm-box" x="156" y="70" width="90" height="80" rx="8"/>
         <text class="dgm-ink" x="201" y="104" text-anchor="middle" font-size="12" font-weight="700">Critic</text>
-        <text class="dgm-ink2" x="201" y="122" text-anchor="middle" font-size="9" font-family="IBM Plex Mono">model lớn</text>
+        <text class="dgm-ink2" x="201" y="122" text-anchor="middle" font-size="10" font-family="IBM Plex Mono">model lớn</text>
         <text class="dgm-ink2" x="145" y="182" text-anchor="middle" font-size="10">2 model lớn cùng lúc</text>
 
         <text class="dgm-ink2" x="330" y="24" font-size="12" font-family="IBM Plex Mono">✓ GRPO — group baseline</text>
         <rect class="dgm-accent" x="330" y="40" width="290" height="170" rx="10" stroke-width="2"/>
         <rect class="dgm-box" x="350" y="90" width="80" height="60" rx="8"/>
         <text class="dgm-ink" x="390" y="118" text-anchor="middle" font-size="12" font-weight="700">Policy</text>
-        <text class="dgm-ink2" x="390" y="134" text-anchor="middle" font-size="9" font-family="IBM Plex Mono">chỉ 1 model</text>
+        <text class="dgm-ink2" x="390" y="134" text-anchor="middle" font-size="10" font-family="IBM Plex Mono">chỉ 1 model</text>
         <path class="dgm-flow" d="M430 108 H470" stroke-width="1.5" marker-end="url(#m3l2b-ah)"/>
         <path class="dgm-flow" d="M430 120 L470 150" stroke-width="1.5" marker-end="url(#m3l2b-ah)"/>
         <path class="dgm-flow" d="M430 96 L470 70" stroke-width="1.5" marker-end="url(#m3l2b-ah)"/>
@@ -1505,8 +1511,8 @@ cfg = LoraConfig(
       <details class="accordion"><summary><span class="chev">▶</span><span class="accordion-tag">Cần cải thiện suy luận có thể chấm đúng/sai</span><span>→ GRPO</span></summary>
         <div class="accordion-body">Khi tín hiệu là một hàm reward chấm được đúng/sai (toán, code chạy pass/fail), GRPO hợp hơn: nó là biến thể RL nhưng bỏ critic để nhẹ bộ nhớ, chính là cách các nhóm mở như DeepSeek huấn luyện được reasoning model với ngân sách nhỏ hơn. Nhưng nó vẫn là một vòng RL, cần hạ tầng tương ứng.</div>
       </details>
-      <details class="accordion"><summary><span class="chev">▶</span><span class="accordion-tag">Không có tín hiệu preference nào cả</span><span>→ chưa tới lượt cả hai</span></summary>
-        <div class="accordion-body">Nếu bạn chưa có cặp preferred/rejected lẫn hàm reward, thì việc cần làm không phải chọn DPO hay GRPO, mà là quay lại eval + curate dữ liệu preference trước. Phương pháp không cứu được việc thiếu tín hiệu.</div>
+      <details class="accordion"><summary><span class="chev">▶</span><span class="accordion-tag">Không có tín hiệu preference nào cả</span><span>→ chưa tới lượt DPO/GRPO, nhưng còn KTO và ORPO</span></summary>
+        <div class="accordion-body">Nếu bạn chưa có cặp preferred/rejected lẫn hàm reward, thì việc cần làm không phải chọn DPO hay GRPO, mà là quay lại eval + curate dữ liệu preference trước. Phương pháp không cứu được việc thiếu tín hiệu. Nhưng trước khi bỏ hẳn, xem tín hiệu <em>rẻ nhất</em> bạn có thể thu: <strong>KTO</strong> (arXiv 2402.01306) chỉ cần nhãn nhị phân "chấp nhận được / không" trên từng output riêng lẻ, <strong>không cần cặp</strong> — thường là thứ đội support đã bấm sẵn hằng ngày; paper báo cáo nó "matches or exceeds the performance of preference-based methods at scales from 1B to 30B". Còn <strong>ORPO</strong> (arXiv 2403.07691) gộp SFT với align vào một giai đoạn và bỏ luôn model tham chiếu. Cả hai có trainer sẵn trong TRL (<span class="mono">KTOTrainer</span>; <span class="mono">ORPOTrainer</span> còn nằm trong <span class="mono">trl.experimental</span>), nên chi phí thử là một config, không phải một dự án.</div>
       </details>
     </div>
 
@@ -1521,7 +1527,7 @@ cfg = LoraConfig(
     <div class="quiz" data-correct="0">
       <span class="eyebrow">Kiểm tra nhanh</span>
       <p class="quiz-q">Nhóm bạn cần model trả lời đúng giọng thương hiệu, đã thu được một tập cặp (câu đúng giọng, câu sai giọng), và không có ai vận hành hạ tầng RL. Chọn phương pháp nào?</p>
-      <button class="quiz-opt" onclick="quizPick(this,0)"><span class="quiz-letter">A</span><span>DPO — nó giải đúng bài toán preference bằng một classification loss trên cặp (preferred, rejected), chạy một vòng train như SFT, không cần reward model hay vòng RL.</span></button>
+      <button class="quiz-opt" onclick="quizPick(this,0)"><span class="quiz-letter">A</span><span>DPO — một classification loss trên cặp (preferred, rejected), chạy một vòng như SFT, không cần vòng RL.</span></button>
       <button class="quiz-opt" onclick="quizPick(this,1)"><span class="quiz-letter">B</span><span>GRPO — vì nó mới hơn và đã bỏ được critic model, nên chắc chắn tốt hơn DPO.</span></button>
       <button class="quiz-opt" onclick="quizPick(this,2)"><span class="quiz-letter">C</span><span>Bỏ preference tuning, quay lại prompt engineering — vì không có hạ tầng RL thì không align theo preference được.</span></button>
       <div class="quiz-feedback" role="status" data-explain="A đúng: bạn có sẵn cặp preferred/rejected, cần đúng tone/style, và không có RL — đây chính xác là ca của DPO (một vòng như SFT, không reward model, không vòng RL). B sai: GRPO hợp với tín hiệu chấm đúng/sai (toán/suy luận), 'mới hơn' không phải tiêu chí — và nó vẫn là một vòng RL. C sai: chính DPO cho phép làm preference tuning MÀ KHÔNG cần RL, nên không phải bỏ."></div>
@@ -1578,9 +1584,9 @@ cfg = LoraConfig(
         <line class="dgm-line" x1="40" y1="205" x2="212" y2="205" stroke-width="1.5"/>
         <rect class="dgm-accent" x="62" y="82" width="46" height="123" rx="4" stroke-width="1.5"/>
         <rect class="dgm-box" x="132" y="150" width="46" height="55" rx="4"/>
-        <text class="dgm-ink2" x="85" y="220" text-anchor="middle" font-size="9.5" font-family="IBM Plex Mono">StackEx</text>
-        <text class="dgm-ink2" x="155" y="220" text-anchor="middle" font-size="9.5" font-family="IBM Plex Mono">wikiHow</text>
-        <text class="dgm-ink2" x="125" y="238" text-anchor="middle" font-size="9.5">đa dạng &gt; đồng nhất</text>
+        <text class="dgm-ink2" x="85" y="220" text-anchor="middle" font-size="10" font-family="IBM Plex Mono">StackEx</text>
+        <text class="dgm-ink2" x="155" y="220" text-anchor="middle" font-size="10" font-family="IBM Plex Mono">wikiHow</text>
+        <text class="dgm-ink2" x="125" y="238" text-anchor="middle" font-size="10">đa dạng &gt; đồng nhất</text>
 
         <line class="dgm-line" x1="228" y1="20" x2="228" y2="238" stroke-width="1" stroke-dasharray="3 3"/>
 
@@ -1591,9 +1597,9 @@ cfg = LoraConfig(
         <rect class="dgm-box" x="356" y="120" width="46" height="85" rx="4"/>
         <path class="dgm-line" d="M309 84 V78 H379 V112" stroke-width="1.5"/>
         <text class="dgm-ink" x="344" y="72" text-anchor="middle" font-size="10.5" font-weight="700">+0,5 điểm</text>
-        <text class="dgm-ink2" x="309" y="220" text-anchor="middle" font-size="9.5" font-family="IBM Plex Mono">đã lọc</text>
-        <text class="dgm-ink2" x="379" y="220" text-anchor="middle" font-size="9.5" font-family="IBM Plex Mono">chưa lọc</text>
-        <text class="dgm-ink2" x="345" y="238" text-anchor="middle" font-size="9.5">thang điểm ChatGPT</text>
+        <text class="dgm-ink2" x="309" y="220" text-anchor="middle" font-size="10" font-family="IBM Plex Mono">đã lọc</text>
+        <text class="dgm-ink2" x="379" y="220" text-anchor="middle" font-size="10" font-family="IBM Plex Mono">chưa lọc</text>
+        <text class="dgm-ink2" x="345" y="238" text-anchor="middle" font-size="10">thang điểm ChatGPT</text>
 
         <line class="dgm-line" x1="448" y1="20" x2="448" y2="238" stroke-width="1" stroke-dasharray="3 3"/>
 
@@ -1605,12 +1611,12 @@ cfg = LoraConfig(
         <circle class="dgm-ink" cx="560" cy="117" r="3"/><circle class="dgm-ink" cx="600" cy="116" r="3"/>
         <circle class="dgm-ink" cx="640" cy="116" r="3"/>
         <text class="dgm-ink" x="565" y="100" text-anchor="middle" font-size="10.5" font-weight="700">plateau</text>
-        <text class="dgm-ink2" x="490" y="220" text-anchor="middle" font-size="9" font-family="IBM Plex Mono">×1</text>
-        <text class="dgm-ink2" x="525" y="220" text-anchor="middle" font-size="9" font-family="IBM Plex Mono">×2</text>
-        <text class="dgm-ink2" x="560" y="220" text-anchor="middle" font-size="9" font-family="IBM Plex Mono">×4</text>
-        <text class="dgm-ink2" x="600" y="220" text-anchor="middle" font-size="9" font-family="IBM Plex Mono">×8</text>
-        <text class="dgm-ink2" x="640" y="220" text-anchor="middle" font-size="9" font-family="IBM Plex Mono">×16</text>
-        <text class="dgm-ink2" x="565" y="238" text-anchor="middle" font-size="9.5">nhân đôi data → không lên</text>
+        <text class="dgm-ink2" x="490" y="220" text-anchor="middle" font-size="10" font-family="IBM Plex Mono">×1</text>
+        <text class="dgm-ink2" x="525" y="220" text-anchor="middle" font-size="10" font-family="IBM Plex Mono">×2</text>
+        <text class="dgm-ink2" x="560" y="220" text-anchor="middle" font-size="10" font-family="IBM Plex Mono">×4</text>
+        <text class="dgm-ink2" x="600" y="220" text-anchor="middle" font-size="10" font-family="IBM Plex Mono">×8</text>
+        <text class="dgm-ink2" x="640" y="220" text-anchor="middle" font-size="10" font-family="IBM Plex Mono">×16</text>
+        <text class="dgm-ink2" x="565" y="238" text-anchor="middle" font-size="10">nhân đôi data → không lên</text>
       </svg>
       <figcaption><b>Hình 4.1</b> — Ba ablation của LIMA. Đa dạng (Stack Exchange) vượt đồng nhất (wikiHow) cùng cỡ dữ liệu; lọc chất lượng cho <b>"a significant 0.5 point difference"</b> trên thang ChatGPT; còn nhân đôi số lượng thô tới <b>×16</b> thì điểm <b>"plateaus"</b> — phẳng. Cái hình cho thấy điều một câu không nói được: hai trục trái tạo ra chênh lệch thật, trục phải thì không.</figcaption>
     </figure>
@@ -1629,8 +1635,9 @@ cfg = LoraConfig(
     </div>
 
     <div class="callout info">
-      <div class="callout-title">Con số thực dụng của OpenAI (docs, truy cập 07/2026)</div>
+      <div class="callout-title">Con số thực dụng của OpenAI (docs bản 2024–2025)</div>
       <p>Tối thiểu để job chạy: <strong>10</strong> ví dụ. Bắt đầu thấy cải thiện rõ từ <strong>50–100</strong> ví dụ; OpenAI khuyến nghị <em>"starting with 50 well-crafted demonstrations and evaluating the results"</em>: bắt đầu với 50 ví dụ làm kỹ rồi đánh giá. Và nếu 50 ví dụ tốt vẫn không cải thiện, lời khuyên là <em>"rethink your task or prompt before adding training data"</em>: xem lại task/prompt, đừng cứ đổ thêm data. Kỷ luật tách tập: chính nhóm LIMA cũng giữ riêng một <strong>dev set 50</strong> ví dụ, tách khỏi cả training lẫn 300 test prompt.</p>
+      <p>Cả cụm 10 / 50–100 và hai câu trích trên thuộc bản docs 2024–2025; trang OpenAI hiện tại đã viết lại quanh thông báo wind-down và không còn chở chúng (kiểm 05/09/2026). Giá trị nằm ở nguyên tắc, không ở chỗ nó còn trên web (xem ghi chú bài 1.1). Con số của LIMA thì lấy thẳng từ paper, không đổi.</p>
     </div>
 
     <div class="callout insight">
@@ -1658,7 +1665,7 @@ cfg = LoraConfig(
       <span class="eyebrow">Kiểm tra nhanh</span>
       <p class="quiz-q">Team bạn có 50.000 hội thoại support thô. Đề xuất "đổ hết vào fine-tune vì càng nhiều càng tốt". Phản hồi đúng nhất theo tinh thần LIMA?</p>
       <button class="quiz-opt" onclick="quizPick(this,0)"><span class="quiz-letter">A</span><span>Đồng ý — 50.000 &gt;&gt; 1.000, thêm dữ liệu luôn giúp model tổng quát tốt hơn.</span></button>
-      <button class="quiz-opt" onclick="quizPick(this,1)"><span class="quiz-letter">B</span><span>Curate lấy vài trăm–1.000 ví dụ đa dạng, sạch format/tone; thêm số lượng thô sau đó thường plateau, thậm chí hại.</span></button>
+      <button class="quiz-opt" onclick="quizPick(this,1)"><span class="quiz-letter">B</span><span>Curate vài trăm–1.000 ví dụ đa dạng, sạch format/tone, rồi mới tính chuyện thêm.</span></button>
       <button class="quiz-opt" onclick="quizPick(this,2)"><span class="quiz-letter">C</span><span>Chỉ cần lấy đúng 10 ví dụ vì đó là ngưỡng tối thiểu OpenAI cho phép.</span></button>
       <div class="quiz-feedback" role="status" data-explain="B đúng: LIMA cho thấy diversity + quality quyết định, số lượng thô plateau sau ×16 và data bẩn còn kéo model xuống. A sai vì thêm số lượng thô không cải thiện khi chất lượng đã cố định. C nhầm 'ngưỡng để job chạy' (10) với 'đủ để có kết quả tốt' — OpenAI chỉ thấy cải thiện rõ từ 50–100 ví dụ."></div>
     </div>
@@ -1706,30 +1713,30 @@ cfg = LoraConfig(
         <!-- good row -->
         <rect class="dgm-box" x="20" y="42" width="140" height="52" rx="8"/>
         <text class="dgm-ink" x="90" y="65" text-anchor="middle" font-size="11" font-family="IBM Plex Mono">messages[]</text>
-        <text class="dgm-ink2" x="90" y="80" text-anchor="middle" font-size="9" font-family="IBM Plex Mono">role / content</text>
+        <text class="dgm-ink2" x="90" y="80" text-anchor="middle" font-size="10" font-family="IBM Plex Mono">role / content</text>
         <path class="dgm-flow" d="M160 68 H208" stroke-width="2" marker-end="url(#m4l2-ah)"/>
         <rect class="dgm-accent" x="208" y="42" width="176" height="52" rx="8" stroke-width="2"/>
         <text class="dgm-ink" x="296" y="63" text-anchor="middle" font-size="11" font-weight="700" font-family="IBM Plex Mono">apply_chat_template</text>
-        <text class="dgm-ink2" x="296" y="80" text-anchor="middle" font-size="9" font-family="IBM Plex Mono">tokenizer GỐC của model</text>
+        <text class="dgm-ink2" x="296" y="80" text-anchor="middle" font-size="10" font-family="IBM Plex Mono">tokenizer GỐC của model</text>
         <path class="dgm-flow" d="M384 68 H432" stroke-width="2" marker-end="url(#m4l2-ah)"/>
         <rect class="dgm-box" x="432" y="36" width="228" height="64" rx="8"/>
         <text class="dgm-ink" x="446" y="60" font-size="11" font-family="IBM Plex Mono">&lt;|user|&gt;…&lt;|assistant|&gt;…</text>
         <text class="dgm-ink" x="446" y="76" font-size="11" font-family="IBM Plex Mono">&lt;|end_of_message|&gt;</text>
-        <text x="446" y="92" font-size="9.5" font-weight="700" fill="var(--success)">✓ khớp thứ model thấy lúc train</text>
+        <text x="446" y="92" font-size="10" font-weight="700" fill="var(--success)">✓ khớp thứ model thấy lúc train</text>
 
         <!-- bad row -->
         <rect class="dgm-box" x="20" y="176" width="140" height="52" rx="8"/>
         <text class="dgm-ink" x="90" y="199" text-anchor="middle" font-size="11" font-family="IBM Plex Mono">messages[]</text>
-        <text class="dgm-ink2" x="90" y="214" text-anchor="middle" font-size="9" font-family="IBM Plex Mono">role / content</text>
+        <text class="dgm-ink2" x="90" y="214" text-anchor="middle" font-size="10" font-family="IBM Plex Mono">role / content</text>
         <path class="dgm-line" d="M160 202 H208" stroke-width="2" marker-end="url(#m4l2-ahw)"/>
         <rect class="dgm-warn" x="208" y="176" width="176" height="52" rx="8" stroke-width="2"/>
         <text class="dgm-ink" x="296" y="197" text-anchor="middle" font-size="11" font-weight="700" font-family="IBM Plex Mono">tự chế</text>
-        <text class="dgm-ink2" x="296" y="214" text-anchor="middle" font-size="9.5" font-family="IBM Plex Mono">### User: / ### Assistant:</text>
+        <text class="dgm-ink2" x="296" y="214" text-anchor="middle" font-size="10" font-family="IBM Plex Mono">### User: / ### Assistant:</text>
         <path class="dgm-line" d="M384 202 H432" stroke-width="2" marker-end="url(#m4l2-ahw)"/>
         <rect x="432" y="170" width="228" height="64" rx="8" fill="var(--danger-bg)" stroke="var(--danger)" stroke-width="2" stroke-dasharray="6 4"/>
         <text class="dgm-ink" x="446" y="194" font-size="10.5" font-family="IBM Plex Mono">control token LỆCH</text>
         <text x="446" y="212" font-size="10" font-weight="700" fill="var(--danger)">✗ performance degradation</text>
-        <text class="dgm-ink2" x="446" y="226" font-size="9" font-family="IBM Plex Mono">kể cả khi train tiếp</text>
+        <text class="dgm-ink2" x="446" y="226" font-size="10" font-family="IBM Plex Mono">kể cả khi train tiếp</text>
         <defs>
           <marker id="m4l2-ah" markerWidth="9" markerHeight="9" refX="7" refY="4.5" orient="auto"><path d="M0 0 L9 4.5 L0 9 z" fill="var(--accent-2)"/></marker>
           <marker id="m4l2-ahw" markerWidth="9" markerHeight="9" refX="7" refY="4.5" orient="auto"><path d="M0 0 L9 4.5 L0 9 z" fill="var(--ink-3)"/></marker>
@@ -1834,7 +1841,7 @@ cfg = LoraConfig(
         <!-- validation loss (down then up) -->
         <path d="M60 78 C180 120, 300 148, 360 150 C440 154, 540 122, 640 96" fill="none" stroke="var(--warning)" stroke-width="2.5"/>
         <text fill="var(--warning)" x="470" y="112" font-size="10" font-weight="700" font-family="IBM Plex Mono">validation loss ↑</text>
-        <text class="dgm-ink2" x="505" y="200" font-size="9.5" text-anchor="middle">vùng học thuộc / memorization</text>
+        <text class="dgm-ink2" x="505" y="200" font-size="10" text-anchor="middle">vùng học thuộc / memorization</text>
       </svg>
       <figcaption><b>Hình 4.3a</b> — Overfit: OpenAI mô tả model <b>"improves early on but then memorizes the dataset instead of learning generalizable knowledge"</b>. Dấu hiệu trên loss-curve — training loss vẫn giảm trong khi validation loss chững rồi tăng — là <em>thực hành phổ biến</em> của cộng đồng để chọn điểm dừng sớm, <em>không phải câu quote chính thức của OpenAI</em>. Điểm hình dạy: hai đường tách nhau ở đâu thì nên dừng ở đó.</figcaption>
     </figure>
@@ -1843,20 +1850,20 @@ cfg = LoraConfig(
       <svg viewBox="0 0 700 180" role="img" aria-label="Đường rò rỉ contamination: test set công khai lọt vào dữ liệu training rồi tới model, khiến điểm eval bị thổi phồng không phản ánh năng lực thật">
         <rect class="dgm-box" x="20" y="60" width="140" height="58" rx="8"/>
         <text class="dgm-ink" x="90" y="84" text-anchor="middle" font-size="10.5" font-weight="700">Test/eval set</text>
-        <text class="dgm-ink2" x="90" y="100" text-anchor="middle" font-size="9.5" font-family="IBM Plex Mono">công khai</text>
+        <text class="dgm-ink2" x="90" y="100" text-anchor="middle" font-size="10" font-family="IBM Plex Mono">công khai</text>
         <path d="M160 89 H228" stroke="var(--danger)" stroke-width="2" fill="none" marker-end="url(#m4l3-ahr)"/>
-        <text x="194" y="54" text-anchor="middle" font-size="9.5" fill="var(--danger)" font-family="IBM Plex Mono">exact / near-dup</text>
-        <text x="194" y="66" text-anchor="middle" font-size="9.5" fill="var(--danger)" font-family="IBM Plex Mono">/ derivative</text>
+        <text x="194" y="54" text-anchor="middle" font-size="10" fill="var(--danger)" font-family="IBM Plex Mono">exact / near-dup</text>
+        <text x="194" y="66" text-anchor="middle" font-size="10" fill="var(--danger)" font-family="IBM Plex Mono">/ derivative</text>
         <rect class="dgm-warn" x="228" y="60" width="160" height="58" rx="8" stroke-width="2"/>
         <text class="dgm-ink" x="308" y="84" text-anchor="middle" font-size="10.5" font-weight="700">Training / FT data</text>
-        <text class="dgm-ink2" x="308" y="100" text-anchor="middle" font-size="9.5" font-family="IBM Plex Mono">lọt vào đây</text>
+        <text class="dgm-ink2" x="308" y="100" text-anchor="middle" font-size="10" font-family="IBM Plex Mono">lọt vào đây</text>
         <path class="dgm-flow" d="M388 89 H452" stroke-width="2" marker-end="url(#m4l3-ah)"/>
         <rect class="dgm-accent" x="452" y="66" width="92" height="46" rx="8" stroke-width="2"/>
         <text class="dgm-ink" x="498" y="93" text-anchor="middle" font-size="11" font-weight="700">Model</text>
         <path class="dgm-flow" d="M544 89 H600" stroke-width="2" marker-end="url(#m4l3-ah)"/>
         <rect x="600" y="60" width="86" height="58" rx="8" fill="var(--danger-bg)" stroke="var(--danger)" stroke-width="2"/>
         <text class="dgm-ink" x="643" y="82" text-anchor="middle" font-size="10.5" font-weight="700">Eval score</text>
-        <text x="643" y="100" text-anchor="middle" font-size="9.5" font-weight="700" fill="var(--danger)">✗ thổi phồng</text>
+        <text x="643" y="100" text-anchor="middle" font-size="10" font-weight="700" fill="var(--danger)">✗ thổi phồng</text>
         <defs>
           <marker id="m4l3-ah" markerWidth="9" markerHeight="9" refX="7" refY="4.5" orient="auto"><path d="M0 0 L9 4.5 L0 9 z" fill="var(--accent-2)"/></marker>
           <marker id="m4l3-ahr" markerWidth="9" markerHeight="9" refX="7" refY="4.5" orient="auto"><path d="M0 0 L9 4.5 L0 9 z" fill="var(--danger)"/></marker>
@@ -1879,7 +1886,8 @@ cfg = LoraConfig(
     <div class="callout insight">
       <div class="callout-title">Bốn nguyên tắc làm eval: chỗ phần lớn team làm sai</div>
       <p><strong>1 · Holdout phải đủ lớn để phân biệt được cái bạn cần phân biệt.</strong> Trực giác cỡ mẫu: sai số của một tỉ lệ co lại theo <em>căn bậc hai</em> của số ví dụ, nên muốn chia đôi độ rộng khoảng tin cậy bạn phải nhân bốn cỡ holdout. Hệ quả rất thực tế: vài chục ví dụ chỉ đủ thấy chênh lệch <em>rất lớn</em>; muốn tự tin về mức chênh vài điểm phần trăm, bạn cần hàng trăm ví dụ trở lên. Nếu holdout nhỏ, hãy thừa nhận nó chỉ bắt được lỗi to.</p>
-      <p><strong>2 · Báo cáo chênh lệch kèm khoảng, không kèm dấu chấm.</strong> "72% → 94%" là một câu chuyện; "+22 điểm, khoảng ±6 trên holdout 150 ví dụ" là một kết quả. Không có khoảng thì không ai, kể cả bạn, phân biệt được cải thiện thật với nhiễu lấy mẫu, và đây đúng là chỗ một con số đẹp bắt đầu nói dối.</p>
+      <p><strong>2 · Báo cáo chênh lệch kèm khoảng, không kèm dấu chấm.</strong> "72% → 94%" là một câu chuyện; "+22 điểm, khoảng ±8 trên holdout 150 ví dụ" là một kết quả. Không có khoảng thì không ai, kể cả bạn, phân biệt được cải thiện thật với nhiễu lấy mẫu, và đây đúng là chỗ một con số đẹp bắt đầu nói dối.</p>
+      <p>Con số ±8 đó tính ra được chứ không phỏng đoán. Khoảng tin cậy 95% của <em>một</em> tỉ lệ ≈ <span class="mono">p ± 1,96·√(p(1−p)/n)</span>: với p = 0,94 và n = 150 cho <strong>±3,8 điểm</strong>. Nhưng "+22 điểm" là <em>hiệu</em> hai tỉ lệ nên sai số cộng lại: 1,96·√(0,72·0,28/150 + 0,94·0,06/150) ≈ 0,081 → <strong>±8 điểm</strong>. Đọc ra: "+22 ± 8" là cải thiện thật, "+6 ± 8" thì chưa nói được gì.</p>
       <p><strong>3 · Chấm nhị phân theo từng lỗi có tên, đừng chấm cảm tính 1–5.</strong> Mỗi dòng eval là một câu hỏi trả lời được bằng có/không về <em>một</em> khuyết tật cụ thể: "có thiếu field <span class="mono">ticket_id</span> không?", "có hứa hoàn tiền khi chính sách không cho không?", "có bịa số hiệu điều khoản không?". Điểm "chất lượng tổng thể: 3,5/5" không nói cho bạn biết phải sửa gì, còn "12% rớt ở lỗi thiếu field" thì có, và nó cũng ổn định giữa những người chấm khác nhau.</p>
       <p><strong>4 · LLM-judge chỉ dùng sau khi đã đo chính judge đó.</strong> Trước khi để một model chấm hàng nghìn output, hãy nhãn tay một tập con rồi đo mức <em>đồng thuận judge ↔ người</em> trên chính tập con đó. Đồng thuận thấp thì con số judge sinh ra không phải phép đo, nó là ý kiến của một model khác, và bạn vừa thay eval bằng một model chưa được eval. Cuối cùng, khép vòng: mỗi lần eval, đọc các ca <em>trượt</em>, gom chúng thành lô curate tiếp theo. Đó là cách error analysis biến eval từ một cái cổng thành một cỗ máy sinh dữ liệu (bài 4.1).</p>
     </div>
@@ -1895,7 +1903,7 @@ cfg = LoraConfig(
     <div class="quiz" data-correct="0">
       <span class="eyebrow">Kiểm tra nhanh</span>
       <p class="quiz-q">Sau fine-tune, holdout eval nhảy từ 72% lên 94% và điểm tăng vọt chỉ sau ít bước. Bước tiếp theo tỉnh táo nhất trước khi ship?</p>
-      <button class="quiz-opt" onclick="quizPick(this,0)"><span class="quiz-letter">A</span><span>Chưa tin vội: kiểm holdout có lọt vào training không (contamination), test tập out-of-distribution (shortcut), và eval lại năng lực cũ (forgetting) — cộng vài chục lượt test thủ công.</span></button>
+      <button class="quiz-opt" onclick="quizPick(this,0)"><span class="quiz-letter">A</span><span>Chưa tin vội: kiểm contamination, test out-of-distribution, eval lại năng lực cũ, cộng vài chục lượt test tay.</span></button>
       <button class="quiz-opt" onclick="quizPick(this,1)"><span class="quiz-letter">B</span><span>Ship ngay — 94% trên holdout là bằng chứng đủ mạnh, tăng nhanh nghĩa là fine-tune rất hiệu quả.</span></button>
       <button class="quiz-opt" onclick="quizPick(this,2)"><span class="quiz-letter">C</span><span>Train thêm nhiều epoch nữa để đẩy điểm holdout lên 98% rồi mới ship.</span></button>
       <div class="quiz-feedback" role="status" data-explain="A đúng: điểm tăng vọt bất thường là dấu hiệu kinh điển của contamination hoặc shortcut, và holdout đẹp vẫn có thể che catastrophic forgetting — cần ba lớp + test tay để xác nhận. B tin một con số duy nhất, đúng cái bẫy của bài. C còn tệ hơn: train thêm dễ đẩy vào vùng overfit (Hình 4.3a) và làm forgetting nặng hơn."></div>
@@ -1942,11 +1950,12 @@ cfg = LoraConfig(
     <div class="concept">
       <span class="eyebrow">Khái niệm</span>
       <h4>Bốn công cụ tự host, ba tầng trừu tượng</h4>
-      <p><strong>TRL</strong> (Transformers Reinforcement Learning) và <strong>PEFT</strong> là hai thư viện Python của Hugging Face: bạn viết training loop, đổi lại là kiểm soát cao nhất. Docs TRL định nghĩa: <em>"TRL is a full stack library where we provide a set of tools to train transformer language models with methods like Supervised Fine-Tuning (SFT), Group Relative Policy Optimization (GRPO), Direct Preference Optimization (DPO), Reward Modeling, and more"</em>. Đó là một bộ đồ nghề đầy đủ, chia thành 4 nhóm trainer: online (GRPO/RLOO/PPO), reward modeling, offline (SFT/DPO/KTO/ORPO) và knowledge distillation. <strong>PEFT</strong> lo phần adapter: <em>"only fine-tune a small number of (extra) model parameters … while yielding performance comparable to a fully fine-tuned model"</em>. <strong>Axolotl</strong> gói cả pipeline (data → train → eval) sau một file cấu hình <span class="mono">YAML</span>, ít boilerplate hơn, hỗ trợ FSDP/DeepSpeed, QAT. <strong>Unsloth</strong> tối ưu tốc độ và VRAM, nhưng mọi con số nó công bố là <strong>claim của vendor, chưa đo độc lập</strong>. [nguồn: docs HF TRL/PEFT, Axolotl, Unsloth, truy cập 07/2026]</p>
+      <p><strong>TRL</strong> (Transformers Reinforcement Learning) và <strong>PEFT</strong> là hai thư viện Python của Hugging Face: bạn viết training loop, đổi lại là kiểm soát cao nhất. Docs TRL định nghĩa: <em>"TRL is a full stack library where we provide a set of tools to train transformer language models with methods like Supervised Fine-Tuning (SFT), Group Relative Policy Optimization (GRPO), Direct Preference Optimization (DPO), Reward Modeling, and more"</em>. Đó là một bộ đồ nghề đầy đủ, chia thành 4 nhóm trainer: online (GRPO/RLOO/PPO), reward modeling, offline (SFT/DPO/KTO/ORPO) và knowledge distillation. <strong>PEFT</strong> lo phần adapter: <em>"only fine-tune a small number of (extra) model parameters … while yielding performance comparable to a fully fine-tuned model"</em>. <strong>Axolotl</strong> gói cả pipeline (data → train → eval) sau một file cấu hình <span class="mono">YAML</span>, ít boilerplate hơn, hỗ trợ FSDP/DeepSpeed, QAT. <strong>Unsloth</strong> tối ưu tốc độ và VRAM, nhưng mọi con số nó công bố là <strong>claim của vendor, chưa đo độc lập</strong>. [nguồn: docs HF TRL/PEFT, Axolotl, Unsloth, truy cập 05/09/2026]</p>
+      <p>Hai thư viện này không đứng yên, và hai thay đổi gần đây đổi được lựa chọn của bạn. Nhóm <em>knowledge distillation</em> của TRL không còn là ghi chú bên lề: <span class="mono">DistillationTrainer</span> đã ra khỏi <span class="mono">trl.experimental</span> để thành trainer chính thức ngang hàng SFT/DPO (v1.10.0), và <span class="mono">AsyncDistillationTrainer</span> (v1.11.0, còn experimental) cho một worker chạy nền sinh completion của student rồi chấm với teacher phục vụ qua HTTP, để generation và training chồng lấn thay vì thay phiên — khớp thẳng với nhánh distillation ở bài 1.2. Còn PEFT đã vượt xa LoRA/DoRA: riêng v0.20.0 (28/07/2026) thêm chín phương pháp adapter mới (HiRA, GLoRA, BEFT, MonteCLoRA, VeLoRA, Uni-LoRA, FRoD, MiCA, DEFT). Bạn không cần học hết; cần biết là danh sách còn dài để tra khi LoRA chưa đủ. [nguồn: release notes TRL và PEFT trên GitHub, truy cập 05/09/2026]</p>
     </div>
 
     <figure class="figure">
-      <svg viewBox="0 0 660 300" role="img" aria-label="Bản đồ toolchain tự host: trục ngang từ viết code kiểm soát cao bên trái sang config YAML trọn gói bên phải; TRL cộng PEFT và Unsloth nằm phía viết code, Axolotl phía YAML; băng xám dưới cùng ghi torchtune đã ngừng phát triển năm 2025">
+      <svg viewBox="0 0 660 300" role="img" aria-label="Bản đồ toolchain tự host: trục ngang từ viết code kiểm soát cao bên trái sang config YAML trọn gói bên phải; TRL cộng PEFT và Unsloth nằm phía viết code, Axolotl phía YAML; băng xám dưới cùng ghi torchtune đã ngừng phát triển năm 2025 và tool kế nhiệm TorchForge cũng đã tạm dừng năm 2026">
         <text class="dgm-ink2" x="30" y="26" font-size="12" font-family="IBM Plex Mono">Toolchain tự host — chọn theo kiểu team</text>
 
         <rect class="dgm-accent" x="40" y="52" width="180" height="70" rx="10" stroke-width="2"/>
@@ -1955,12 +1964,12 @@ cfg = LoraConfig(
 
         <rect class="dgm-box" x="240" y="120" width="180" height="70" rx="10"/>
         <text class="dgm-ink" x="330" y="148" text-anchor="middle" font-size="14" font-weight="700">Unsloth</text>
-        <text class="dgm-ink2" x="330" y="166" text-anchor="middle" font-size="9.5" font-family="IBM Plex Mono">tốc độ/VRAM · claim vendor</text>
+        <text class="dgm-ink2" x="330" y="166" text-anchor="middle" font-size="10" font-family="IBM Plex Mono">tốc độ/VRAM · claim vendor</text>
 
         <rect class="dgm-accent" x="440" y="52" width="180" height="70" rx="10" stroke-width="2"/>
         <text class="dgm-ink" x="530" y="76" text-anchor="middle" font-size="14" font-weight="700">Axolotl</text>
-        <text class="dgm-ink2" x="530" y="94" text-anchor="middle" font-size="9.5" font-family="IBM Plex Mono">config YAML · trọn pipeline</text>
-        <text class="dgm-ink2" x="530" y="108" text-anchor="middle" font-size="9.5" font-family="IBM Plex Mono">FSDP/DeepSpeed/QAT</text>
+        <text class="dgm-ink2" x="530" y="94" text-anchor="middle" font-size="10" font-family="IBM Plex Mono">config YAML · trọn pipeline</text>
+        <text class="dgm-ink2" x="530" y="108" text-anchor="middle" font-size="10" font-family="IBM Plex Mono">FSDP/DeepSpeed/QAT</text>
 
         <line class="dgm-line" x1="40" y1="212" x2="620" y2="212" stroke-width="1.5" marker-end="url(#m5l1-ah)"/>
         <line class="dgm-line" x1="620" y1="212" x2="40" y2="212" stroke-width="1.5" marker-start="url(#m5l1-ah)"/>
@@ -1970,15 +1979,16 @@ cfg = LoraConfig(
         <rect class="dgm-warn" x="40" y="250" width="580" height="40" rx="8" stroke-width="2" style="opacity:.7"/>
         <text class="dgm-ink" x="56" y="268" font-size="11" font-weight="700">🪦 torchtune</text>
         <text class="dgm-ink2" x="150" y="268" font-size="10" font-family="IBM Plex Mono">"no longer actively maintained … wound down in 2025"</text>
-        <text class="dgm-ink2" x="150" y="282" font-size="9.5" font-family="IBM Plex Mono">Meta chống lưng vẫn bị dừng · sản phẩm kế nhiệm chưa xác định</text>
+        <text class="dgm-ink2" x="150" y="282" font-size="10" font-family="IBM Plex Mono">kế nhiệm TorchForge cũng đã "Development paused" (09/2026)</text>
         <defs><marker id="m5l1-ah" markerWidth="9" markerHeight="9" refX="7" refY="4.5" orient="auto"><path d="M0 0 L9 4.5 L0 9 z" fill="var(--accent-2)"/></marker></defs>
       </svg>
-      <figcaption><b>Hình 5.1</b> — Ba tool sống chọn theo kiểu team: TRL/PEFT nếu muốn kiểm soát bằng code, Axolotl nếu muốn cấu hình YAML trọn gói, Unsloth nếu ưu tiên tốc độ/VRAM (số là claim vendor). Băng xám dưới cùng là torchtune — <b>được Meta chống lưng vẫn "wound down in 2025"</b>: hình này dạy bạn nhìn "độ sống" của tool, thứ không nằm trong bảng so tính năng.</figcaption>
+      <figcaption><b>Hình 5.1</b> — Ba tool sống chọn theo kiểu team: TRL/PEFT nếu muốn kiểm soát bằng code, Axolotl nếu muốn cấu hình YAML trọn gói, Unsloth nếu ưu tiên tốc độ/VRAM (số là claim vendor). Băng xám dưới cùng là torchtune — <b>được Meta chống lưng vẫn "wound down in 2025"</b>, và kế nhiệm của nó (TorchForge) tới 09/2026 cũng đã tạm dừng: hình này dạy bạn nhìn "độ sống" của tool, thứ không nằm trong bảng so tính năng, và nhắc rằng nó phải được kiểm lại theo chu kỳ.</figcaption>
     </figure>
 
     <div class="callout warn">
       <div class="callout-title">torchtune: bài học sống về vòng đời tool</div>
-      <p>Repo torchtune hiện treo cảnh báo: <em>"⚠️ Torchtune is no longer actively maintained: torchtune development wound down in 2025."</em> Issue #2883 "The future of torchtune" (15/07/2025) nói rõ lý do: nhóm phát triển <em>"a new product - in a new repo"</em> và <em>"stopping active development on torchtune, effective immediately"</em>. Tại thời điểm biên soạn 07/2026, <strong>sản phẩm kế nhiệm đó vẫn chưa được xác nhận công khai</strong>: không phải TRL, không phải Axolotl. Repo còn nhận bug-fix nhưng không có tính năng mới. Với dự án mới sau 2025, torchtune không còn là lựa chọn an toàn để làm công cụ chính. [nguồn: github.com/meta-pytorch/torchtune, Issue #2883, truy cập 07/2026]</p>
+      <p>Repo torchtune hiện treo cảnh báo: <em>"⚠️ Torchtune is no longer actively maintained: torchtune development wound down in 2025."</em> Issue #2883 "The future of torchtune" (15/07/2025) nói rõ lý do: nhóm phát triển <em>"a new product - in a new repo"</em> và <em>"stopping active development on torchtune, effective immediately"</em>. Sản phẩm kế nhiệm đó là <strong>TorchForge</strong>, công bố trên blog PyTorch ngày <strong>22/10/2025</strong> — thư viện RL post-training PyTorch-native dựng trên Monarch + torchtitan + vLLM. Đây không phải suy đoán: ngay trong Issue #2883, khi có người hỏi <em>"Is this the new lib: github.com/meta-pytorch/torchforge?"</em>, maintainer felipemello1 trả lời <em>"yes! :)"</em> kèm link bài blog (22/10/2025).</p>
+      <p>Nhưng câu chuyện có <strong>hồi ba</strong>: tính tới 09/2026 chính repo TorchForge cũng treo cảnh báo <em>"⚠️ Development paused: Development in Forge has paused. LLM training at PyTorch is being consolidated in torchtitan."</em> Bài học không đổi mà còn nặng hơn: một tool có thể chết, và <strong>cả tool kế nhiệm của nó cũng có thể chết</strong> — "độ sống" phải kiểm lại theo chu kỳ, không kiểm một lần rồi yên tâm. Với dự án mới, torchtune không còn là lựa chọn an toàn để làm công cụ chính. [nguồn: github.com/meta-pytorch/torchtune Issue #2883 (kể cả comment xác nhận 22/10/2025); pytorch.org/blog/introducing-torchforge; README github.com/meta-pytorch/torchforge, truy cập 05/09/2026]</p>
     </div>
 
     <div class="callout info">
@@ -1989,13 +1999,16 @@ cfg = LoraConfig(
     <div>
       <span class="eyebrow" style="display:block;margin-bottom:10px">Áp dụng: chọn tool theo đội</span>
       <details class="accordion"><summary><span class="chev">▶</span><span class="accordion-tag">Đội nhỏ · ngân sách hẹp</span><span>Muốn thử QLoRA rẻ nhất trên 1 GPU</span></summary>
-        <div class="accordion-body">Unsloth + QLoRA trên 1 GPU consumer (RTX 4090 24GB, hoặc thuê A100/H100 theo giờ) là điểm khởi đầu rẻ nhất. Nhưng số "2x nhanh hơn, giảm &gt;70% VRAM" là claim vendor; benchmark lại trên use-case thật <em>trước khi</em> cam kết SLA nội bộ.</div>
+        <div class="accordion-body">Unsloth + QLoRA trên 1 GPU consumer (RTX 4090 24GB, hoặc thuê A100/H100 theo giờ) là điểm khởi đầu rẻ nhất. Nhưng câu README <em>"Train LLMs, diffusion, TTS, and embedding models 2× faster with 70% less VRAM with no accuracy loss"</em> là claim vendor; benchmark lại trên use-case thật <em>trước khi</em> cam kết SLA nội bộ. (Trích đúng chữ: <strong>70%</strong>, không phải "&gt;70%" — và Unsloth giờ không còn chỉ làm LLM. Kiểm 05/09/2026.)</div>
       </details>
       <details class="accordion"><summary><span class="chev">▶</span><span class="accordion-tag">Đội ML · nhiều thí nghiệm</span><span>SFT/DPO/GRPO lặp lại, cần chuẩn hoá</span></summary>
         <div class="accordion-body">Axolotl (config YAML) nếu team ít kỹ sư ML chuyên sâu: giảm boilerplate, một file cấu hình chạy được nhiều biến thể. TRL trực tiếp nếu team đã quen viết training loop Python và cần kiểm soát từng bước.</div>
       </details>
       <details class="accordion"><summary><span class="chev">▶</span><span class="accordion-tag">Đang dùng torchtune</span><span>Dự án cũ chạy trên torchtune</span></summary>
-        <div class="accordion-body">Lên kế hoạch migrate. Repo không còn tính năng mới và tương lai chưa rõ; đừng khởi động dự án <em>mới</em> trên nó sau 2025. Chuyển sang TRL/Axolotl là đường an toàn hơn.</div>
+        <div class="accordion-body">Lên kế hoạch migrate. Repo không còn tính năng mới; đừng khởi động dự án <em>mới</em> trên nó. Và đừng migrate sang TorchForge chỉ vì nó là hậu duệ: chính TorchForge cũng đã tạm dừng phát triển, PyTorch đang gom LLM training về torchtitan. Chuyển sang TRL/Axolotl là đường an toàn hơn cho một dự án phải chạy năm nay.</div>
+      </details>
+      <details class="accordion"><summary><span class="chev">▶</span><span class="accordion-tag">Vượt quá một GPU</span><span>Chạy RL phân tán ở quy mô cluster</span></summary>
+        <div class="accordion-body">Ba tool sống ở trên là tầng <em>single-node</em>. Khi bạn chạy GRPO/PPO phân tán ở quy mô cluster, tầng thực tế là <strong>verl</strong> (ByteDance Seed khởi xướng, nay là dự án cộng đồng; bản hiện hành nói tới model tới 671B trên hàng trăm GPU, và năm 2026 sinh thêm các repo anh em trong cùng tổ chức verl-project như verl-vla, verl-omni), <strong>NVIDIA NeMo-RL</strong> (v0.7.0, GRPO sync/async + PPO first-class) và <strong>torchtitan</strong> — nơi PyTorch đang gom LLM training về (xem callout torchtune), nay có thêm stack RL tên TitanRL trong thư mục <span class="mono">experiments</span>. Ở phía ngược lại, nếu bạn muốn fine-tune mà không dựng hạ tầng gì cả, <strong>Tinker</strong> của Thinking Machines là API fine-tune LoRA tính tiền theo token (giá công bố ở dạng USD trên một triệu token, cộng phí lưu checkpoint theo GB-tháng) — nằm giữa "tự host" và "managed của chính nhà làm model" ở bài 5.2. Mục đích của đoạn này là để bạn <em>biết bốn cái tên này tồn tại mà tra</em>, không phải để học ở đây. [nguồn: README/release notes verl, NeMo-RL, torchtitan; thinkingmachines.ai/tinker, truy cập 05/09/2026]</div>
       </details>
     </div>
 
@@ -2004,16 +2017,16 @@ cfg = LoraConfig(
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true" focusable="false"><path d="M12 2v6m0 8v6M4.9 4.9l4.2 4.2m5.8 5.8l4.2 4.2M2 12h6m8 0h6M4.9 19.1l4.2-4.2m5.8-5.8l4.2-4.2"/></svg>
         Takeaway
       </span>
-      <p>Chọn tool tự host theo kiểu team: TRL/PEFT (code), Axolotl (YAML), Unsloth (tốc độ/VRAM, <span class="hl">số là claim vendor phải tự benchmark</span>). Và coi <span class="hl">"độ sống" của tool là một tiêu chí chọn</span>: torchtune do Meta chống lưng vẫn "wound down in 2025".</p>
+      <p>Chọn tool tự host theo kiểu team: TRL/PEFT (code), Axolotl (YAML), Unsloth (tốc độ/VRAM, <span class="hl">số là claim vendor phải tự benchmark</span>). Và coi <span class="hl">"độ sống" của tool là một tiêu chí chọn</span>, <span class="hl">kiểm lại theo chu kỳ chứ không kiểm một lần</span>: torchtune do Meta chống lưng vẫn "wound down in 2025", và kế nhiệm TorchForge tới 09/2026 cũng đã tạm dừng.</p>
     </div>
 
     <div class="quiz" data-correct="1">
       <span class="eyebrow">Kiểm tra nhanh</span>
-      <p class="quiz-q">Đầu 2026 team khởi động một dự án fine-tune mới. Một senior đề xuất dùng torchtune "vì Meta chống lưng, chắc bền". Phản biện đúng nhất?</p>
+      <p class="quiz-q">Team bạn nay khởi động một dự án fine-tune mới. Một senior đề xuất dùng torchtune "vì Meta chống lưng, chắc bền". Phản biện đúng nhất?</p>
       <button class="quiz-opt" onclick="quizPick(this,0)"><span class="quiz-letter">A</span><span>Đồng ý — được một hãng lớn như Meta chống lưng là bảo đảm cho độ bền dài hạn của tool.</span></button>
-      <button class="quiz-opt" onclick="quizPick(this,1)"><span class="quiz-letter">B</span><span>Repo torchtune hiện ghi "no longer actively maintained … wound down in 2025", chưa rõ sản phẩm kế nhiệm — chọn TRL/PEFT hoặc Axolotl còn được phát triển, và coi độ sống của tool là tiêu chí chọn.</span></button>
-      <button class="quiz-opt" onclick="quizPick(this,2)"><span class="quiz-letter">C</span><span>Dùng Unsloth thay vì torchtune vì Unsloth "2x nhanh hơn, giảm &gt;70% VRAM" nên chắc chắn là lựa chọn tốt hơn.</span></button>
-      <div class="quiz-feedback" role="status" data-explain="B đúng: torchtune đã ngừng phát triển bất kể ai chống lưng, và độ sống của tool phải được cân nhắc khi chọn. A sai vì chính torchtune chứng minh hãng lớn chống lưng KHÔNG bảo đảm tool sống — nó bị dừng. C sai ở lập luận: số 2x/>70% của Unsloth là claim vendor chưa đo độc lập, không thể lấy làm bằng chứng 'chắc chắn tốt hơn', và câu này né mất điểm chính là độ sống của tool."></div>
+      <button class="quiz-opt" onclick="quizPick(this,1)"><span class="quiz-letter">B</span><span>torchtune đã "wound down in 2025" và cả kế nhiệm TorchForge cũng đã dừng — chọn TRL/PEFT hoặc Axolotl.</span></button>
+      <button class="quiz-opt" onclick="quizPick(this,2)"><span class="quiz-letter">C</span><span>Dùng Unsloth thay vì torchtune vì Unsloth "2× faster with 70% less VRAM" nên chắc chắn là lựa chọn tốt hơn.</span></button>
+      <div class="quiz-feedback" role="status" data-explain="B đúng: torchtune đã ngừng phát triển bất kể ai chống lưng, và kế nhiệm TorchForge (công bố 22/10/2025, maintainer torchtune xác nhận ngay trong Issue #2883) tới 09/2026 cũng treo 'Development paused' — nên độ sống của tool phải được kiểm theo chu kỳ, không kiểm một lần. A sai vì chính torchtune chứng minh hãng lớn chống lưng KHÔNG bảo đảm tool sống. C sai ở lập luận: câu '2× faster with 70% less VRAM' là claim vendor chưa đo độc lập, không thể lấy làm bằng chứng 'chắc chắn tốt hơn', và nó né mất điểm chính là độ sống của tool."></div>
     </div>
   </div>
   <div class="lesson-nav" data-navfor="m5-l1"></div>
@@ -2049,7 +2062,7 @@ cfg = LoraConfig(
     <div class="concept">
       <span class="eyebrow">Khái niệm</span>
       <h4>Managed fine-tuning = dependency có vòng đời</h4>
-      <p><strong>Managed fine-tuning</strong> là để nhà cung cấp lo GPU, checkpoint, training loop; bạn chỉ đẩy dữ liệu JSONL lên. Đổi lại sự tiện đó là một <strong>dependency</strong>: vòng đời của nó không do bạn quyết. Bức tranh managed <em>đảo chiều</em> trong 2026. OpenAI treo banner: <em>"OpenAI is winding down the fine-tuning platform. The platform is no longer accessible to new users, but existing users … will be able to create training jobs for the coming months"</em> và <em>"All fine-tuned models will remain available for inference until their base models are deprecated"</em>, tức <strong>inference còn sống tới khi base model bị deprecate</strong>, nhưng quyền <em>tạo job mới</em> thì đang tắt dần. <strong>Wind-down / deprecation</strong> là chính cái quy trình khai tử theo lịch đó. [nguồn: OpenAI docs, truy cập 07/2026]</p>
+      <p><strong>Managed fine-tuning</strong> là để nhà cung cấp lo GPU, checkpoint, training loop; bạn chỉ đẩy dữ liệu JSONL lên. Đổi lại sự tiện đó là một <strong>dependency</strong>: vòng đời của nó không do bạn quyết. Bức tranh managed <em>đảo chiều</em> trong 2026. OpenAI treo banner: <em>"OpenAI is winding down the fine-tuning platform. The platform is no longer accessible to new users, but existing users … will be able to create training jobs for the coming months"</em> và <em>"All fine-tuned models will remain available for inference until their base models are deprecated"</em>, tức <strong>inference còn sống tới khi base model bị deprecate</strong>, nhưng quyền <em>tạo job mới</em> thì đang tắt dần. <strong>Wind-down / deprecation</strong> là chính cái quy trình khai tử theo lịch đó. [nguồn: OpenAI docs, truy cập 05/09/2026]</p>
     </div>
 
     <figure class="figure">
@@ -2060,47 +2073,47 @@ cfg = LoraConfig(
 
         <circle class="dgm-accent" cx="110" cy="120" r="7" stroke-width="2"/>
         <text class="dgm-ink" x="110" y="92" text-anchor="middle" font-size="11" font-weight="700">2026-05-07</text>
-        <text class="dgm-ink2" x="110" y="150" text-anchor="middle" font-size="9.5" font-family="IBM Plex Mono">công bố</text>
-        <text class="dgm-ink2" x="110" y="164" text-anchor="middle" font-size="9.5" font-family="IBM Plex Mono">wind-down</text>
+        <text class="dgm-ink2" x="110" y="150" text-anchor="middle" font-size="10" font-family="IBM Plex Mono">công bố</text>
+        <text class="dgm-ink2" x="110" y="164" text-anchor="middle" font-size="10" font-family="IBM Plex Mono">wind-down</text>
 
         <circle class="dgm-accent" cx="290" cy="120" r="7" stroke-width="2"/>
         <text class="dgm-ink" x="290" y="92" text-anchor="middle" font-size="11" font-weight="700">2026-07-02</text>
-        <text class="dgm-ink2" x="290" y="150" text-anchor="middle" font-size="9.5" font-family="IBM Plex Mono">mất quyền tạo job nếu</text>
-        <text class="dgm-ink2" x="290" y="164" text-anchor="middle" font-size="9.5" font-family="IBM Plex Mono">không active 60 ngày</text>
+        <text class="dgm-ink2" x="290" y="150" text-anchor="middle" font-size="10" font-family="IBM Plex Mono">mất quyền tạo job nếu</text>
+        <text class="dgm-ink2" x="290" y="164" text-anchor="middle" font-size="10" font-family="IBM Plex Mono">không active 60 ngày</text>
 
         <circle class="dgm-warn" cx="470" cy="120" r="8" stroke-width="2"/>
         <text class="dgm-ink" x="470" y="92" text-anchor="middle" font-size="11" font-weight="700" fill="var(--danger)">2027-01-06</text>
-        <text class="dgm-ink2" x="470" y="150" text-anchor="middle" font-size="9.5" font-family="IBM Plex Mono">TẤT CẢ khách hàng mất</text>
-        <text class="dgm-ink2" x="470" y="164" text-anchor="middle" font-size="9.5" font-family="IBM Plex Mono">quyền tạo job mới</text>
+        <text class="dgm-ink2" x="470" y="150" text-anchor="middle" font-size="10" font-family="IBM Plex Mono">TẤT CẢ khách hàng mất</text>
+        <text class="dgm-ink2" x="470" y="164" text-anchor="middle" font-size="10" font-family="IBM Plex Mono">quyền tạo job mới</text>
 
-        <rect class="dgm-box" x="558" y="100" width="112" height="40" rx="8"/>
-        <text class="dgm-ink" x="614" y="118" text-anchor="middle" font-size="9.5" font-family="IBM Plex Mono">∞ inference còn</text>
-        <text class="dgm-ink2" x="614" y="131" text-anchor="middle" font-size="8.5" font-family="IBM Plex Mono">tới khi base deprecate</text>
+        <rect class="dgm-box" x="528" y="96" width="146" height="46" rx="8"/>
+        <text class="dgm-ink" x="601" y="116" text-anchor="middle" font-size="10" font-family="IBM Plex Mono">∞ inference còn</text>
+        <text class="dgm-ink2" x="601" y="132" text-anchor="middle" font-size="10" font-family="IBM Plex Mono">tới khi base deprecate</text>
 
         <rect class="dgm-warn" x="50" y="196" width="580" height="34" rx="8" stroke-width="1.5" style="opacity:.75"/>
         <text class="dgm-ink" x="66" y="217" font-size="10" font-family="IBM Plex Mono">"existing users … will be able to create training jobs for the coming months" — rồi hết.</text>
         <defs><marker id="m5l2-ah" markerWidth="9" markerHeight="9" refX="7" refY="4.5" orient="auto"><path d="M0 0 L9 4.5 L0 9 z" fill="var(--accent-2)"/></marker></defs>
       </svg>
-      <figcaption><b>Hình 5.2</b> — Ba mốc cạn dần: công bố (05/2026) → mất quyền nếu không active (07/2026) → chốt hẳn cho mọi khách hàng (06/01/2027). Hình này chở một fact then chốt caption không nói hết: <b>inference tách khỏi training</b> — model cũ vẫn suy luận được tới khi base model bị deprecate, nhưng khả năng <i>train lại</i> mới là thứ đang chết theo lịch. [nguồn: OpenAI Deprecations, truy cập 07/2026]</figcaption>
+      <figcaption><b>Hình 5.2</b> — Ba mốc cạn dần: công bố (05/2026) → mất quyền nếu không active (07/2026) → chốt hẳn cho mọi khách hàng (06/01/2027). Hình này chở một fact then chốt caption không nói hết: <b>inference tách khỏi training</b> — model cũ vẫn suy luận được tới khi base model bị deprecate, nhưng khả năng <i>train lại</i> mới là thứ đang chết theo lịch. [nguồn: OpenAI Deprecations, truy cập 05/09/2026]</figcaption>
     </figure>
 
     <div class="callout danger">
-      <div class="callout-title">Fine-tune Claude? Trạng thái thực 08/2026: đường Bedrock đã đóng</div>
-      <p>Glossary chính thức của Claude Platform Docs viết thẳng: <em>"The Claude API does not currently offer fine-tuning, but ask your Anthropic contact if you are interested in exploring this option."</em> Đừng dạy nhầm là "Anthropic đã mở fine-tuning API". Có một ngoại lệ <em>lịch sử</em> hay bị trích lại: fine-tuning từng GA cho <strong>đúng một model, Claude 3 Haiku</strong> (<span class="mono">claude-3-haiku-20240307</span>) qua Amazon Bedrock, host bằng Provisioned Throughput. Nhưng model đó đã <strong>retire trên Claude API ngày 20/04/2026</strong>, còn trên Bedrock nó ở trạng thái <em>legacy</em>: không nhận khách mới, không nhận job fine-tune mới, không mua thêm Provisioned Throughput, và EOL hoàn toàn 10/09/2026. Nói cách khác, tính tới 08/2026 <strong>không còn đường fine-tune Claude nào mở cho khách mới</strong>. Đó chính là lý do dòng "KHÔNG có Claude" ở bảng dưới là bản tóm tắt đúng hiện trạng, không mâu thuẫn với đoạn này. Với hầu hết use-case, prompt engineering + RAG + tool use trên Claude thực tế hơn là cố fine-tune. [nguồn: Anthropic Glossary + Model deprecations: platform.claude.com/docs/en/about-claude/model-deprecations; AWS Bedrock model lifecycle docs, truy cập 08/2026]</p>
+      <div class="callout-title">Fine-tune Claude? Trạng thái thực 09/2026: đường Bedrock đã đóng</div>
+      <p>Glossary chính thức của Claude Platform Docs viết thẳng: <em>"The Claude API does not currently offer fine-tuning, but ask your Anthropic contact if you are interested in exploring this option."</em> Đừng dạy nhầm là "Anthropic đã mở fine-tuning API". Có một ngoại lệ <em>lịch sử</em> hay bị trích lại: fine-tuning từng GA cho <strong>đúng một model, Claude 3 Haiku</strong> (<span class="mono">claude-3-haiku-20240307</span>) qua Amazon Bedrock, host bằng Provisioned Throughput. Nhưng model đó đã <strong>retire trên Claude API ngày 20/04/2026</strong>; trên Bedrock nó vào trạng thái <em>Legacy</em> từ <strong>10/03/2026</strong> — không nhận khách mới, <strong>không tạo được job fine-tune mới</strong>, không mua thêm Provisioned Throughput — và <strong>EOL ngày 10/09/2026</strong>, mốc mà AWS mô tả thẳng: <em>"requests made to this version will fail"</em>. Nói cách khác, đường fine-tune Claude đã <strong>đóng từ 03/2026</strong> cho cả khách cũ lẫn khách mới, và bản thân model tắt hẳn ở mốc 10/09/2026. Một chi tiết dễ gây hiểu nhầm khi bạn tự tra: bảng "supported models for fine-tuning" của Bedrock <em>vẫn còn dòng</em> <span class="mono">claude-3-haiku</span>; trạng thái Legacy đè lên bảng đó, vì Legacy thì không tạo được job fine-tune mới. Đó chính là lý do dòng "KHÔNG có Claude" ở bảng dưới là bản tóm tắt đúng hiện trạng, không mâu thuẫn với đoạn này. Với hầu hết use-case, prompt engineering + RAG + tool use trên Claude thực tế hơn là cố fine-tune. [nguồn: Anthropic Glossary + Model deprecations: platform.claude.com/docs/en/about-claude/model-deprecations; AWS Bedrock model lifecycle docs, truy cập 05/09/2026]</p>
     </div>
 
-    <p>Tổng hợp lại, managed fine-tuning tính đến 07/2026 chia làm ba nhóm: <strong>đang khai tử</strong> (OpenAI), <strong>không có FT công khai</strong> (Anthropic/Claude; đường Claude 3 Haiku qua Bedrock đã đóng với khách mới, xem callout trên), và <strong>còn phục vụ</strong> (Vertex, Bedrock, Together, Fireworks). Cột trạng thái dưới đây chốt ở 07/2026 trừ dòng Anthropic đã cập nhật 08/2026; giá và trạng thái managed đổi nhanh, kiểm docs chính thức trước khi quyết:</p>
+    <p>Tổng hợp lại, managed fine-tuning tính đến 05/09/2026 chia làm ba nhóm: <strong>đang khai tử</strong> (OpenAI), <strong>không có FT công khai</strong> (Anthropic/Claude; đường Claude 3 Haiku qua Bedrock đã đóng, xem callout trên), và <strong>còn phục vụ</strong> (Vertex, Bedrock, Together, Fireworks). Mỗi dòng dưới đây mang ngày kiểm của riêng nó, vì các dòng này không đổi cùng nhịp; giá và trạng thái managed đổi nhanh, kiểm docs chính thức trước khi quyết:</p>
 
     <div class="table-wrap">
       <table>
-        <thead><tr><th>Nền tảng</th><th>Trạng thái FT (07/2026)</th><th>Model / lưu ý</th></tr></thead>
+        <thead><tr><th>Nền tảng</th><th>Trạng thái FT</th><th>Model / lưu ý (ngày kiểm)</th></tr></thead>
         <tbody>
-          <tr><td><b>OpenAI</b></td><td>🛑 Đang wind-down</td><td>Không nhận user mới; chốt tạo job mới 06/01/2027. RFT trên <span class="mono">o4-mini</span> giá <b>"$100.00 / hour"</b>.</td></tr>
-          <tr><td><b>Anthropic / Claude</b></td><td>🔒 Không có public FT API</td><td>"does not currently offer fine-tuning"; đường Claude 3 Haiku qua Bedrock là legacy — đóng với khách mới, EOL 10/09/2026. Còn lại là enterprise contact.</td></tr>
-          <tr><td><b>Google Vertex AI</b></td><td>✅ Managed (Gemini)</td><td>Fully-managed, JSONL có nhãn; Google khuyến nghị khởi điểm ~100 example.</td></tr>
-          <tr><td><b>AWS Bedrock</b></td><td>✅ Có giới hạn model</td><td>FT tập trung Titan / Nova / một số Llama; <b>KHÔNG có Claude</b>; RFT <span class="mono">qwen3-32b</span> &amp; <span class="mono">gpt-oss-20b</span> (từ 02/2026). <em>Độ tin cậy trung bình — tự kiểm tra console AWS.</em></td></tr>
-          <tr><td><b>Together AI</b></td><td>✅ Mở (open-weight)</td><td>Fine-tune cả model 100B+ (các dòng lớn của Llama/DeepSeek/Qwen — kiểm danh sách hiện hành). Giá <b>"$0.48–$8.00 per 1M tokens"</b>, model chuyên biệt tới <b>"$100/1M tokens"</b>; có phí tối thiểu theo job — <em>kiểm bảng giá hiện hành, các nguồn không thống nhất về mức này</em>.</td></tr>
-          <tr><td><b>Fireworks AI</b></td><td>✅ Mở (LoRA/QLoRA)</td><td>Giá $/1M training token (≤16B): LoRA SFT <b>$0.50</b>, LoRA DPO <b>$1.00</b>, Full SFT <b>$1.00</b>, Full DPO <b>$2.00</b>; bậc &gt;300B lên tới <b>$40.00</b>.</td></tr>
+          <tr><td><b>OpenAI</b></td><td>🛑 Đang wind-down</td><td>Không nhận user mới; chốt tạo job mới 06/01/2027. RFT trên <span class="mono">o4-mini</span> giá <b>"$100.00 / hour"</b>. <em>(kiểm 05/09/2026)</em></td></tr>
+          <tr><td><b>Anthropic / Claude</b></td><td>🔒 Không có public FT API</td><td>"does not currently offer fine-tuning"; đường Claude 3 Haiku qua Bedrock vào <b>Legacy từ 10/03/2026</b> (không tạo được job FT mới); <b>EOL 10/09/2026</b> — sau mốc đó request tới model sẽ fail. Còn lại là enterprise contact. <em>(kiểm 05/09/2026)</em></td></tr>
+          <tr><td><b>Google Vertex AI</b></td><td>✅ Managed (Gemini)</td><td>Fully-managed, JSONL có nhãn; Google khuyến nghị khởi điểm ~100 example. <em>(kiểm 05/09/2026)</em></td></tr>
+          <tr><td><b>AWS Bedrock</b></td><td>✅ Có giới hạn model</td><td>Ba kiểu tuỳ biến: supervised fine-tuning, reinforcement fine-tuning và distillation (không có continued pre-training). <b>SFT</b> tập trung <b>Nova</b> (2 Lite, Lite, Micro, Pro, Canvas) và <b>Llama 3.1–3.3</b>; dòng Titan còn trong bảng SFT chỉ là image/embedding, không phải Titan text. <b>RFT</b> (ra mắt 03/12/2025) đi hai đường: đường Bedrock gốc cho <b>Nova 2 Lite</b>, và đường <b>API tương thích OpenAI</b> (thêm 17/02/2026) chỉ cho hai model open-weight <span class="mono">openai.gpt-oss-20b</span> và <span class="mono">qwen.qwen3-32b</span>. <b>KHÔNG có Claude</b> (xem callout). <em>Danh sách này đổi theo tháng — kiểm lại trong console AWS. (kiểm 05/09/2026)</em></td></tr>
+          <tr><td><b>Together AI</b></td><td>✅ Mở (open-weight)</td><td>Fine-tune cả model 100B+ (các dòng lớn của Llama/DeepSeek/Qwen — kiểm danh sách hiện hành). Giá <b>"$0.48–$8.00 per 1M tokens"</b>, model chuyên biệt tới <b>"$100/1M tokens"</b>; có phí tối thiểu theo job — <em>kiểm bảng giá hiện hành, các nguồn không thống nhất về mức này. (giá kiểm lần cuối 07/2026)</em></td></tr>
+          <tr><td><b>Fireworks AI</b></td><td>✅ Mở (LoRA/QLoRA)</td><td>Giá $/1M training token (≤16B): LoRA SFT <b>$0.50</b>, LoRA DPO <b>$1.00</b>, Full SFT <b>$1.00</b>, Full DPO <b>$2.00</b>; bậc &gt;300B lên tới <b>$40.00</b>. <em>(kiểm 05/09/2026)</em></td></tr>
         </tbody>
       </table>
     </div>
@@ -2123,8 +2136,8 @@ cfg = LoraConfig(
       <p class="quiz-q">Sản phẩm của bạn phụ thuộc một model OpenAI fine-tuned. Bạn vừa đọc thông báo wind-down. Hành động đúng nhất là gì?</p>
       <button class="quiz-opt" onclick="quizPick(this,0)"><span class="quiz-letter">A</span><span>Không cần làm gì — docs ghi "All fine-tuned models will remain available for inference", nên model cứ chạy mãi, không có rủi ro.</span></button>
       <button class="quiz-opt" onclick="quizPick(this,1)"><span class="quiz-letter">B</span><span>Chuyển ngay sang fine-tune Claude qua Claude API vì Anthropic ổn định hơn OpenAI.</span></button>
-      <button class="quiz-opt" onclick="quizPick(this,2)"><span class="quiz-letter">C</span><span>Model cũ còn inference tới khi base deprecate, nhưng quyền tạo job mới sẽ chốt (06/01/2027) — lập kế hoạch B: migrate sang managed mở hơn (Together/Fireworks cho open-weight) hoặc tự host, trước hạn.</span></button>
-      <div class="quiz-feedback" role="status" data-explain="C đúng: inference còn nhưng khả năng train lại đang chết theo lịch — phải có kế hoạch B trước hạn. A đọc thiếu: inference sống KHÔNG bằng train lại được; khi cần cập nhật model bạn sẽ kẹt. B sai fact: Claude API 'does not currently offer fine-tuning' — không có đường self-serve để chuyển sang."></div>
+      <button class="quiz-opt" onclick="quizPick(this,2)"><span class="quiz-letter">C</span><span>Inference còn tới khi base deprecate, nhưng quyền tạo job mới chốt 06/01/2027 — lập kế hoạch B trước hạn.</span></button>
+      <div class="quiz-feedback" role="status" data-explain="C đúng: inference còn nhưng khả năng train lại đang chết theo lịch — phải có kế hoạch B (migrate sang managed mở hơn như Together/Fireworks cho open-weight, hoặc tự host) trước hạn. A đọc thiếu: inference sống KHÔNG bằng train lại được; khi cần cập nhật model bạn sẽ kẹt. B sai fact: Claude API 'does not currently offer fine-tuning' — không có đường self-serve để chuyển sang."></div>
     </div>
   </div>
   <div class="lesson-nav" data-navfor="m5-l2"></div>
@@ -2160,11 +2173,11 @@ cfg = LoraConfig(
     <div class="concept">
       <span class="eyebrow">Khái niệm</span>
       <h4>Open-weight ≠ cùng một license, và license đi theo version</h4>
-      <p><strong>Open-weight</strong> nghĩa là trọng số model tải về được, nhưng <em>điều khoản dùng</em> thì mỗi họ một khác, và có khi mỗi <em>version</em> một khác. <strong>Apache 2.0</strong> là giấy phép mã nguồn mở chuẩn công nghiệp, gần như không ràng buộc downstream. <strong>Community license</strong> (như Llama) là giấy phép riêng của hãng, mở nhưng kèm điều kiện. Bốn họ phổ biến rơi vào bốn tình huống khác nhau, nên câu hỏi pháp lý phải đi <em>trước</em> câu hỏi benchmark khi doanh nghiệp chọn model để fine-tune rồi phân phối. [nguồn: license text Meta/Google/Qwen/Mistral, truy cập 07/2026]</p>
+      <p><strong>Open-weight</strong> nghĩa là trọng số model tải về được, nhưng <em>điều khoản dùng</em> thì mỗi họ một khác, và có khi mỗi <em>version</em> một khác. <strong>Apache 2.0</strong> là giấy phép mã nguồn mở chuẩn công nghiệp, gần như không ràng buộc downstream. <strong>Community license</strong> (như Llama) là giấy phép riêng của hãng, mở nhưng kèm điều kiện. Bốn họ phổ biến rơi vào bốn tình huống khác nhau, nên câu hỏi pháp lý phải đi <em>trước</em> câu hỏi benchmark khi doanh nghiệp chọn model để fine-tune rồi phân phối. [nguồn: license text Meta/Google/Qwen/Mistral, truy cập 05/09/2026]</p>
     </div>
 
     <figure class="figure">
-      <svg viewBox="0 0 680 300" role="img" aria-label="Bốn thẻ license: Llama Community License với điều khoản 700 triệu MAU và bắt đặt tên Llama; Gemma license theo version với Gemma 1-3 Terms of Use riêng và Gemma 4 Apache 2.0; Qwen3 Apache 2.0 toàn dòng; Mistral phần lớn Apache 2.0 và một số modified MIT; băng dưới cùng nhấn license đọc theo version">
+      <svg viewBox="0 0 680 300" role="img" aria-label="Bốn thẻ license: Llama Community License với điều khoản 700 triệu MAU và bắt đặt tên Llama; Gemma license theo version với Gemma 1-3 Terms of Use riêng và Gemma 4 Apache 2.0; Qwen đọc theo từng model với các checkpoint open-weight là Apache 2.0; Mistral phần lớn Apache 2.0 và một số modified MIT; băng dưới cùng nhấn license đọc theo version">
         <rect class="dgm-warn" x="24" y="34" width="304" height="98" rx="10" stroke-width="2"/>
         <text class="dgm-ink" x="40" y="58" font-size="13" font-weight="700">Llama 3.1 / 4</text>
         <text class="dgm-ink2" x="40" y="76" font-size="10" font-family="IBM Plex Mono">Community License (riêng)</text>
@@ -2175,34 +2188,35 @@ cfg = LoraConfig(
         <text class="dgm-ink" x="368" y="58" font-size="13" font-weight="700">Gemma — theo VERSION</text>
         <text class="dgm-ink2" x="368" y="78" font-size="10">Gemma 1–3: Terms of Use riêng ⚑</text>
         <text class="dgm-ink" x="368" y="98" font-size="10" fill="var(--success)">Gemma 4 (04/2026): Apache 2.0 ✓</text>
-        <text class="dgm-ink2" x="368" y="116" font-size="9.5" font-family="IBM Plex Mono">"first in the Gemmaverse … Apache 2.0"</text>
+        <text class="dgm-ink2" x="368" y="116" font-size="10" font-family="IBM Plex Mono">"first in the Gemmaverse … Apache 2.0"</text>
 
         <rect class="dgm-accent" x="24" y="146" width="304" height="88" rx="10" stroke-width="2"/>
-        <text class="dgm-ink" x="40" y="170" font-size="13" font-weight="700">Qwen3</text>
-        <text class="dgm-ink" x="40" y="190" font-size="10" fill="var(--success)">Apache 2.0 toàn dòng ✓</text>
-        <text class="dgm-ink2" x="40" y="210" font-size="10">kể cả bản lớn nhất 235B-A22B</text>
-        <text class="dgm-ink2" x="40" y="226" font-size="9.5" font-family="IBM Plex Mono">không điều khoản riêng ngoài Apache</text>
+        <text class="dgm-ink" x="40" y="170" font-size="13" font-weight="700">Qwen — theo TỪNG model</text>
+        <text class="dgm-ink" x="40" y="190" font-size="10" fill="var(--success)">checkpoint open-weight: Apache 2.0 ✓</text>
+        <text class="dgm-ink2" x="40" y="210" font-size="10">Qwen3.8-27B (08/2026) cũng Apache 2.0</text>
+        <text class="dgm-ink2" x="40" y="226" font-size="10" font-family="IBM Plex Mono">bảo đảm chỉ phủ bản open-weight ⚑</text>
 
         <rect class="dgm-box" x="352" y="146" width="304" height="88" rx="10"/>
         <text class="dgm-ink" x="368" y="170" font-size="13" font-weight="700">Mistral</text>
         <text class="dgm-ink" x="368" y="190" font-size="10" fill="var(--success)">phần lớn Apache 2.0 ✓</text>
         <text class="dgm-ink2" x="368" y="210" font-size="10">"certain models … modified MIT"</text>
-        <text class="dgm-ink2" x="368" y="226" font-size="9.5" font-family="IBM Plex Mono">không nêu tên → tra model card riêng</text>
+        <text class="dgm-ink2" x="368" y="226" font-size="10" font-family="IBM Plex Mono">không nêu tên → tra model card riêng</text>
 
         <rect class="dgm-accent" x="24" y="250" width="632" height="38" rx="8" stroke-width="2"/>
         <text class="dgm-ink" x="340" y="274" text-anchor="middle" font-size="12" font-weight="700">License đọc theo VERSION, không theo tên họ model.</text>
       </svg>
-      <figcaption><b>Hình 5.3</b> — Bốn họ, bốn tình huống pháp lý khác nhau. Fact hình chở mà một câu benchmark không nói: Llama gắn <b>điều kiện quy mô (700M MAU) + đặt tên</b>, còn "Gemma" <b>không phải một license</b> — Gemma 1–3 và Gemma 4 khác hẳn nhau. Qwen3 là lựa chọn "sạch" nhất về license. [nguồn: license text, truy cập 07/2026]</figcaption>
+      <figcaption><b>Hình 5.3</b> — Bốn họ, bốn tình huống pháp lý khác nhau. Fact hình chở mà một câu benchmark không nói: Llama gắn <b>điều kiện quy mô (700M MAU) + đặt tên</b>, còn "Gemma" <b>không phải một license</b> — Gemma 1–3 và Gemma 4 khác hẳn nhau. Không có họ model nào "sạch" vĩnh viễn: đọc theo từng model. [nguồn: license text, truy cập 05/09/2026]</figcaption>
     </figure>
 
     <div class="callout warn">
       <div class="callout-title">Hai điều khoản Llama dễ bị bỏ sót</div>
-      <p><strong>(1) Ngưỡng 700M MAU:</strong> <em>"If, on the … version release date, the monthly active users … is greater than 700 million monthly active users in the preceding calendar month, you must request a license from Meta, which Meta may grant … in its sole discretion, and you are not authorized to exercise any of the rights under this Agreement unless or until Meta … grants you such rights."</em>: chặn <em>mọi</em> quyền, không riêng inference. <strong>(2) Đặt tên (Section 1.b.i):</strong> bất kỳ model nào train/fine-tune từ vật liệu Llama đều phải đặt tên bắt đầu bằng "Llama". Cả hai giữ nguyên trong Llama 4. [nguồn: Llama 3.1/4 Community License, truy cập 07/2026]</p>
+      <p><strong>(1) Ngưỡng 700M MAU:</strong> <em>"If, on the … version release date, the monthly active users … is greater than 700 million monthly active users in the preceding calendar month, you must request a license from Meta, which Meta may grant … in its sole discretion, and you are not authorized to exercise any of the rights under this Agreement unless or until Meta … grants you such rights."</em>: chặn <em>mọi</em> quyền, không riêng inference. <strong>(2) Đặt tên (Section 1.b.i):</strong> bất kỳ model nào train/fine-tune từ vật liệu Llama đều phải đặt tên bắt đầu bằng "Llama". Cả hai giữ nguyên trong Llama 4. [nguồn: Llama 3.1/4 Community License, truy cập 05/09/2026]</p>
     </div>
 
     <div class="callout insight">
       <div class="callout-title">Đừng chuyển từ "đọc theo version" sang "đọc theo vendor"</div>
-      <p>Bài này dễ để lại một kết luận sai: "Meta = license ràng buộc, Qwen = sạch". Chính Meta phá quy tắc đó: <strong>Muse Glimmer</strong> (30B, phát hành 10/08/2026, weights ở repo Hugging Face <span class="mono">meta-models/Muse-Glimmer-30B</span>) ra thẳng dưới <strong>Apache 2.0</strong>, không phải Llama Community License, nên không kéo theo ngưỡng 700M MAU lẫn ràng buộc đặt tên. Cùng một hãng, hai chế độ pháp lý khác nhau. Quy tắc bền là quy tắc hẹp hơn: <strong>đọc license theo TỪNG model bạn định tải, không theo tên vendor và cũng không theo model trước đó của họ</strong>, và lấy nó từ model card / file LICENSE của đúng repo đó, không từ một bài blog tóm tắt. [nguồn: model card Hugging Face + thông báo Meta, truy cập 08/2026]</p>
+      <p>Bài này dễ để lại một kết luận sai: "Meta = license ràng buộc, Qwen = sạch". Chính Meta phá quy tắc đó: <strong>Muse Glimmer</strong> (30B, phát hành 10/08/2026, weights ở repo Hugging Face <span class="mono">meta-models/Muse-Glimmer-30B</span>) ra thẳng dưới <strong>Apache 2.0</strong>, không phải Llama Community License, nên không kéo theo ngưỡng 700M MAU lẫn ràng buộc đặt tên. Cùng một hãng, hai chế độ pháp lý khác nhau. Quy tắc bền là quy tắc hẹp hơn: <strong>đọc license theo TỪNG model bạn định tải, không theo tên vendor và cũng không theo model trước đó của họ</strong>, và lấy nó từ model card / file LICENSE của đúng repo đó, không từ một bài blog tóm tắt.</p>
+      <p>Quy tắc đó chặn cả chiều ngược lại. Bảo đảm của Qwen, đọc đúng chữ trong README Qwen3, là <em>"All our open-weight models are licensed under Apache 2.0"</em>: nó phủ các <strong>checkpoint open-weight</strong> họ phát hành — Qwen3, và tới 08/2026 là Qwen3.8-27B, đều Apache 2.0 — chứ không phải mọi model mang tên Qwen. Câu "Qwen Apache toàn dòng" là đọc theo vendor, đúng cái lỗi đoạn này cảnh báo; câu đúng là "các bản open-weight của Qwen là Apache 2.0, và bạn vẫn mở file LICENSE của đúng repo mình tải". [nguồn: model card Hugging Face + thông báo Meta; README github.com/QwenLM/Qwen3; model card Qwen/Qwen3.8-27B, truy cập 05/09/2026]</p>
     </div>
 
     <div class="callout info">
@@ -2215,16 +2229,16 @@ cfg = LoraConfig(
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true" focusable="false"><path d="M12 2v6m0 8v6M4.9 4.9l4.2 4.2m5.8 5.8l4.2 4.2M2 12h6m8 0h6M4.9 19.1l4.2-4.2m5.8-5.8l4.2-4.2"/></svg>
         Takeaway
       </span>
-      <p>Với enterprise, câu hỏi pháp lý đi <span class="hl">trước</span> câu hỏi benchmark, và license đọc <span class="hl">theo version, không theo tên họ</span>: Llama gắn 700M MAU + bắt đặt tên "Llama"; Gemma 4 mới Apache 2.0 (Gemma 1–3 thì không); Qwen3 Apache toàn dòng.</p>
+      <p>Với enterprise, câu hỏi pháp lý đi <span class="hl">trước</span> câu hỏi benchmark, và license đọc <span class="hl">theo version, không theo tên họ</span>: Llama gắn 700M MAU + bắt đặt tên "Llama"; Gemma 4 mới Apache 2.0 (Gemma 1–3 thì không); và bảo đảm Apache 2.0 của Qwen chỉ phủ các checkpoint open-weight họ phát hành, không phải mọi model mang tên Qwen.</p>
     </div>
 
     <div class="quiz" data-correct="0">
       <span class="eyebrow">Kiểm tra nhanh</span>
       <p class="quiz-q">Một enterprise đang tiến tới &gt;700M MAU muốn fine-tune một model rồi phân phối bản phái sinh cho khách. Đội ML thích "Gemma" và "Llama" vì đứng đầu leaderboard. Tư vấn đúng nhất?</p>
-      <button class="quiz-opt" onclick="quizPick(this,0)"><span class="quiz-letter">A</span><span>Kiểm license theo đúng version: Llama có điều khoản 700M MAU + bắt derivative đặt tên "Llama" — quy mô này phải xin phép Meta; nếu chọn "Gemma" phải xác nhận đúng Gemma 4 (Apache 2.0) chứ không phải Gemma 3 (Terms of Use riêng). Qwen3 (Apache toàn dòng) là lựa chọn sạch hơn.</span></button>
+      <button class="quiz-opt" onclick="quizPick(this,0)"><span class="quiz-letter">A</span><span>Kiểm license theo đúng version: Llama chặn ở 700M MAU và bắt derivative đặt tên "Llama"; "Gemma" thì phải xác nhận đúng Gemma 4.</span></button>
       <button class="quiz-opt" onclick="quizPick(this,1)"><span class="quiz-letter">B</span><span>Cứ chọn "Gemma" vì bản Gemma nào cũng Apache 2.0 nên an toàn nhất về license.</span></button>
       <button class="quiz-opt" onclick="quizPick(this,2)"><span class="quiz-letter">C</span><span>Cứ chọn Llama — điều khoản 700M MAU chỉ ảnh hưởng khi dùng model để chạy dịch vụ, không ràng buộc việc phân phối bản phái sinh.</span></button>
-      <div class="quiz-feedback" role="status" data-explain="A đúng: license đọc theo version, và Qwen3 sạch hơn cho quy mô lớn. B sai vì 'Gemma' không phải một license — chỉ Gemma 4 (04/2026) mới Apache 2.0, Gemma 1–3 vẫn dùng Gemma Terms of Use riêng. C sai vì điều khoản 700M MAU chặn 'any of the rights under this Agreement' — gồm cả phân phối phái sinh — và Llama còn bắt đặt tên 'Llama' cho derivative."></div>
+      <div class="quiz-feedback" role="status" data-explain="A đúng: license đọc theo version — quy mô &gt;700M MAU phải xin phép Meta, còn 'Gemma' thì chỉ Gemma 4 mới Apache 2.0. Và đừng đổi sang 'đọc theo vendor': bảo đảm Apache 2.0 của Qwen chỉ phủ các checkpoint open-weight họ phát hành, nên vẫn phải mở file LICENSE của đúng repo bạn tải. B sai vì 'Gemma' không phải một license — chỉ Gemma 4 (04/2026) mới Apache 2.0, Gemma 1–3 vẫn dùng Gemma Terms of Use riêng. C sai vì điều khoản 700M MAU chặn 'any of the rights under this Agreement' — gồm cả phân phối phái sinh — và Llama còn bắt đặt tên 'Llama' cho derivative."></div>
     </div>
   </div>
   <div class="lesson-nav" data-navfor="m5-l3"></div>
@@ -2269,22 +2283,23 @@ cfg = LoraConfig(
       <span class="eyebrow">Khái niệm</span>
       <h4>GGUF là format còn GPTQ/AWQ là thuật toán, đừng xếp ngang hàng</h4>
       <p>Lỗi phổ biến là hỏi "chọn GGUF hay GPTQ?" như thể ba thứ cùng loại. Không phải. <strong>GGUF</strong> là một <em>định dạng file</em>: đóng gói weight + tokenizer + metadata vào một file, hỗ trợ 2–8 bit, tối ưu cho <code>llama.cpp</code> chạy CPU/consumer GPU. <strong>GPTQ</strong> và <strong>AWQ</strong> là <em>thuật toán post-training quantization</em> nén weight xuống 3–4 bit để serve trên GPU. Bạn có thể quantize <em>bằng</em> GPTQ/AWQ rồi vẫn <em>đóng gói</em> ở nhiều format khác nhau; chúng nằm ở hai tầng khác nhau của bài toán.</p>
+      <p><strong>Cập nhật 2026:</strong> hai thuật toán trên vẫn đúng về nguyên lý, nhưng <em>công cụ</em> đã đổi chỗ. AutoAWQ treo thẳng dòng <em>"AutoAWQ is officially deprecated and will no longer be maintained"</em> và trỏ người dùng sang vLLM; AutoGPTQ bị archive từ 04/2025 (<em>"AutoGPTQ is unmaintained"</em>, đề nghị dùng GPTQModel). Đường chính thức của vLLM hiện là <strong>llm-compressor</strong>, gói cả GPTQ, AWQ, SmoothQuant, AutoRound và thêm hai định dạng microscale <strong>MXFP4 / NVFP4</strong> bên cạnh FP8/INT8/INT4 (bản hiện hành v0.13.0, 11/08/2026). Đây không phải chi tiết nhỏ: <strong>gpt-oss phát hành thẳng ở MXFP4</strong> (áp trên trọng số MoE), và Axolotl v0.18.0 lấy 4-bit expert LoRA trên NVFP4/MXFP4 làm chủ đề chính. Cũng nhớ nhánh còn lại: <strong>QAT</strong> (quantization-aware training — quantize <em>trong lúc</em> train thay vì sau khi train) đã có trong Axolotl từ 2025. Với một model MoE lớn năm 2026, câu hỏi đúng là "FP8 hay FP4 microscale", không còn là "GPTQ hay AWQ". [nguồn: README AutoAWQ và AutoGPTQ; docs vLLM llm-compressor; release notes llm-compressor và Axolotl; blog Hugging Face gpt-oss, truy cập 05/09/2026]</p>
     </div>
 
     <figure class="figure">
       <svg viewBox="0 0 640 250" role="img" aria-label="Ba cột song song: GGUF là format đóng gói cho llama.cpp CPU edge; GPTQ là thuật toán quantize GPU 175B trong 4 GPU-hour 3.25 đến 4.5 lần speedup; AWQ là thuật toán bảo vệ 1 phần trăm weight quan trọng TinyChat hơn 3 lần; mũi tên dưới cùng chọn GGUF cho CPU edge, AWQ hoặc GPTQ cho GPU">
         <rect class="dgm-box" x="16" y="16" width="196" height="176" rx="10"/>
         <text class="dgm-ink" x="114" y="42" text-anchor="middle" font-size="15" font-weight="700">GGUF</text>
-        <text class="dgm-ink2" x="114" y="60" text-anchor="middle" font-size="9.5" font-family="IBM Plex Mono">FORMAT · không phải thuật toán</text>
+        <text class="dgm-ink2" x="114" y="60" text-anchor="middle" font-size="10" font-family="IBM Plex Mono">FORMAT · không phải thuật toán</text>
         <text class="dgm-ink2" x="114" y="88" text-anchor="middle" font-size="10">đóng gói weight +</text>
         <text class="dgm-ink2" x="114" y="103" text-anchor="middle" font-size="10">tokenizer + metadata</text>
         <text class="dgm-ink2" x="114" y="118" text-anchor="middle" font-size="10">vào 1 file · 2–8 bit</text>
         <text class="dgm-ink" x="114" y="150" text-anchor="middle" font-size="10.5" font-weight="700">Đích: CPU / edge</text>
-        <text class="dgm-ink2" x="114" y="167" text-anchor="middle" font-size="9.5" font-family="IBM Plex Mono">qua llama.cpp</text>
+        <text class="dgm-ink2" x="114" y="167" text-anchor="middle" font-size="10" font-family="IBM Plex Mono">qua llama.cpp</text>
 
         <rect class="dgm-accent" x="222" y="16" width="196" height="176" rx="10" stroke-width="2"/>
         <text class="dgm-ink" x="320" y="42" text-anchor="middle" font-size="15" font-weight="700">GPTQ</text>
-        <text class="dgm-ink2" x="320" y="60" text-anchor="middle" font-size="9.5" font-family="IBM Plex Mono">thuật toán · arXiv 2210.17323</text>
+        <text class="dgm-ink2" x="320" y="60" text-anchor="middle" font-size="10" font-family="IBM Plex Mono">thuật toán · arXiv 2210.17323</text>
         <text class="dgm-ink2" x="320" y="88" text-anchor="middle" font-size="10">layer-wise, xấp xỉ</text>
         <text class="dgm-ink2" x="320" y="103" text-anchor="middle" font-size="10">đạo hàm bậc 2</text>
         <text class="dgm-ink" x="320" y="128" text-anchor="middle" font-size="10.5" font-weight="700">175B ~4 GPU-hour</text>
@@ -2293,17 +2308,17 @@ cfg = LoraConfig(
 
         <rect class="dgm-accent" x="428" y="16" width="196" height="176" rx="10" stroke-width="2"/>
         <text class="dgm-ink" x="526" y="42" text-anchor="middle" font-size="15" font-weight="700">AWQ</text>
-        <text class="dgm-ink2" x="526" y="60" text-anchor="middle" font-size="9.5" font-family="IBM Plex Mono">thuật toán · arXiv 2306.00978</text>
+        <text class="dgm-ink2" x="526" y="60" text-anchor="middle" font-size="10" font-family="IBM Plex Mono">thuật toán · arXiv 2306.00978</text>
         <text class="dgm-ink2" x="526" y="88" text-anchor="middle" font-size="10">quan sát activation,</text>
         <text class="dgm-ink" x="526" y="106" text-anchor="middle" font-size="10.5" font-weight="700">bảo vệ ~1% weight</text>
         <text class="dgm-ink2" x="526" y="124" text-anchor="middle" font-size="10">không backprop</text>
         <text class="dgm-ink" x="526" y="150" text-anchor="middle" font-size="10.5" font-weight="700">TinyChat &gt;3×</text>
-        <text class="dgm-ink2" x="526" y="167" text-anchor="middle" font-size="9.5" font-family="IBM Plex Mono">so với HF FP16</text>
+        <text class="dgm-ink2" x="526" y="167" text-anchor="middle" font-size="10" font-family="IBM Plex Mono">so với HF FP16</text>
 
         <text class="dgm-ink2" x="320" y="222" text-anchor="middle" font-size="11" font-weight="600">Chọn GGUF nếu chạy CPU/edge qua llama.cpp · chọn AWQ/GPTQ nếu serve GPU qua vLLM/SGLang</text>
         <path class="dgm-line" d="M114 192 V214 H526 V192" stroke-width="1.3" fill="none"/>
       </svg>
-      <figcaption><b>Hình 6.1</b> — Cùng nhìn là ba lựa chọn, nhưng GGUF (khối viền xám) đứng ở tầng <em>đóng gói</em>, còn GPTQ/AWQ (khối viền accent) đứng ở tầng <em>thuật toán nén</em>. GPTQ có track record datacenter lâu hơn; AWQ không cần backprop nên generalize tốt hơn qua nhiều domain. Số đo trích từ paper gốc (GPTQ 2023, AWQ 2024).</figcaption>
+      <figcaption><b>Hình 6.1</b> — Cùng nhìn là ba lựa chọn, nhưng GGUF (khối viền xám) đứng ở tầng <em>đóng gói</em>, còn GPTQ/AWQ (khối viền accent) đứng ở tầng <em>thuật toán nén</em>. GPTQ có track record datacenter lâu hơn; AWQ không cần backprop nên generalize tốt hơn qua nhiều domain. Số đo trích từ paper gốc (GPTQ 2023, AWQ 2024); công cụ để chạy chúng năm 2026 thì xem đoạn "Cập nhật 2026" ở trên.</figcaption>
     </figure>
 
     <div class="concept">
@@ -2316,7 +2331,7 @@ cfg = LoraConfig(
       <svg viewBox="0 0 640 240" role="img" aria-label="Sơ đồ hub: một base model ở giữa trên GPU nạp một lần, sáu adapter LoRA nhẹ của các khách hàng khác nhau bao quanh, mũi tên hai chiều swap theo request">
         <rect class="dgm-accent" x="238" y="94" width="164" height="52" rx="10" stroke-width="2.5"/>
         <text class="dgm-ink" x="320" y="116" text-anchor="middle" font-size="12.5" font-weight="700">Base model</text>
-        <text class="dgm-ink2" x="320" y="134" text-anchor="middle" font-size="9.5" font-family="IBM Plex Mono">1 bản trên GPU · nạp 1 lần</text>
+        <text class="dgm-ink2" x="320" y="134" text-anchor="middle" font-size="10" font-family="IBM Plex Mono">1 bản trên GPU · nạp 1 lần</text>
 
         <rect class="dgm-box" x="28" y="20" width="132" height="32" rx="7"/><text class="dgm-ink" x="94" y="40" text-anchor="middle" font-size="10">adapter · khách A</text>
         <rect class="dgm-box" x="254" y="12" width="132" height="32" rx="7"/><text class="dgm-ink" x="320" y="32" text-anchor="middle" font-size="10">adapter · khách B</text>
@@ -2338,7 +2353,7 @@ cfg = LoraConfig(
 
     <div class="table-wrap">
       <table>
-        <thead><tr><th>Engine</th><th>Cơ chế multi-adapter</th><th>Tham số chính (nguồn: docs 07/2026)</th></tr></thead>
+        <thead><tr><th>Engine</th><th>Cơ chế multi-adapter</th><th>Tham số chính (nguồn: docs 05/09/2026)</th></tr></thead>
         <tbody>
           <tr><td><strong>vLLM</strong></td><td>cache adapter trên GPU + buffer CPU RAM</td><td>mặc định <code>--max-loras 1</code>; production ví dụ <code>--max-loras 8</code> + <code>--max-cpu-loras 64</code></td></tr>
           <tr><td><strong>SGLang</strong></td><td>S-LoRA + Punica, nhiều adapter trong cùng 1 batch</td><td><code>max_loras_per_batch</code> mặc định 8; backend <code>csgmv</code> nhanh hơn <code>triton</code> 20–80% khi nhiều request đồng thời</td></tr>
@@ -2357,16 +2372,16 @@ cfg = LoraConfig(
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true" focusable="false"><path d="M12 2v6m0 8v6M4.9 4.9l4.2 4.2m5.8 5.8l4.2 4.2M2 12h6m8 0h6M4.9 19.1l4.2-4.2m5.8-5.8l4.2-4.2"/></svg>
         Takeaway
       </span>
-      <p>GGUF là <span class="hl">format đóng gói</span> (CPU/edge qua llama.cpp), GPTQ/AWQ là <span class="hl">thuật toán quantize</span> cho GPU (GPTQ: 175B trong ~4 GPU-hour; AWQ: bảo vệ ~1% weight); và multi-LoRA serving cho một base + N adapter phục vụ N tenant mà không cần N GPU.</p>
+      <p>GGUF là <span class="hl">format đóng gói</span> (CPU/edge qua llama.cpp), GPTQ/AWQ là <span class="hl">thuật toán quantize</span> cho GPU (GPTQ: 175B trong ~4 GPU-hour; AWQ: bảo vệ ~1% weight) — nhưng công cụ 2026 đã dồn về <span class="hl">llm-compressor với FP8 và FP4 microscale (MXFP4/NVFP4)</span>, vì AutoAWQ deprecated và AutoGPTQ archived. Và multi-LoRA serving cho một base + N adapter phục vụ N tenant mà không cần N GPU.</p>
     </div>
 
     <div class="quiz" data-correct="1">
       <span class="eyebrow">Kiểm tra nhanh</span>
       <p class="quiz-q">SaaS của bạn có 30 khách, mỗi khách một adapter LoRA fine-tune trên cùng một base model open-weight, cần serve trên GPU ở scale. Kiến trúc serving rẻ và đúng nhất?</p>
       <button class="quiz-opt" onclick="quizPick(this,0)"><span class="quiz-letter">A</span><span>Deploy 30 base model riêng, mỗi khách một GPU, để cách ly hoàn toàn giữa các tenant.</span></button>
-      <button class="quiz-opt" onclick="quizPick(this,1)"><span class="quiz-letter">B</span><span>Một base model trên GPU + 30 adapter hot-swap qua vLLM (<code>--max-loras 8</code>, <code>--max-cpu-loras 64</code>) hoặc SGLang — nhiều adapter chung một batch.</span></button>
+      <button class="quiz-opt" onclick="quizPick(this,1)"><span class="quiz-letter">B</span><span>Một base model trên GPU + 30 adapter hot-swap qua vLLM hoặc SGLang, nhiều adapter chung một batch.</span></button>
       <button class="quiz-opt" onclick="quizPick(this,2)"><span class="quiz-letter">C</span><span>Merge cả 30 adapter vào base thành một model khổng lồ rồi serve một endpoint duy nhất.</span></button>
-      <div class="quiz-feedback" role="status" data-explain="B đúng: multi-LoRA serving giữ 1 base trên GPU và swap adapter nhẹ theo request — chi phí GPU không nhân theo số khách. A là chính cái bẫy N-GPU: 30 base = 30 GPU, hoá đơn gấp 30 lần vô ích khi các adapter chia sẻ cùng base. C phá hỏng mục đích: merge làm mất khả năng tách adapter theo tenant, và trộn 30 hành vi khác nhau vào một trọng số."></div>
+      <div class="quiz-feedback" role="status" data-explain="B đúng: multi-LoRA serving giữ 1 base trên GPU và swap adapter nhẹ theo request (vLLM: --max-loras 8 + --max-cpu-loras 64 là cấu hình production điển hình) — chi phí GPU không nhân theo số khách. A là chính cái bẫy N-GPU: 30 base = 30 GPU, hoá đơn gấp 30 lần vô ích khi các adapter chia sẻ cùng base. C phá hỏng mục đích: merge làm mất khả năng tách adapter theo tenant, và trộn 30 hành vi khác nhau vào một trọng số."></div>
     </div>
   </div>
   <div class="lesson-nav" data-navfor="m6-l1"></div>
@@ -2409,42 +2424,42 @@ cfg = LoraConfig(
         <defs><marker id="m6l2-ah" markerWidth="8" markerHeight="8" refX="6" refY="4" orient="auto"><path d="M0 0 L8 4 L0 8 z" fill="var(--accent-2)"/></marker></defs>
         <rect class="dgm-box" x="60" y="12" width="520" height="34" rx="8"/>
         <text class="dgm-ink" x="76" y="33" font-size="11.5" font-weight="700">1 · Dựng eval trước — "good evals first"</text>
-        <text class="dgm-ink2" x="500" y="33" font-size="9.5" font-family="IBM Plex Mono" text-anchor="end">bài 1.2</text>
+        <text class="dgm-ink2" x="500" y="33" font-size="10" font-family="IBM Plex Mono" text-anchor="end">bài 1.2</text>
         <path class="dgm-flow" d="M320 46 V54" stroke-width="1.5" marker-end="url(#m6l2-ah)"/>
 
         <rect class="dgm-box" x="60" y="56" width="520" height="34" rx="8"/>
         <text class="dgm-ink" x="76" y="77" font-size="11.5" font-weight="700">2 · Phân loại lỗi theo hai trục → sai format/giọng = trục hành vi</text>
-        <text class="dgm-ink2" x="500" y="77" font-size="9.5" font-family="IBM Plex Mono" text-anchor="end">bài 1.1</text>
+        <text class="dgm-ink2" x="500" y="77" font-size="10" font-family="IBM Plex Mono" text-anchor="end">bài 1.1</text>
         <path class="dgm-flow" d="M320 90 V98" stroke-width="1.5" marker-end="url(#m6l2-ah)"/>
 
         <rect class="dgm-box" x="60" y="100" width="520" height="34" rx="8"/>
         <text class="dgm-ink" x="76" y="121" font-size="11.5" font-weight="700">3 · Chọn model open-weight theo license (đọc license trước benchmark)</text>
-        <text class="dgm-ink2" x="500" y="121" font-size="9.5" font-family="IBM Plex Mono" text-anchor="end">bài 5.3</text>
+        <text class="dgm-ink2" x="500" y="121" font-size="10" font-family="IBM Plex Mono" text-anchor="end">bài 5.3</text>
         <path class="dgm-flow" d="M320 134 V142" stroke-width="1.5" marker-end="url(#m6l2-ah)"/>
 
         <rect class="dgm-accent" x="60" y="144" width="520" height="34" rx="8" stroke-width="2"/>
         <text class="dgm-ink" x="76" y="165" font-size="11.5" font-weight="700">4 · QLoRA trên GPU vừa túi (65B trên 1 GPU 48GB)</text>
-        <text class="dgm-ink2" x="500" y="165" font-size="9.5" font-family="IBM Plex Mono" text-anchor="end">bài 2.3</text>
+        <text class="dgm-ink2" x="500" y="165" font-size="10" font-family="IBM Plex Mono" text-anchor="end">bài 2.3</text>
         <path class="dgm-flow" d="M320 178 V186" stroke-width="1.5" marker-end="url(#m6l2-ah)"/>
 
         <rect class="dgm-accent" x="60" y="188" width="520" height="34" rx="8" stroke-width="2"/>
         <text class="dgm-ink" x="76" y="209" font-size="11.5" font-weight="700">5 · Curate ~1.000 ví dụ chất, đúng chat template</text>
-        <text class="dgm-ink2" x="500" y="209" font-size="9.5" font-family="IBM Plex Mono" text-anchor="end">bài 4.1 · 4.2</text>
+        <text class="dgm-ink2" x="500" y="209" font-size="10" font-family="IBM Plex Mono" text-anchor="end">bài 4.1 · 4.2</text>
         <path class="dgm-flow" d="M320 222 V230" stroke-width="1.5" marker-end="url(#m6l2-ah)"/>
 
         <rect class="dgm-box" x="60" y="232" width="520" height="34" rx="8"/>
         <text class="dgm-ink" x="76" y="253" font-size="11.5" font-weight="700">6 · DPO cho tone/giọng nếu SFT chưa đủ</text>
-        <text class="dgm-ink2" x="500" y="253" font-size="9.5" font-family="IBM Plex Mono" text-anchor="end">bài 3.2</text>
+        <text class="dgm-ink2" x="500" y="253" font-size="10" font-family="IBM Plex Mono" text-anchor="end">bài 3.2</text>
         <path class="dgm-flow" d="M320 266 V274" stroke-width="1.5" marker-end="url(#m6l2-ah)"/>
 
         <rect class="dgm-warn" x="60" y="276" width="520" height="34" rx="8"/>
         <text class="dgm-ink" x="76" y="297" font-size="11.5" font-weight="700">7 · Eval ba lớp — cảnh giác contamination / shortcut / forgetting</text>
-        <text class="dgm-ink2" x="500" y="297" font-size="9.5" font-family="IBM Plex Mono" text-anchor="end">bài 4.3</text>
+        <text class="dgm-ink2" x="500" y="297" font-size="10" font-family="IBM Plex Mono" text-anchor="end">bài 4.3</text>
         <path class="dgm-flow" d="M320 310 V318" stroke-width="1.5" marker-end="url(#m6l2-ah)"/>
 
         <rect class="dgm-accent" x="60" y="320" width="520" height="34" rx="8" stroke-width="2"/>
         <text class="dgm-ink" x="76" y="341" font-size="11.5" font-weight="700">8 · Quantize + multi-LoRA serve (N tenant trên 1 base)</text>
-        <text class="dgm-ink2" x="500" y="341" font-size="9.5" font-family="IBM Plex Mono" text-anchor="end">bài 6.1</text>
+        <text class="dgm-ink2" x="500" y="341" font-size="10" font-family="IBM Plex Mono" text-anchor="end">bài 6.1</text>
       </svg>
       <figcaption><b>Hình 6.3</b> — Toàn khoá là <em>một</em> pipeline quyết định, không phải mười sáu chủ đề rời. Fine-tune (bước 4) đứng sau eval (1) và phân loại trục lỗi (2) — bạn chỉ chạm GPU khi đã biết đo cải thiện bằng gì và chắc lỗi thuộc trục hành vi. Mỗi ô trỏ về đúng bài dạy nó.</figcaption>
     </figure>
@@ -2496,7 +2511,7 @@ cfg = LoraConfig(
       <button class="quiz-opt" onclick="quizPick(this,0)"><span class="quiz-letter">A</span><span>Chọn ngay model 70B mạnh nhất rồi QLoRA — chất lượng cao là ưu tiên số một.</span></button>
       <button class="quiz-opt" onclick="quizPick(this,1)"><span class="quiz-letter">B</span><span>Đổ toàn bộ 50.000 log hội thoại support vào train để model học được càng nhiều càng tốt.</span></button>
       <button class="quiz-opt" onclick="quizPick(this,2)"><span class="quiz-letter">C</span><span>Fine-tune ngay: lỗi định dạng chắc chắn là trục hành vi nên không cần thử gì khác trước.</span></button>
-      <button class="quiz-opt" onclick="quizPick(this,3)"><span class="quiz-letter">D</span><span>Dựng eval đo được cải thiện, phân loại lỗi theo hai trục (đây là trục hành vi), và vẫn thử prompt trước khi cam kết fine-tune.</span></button>
+      <button class="quiz-opt" onclick="quizPick(this,3)"><span class="quiz-letter">D</span><span>Dựng eval đo được cải thiện, phân loại lỗi theo hai trục, và vẫn thử prompt trước khi cam kết fine-tune.</span></button>
       <div class="quiz-feedback" role="status" data-explain="D đúng: 'good evals first' (bài 1.2) rồi mới phân loại theo hai trục (bài 1.1) — sai định dạng đúng là trục hành vi, nhưng khung khuyến nghị vẫn thử prompt trước khi fine-tune. A nhảy vào GPU khi chưa biết đo cải thiện bằng gì và chưa xét license (bài 5.3). B bỏ qua LIMA: 1.000 ví dụ curate kỹ thắng 50.000 log thô (bài 4.1). C đúng nửa vời — nhận ra trục hành vi nhưng bỏ cả bước eval lẫn prompt-first."></div>
     </div>
   </div>
@@ -2536,52 +2551,50 @@ cfg = LoraConfig(
       </ul>
     </div>
 
-    <p>Bạn vừa đi qua sáu module. Vấn đề của kiến thức rời: đúng lúc cần — khi sếp giao "viết đề xuất fine-tune" và deadline là chiều mai — bạn không có thời gian lật lại mười sáu bài. Trang này nén cả khoá thành thứ dán được cạnh màn hình: mỗi bài một dòng mang đi, một checklist chạy tay trước khi chạm GPU, một bản đồ để định hướng. Không phải để đọc lại lý thuyết — để hành động. Nội dung cập nhật 07/2026; giá và trạng thái các nền tảng managed đổi nhanh, nên kiểm docs chính thức trước khi quyết.</p>
+    <p>Bạn vừa đi qua sáu module. Vấn đề của kiến thức rời: đúng lúc cần — khi sếp giao "viết đề xuất fine-tune" và deadline là chiều mai — bạn không có thời gian lật lại mười sáu bài. Trang này nén cả khoá thành thứ dán được cạnh màn hình: mỗi bài một dòng mang đi, một checklist chạy tay trước khi chạm GPU, một bản đồ để định hướng. Không phải để đọc lại lý thuyết — để hành động. Nội dung cập nhật 05/09/2026; giá và trạng thái các nền tảng managed đổi nhanh, nên kiểm docs chính thức trước khi quyết.</p>
 
     <figure class="figure">
-      <svg viewBox="0 0 640 356" role="img" aria-label="Pipeline quyết định tám bước dọc từ trên xuống, tái hiện bản đồ bài 6.2: 1 dựng eval trước, 2 phân loại lỗi theo hai trục, 3 chọn model theo license, 4 QLoRA trên GPU vừa túi, 5 curate 1000 ví dụ đúng chat template, 6 DPO cho tone nếu cần, 7 eval ba lớp cảnh giác contamination shortcut forgetting, 8 quantize và multi-LoRA serve có kế hoạch B; mỗi bước gắn nhãn bài tương ứng, fine-tune ở bước 4 đứng sau eval và phân loại trục lỗi">
+      <svg viewBox="0 0 640 340" role="img" aria-label="Ba đường ra ở bước 7 của pipeline: sau khi eval ba lớp xong, một cổng đã đăng ký từ bước 1 (holdout tăng ít nhất N điểm VÀ regression suite không tụt) rẽ thành ba nhánh — ship nếu qua cả hai vế; lặp thêm một vòng nếu suýt đạt và biết cụ thể sẽ sửa gì, với số vòng ấn định trước; hoặc bỏ fine-tune và quay về prompt cộng RAG nếu không đạt">
         <defs><marker id="m7l1-ah" markerWidth="8" markerHeight="8" refX="6" refY="4" orient="auto"><path d="M0 0 L8 4 L0 8 z" fill="var(--accent-2)"/></marker></defs>
-        <rect class="dgm-box" x="60" y="10" width="520" height="34" rx="8"/>
-        <text class="dgm-ink" x="76" y="31" font-size="11.5" font-weight="700">1 · Dựng eval trước — không đo được thì không fine-tune</text>
-        <text class="dgm-ink2" x="500" y="31" font-size="9.5" font-family="IBM Plex Mono" text-anchor="end">bài 1.2</text>
-        <path class="dgm-flow" d="M320 44 V52" stroke-width="1.5" marker-end="url(#m7l1-ah)"/>
 
-        <rect class="dgm-box" x="60" y="54" width="520" height="34" rx="8"/>
-        <text class="dgm-ink" x="76" y="75" font-size="11.5" font-weight="700">2 · Phân loại lỗi theo hai trục → thiếu kiến thức thì dừng, dùng RAG</text>
-        <text class="dgm-ink2" x="500" y="75" font-size="9.5" font-family="IBM Plex Mono" text-anchor="end">bài 1.1</text>
-        <path class="dgm-flow" d="M320 88 V96" stroke-width="1.5" marker-end="url(#m7l1-ah)"/>
+        <rect class="dgm-box" x="170" y="12" width="300" height="44" rx="9"/>
+        <text class="dgm-ink" x="320" y="34" text-anchor="middle" font-size="13" font-weight="700">Bước 7 · eval ba lớp đã chạy xong</text>
+        <text class="dgm-ink2" x="320" y="50" text-anchor="middle" font-size="11" font-family="IBM Plex Mono">bài 4.3</text>
+        <path class="dgm-flow" d="M320 56 V78" stroke-width="1.6" marker-end="url(#m7l1-ah)"/>
 
-        <rect class="dgm-box" x="60" y="98" width="520" height="34" rx="8"/>
-        <text class="dgm-ink" x="76" y="119" font-size="11.5" font-weight="700">3 · Chọn model open-weight — đọc license trước benchmark</text>
-        <text class="dgm-ink2" x="500" y="119" font-size="9.5" font-family="IBM Plex Mono" text-anchor="end">bài 5.3</text>
-        <path class="dgm-flow" d="M320 132 V140" stroke-width="1.5" marker-end="url(#m7l1-ah)"/>
+        <rect class="dgm-warn" x="50" y="80" width="540" height="58" rx="9" stroke-width="2"/>
+        <text class="dgm-ink" x="320" y="104" text-anchor="middle" font-size="12.5" font-weight="700">Cổng đăng ký từ bước 1 — viết bằng số, trước khi đo</text>
+        <text class="dgm-ink" x="320" y="126" text-anchor="middle" font-size="11.5">holdout ≥ N điểm  VÀ  regression suite không tụt</text>
 
-        <rect class="dgm-accent" x="60" y="142" width="520" height="34" rx="8" stroke-width="2"/>
-        <text class="dgm-ink" x="76" y="163" font-size="11.5" font-weight="700">4 · QLoRA trên GPU vừa túi (65B trên 1 GPU 48GB)</text>
-        <text class="dgm-ink2" x="500" y="163" font-size="9.5" font-family="IBM Plex Mono" text-anchor="end">bài 2.3</text>
-        <path class="dgm-flow" d="M320 176 V184" stroke-width="1.5" marker-end="url(#m7l1-ah)"/>
+        <path class="dgm-flow" d="M180 138 Q108 162 108 186" stroke-width="1.6" marker-end="url(#m7l1-ah)"/>
+        <path class="dgm-flow" d="M320 138 V186" stroke-width="1.6" marker-end="url(#m7l1-ah)"/>
+        <path class="dgm-flow" d="M460 138 Q532 162 532 186" stroke-width="1.6" marker-end="url(#m7l1-ah)"/>
 
-        <rect class="dgm-accent" x="60" y="186" width="520" height="34" rx="8" stroke-width="2"/>
-        <text class="dgm-ink" x="76" y="207" font-size="11.5" font-weight="700">5 · Curate ~1.000 ví dụ chất, đúng chat template</text>
-        <text class="dgm-ink2" x="500" y="207" font-size="9.5" font-family="IBM Plex Mono" text-anchor="end">bài 4.1 · 4.2</text>
-        <path class="dgm-flow" d="M320 220 V228" stroke-width="1.5" marker-end="url(#m7l1-ah)"/>
+        <rect class="dgm-accent" x="18" y="188" width="180" height="96" rx="9" stroke-width="2"/>
+        <text class="dgm-ink" x="108" y="216" text-anchor="middle" font-size="13.5" font-weight="700">✅ Ship</text>
+        <text class="dgm-ink2" x="108" y="240" text-anchor="middle" font-size="11">qua cả hai vế</text>
+        <text class="dgm-ink2" x="108" y="258" text-anchor="middle" font-size="11">của cổng</text>
 
-        <rect class="dgm-box" x="60" y="230" width="520" height="34" rx="8"/>
-        <text class="dgm-ink" x="76" y="251" font-size="11.5" font-weight="700">6 · DPO cho tone/giọng nếu SFT chưa đủ</text>
-        <text class="dgm-ink2" x="500" y="251" font-size="9.5" font-family="IBM Plex Mono" text-anchor="end">bài 3.2</text>
-        <path class="dgm-flow" d="M320 264 V272" stroke-width="1.5" marker-end="url(#m7l1-ah)"/>
+        <rect class="dgm-box" x="230" y="188" width="180" height="96" rx="9"/>
+        <text class="dgm-ink" x="320" y="216" text-anchor="middle" font-size="13.5" font-weight="700">↻ Lặp một vòng</text>
+        <text class="dgm-ink2" x="320" y="240" text-anchor="middle" font-size="11">suýt đạt và biết</text>
+        <text class="dgm-ink2" x="320" y="258" text-anchor="middle" font-size="11">cụ thể sẽ sửa gì</text>
+        <text class="dgm-ink2" x="320" y="276" text-anchor="middle" font-size="11" font-family="IBM Plex Mono">số vòng ấn định trước</text>
 
-        <rect class="dgm-warn" x="60" y="274" width="520" height="34" rx="8"/>
-        <text class="dgm-ink" x="76" y="295" font-size="11.5" font-weight="700">7 · Eval ba lớp — cảnh giác contamination / shortcut / forgetting</text>
-        <text class="dgm-ink2" x="500" y="295" font-size="9.5" font-family="IBM Plex Mono" text-anchor="end">bài 4.3</text>
-        <path class="dgm-flow" d="M320 308 V316" stroke-width="1.5" marker-end="url(#m7l1-ah)"/>
+        <rect class="dgm-warn" x="442" y="188" width="180" height="96" rx="9" stroke-width="2"/>
+        <text class="dgm-ink" x="532" y="216" text-anchor="middle" font-size="13.5" font-weight="700">↩ Bỏ fine-tune</text>
+        <text class="dgm-ink2" x="532" y="240" text-anchor="middle" font-size="11">không đạt → quay về</text>
+        <text class="dgm-ink2" x="532" y="258" text-anchor="middle" font-size="11">prompt + RAG</text>
+        <text class="dgm-ink2" x="532" y="276" text-anchor="middle" font-size="11" font-family="IBM Plex Mono">kết quả hợp lệ</text>
 
-        <rect class="dgm-accent" x="60" y="318" width="520" height="34" rx="8" stroke-width="2"/>
-        <text class="dgm-ink" x="76" y="339" font-size="11.5" font-weight="700">8 · Quantize + multi-LoRA serve · managed thì có kế hoạch B</text>
-        <text class="dgm-ink2" x="500" y="339" font-size="9.5" font-family="IBM Plex Mono" text-anchor="end">bài 6.1 · 5.2</text>
+        <rect class="dgm-box" x="18" y="296" width="604" height="34" rx="8"/>
+        <text class="dgm-ink" x="320" y="318" text-anchor="middle" font-size="11.5">Đường thứ ba là một kết quả hợp lệ, không phải thất bại.</text>
       </svg>
-      <figcaption><b>Hình 7.1</b> — Bản đồ cuối, gọi lại bài 6.2: toàn khoá là <em>một</em> pipeline quyết định, không phải mười sáu chủ đề rời. Fine-tune (bước 4, khối accent) đứng <em>sau</em> eval (1) và phân loại trục lỗi (2) — bạn chỉ chạm GPU khi đã biết đo cải thiện bằng gì và chắc lỗi thuộc trục hành vi. Mỗi ô trỏ về đúng bài đã dạy nó.</figcaption>
+      <figcaption><b>Hình 7.1</b> — Bản đồ tám bước ở bài 6.2 nói cách <em>đi tiếp</em>; hình này vẽ quyền <em>dừng lại</em>. Cổng phải viết bằng số ngay ở bước 1, trước khi thấy kết quả — đó là thứ duy nhất ngăn N lặng lẽ hạ xuống. Cả ba đường ra đều có tên, kể cả đường bỏ cuộc.</figcaption>
     </figure>
+
+    <span class="eyebrow" style="display:block;margin-top:6px">Pipeline tám bước · rút gọn (bài 6.2)</span>
+    <p class="mono" style="font-size:12.5px;color:var(--ink-2)">eval <b>(1.2)</b> → hai trục <b>(1.1)</b> → license <b>(5.3)</b> → QLoRA <b>(2.3)</b> → curate + template <b>(4.1 · 4.2)</b> → DPO <b>(3.2)</b> → eval ba lớp <b>(4.3)</b> → quantize + serve <b>(6.1 · 5.2)</b></p>
 
     <span class="eyebrow" style="display:block;margin-top:6px">Distill · mỗi bài một dòng mang đi</span>
     <div class="table-wrap">
@@ -2599,10 +2612,10 @@ cfg = LoraConfig(
           <tr><td><strong>4.1</strong></td><td>Với SFT/alignment, đa dạng + chất lượng thắng số lượng thô — 1.000 ví dụ curate kỹ (LIMA) vượt cả đống dữ liệu thô; 50 ví dụ tốt không cải thiện thì "xem lại task/prompt" chứ đừng đổ thêm data.</td></tr>
           <tr><td><strong>4.2</strong></td><td>Dataset SFT là JSONL theo chat-completions schema, và model open-weight phải áp đúng chat template gốc bằng tokenizer của nó — template lệch gây "performance degradation" ngay cả khi train tiếp; build data train luôn add_generation_prompt=False.</td></tr>
           <tr><td><strong>4.3</strong></td><td>Đo model sau fine-tune bằng đủ ba lớp (holdout trước/sau · loss-curve bắt overfit · test thủ công), và cảnh giác ba cách điểm số lừa — contamination, shortcut learning, catastrophic forgetting; một con số eval đẹp chưa phải bằng chứng.</td></tr>
-          <tr><td><strong>5.1</strong></td><td>Chọn tool tự host theo kiểu team — TRL/PEFT (code), Axolotl (YAML), Unsloth (tốc độ/VRAM, số là claim của vendor phải tự benchmark) — và coi "độ sống" của tool là một tiêu chí chọn: torchtune do Meta chống lưng vẫn "wound down in 2025".</td></tr>
+          <tr><td><strong>5.1</strong></td><td>Chọn tool tự host theo kiểu team — TRL/PEFT (code), Axolotl (YAML), Unsloth (tốc độ/VRAM, số là claim của vendor phải tự benchmark) — và coi "độ sống" của tool là tiêu chí chọn, kiểm lại theo chu kỳ: torchtune "wound down in 2025", kế nhiệm TorchForge cũng đã dừng.</td></tr>
           <tr><td><strong>5.2</strong></td><td>Managed fine-tuning là dependency có vòng đời: OpenAI đang wind-down (chốt tạo job mới 06/01/2027, inference còn tới khi base model deprecate), Claude API "does not currently offer fine-tuning". Luôn có kế hoạch B — Together/Fireworks cho open-weight, hoặc tự host.</td></tr>
-          <tr><td><strong>5.3</strong></td><td>Với enterprise, câu hỏi pháp lý đi trước câu hỏi benchmark — và license đọc theo version, không theo tên họ: Llama gắn 700M MAU + bắt đặt tên "Llama"; Gemma 4 mới Apache 2.0 (Gemma 1–3 thì không); Qwen3 Apache toàn dòng.</td></tr>
-          <tr><td><strong>6.1</strong></td><td>GGUF là format đóng gói (CPU/edge qua llama.cpp), GPTQ/AWQ là thuật toán quantize cho GPU (GPTQ: 175B trong ~4 GPU-hour; AWQ: bảo vệ ~1% weight); và multi-LoRA serving cho một base + N adapter phục vụ N tenant mà không cần N GPU.</td></tr>
+          <tr><td><strong>5.3</strong></td><td>Với enterprise, câu hỏi pháp lý đi trước câu hỏi benchmark — và license đọc theo version, không theo tên họ: Llama gắn 700M MAU + bắt đặt tên "Llama"; Gemma 4 mới Apache 2.0 (Gemma 1–3 thì không); bảo đảm Apache 2.0 của Qwen chỉ phủ các checkpoint open-weight họ phát hành.</td></tr>
+          <tr><td><strong>6.1</strong></td><td>GGUF là format đóng gói (CPU/edge qua llama.cpp), GPTQ/AWQ là thuật toán quantize cho GPU (GPTQ: 175B trong ~4 GPU-hour; AWQ: bảo vệ ~1% weight) — công cụ 2026 đã dồn về llm-compressor với FP8/MXFP4/NVFP4; và multi-LoRA serving cho một base + N adapter phục vụ N tenant mà không cần N GPU.</td></tr>
           <tr><td><strong>6.2</strong></td><td>Toàn khoá khớp thành một pipeline quyết định tám bước — eval trước, phân loại trục lỗi, rồi license → QLoRA → curate đúng template → DPO → eval ba lớp → serve — và fine-tune là mắt xích gần cuối, không phải bước đầu. Mỗi bước trỏ về đúng bài đã dạy nó.</td></tr>
         </tbody>
       </table>
@@ -2613,7 +2626,7 @@ cfg = LoraConfig(
       <li><h4>Có eval chưa — và có ngưỡng dừng chưa?</h4><p>Dựng thước đo cải thiện <em>trước</em> — không có eval thì không cách nào biết fine-tune có tác dụng gì. Cùng lúc, đăng ký trước bằng số: chỉ ship nếu holdout tăng ≥ N điểm VÀ regression suite năng lực cũ không tụt; và ghi sẵn đường bỏ cuộc — quay về prompt + RAG nếu sau số vòng lặp đã ấn định vẫn không đạt (1.2 / 6.2).</p></li>
       <li><h4>Lỗi thuộc trục nào?</h4><p>Phân loại theo hai trục: thiếu dữ kiện / lỗi thời (trục context) hay lệch format/tone/reasoning (trục hành vi). Nếu là trục context thì <strong>dừng lại</strong> — fine-tune không nhồi được kiến thức mới (1.1).</p></li>
       <li><h4>Đã thử prompt/RAG chưa?</h4><p>Trước khi cam kết fine-tune, thử prompt engineering, và RAG nếu lỗi thuộc trục kiến thức — chúng rẻ hơn nhiều và thường đủ (1.2 / 1.3).</p></li>
-      <li><h4>License model đọc chưa?</h4><p>Đọc license trước benchmark, và đọc theo version: Llama gắn 700M MAU + bắt đặt tên "Llama"; Gemma 4 mới Apache 2.0; Qwen3 Apache toàn dòng — câu hỏi pháp lý đi trước (5.3).</p></li>
+      <li><h4>License model đọc chưa?</h4><p>Đọc license trước benchmark, và đọc theo version: Llama gắn 700M MAU + bắt đặt tên "Llama"; Gemma 4 mới Apache 2.0; Qwen bảo đảm Apache 2.0 cho các checkpoint open-weight của họ — câu hỏi pháp lý đi trước (5.3).</p></li>
       <li><h4>Method khớp GPU budget chưa?</h4><p>Chọn phương pháp theo VRAM: full FT ~16 byte/param là quá đắt; LoRA giảm memory 3×; QLoRA đưa cả 65B vào 1 GPU 48GB. Không cần cluster để bắt đầu (2.1 / 2.2 / 2.3).</p></li>
       <li><h4>Data curate + template đúng chưa?</h4><p>Curate ~1.000 ví dụ chất (LIMA thắng đống log thô), đóng gói JSONL chat-schema, và áp <em>đúng</em> chat template gốc bằng tokenizer của model — template lệch làm model tệ đi (4.1 / 4.2).</p></li>
       <li><h4>Cổng dữ liệu cá nhân đã qua chưa?</h4><p>Trên tập <em>đã curate</em>: scrub PII rồi lấy mẫu kiểm tra tái định danh; biết dữ liệu train ở vùng nào; và nhớ trọng số coi như không xoá được từng phần, nên phạm vi đồng ý phải phủ cả việc huấn luyện. Kiểm văn bản pháp luật dữ liệu cá nhân hiện hành với pháp chế — trước khi train, không phải sau (4.1).</p></li>
@@ -2635,14 +2648,14 @@ cfg = LoraConfig(
       <p class="quiz-q">Một team than "bot nội bộ trả lời sai chính sách mới ban hành tuần trước", nên họ gom 50.000 log hội thoại thô đổ vào fine-tune. Eval nội bộ tăng vọt, nhưng demo thật vẫn sai chính sách. Đọc nào đúng nhất?</p>
       <button class="quiz-opt" onclick="quizPick(this,0)"><span class="quiz-letter">A</span><span>Model chưa học đủ — gom thêm 200.000 log nữa đổ vào train cho tới khi hết sai chính sách.</span></button>
       <button class="quiz-opt" onclick="quizPick(this,1)"><span class="quiz-letter">B</span><span>Chỉ cần tăng rank LoRA lên thật cao là model sẽ nhớ được chính sách mới, phần còn lại đã ổn.</span></button>
-      <button class="quiz-opt" onclick="quizPick(this,2)"><span class="quiz-letter">C</span><span>Ba sai lầm chồng nhau: "sai chính sách mới" là lỗi thiếu kiến thức (trục context) phải giải bằng RAG/prompt chứ fine-tune không nhồi được dữ kiện; 50.000 log thô còn thua 1.000 ví dụ curate kỹ; và eval tăng vọt mà thực tế sai là dấu hiệu contamination.</span></button>
+      <button class="quiz-opt" onclick="quizPick(this,2)"><span class="quiz-letter">C</span><span>Ba sai lầm chồng nhau: đó là lỗi trục context; 50.000 log thô thua 1.000 ví dụ curate; và eval tăng vọt là cờ contamination.</span></button>
       <div class="quiz-feedback" role="status" data-explain="C đúng: ba lỗ hổng span ba bài — 'sai chính sách mới' là lỗi thiếu dữ kiện, trục context, giải bằng RAG/prompt vì fine-tune chỉ dạy cách trình bày thứ model đã biết (1.1); 50.000 log thô thua 1.000 ví dụ curate kỹ theo LIMA (4.1); và điểm eval tăng vọt trong khi demo thật sai là cờ đỏ contamination — test set có thể đã lọt vào training data (4.3). A sai: thêm số lượng thô không giải được lỗi kiến thức, và LIMA cho thấy số lượng plateau. B sai: tăng rank không nhồi được kiến thức mới, vẫn là nhầm trục context sang trục hành vi."></div>
     </div>
 
     <div class="quiz" data-correct="0">
       <span class="eyebrow">Kiểm tra nhanh · Capstone 2</span>
-      <p class="quiz-q">Sản phẩm của bạn build quanh một model GPT fine-tuned qua nền tảng managed của OpenAI. Bạn chỉ có 1 GPU 48GB on-prem, và pháp chế bắt đầu lo về điều khoản license. Nước đi giảm rủi ro tốt nhất (tính đến 07/2026) là gì?</p>
-      <button class="quiz-opt" onclick="quizPick(this,0)"><span class="quiz-letter">A</span><span>Coi managed OpenAI là dependency có vòng đời và dựng kế hoạch B: chuyển sang open-weight tự host được vì QLoRA fine-tune tới 65B trên đúng 1 GPU 48GB, và chọn open-weight thì đọc license trước — Qwen3 Apache toàn dòng, còn Llama gắn 700M MAU + bắt đặt tên "Llama".</span></button>
+      <p class="quiz-q">Sản phẩm của bạn build quanh một model GPT fine-tuned qua nền tảng managed của OpenAI. Bạn chỉ có 1 GPU 48GB on-prem, và pháp chế bắt đầu lo về điều khoản license. Nước đi giảm rủi ro tốt nhất (tính đến 09/2026) là gì?</p>
+      <button class="quiz-opt" onclick="quizPick(this,0)"><span class="quiz-letter">A</span><span>Coi managed OpenAI là dependency có vòng đời và dựng kế hoạch B: QLoRA tự host tới 65B trên 1 GPU 48GB, và đọc license trước khi chọn open-weight.</span></button>
       <button class="quiz-opt" onclick="quizPick(this,1)"><span class="quiz-letter">B</span><span>Cứ ở lại nền tảng managed OpenAI vì nó ổn định nhất, chỉ cần khoá version model hiện tại là an tâm dài hạn.</span></button>
       <button class="quiz-opt" onclick="quizPick(this,2)"><span class="quiz-letter">C</span><span>1 GPU 48GB thì không thể tự host fine-tune model lớn, nên buộc phải mua cluster đa-GPU trước khi tính chuyện rời managed.</span></button>
       <div class="quiz-feedback" role="status" data-explain="A đúng: ba mảnh khớp lại — managed là dependency có vòng đời và OpenAI đang wind-down (chốt tạo job mới 06/01/2027), nên cần kế hoạch B (5.2); QLoRA đưa cả 65B vào 1 GPU 48GB nên tự host open-weight là khả thi với đúng phần cứng bạn có (2.3); và khi đổi sang open-weight phải đọc license trước benchmark, đọc theo version (5.3). B sai: OpenAI không phải managed option ổn định — đang khai tử, khoá version cũng không cứu được khi platform ngừng nhận job. C sai: đúng cái bẫy 'phải có cluster' — QLoRA sinh ra để fine-tune model lớn trên đúng một GPU vừa túi."></div>
@@ -2662,7 +2675,7 @@ cfg = LoraConfig(
       </div>
     </section>
 
-    <footer class="site">LLM Fine-tuning &amp; Model Customization · khoá học tương tác · 2026</footer>
+    <footer class="site">LLM Fine-tuning &amp; Model Customization · khoá học tương tác · 2026 · cập nhật 05/09/2026</footer>
   </main>
 </div>
 
@@ -2690,7 +2703,7 @@ const LESSONS = [
   {id:'m4-l3', mod:4, part:'Phần IV · Dữ liệu & eval', title:'Eval sau fine-tune: ba lớp kiểm tra và những cách điểm số nói dối', desc:'Ba lớp: holdout · loss-curve · test tay; cảnh giác contamination, shortcut, forgetting.'},
   {id:'m5-l1', mod:5, part:'Phần V · Toolchain & hạ tầng 2026', title:'Toolchain tự host: TRL, PEFT, Axolotl, Unsloth — và bia mộ torchtune', desc:'Chọn tool theo kiểu team; số Unsloth là claim vendor; torchtune \'wound down in 2025\' — độ sống của tool là tiêu chí chọn.'},
   {id:'m5-l2', mod:5, part:'Phần V · Toolchain & hạ tầng 2026', title:'Managed fine-tuning 2026: ai còn, ai đang khai tử', desc:'OpenAI wind-down 3 mốc tới 2027-01-06; Claude API không có FT; Bedrock/Vertex/Together/Fireworks còn — managed là dependency có vòng đời.'},
-  {id:'m5-l3', mod:5, part:'Phần V · Toolchain & hạ tầng 2026', title:'Chọn model open-weight: đọc license trước khi đọc benchmark', desc:'Llama 700M MAU + naming; Gemma theo version (4 mới Apache 2.0); Qwen3 Apache toàn dòng; Mistral phần lớn Apache — pháp lý đi trước benchmark.'},
+  {id:'m5-l3', mod:5, part:'Phần V · Toolchain & hạ tầng 2026', title:'Chọn model open-weight: đọc license trước khi đọc benchmark', desc:'Llama 700M MAU + naming; Gemma theo version (4 mới Apache 2.0); Qwen chỉ bảo đảm Apache 2.0 cho bản open-weight; Mistral phần lớn Apache — pháp lý đi trước benchmark.'},
   {id:'m6-l1', mod:6, part:'Phần VI · Serving & tổng hợp', title:'Sau fine-tune: quantization, GGUF/AWQ/GPTQ, và multi-LoRA serving', desc:'GGUF là format vs GPTQ/AWQ là thuật toán; số từ paper gốc; multi-LoRA serving cho N tenant trên 1 base.'},
   {id:'m6-l2', mod:6, part:'Phần VI · Serving & tổng hợp', title:'Ghép hết: một dự án fine-tune ví dụ từ quyết định tới serving', desc:'Pipeline quyết định tám bước trên một dự án ví dụ; mỗi bước chặn một sai lầm và trỏ về đúng bài đã dạy nó.'},
   {id:'m7-l1', mod:7, part:'Tổng kết', title:'Tổng kết · Cheat sheet 1 trang', desc:'Nén cả khoá thành một trang mang đi: mười sáu dòng distill, checklist trước khi bấm nút fine-tune, và pipeline quyết định tám bước.'},
