@@ -3,7 +3,7 @@ import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 
 const coursesDir = dirname(fileURLToPath(import.meta.url));
-const htmlPath = join(coursesDir, "chatgpt-work-claude-cowork-practical-guide.html");
+const htmlPath = join(coursesDir, "ai-work-agents-practical-guide.html");
 const imagePath = join(coursesDir, "assets", "ai-work-agent-desk.webp");
 let html = readFileSync(htmlPath, "utf8");
 

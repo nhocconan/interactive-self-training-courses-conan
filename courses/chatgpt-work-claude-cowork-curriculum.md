@@ -4,14 +4,14 @@ PUBLIC
 
 ## Course identity
 
-- Final file: `courses/chatgpt-work-claude-cowork-practical-guide.html`
+- Final file: `courses/ai-work-agents-practical-guide.html`
 - Title: `ChatGPT Work & Claude Cowork thực chiến`
 - Audience: nhân sự văn phòng/knowledge worker không cần biết code.
 - Promise: sau khoá học, người học chọn đúng chế độ, giao một task nhiều bước
   bằng brief rõ ràng, giới hạn quyền, kiểm chứng bản nộp, và đưa một quy trình
   lặp lại vào vận hành có giám sát.
 - Language/theme/slug: `vi` / `teal` /
-  `chatgpt-work-claude-cowork-practical-guide`.
+  `ai-work-agents-practical-guide`.
 - Edition: facts verified 2026-09-05; capabilities vary by plan, workspace,
   region, rollout, and device.
 - Distribution: PUBLIC. All people, organizations, files, folders, metrics, and
