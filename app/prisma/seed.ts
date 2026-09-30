@@ -45,10 +45,10 @@ const COURSES = [
   {
     slug: "ai-work-agents",
     title: "AI Work Agents thực chiến",
-    description: "Practical guide cho người không code: giao việc nhiều bước cho ChatGPT Work, Claude, Meta Muse và Gemini Spark, xử lý file/web/app, kiểm chứng đầu ra và đưa workflow lặp lại vào vận hành có giám sát.",
+    description: "Practical guide cho người không code: chọn việc, viết brief, kiểm bản nộp và cấp quyền khi giao việc nhiều bước cho ChatGPT Work, Claude và Gemini Spark. 14 bài thực hành trên việc thật, kèm bộ checklist in được.",
     htmlPath: "ai-work-agents-practical-guide.html",
     categorySlug: "ai-engineering",
-    level: "Beginner", durationMin: 160, tags: ["AI", "ChatGPT Work", "Claude Cowork", "Meta Muse", "Gemini Spark", "Non-coder"],
+    level: "Beginner", durationMin: 120, tags: ["AI", "ChatGPT Work", "Claude", "Gemini Spark", "Non-coder"],
   },
   {
     slug: "rag-information-retrieval",
