@@ -450,8 +450,6 @@ footer.site{border-top:1px solid var(--border);padding:26px 24px;text-align:cent
 }
 </style>
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E📚%3C/text%3E%3C/svg%3E">
-<meta name="course-knowledge-cutoff" content="2026-11-12">
-<meta name="course-reviewed" content="2026-11-13">
 </head>
 <body data-theme="midnight">
 <a href="#main" class="skip-link">Skip to main content</a>
@@ -466,7 +464,7 @@ footer.site{border-top:1px solid var(--border);padding:26px 24px;text-align:cent
   <aside class="sidebar" id="sidebar" aria-label="Course navigation">
     <div class="sidebar-brand">
       <div class="sidebar-brand-title">RAG, <em>Layer by Layer</em></div>
-      <div class="sidebar-brand-sub">19 lessons · 2026 edition</div>
+      <div class="sidebar-brand-sub">19 lessons</div>
     </div>
     <div class="progress-wrap">
       <div class="progress-meta"><span>Progress</span><span><b id="pg-done">0</b>/<span id="pg-total">0</span> · <span id="pg-pct">0</span>%</span></div>
@@ -492,7 +490,7 @@ footer.site{border-top:1px solid var(--border);padding:26px 24px;text-align:cent
       <div class="hero">
         <div class="hero-inner">
           <h1><span class="grad-text">RAG, Layer by Layer</span> — from naive RAG to production</h1>
-          <p class="hero-sub">For engineers building a knowledge or chatbot product: from the most naive RAG (embed one chunk, find the nearest neighbor) to measuring retrieval, then through 13 production layers: chunking, hybrid BM25 + RRF, multi-query, contextual chunking, cross-encoder rerank, CRAG, entity planning, distillation, caching. A layer stays only when eval proves it fixes the intended failure on an example multi-tenant chatbot platform.</p>
+          <p class="hero-sub">For engineers building a knowledge or chatbot product: from the most naive RAG (embed one chunk, find the nearest neighbor) to measuring retrieval, then through production techniques: chunking, hybrid BM25 + RRF, multi-query, contextual chunking, cross-encoder rerank, CRAG, entity planning, distillation, caching. A layer stays only when eval proves it fixes the intended failure on an example multi-tenant chatbot platform.</p>
           <div style="margin-top:28px;display:flex;gap:12px;flex-wrap:wrap">
             <a class="btn btn-primary" id="start-btn">Start learning →</a>
             <a class="btn btn-ghost" href="#curriculum">View curriculum</a>
@@ -511,7 +509,7 @@ footer.site{border-top:1px solid var(--border);padding:26px 24px;text-align:cent
           <thead><tr><th style="width:220px">Term</th><th>Meaning (as used in the course)</th></tr></thead>
           <tbody>
             <tr><td><b>Retrieval / RAG</b></td><td>Retrieve knowledge and load it into the prompt before the LLM answers — Retrieval-Augmented Generation.</td></tr>
-            <tr><td><b>Hallucination</b></td><td>The LLM produces confident text even when it is wrong — because it is a probability machine over tokens, not a truth machine.</td></tr>
+            <tr><td><b>Hallucination</b></td><td>The LLM produces incorrect or unsupported claims, even when the wording sounds confident.</td></tr>
             <tr><td><b>Embedding</b></td><td>A function mapping text → a high-dimensional vector; text close in meaning → close in geometry.</td></tr>
             <tr><td><b>Cosine similarity</b></td><td>The cosine of the angle between two vectors, [−1..1]; measures direction only, not magnitude — a ruler for semantic distance.</td></tr>
             <tr><td><b>Chunk</b></td><td>The atomic unit of retrieval; a piece of text embedded and retrieved on its own.</td></tr>
@@ -522,7 +520,7 @@ footer.site{border-top:1px solid var(--border);padding:26px 24px;text-align:cent
             <tr><td><b>RRF (Reciprocal Rank Fusion)</b></td><td>Fuses multiple rankings using rank alone: RRF(d)=Σ 1/(k+rank), k=60 — no score normalization needed.</td></tr>
             <tr><td><b>Multi-query expansion</b></td><td>Expand one query into several variants (entity/intent/paraphrase), fuse with RRF — raises recall.</td></tr>
             <tr><td><b>Contextual chunking</b></td><td>The LLM generates 1–2 sentences of context, prepended before the chunk then embedded — addresses lost context; Anthropic’s 2024 study reported −35% retrieval failure, or −49% with contextual BM25.</td></tr>
-            <tr><td><b>Bi-encoder / Cross-encoder</b></td><td>Bi: encodes query and doc separately, fast/blurry. Cross: joins (query,doc) at once, slow/precise — used to rerank the top 30.</td></tr>
+            <tr><td><b>Bi-encoder / Cross-encoder</b></td><td>Bi: encode query and doc separately. Cross: score query/doc pairs to rerank candidates; measure quality, cost and latency.</td></tr>
             <tr><td><b>CRAG</b></td><td>Corrective RAG — classifies retrieval into 4 states (confident/moderate/low/empty) before generation, deciding whether to answer at all.</td></tr>
             <tr><td><b>Self-corrective retrieval</b></td><td>One bounded retry changing soft query choices within unchanged authorized/published scope.</td></tr>
             <tr><td><b>Retrieval gate(G1) / Faithfulness gate(G2)</b></td><td>G1 checks retrieval before generation; G2 checks support afterward. Policy can be deterministic while scores/judges remain fallible; measure quality and cost.</td></tr>
@@ -557,7 +555,7 @@ footer.site{border-top:1px solid var(--border);padding:26px 24px;text-align:cent
           </div>
         </div>
         <div class="lesson-body">
-          <div class="callout insight"><div class="callout-title">About the example system in this course</div><p>So the theory doesn't stay dry, every concept is mapped against an <strong>example multi-tenant chatbot platform</strong> (many organizations, each with many chatbots, each with many users). This is a system <em>illustrative for teaching purposes</em>: every product name (Demo AM, Demo Media…), number, and parameter (cosine thresholds, k=60, cache-hit rates…) is an <strong>example value</strong>, not the operational or real customer data of any organization.</p></div>
+          <div class="callout insight"><div class="callout-title">About the example system in this course</div><p>Every concept is mapped against an <strong>example multi-tenant chatbot platform</strong> (many organizations, each with many chatbots, each with many users). This is a system <em>illustrative for teaching purposes</em>: every product name (Demo AM, Demo Media…), number, and parameter (cosine thresholds, k=60, cache-hit rates…) is an <strong>example value</strong>, not the operational or real customer data of any organization.</p></div>
 
           <div class="objectives">
             <span class="eyebrow">By the end you can</span>
@@ -568,7 +566,7 @@ footer.site{border-top:1px solid var(--border);padding:26px 24px;text-align:cent
             </ul>
           </div>
 
-          <p>A B2B chatbot is asked: <em>"Does Demo AM have a free trial?"</em> It answers confidently: <em>"Yes, 7 days free."</em> It should be 14 days. Smooth prose, firm tone, completely wrong. For an entertainment chatbot in 2024 that's a small thing. For a product where users ask in order to <strong>make a purchase decision</strong>, a confidently wrong answer is <em>worse</em> than no answer at all.</p>
+          <p>A B2B chatbot is asked: <em>"Does Demo AM have a free trial?"</em> It answers confidently: <em>"Yes, 7 days free."</em> It should be 14 days. The answer is wrong despite its confident wording. For a product where users ask in order to <strong>make a purchase decision</strong>, incorrect information can <em>affect</em> the user’s decision.</p>
 
           <p>That's because an LLM is a <strong>probability machine over tokens</strong>. It produces smooth, plausible text regardless of whether the underlying fact is right or wrong. Retrieval-Augmented Generation (RAG) is the answer architecture: <strong>before</strong> the model writes, search a chosen knowledge base, hand the model the relevant passages, and tell it to answer only from those passages (with citations). The pipeline has 3 jobs:</p>
 
@@ -604,10 +602,10 @@ footer.site{border-top:1px solid var(--border);padding:26px 24px;text-align:cent
               <path class="dgm-line" d="M490 210 L430 210" stroke-width="1.5" stroke-dasharray="4 3" marker-end="url(#m1l1-a)"/>
               <defs><marker id="m1l1-a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0 L10 5 L0 10 Z" fill="var(--ink-3)"/></marker></defs>
             </svg></div>
-            <figcaption><b>Figure 1.1</b> — Same question: the LLM alone fabricates confidently; RAG retrieves the right passage then anchors a sourced answer. The only difference: retrieval ran before the model opened its mouth.</figcaption>
+            <figcaption><b>Figure 1.1</b> — Same question: the LLM alone fabricates confidently; RAG retrieves the right passage then anchors a sourced answer. Retrieval supplies evidence before answer generation.</figcaption>
           </figure>
 
-          <div class="callout insight"><div class="callout-title">A model to remember</div><p>An LLM is a smart intern who read everything but remembers nothing exactly. RAG is the move of sliding the right page of the document across the desk before they speak.</p></div>
+          <div class="callout insight"><div class="callout-title">A model to remember</div><p>RAG places relevant passages in context before the LLM generates an answer. Check both the retrieved passages and whether the answer follows them.</p></div>
 
           <div class="takeaway">
             <span class="eyebrow"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true" focusable="false"><path d="M12 2v6m0 8v6M4.9 4.9l4.2 4.2m5.8 5.8l4.2 4.2M2 12h6m8 0h6M4.9 19.1l4.2-4.2m5.8-5.8l4.2-4.2"/></svg>Takeaway</span>
@@ -632,13 +630,13 @@ footer.site{border-top:1px solid var(--border);padding:26px 24px;text-align:cent
           <div class="objectives">
             <span class="eyebrow">By the end you can</span>
             <ul>
-              <li>Draw the 4 steps of naive RAG and explain why the "magic" lives in vector space.</li>
+              <li>Draw the 4 steps of naive RAG and explain the relation between meaning and vector position.</li>
               <li>Explain why the query must be embedded with the exact model that embedded the chunks.</li>
-              <li>List the 5 reliability failures naive RAG will hit, each one fixed by a later layer.</li>
+              <li>List 5 failure classes to evaluate in naive RAG and match them to possible changes.</li>
             </ul>
           </div>
 
-          <p>Two products with near-identical names: "Demo AM" and "Demo Media". Naive RAG embeds both; because they share a brand family, their vectors sit close together in space. A user asks about Demo AM, the system returns a Demo Media chunk. That is an architectural error rather than a tuning miss, and the rest of this course exists to fix each variant of it.</p>
+          <p>Two products with near-identical names: "Demo AM" and "Demo Media". Naive RAG embeds both; because they share a brand family, their vectors sit close together in space. A user asks about Demo AM, the system returns a Demo Media chunk. Evaluate entity discrimination through lexical retrieval, metadata and entity planning.</p>
 
           <p>The simplest RAG you can build has 4 parts:</p>
           <ol>
@@ -647,9 +645,9 @@ footer.site{border-top:1px solid var(--border);padding:26px 24px;text-align:cent
             <li>Store <code>(chunk_text, vector)</code> in a vector database.</li>
             <li>At query time, embed the question with the <em>same</em> model, find the K nearest vectors by cosine similarity, and hand those chunks to the LLM.</li>
           </ol>
-          <p>The whole "magic" of vector search is this: text with the <em>same meaning</em> ends up geometrically close even when the words don't match, so "free trial" embeds near "no-cost evaluation period".</p>
+          <p>Vector search relies on this relation: text with the <em>same meaning</em> ends up geometrically close even when the words don't match, so "free trial" embeds near "no-cost evaluation period".</p>
 
-          <p>Matryoshka-trained models support shorter vector prefixes. For example, EmbeddingGemma supports truncation followed by renormalization; do not apply it to an arbitrary encoder. Int8/binary values use 4×/32× less raw payload than float32, excluding index/metadata overhead. Quantization can lose candidate recall; reranking only reorders retrieved candidates. <a href="https://huggingface.co/google/embeddinggemma-300m" target="_blank" rel="noreferrer">EmbeddingGemma</a> (checked 12 Nov 2026).</p>
+          <p>Matryoshka-trained models support shorter vector prefixes. For example, EmbeddingGemma supports truncation followed by renormalization; do not apply it to an arbitrary encoder. Int8/binary values use 4×/32× less raw payload than float32, excluding index/metadata overhead. Quantization can lose candidate recall; reranking only reorders retrieved candidates. <a href="https://huggingface.co/google/embeddinggemma-300m" target="_blank" rel="noreferrer">EmbeddingGemma</a>.</p>
 
           <figure class="figure">
             <div class="diagram-viewport" role="region" tabindex="0" aria-label="Diagram; scroll horizontally to read all labels" style="--diagram-width:760px"><svg viewBox="0 0 760 320" role="img" aria-label="Naive RAG: on the left, the index pipeline (document → 1000-character chunk → embedding model → 1,536-float vector); on the right, query time (question → same embedding model → query vector), then cosine sim into the vector space to pull the 3 nearest chunks.">
@@ -693,7 +691,7 @@ footer.site{border-top:1px solid var(--border);padding:26px 24px;text-align:cent
           <p>Suppose your only document is a PDF <code>Demo-AM-pricing.pdf</code>. Naive RAG cuts it into 3 chunks of 1,000 characters, embeds 3 vectors, the query <em>"free trial?"</em> → embed 1 vector → cosine sim against the 3 chunks → take the top 1 → send the chunk + question to the LLM with <em>"Answer using only this passage."</em> Total infrastructure: one Postgres table with a <code>vector</code> column.</p>
 
           <h3>Where this breaks</h3>
-          <p>Naive RAG breaks in 5 reliable ways. The rest of the course exists to fix each one:</p>
+          <p>Five failure classes to evaluate in naive RAG:</p>
           <div class="table-wrap"><table>
             <thead><tr><th>Failure</th><th>What happens</th><th>Fixed by</th></tr></thead>
             <tbody>
@@ -707,7 +705,7 @@ footer.site{border-top:1px solid var(--border);padding:26px 24px;text-align:cent
 
           <div class="takeaway">
             <span class="eyebrow"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true" focusable="false"><path d="M12 2v6m0 8v6M4.9 4.9l4.2 4.2m5.8 5.8l4.2 4.2M2 12h6m8 0h6M4.9 19.1l4.2-4.2m5.8-5.8l4.2-4.2"/></svg>Takeaway</span>
-            <p>Naive RAG needs only one Postgres table with a <code>vector</code> column, and it <span class="hl">breaks the moment two products have similar names</span>. That is the sign the 5 failures are ready to appear.</p>
+            <p>Naive RAG needs only one Postgres table with a <code>vector</code> column, and it <span class="hl">can confuse two products with similar names</span>. Use the five failure classes above to choose a change.</p>
           </div>
 
           <div class="quiz" data-correct="1">
@@ -742,7 +740,7 @@ footer.site{border-top:1px solid var(--border);padding:26px 24px;text-align:cent
             </ul>
           </div>
 
-          <p>A document has a pricing table: <code>| Plan A | $9 | … | Plan B | $19 | …</code>. Naive chunking splits every 1,000 characters and cuts right through a row: <code>| Pl</code> / <code>an B | $19</code>. That chunk's embedding represents nothing complete. A chunk is the <strong>atomic unit</strong> of retrieval: cut it wrong and every layer above is debugging your splitter.</p>
+          <p>A document has a pricing table: <code>| Plan A | $9 | … | Plan B | $19 | …</code>. Naive chunking splits every 1,000 characters and cuts right through a row: <code>| Pl</code> / <code>an B | $19</code>. That chunk's embedding represents nothing complete. A chunk is the <strong>atomic unit</strong> of retrieval: missing information in a chunk can reduce retrieval quality in later stages.</p>
 
           <p>Before chunking there is <strong>extraction</strong>, and it breaks first. A multi-column PDF reads out zig-zag, a table flattens into one long line, a scan with no text layer needs OCR, an HTML crawl drags in nav and footer. A good chunker cannot rescue broken extraction: open your 5 hardest documents and read the extracted text with your own eyes before blaming the splitter.</p>
 
@@ -779,7 +777,7 @@ footer.site{border-top:1px solid var(--border);padding:26px 24px;text-align:cent
 
           <div class="callout warn"><div class="callout-title">Anti-pattern</div><p>Character-based defaults reduce coupling to one tokenizer, but token-based splitting is also valid. Always check the embedding model’s token limit. Prefer document structure; split an overlong table by rows with repeated headers. The example1500/300 and1000/200 settings are synthetic starting points to validate.</p></div>
 
-          <details class="accordion"><summary><span class="chev">▶</span><span class="accordion-tag">What you do on Monday</span><span>Measure the chunk-length distribution of your current corpus</span></summary>
+          <details class="accordion"><summary><span class="chev">▶</span><span class="accordion-tag">Practice</span><span>Measure the chunk-length distribution of your current corpus</span></summary>
             <div class="accordion-body">Export the length of every chunk in one chatbot, plot a histogram, then hand-count how many chunks start or end in the middle of a table row. If that number is not zero, you just found a retrieval bug before adding any layer at all.</div>
           </details>
 
@@ -826,7 +824,7 @@ footer.site{border-top:1px solid var(--border);padding:26px 24px;text-align:cent
             </tbody>
           </table></div>
 
-          <p>Synthetic fixture: each of 5 queries has exactly one relevant canonical chunk. First-relevant ranks are 1, missing,2,1,3: MRR=(1+0+1/2+1+1/3)/5=0.5667≈0.57. Hit@5=4/5=0.80; it equals mean Recall@5 only under this one-relevant-item assumption. With gold{A,B,C} and retrieved{A,C}, recall=2/3 while hit=1. Evaluate no-answer queries separately for abstention. Select layers on validation, reserve an untouched final test and compare paired query outcomes; related variants need group-aware uncertainty. <a href="https://arxiv.org/html/2411.00640v1" target="_blank" rel="noreferrer">Adding Error Bars to Evals</a> (checked 12 Nov 2026).</p>
+          <p>Synthetic fixture: each of 5 queries has exactly one relevant canonical chunk. First-relevant ranks are 1, missing,2,1,3: MRR=(1+0+1/2+1+1/3)/5=0.5667≈0.57. Hit@5=4/5=0.80; it equals mean Recall@5 only under this one-relevant-item assumption. With gold{A,B,C} and retrieved{A,C}, recall=2/3 while hit=1. Evaluate no-answer queries separately for abstention. Select layers on validation, reserve an untouched final test and compare paired query outcomes; related variants need group-aware uncertainty. <a href="https://arxiv.org/html/2411.00640v1" target="_blank" rel="noreferrer">Adding Error Bars to Evals</a>.</p>
 
           <div class="callout info"><div class="callout-title">Do not collapse this into one “RAG score”</div><p>Correct retrieval plus a wrong answer points to the generator or prompt; wrong retrieval plus a plausible answer is a well-disguised hallucination. Keep component metrics so you know where to intervene. An LLM judge helps with faithfulness and relevance, but calibrate it against a human-labeled slice rather than treating its score as ground truth. Separating retrieval, generation, and efficiency is also a central axis of this <a href="https://arxiv.org/abs/2504.14891" target="_blank" rel="noreferrer">2025 survey of RAG evaluation</a>. When you want something off the shelf: RAGAS and TruLens for faithfulness/answer relevance, BEIR and TREC-RAG for public retrieval benchmarks. Use them to <em>bootstrap</em> an eval set, not to replace your corpus's own. A public benchmark contains none of your tenants' proper nouns.</p></div>
 
@@ -869,7 +867,7 @@ footer.site{border-top:1px solid var(--border);padding:26px 24px;text-align:cent
             <figcaption><b>Figure 1.4</b> — The ablation gate keeps the eval set fixed and changes one variable. A layer survives only when it improves its target failure without breaking an important segment or budget.</figcaption>
           </figure>
 
-          <h3>Ablation: every layer pays rent</h3>
+          <h3>Ablation: compare benefit with cost</h3>
           <ol>
             <li>Run the naive baseline and save its config, corpus version, model/version, K, latency, and cost.</li>
             <li>Enable exactly <strong>one</strong> change (hybrid search, for example) and rerun the same set.</li>
@@ -877,13 +875,13 @@ footer.site{border-top:1px solid var(--border);padding:26px 24px;text-align:cent
             <li>Keep it when target lift justifies regressions and cost; otherwise revert it. No threshold is universal across corpora.</li>
           </ol>
 
-          <details class="accordion"><summary><span class="chev">▶</span><span class="accordion-tag">What you do on Monday</span><span>Write 30 queries + qrels from last week's logs</span></summary>
+          <details class="accordion"><summary><span class="chev">▶</span><span class="accordion-tag">Practice</span><span>Write 30 queries + qrels from last week's logs</span></summary>
             <div class="accordion-body">Open last week's conversation logs, take 30 real questions, and for each one write down the chunk/document ID that should have been returned. That is your first frozen eval set. No tooling needed yet: a CSV file is enough to run the first ablation.</div>
           </details>
 
           <div class="takeaway">
             <span class="eyebrow"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true" focusable="false"><path d="M12 2v6m0 8v6M4.9 4.9l4.2 4.2m5.8 5.8l4.2 4.2M2 12h6m8 0h6M4.9 19.1l4.2-4.2m5.8-5.8l4.2-4.2"/></svg>Takeaway</span>
-            <p>RAG maturity is not a layer count. Every change goes through a <span class="hl">frozen eval set + component metrics + budget gate</span>, and a layer with no lift gets removed.</p>
+            <p>Evaluate each change with a <span class="hl">frozen eval set + component metrics + budget gate</span>, and a layer with no lift gets removed.</p>
           </div>
 
           <div class="quiz" data-correct="2">
@@ -920,7 +918,7 @@ footer.site{border-top:1px solid var(--border);padding:26px 24px;text-align:cent
             <li>Explain why you shouldn't copy the whole entity catalog into every chunk.</li>
           </ul></div>
 
-          <p>A chunk says <em>"$9 / seat / month"</em>. The vector says "this chunk is about pricing". But pricing for which product? The chunk doesn't know where it came from, when it was updated, or whether it deserves to rank higher than its siblings. Every modern RAG pipeline carries a <strong>typed metadata contract</strong> alongside the vector.</p>
+          <p>A chunk says <em>"$9 / seat / month"</em>. The vector says "this chunk is about pricing". But pricing for which product? The chunk doesn't know where it came from, when it was updated, or whether it deserves to rank higher than its siblings. The example pipeline carries a <strong>typed metadata contract</strong> alongside the vector.</p>
 
           <p>Each chunk carries a <code>metadata</code> object built by a metadata service (example), with fields such as: <code>sourceId</code>, <code>sourceName</code>, <code>sourceType</code> (pdf), <code>trustLevel</code> (canonical | authoritative | standard | derived), <code>sourceRole</code> (product | pricing | policy | promo | release_notes…), <code>canonicalSource</code> (bool), <code>intentAllowlist</code> (["pricing","capability"]), <code>entities</code> ([{entityId:"demo-am",name:"Demo AM"}]), <code>sectionTitle</code>, <code>keywords</code>, <code>updatedAt</code>.</p>
 
@@ -959,14 +957,14 @@ footer.site{border-top:1px solid var(--border);padding:26px 24px;text-align:cent
               <text class="dgm-ink2" x="502" y="234" text-anchor="middle" font-size="11">Entity match: entities[] contains "demo-am" → big boost</text>
               <defs><marker id="m2l1-a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0 L10 5 L0 10 Z" fill="var(--ink-3)"/></marker></defs>
             </svg></div>
-            <figcaption><b>Figure 2.1</b> — Metadata is what lets a chunk know "who it is"; retrieval uses it through 3 gates: filter (hard), boost (soft), route (by intent).</figcaption>
+            <figcaption><b>Figure 2.1</b> — Metadata describes a chunk’s source and attributes; retrieval uses it through 3 gates: filter (hard), boost (soft), route (by intent).</figcaption>
           </figure>
 
           <div class="callout info"><div class="callout-title">Design rule</div><p>Source-level metadata lives in the source config (the official catalog); chunk-level metadata stores only what is <em>local</em> to that chunk. Copying the whole entity catalog into every chunk turns routing pages and tables of contents into false positives: they carry the same entity boost as a real description. Keep chunk metadata narrow.</p></div>
 
           <p>Server-derived tenant/ACL constraints apply before ranking. Language filtering follows the product’s coverage requirements, not a universal rule.</p><div class="takeaway">
             <span class="eyebrow"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true" focusable="false"><path d="M12 2v6m0 8v6M4.9 4.9l4.2 4.2m5.8 5.8l4.2 4.2M2 12h6m8 0h6M4.9 19.1l4.2-4.2m5.8-5.8l4.2-4.2"/></svg>Takeaway</span>
-            <p>The vector says "this chunk is about X". Metadata says <span class="hl">"this chunk is from the official pricing page, updated Tuesday, mentions Demo AM"</span>. Retrieval can't rank correctly if a chunk doesn't know who it is.</p>
+            <p>The vector says "this chunk is about X". Metadata says <span class="hl">"this chunk is from the official pricing page, updated Tuesday, mentions Demo AM"</span>. These attributes support ranking by source, version and entity.</p>
           </div>
 
           <div class="quiz" data-correct="1"><span class="eyebrow">Quick check</span><p class="quiz-q">A denied-tenant chunk is highly relevant. Should its metadata filter become a boost?</p><button class="quiz-opt" onclick="quizPick(this,0)"><span class="quiz-letter">A</span><span>Yes, if its score is high.</span></button><button class="quiz-opt" onclick="quizPick(this,1)"><span class="quiz-letter">B</span><span>No. Exclude unauthorized chunks before ranking; language is a separate product/corpus policy.</span></button><button class="quiz-opt" onclick="quizPick(this,2)"><span class="quiz-letter">C</span><span>Yes, if the answer cites it.</span></button><button class="quiz-opt" onclick="quizPick(this,3)"><span class="quiz-letter">D</span><span>Only lower its priority.</span></button><div class="quiz-feedback" role="status" data-explain="Authorization is a hard constraint. Multilingual retrieval may validly answer in Vietnamese from English evidence when the product permits it."></div></div>
@@ -1038,11 +1036,11 @@ footer.site{border-top:1px solid var(--border);padding:26px 24px;text-align:cent
 
           <div class="callout info"><div class="callout-title">Why 'simple' not 'english'?</div><p>The <code>'english'</code> dictionary stems ("running" → "run") and drops stopwords: good for English prose, bad when half the corpus is Vietnamese and the other half contains brand names. <code>'simple'</code> tokenizes + lower-cases without stemming, keeping proper nouns intact across languages.</p></div>
 
-          <details class="accordion"><summary><span class="chev">▶</span><span class="accordion-tag">What you do on Monday</span><span>Run to_tsvector('simple') over 100 real chunks</span></summary>
+          <details class="accordion"><summary><span class="chev">▶</span><span class="accordion-tag">Practice</span><span>Run to_tsvector('simple') over 100 real chunks</span></summary>
             <div class="accordion-body">Take 100 chunks from a live chatbot, populate <code>search_vector</code>, then pick 5 proper-noun queries and put the lexical top-5 next to the vector top-5. Wherever the two lists differ is exactly the recall the lexical path is adding.</div>
           </details>
 
-          <p>The SQL below is illustrative: enforce a server-derived authorized scope and bind query parameters. PostgreSQL ts_rank_cd computes cover-density ranking, not BM25; a BM25 engine requires its own implementation. <a href="https://www.postgresql.org/docs/current/textsearch-controls.html" target="_blank" rel="noreferrer">PostgreSQL</a> (checked 12 Nov 2026).</p><div class="takeaway">
+          <p>The SQL below is illustrative: enforce a server-derived authorized scope and bind query parameters. PostgreSQL ts_rank_cd computes cover-density ranking, not BM25; a BM25 engine requires its own implementation. <a href="https://www.postgresql.org/docs/current/textsearch-controls.html" target="_blank" rel="noreferrer">PostgreSQL</a>.</p><div class="takeaway">
             <span class="eyebrow"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true" focusable="false"><path d="M12 2v6m0 8v6M4.9 4.9l4.2 4.2m5.8 5.8l4.2 4.2M2 12h6m8 0h6M4.9 19.1l4.2-4.2m5.8-5.8l4.2-4.2"/></svg>Takeaway</span>
             <p>Vectors are good at meaning, bad at identifiers. <span class="hl">A parallel BM25 catches the proper nouns vectors collapse</span>. Lexical fails on rephrasing, so you need both.</p>
           </div>
@@ -1077,7 +1075,7 @@ footer.site{border-top:1px solid var(--border);padding:26px 24px;text-align:cent
 
           <p><strong>Reciprocal Rank Fusion (RRF)</strong> sidesteps this by ignoring score entirely and using only <em>rank</em>:</p>
           <div class="code-card"><pre>RRF(d) = Σ over each ranker r:  1 / (k + rank_r(d))</pre></div>
-          <p>Use k=60 as a starting example, not a universal optimum. A document absent from a list contributes0. The original authors selected60 in a pilot and retained it during validation. <a href="https://cormack.uwaterloo.ca/cormacksigir09-rrf.pdf" target="_blank" rel="noreferrer">RRF original paper</a> (checked 12 Nov 2026).</p>
+          <p>Use k=60 as a starting example, not a universal optimum. A document absent from a list contributes0. The original authors selected60 in a pilot and retained it during validation. <a href="https://cormack.uwaterloo.ca/cormacksigir09-rrf.pdf" target="_blank" rel="noreferrer">RRF original paper</a>.</p>
 
           <p>One concrete number: chunk-A is rank 1 on the vector side → 1/(60+1) = 0.0164, and rank 2 on the lexical side → 1/(60+2) = 0.0161, so RRF(A) = 0.0325. chunk-F appears only at lexical rank 3 → 1/(60+3) = 0.0159. It still survives, just ranked lower. The numbers in Figure 2.3 are exactly those values, not cosine or <code>ts_rank_cd</code>. One detail that is easy to miss: chunk-D (vector rank 4) and chunk-G (lexical rank 4) both come out at 1/64 = 0.0156. A tie needs a deterministic tiebreak, by chunk id for instance, or the ranking shifts between runs.</p>
 
@@ -1200,7 +1198,7 @@ footer.site{border-top:1px solid var(--border);padding:26px 24px;text-align:cent
       <header class="module-header" data-module="3">
         <span class="eyebrow">Module 03 · Part III</span>
         <h2>Advanced retrieval quality</h2>
-        <p>You have recall; now raise quality. Contextual chunking fixes lost context, cross-encoder rerank fixes bi-encoder blurriness, CRAG knows when retrieval has failed, and self-corrective retrieval rescues answers a filter is hiding.</p>
+        <p>You have recall; now raise quality. Contextual chunking fixes lost context, cross-encoder rerank fixes bi-encoder blurriness, CRAG knows when retrieval has failed, and self-corrective retrieval retries once within authorized scope.</p>
       </header>
 <article class="lesson" id="m3-l1" data-lesson>
         <div class="lesson-head">
@@ -1255,7 +1253,7 @@ footer.site{border-top:1px solid var(--border);padding:26px 24px;text-align:cent
 
           <div class="callout info"><div class="callout-title">Different from attaching a section title to a chunk</div><p>A section title is static/structural. A generated context prefix <em>knows the whole document</em> and the chunk's role: "This passage is from the 'pricing' section of the 2026 Demo AM product brief, comparing the Pro and Enterprise plans." That's information the chunker can't recover from a lone chunk.</p></div>
 
-          <p>The35%/49% figures are Anthropic’s2024 top-20 retrieval-failure results, not a promised application improvement. Generated context must be checked against its parent source and regenerated when that source changes. <a href="https://www.anthropic.com/research/contextual-retrieval" target="_blank" rel="noreferrer">Contextual Retrieval</a> (checked 12 Nov 2026).</p><div class="takeaway">
+          <p>The35%/49% figures are Anthropic’s2024 top-20 retrieval-failure results, not a promised application improvement. Generated context must be checked against its parent source and regenerated when that source changes. <a href="https://www.anthropic.com/research/contextual-retrieval" target="_blank" rel="noreferrer">Contextual Retrieval</a>.</p><div class="takeaway">
             <span class="eyebrow"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true" focusable="false"><path d="M12 2v6m0 8v6M4.9 4.9l4.2 4.2m5.8 5.8l4.2 4.2M2 12h6m8 0h6M4.9 19.1l4.2-4.2m5.8-5.8l4.2-4.2"/></svg>Takeaway</span>
             <p><span class="hl">Parent-conditioned context locates a chunk before embedding. The35%/49% reductions belong to Anthropic’s2024 experiment; applications need their own eval and complete context-generation cache inputs.</span></p>
           </div>
@@ -1276,7 +1274,7 @@ footer.site{border-top:1px solid var(--border);padding:26px 24px;text-align:cent
       <article class="lesson" id="m3-l2" data-lesson>
         <div class="lesson-head">
           <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px">
-            <div><span class="eyebrow">Lesson 3.2</span><h3>Cross-encoder reranking — a smaller, smarter judge</h3></div>
+            <div><span class="eyebrow">Lesson 3.2</span><h3>Cross-encoder reranking — scoring query/document pairs</h3></div>
           </div>
         </div>
         <div class="lesson-body">
@@ -1306,14 +1304,14 @@ footer.site{border-top:1px solid var(--border);padding:26px 24px;text-align:cent
               <text class="dgm-ink" x="550" y="44" text-anchor="middle" font-weight="600" fill="var(--warning)" font-size="12">Cross-encoder</text>
               <text class="dgm-ink2" x="550" y="62" text-anchor="middle" font-size="11">top 30 → score each pair</text>
               <text class="dgm-ink2" x="550" y="82" text-anchor="middle" font-size="11">latency: measure for 30 pairs</text>
-              <text class="dgm-ink2" x="550" y="104" text-anchor="middle" font-size="10" fill="var(--ink-3)">sharp · varies by provider</text>
+              <text class="dgm-ink2" x="550" y="104" text-anchor="middle" font-size="10" fill="var(--ink-3)">pair scoring</text>
               <path class="dgm-flow" d="M640 70 L680 70" marker-end="url(#m3l2-a)"/>
               <rect x="660" y="40" width="80" height="60" rx="6" fill="var(--success-bg)" stroke="var(--success)"/>
               <text class="dgm-ink" x="700" y="64" text-anchor="middle" font-weight="600" fill="var(--success)" font-size="12">Top 15</text>
               <text class="dgm-ink2" x="700" y="82" text-anchor="middle" font-size="11">for the LLM</text>
               <text class="dgm-ink2" x="380" y="170" text-anchor="middle" font-size="11">Bi: encode(Q), encode(D), dot(Q,D) — ~constant per chunk.</text>
               <text class="dgm-ink2" x="380" y="195" text-anchor="middle" font-size="11">Cross: encode([Q|D]) → score — grows with the number of pairs.</text>
-              <text class="dgm-ink2" x="380" y="218" text-anchor="middle" font-size="10" font-style="italic">Funnel: cheap-and-wide then sharp-and-narrow.</text>
+              <text class="dgm-ink2" x="380" y="218" text-anchor="middle" font-size="10" font-style="italic">Funnel: retrieval → rerank.</text>
               <defs><marker id="m3l2-a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0 L10 5 L0 10 Z" fill="var(--accent-2)"/></marker></defs>
             </svg></div>
             <figcaption><b>Figure 3.2</b> — Lexical/dense retrieval supplies candidates, then reranking scores30 pairs to select15 in this synthetic setup. Measure candidate recall, quality and full-pipeline latency.</figcaption>
@@ -1446,7 +1444,7 @@ footer.site{border-top:1px solid var(--border);padding:26px 24px;text-align:cent
 
           <p>Correct, authorized, current evidence still does not guarantee a correct answer: the generator can change14 days to7. G1 runs before generation and cannot inspect an answer that does not yet exist. G2 checks support/citations afterward using rules, NLI or an LLM judge; checks can miss errors and need human-label validation. Gate costs depend on implementation.</p>
 
-          <p>If you Google "CRAG" you'll hit the original paper (Yan et al. 2024) using different terms than this lesson. There's no contradiction: the course deliberately simplifies for a closed-tenant B2B corpus:</p>
+          <p>The original CRAG paper (Yan et al. 2024) and the example policy for a closed-tenant B2B corpus differ in these ways:</p>
           <div class="table-wrap"><table>
             <thead><tr><th>Paper CRAG (Yan et al. 2024)</th><th>Course (production B2B)</th><th>Why simplified</th></tr></thead>
             <tbody>
@@ -1468,7 +1466,7 @@ footer.site{border-top:1px solid var(--border);padding:26px 24px;text-align:cent
 
           <p>Finally, remember this lesson's limit: CRAG only <em>classifies</em>; on its own it fixes nothing. The corrective action lives in Lesson 3.4, and it is bounded: a classifier plus a bounded policy, not a free agent.</p>
 
-          <details class="accordion"><summary><span class="chev">▶</span><span class="accordion-tag">What you do on Monday</span><span>Log the CRAG tier for 200 real queries</span></summary>
+          <details class="accordion"><summary><span class="chev">▶</span><span class="accordion-tag">Practice</span><span>Log the CRAG tier for 200 real queries</span></summary>
             <div class="accordion-body">Log n, score availability and tier in <code>retrievalTrace</code>. If empty rises, inspect hard filters, permissions, publication, corpus coverage and retriever failures; floor only affects scored nonempty tiers.</div>
           </details>
 
@@ -1484,7 +1482,7 @@ footer.site{border-top:1px solid var(--border);padding:26px 24px;text-align:cent
             <button class="quiz-opt" onclick="quizPick(this,1)"><span class="quiz-letter">B</span><span>Because B2B users prefer short answers.</span></button>
             <button class="quiz-opt" onclick="quizPick(this,2)"><span class="quiz-letter">C</span><span>A chatbot saying "I don't have that information. Would you like to talk to support?" preserves trust; a chatbot that makes up an answer destroys it. When retrieval is empty, the model must not fall back to its training data.</span></button>
             <button class="quiz-opt" onclick="quizPick(this,3)"><span class="quiz-letter">D</span><span>Because CRAG always classifies as empty when there's no reranking.</span></button>
-            <div class="quiz-feedback" role="status" data-explain="Correct: trust is a B2B chatbot's asset. The architectural rule: never let general model knowledge override the retrieved tenant knowledge — when retrieval is empty, the model must say it doesn't know, not fall back to training data."></div>
+            <div class="quiz-feedback" role="status" data-explain="The example system’s rule: never let general model knowledge override the retrieved tenant knowledge — when retrieval is empty, the model must say it doesn't know, not fall back to training data."></div>
           </div>
 
           <div class="quiz" data-correct="1">
@@ -1516,7 +1514,7 @@ footer.site{border-top:1px solid var(--border);padding:26px 24px;text-align:cent
       <header class="module-header" data-module="4">
         <span class="eyebrow">Module 04 · Part IV</span>
         <h2>Production engineering</h2>
-        <p>Real production: entity planning resolves sibling-confusion, then the 2026-Q3 layer (distillation + dispatcher + curation) fixes near-duplicates, version lifecycle, and manual curation, closing with caching that cuts cost & latency at multi-tenant scale.</p>
+        <p>Entity planning addresses sibling-confusion; distillation, dispatching and curation address duplicate candidates, version lifecycle and editorial control. Measure caching quality, cost and latency within each tenant’s authorized scope.</p>
       </header>
 <article class="lesson" id="m4-l1" data-lesson>
         <div class="lesson-head">
@@ -1531,7 +1529,7 @@ footer.site{border-top:1px solid var(--border);padding:26px 24px;text-align:cent
             <li>Describe how a resolved entity propagates down to multi-query/lexical/rerank.</li>
           </ul></div>
 
-          <p>Demo has dozens of products with overlapping names: Demo AM, Demo Media, Demo Social, Demo Group. Generic RAG retrieves whichever sibling vector-matches first. That's a quality bug, not a tuning problem. This is the part that least resembles generic RAG literature, specific to operating a B2B platform with a shared brand prefix.</p>
+          <p>Demo has dozens of products with overlapping names: Demo AM, Demo Media, Demo Social, Demo Group. Generic RAG retrieves whichever sibling vector-matches first. That's a quality bug, not a tuning problem.</p>
 
           <p>The core idea: each source declares an entity catalog in its config. Each entity has a stable <code>entityId</code>, an official <code>name</code>, and a list of <code>aliases</code>. At query time, <em>before</em> retrieval runs, a <strong>planner</strong> matches the user's text against the catalog. The planner has 3 jobs:</p>
           <ol>
@@ -1603,7 +1601,7 @@ footer.site{border-top:1px solid var(--border);padding:26px 24px;text-align:cent
             <li>State why the Q→A index is only for high-value sources (cost).</li>
           </ul></div>
 
-          <p>The Q3 2026 wave brought a series of layered upgrades, each targeting a failure mode the old pipeline still hit. The first, <strong>distillation</strong>, reshapes the corpus so retrieval gets cleaner candidates: semantic dedup, an opt-in Q→A index, and a versionState lifecycle.</p>
+          <p><strong>Distillation</strong> reshapes the corpus so retrieval gets cleaner candidates: semantic dedup, an opt-in Q→A index, and a versionState lifecycle.</p>
 
           <h3>A · Merge semantic duplicates</h3>
           <p>A tenant often trains a chatbot on 3 overlapping sources: a PDF, a website, a hand-typed FAQ, all describing the same product. After ingestion, the index holds 5–15 near-duplicate vectors per fact. Top-K spreads the probability out, burying the canonical copy. A candidate dedup job runs <em>after</em> ingestion; editorial checks decide which candidates are equivalent:</p>
@@ -1679,7 +1677,7 @@ footer.site{border-top:1px solid var(--border);padding:26px 24px;text-align:cent
           <div class="objectives"><span class="eyebrow">By the end you can</span><ul>
             <li>Apply the versionState lifecycle and the current + approved filter.</li>
             <li>Explain the multi-adapter, opt-in reranker dispatcher architecture.</li>
-            <li>State why the reranker is off by default even though benchmarks always say it helps.</li>
+            <li>State when evaluation supports leaving the reranker off or enabling it.</li>
           </ul></div>
 
           <h3>C · versionState lifecycle</h3>
@@ -1794,7 +1792,7 @@ footer.site{border-top:1px solid var(--border);padding:26px 24px;text-align:cent
               <text x="35" y="134" font-family="var(--font-mono)" font-size="10">trustLevel: "authoritative"</text>
               <rect x="20" y="170" width="220" height="100" rx="6" fill="var(--warning-bg)" stroke="var(--warning)" stroke-width="2"/>
               <text class="dgm-ink" x="130" y="192" text-anchor="middle" font-weight="600" fill="var(--warning)">website_pages.metadata</text>
-              <text class="dgm-ink2" x="130" y="210" text-anchor="middle" font-size="11">(sparse, per URL — NEW)</text>
+              <text class="dgm-ink2" x="130" y="210" text-anchor="middle" font-size="11">(sparse, per URL)</text>
               <text x="35" y="232" font-family="var(--font-mono)" font-size="10">sourceRole: "policy"</text>
               <text x="35" y="248" font-family="var(--font-mono)" font-size="10">intentAllowlist: ["policy"]</text>
               <path class="dgm-flow" d="M240 105 L320 165" marker-end="url(#m4l4-a)"/>
@@ -1882,10 +1880,10 @@ footer.site{border-top:1px solid var(--border);padding:26px 24px;text-align:cent
         <h3>Stable content first</h3><div class="code-card"><pre>stable: approved shared instructions + authorized shared context
 dynamic: visitor data + date + retrieved evidence + current question</pre></div>
         <p>Put changing content after the reusable prefix, using the supported API's controls. Keep visitor text in an untrusted user/data field. Prefix stability can improve reuse, but no hit is guaranteed. OpenAI's <code>prompt_cache_key</code> affects routing/accounting; it is not tenant authentication or document authorization. Provider organization/workspace isolation does not separate your application's customers inside one provider account.</p>
-        <p>As checked on 12 Nov 2026, supported OpenAI GPT-5.6+ models also expose explicit breakpoints; older models differ. Gemini Interactions and Gemini 4 use implicit caching only, while supported older generateContent models also offer explicit caching. Claude minimum prefix lengths vary by exact model and hosting platform. Read the current model/API table instead of assuming a family-wide threshold.</p>
+        <p>Supported OpenAI GPT-5.6+ models also expose explicit breakpoints; older models differ. Gemini Interactions and Gemini 4 use implicit caching only, while supported older generateContent models also offer explicit caching. Claude minimum prefix lengths vary by exact model and hosting platform. Read the current model/API table instead of assuming a family-wide threshold.</p>
         <h3>A synthetic cost exercise</h3><p>Choose 100 requests, each with 1,000 eligible shared input tokens. Suppose 20 cold writes cost 1.25 units per 1,000 tokens and 80 reads cost 0.10 units. Cost = 20×1.25+80×0.10=33 units versus100 uncached units:67% less for this shared-input portion. These are invented exercise prices and hit counts, not a provider quote, observed latency or whole-request saving; output, dynamic tokens, expiry and app-cache costs are excluded.</p>
         <p>A public vendor benchmark is a different evidence category: AWS reports 56% hit rate and 92.6% cache-answer accuracy at threshold 0.95 over 63,796 queries/paraphrases, with 51.9% lower cost and 57.7% lower latency in its specified Titan/Claude/ElastiCache setup. Those values do not predict this application's performance.</p>
-        <h3>Test the boundary</h3><p>User A can read payroll and populates “What is An's salary?”; user B in the same bot cannot. B must receive no cached payroll answer. Revoke A's permission and repeat. Also test “its price?” after two different product histories. For a miss, inspect eligible prefix, actual bytes, TTL, routing and concurrency; zero cached tokens alone does not identify one cause. <a href="https://developers.openai.com/api/docs/guides/prompt-caching" target="_blank" rel="noreferrer">OpenAI prompt caching</a>. Source checked 12 Nov 2026: <a href="https://platform.claude.com/docs/en/build-with-claude/prompt-caching" target="_blank" rel="noreferrer">Claude prompt caching</a>. <a href="https://aistudio.google.com/docs/caching" target="_blank" rel="noreferrer">Gemini caching</a>. Source checked 12 Nov 2026: <a href="https://docs.aws.amazon.com/AmazonElastiCache/latest/dg/semantic-caching-benchmarks.html" target="_blank" rel="noreferrer">AWS benchmark setup</a>.</p><div class="takeaway"><span class="eyebrow">Takeaway</span><p><span class="hl">Cache within current authorized scope; measure hit rate, answer quality, full cost and latency before enabling it.</span></p></div><div class="quiz" data-correct="2"><span class="eyebrow">Quick check</span><p class="quiz-q">User B asks the same question as A in the same bot, but cannot read A’s source. Is a matching hash or a different prompt_cache_key enough?</p><button class="quiz-opt" onclick="quizPick(this,0)"><span class="quiz-letter">A</span><span>Yes: identical question means identical permissions.</span></button><button class="quiz-opt" onclick="quizPick(this,1)"><span class="quiz-letter">B</span><span>Yes: the provider key authorizes each tenant.</span></button><button class="quiz-opt" onclick="quizPick(this,2)"><span class="quiz-letter">C</span><span>No: enforce B’s current permissions before lookup and return; the key only identifies reusable work.</span></button><button class="quiz-opt" onclick="quizPick(this,3)"><span class="quiz-letter">D</span><span>Only raise the semantic threshold to0.99.</span></button><div class="quiz-feedback" role="status" data-explain="Question similarity and provider cache routing cannot authorize data. The application derives scope, checks current access and rejects stale or unauthorized hits."></div></div></div>
+        <h3>Test the boundary</h3><p>User A can read payroll and populates “What is An's salary?”; user B in the same bot cannot. B must receive no cached payroll answer. Revoke A's permission and repeat. Also test “its price?” after two different product histories. For a miss, inspect eligible prefix, actual bytes, TTL, routing and concurrency; zero cached tokens alone does not identify one cause. <a href="https://developers.openai.com/api/docs/guides/prompt-caching" target="_blank" rel="noreferrer">OpenAI prompt caching</a>. <a href="https://platform.claude.com/docs/en/build-with-claude/prompt-caching" target="_blank" rel="noreferrer">Claude prompt caching</a>. <a href="https://aistudio.google.com/docs/caching" target="_blank" rel="noreferrer">Gemini caching</a>. <a href="https://docs.aws.amazon.com/AmazonElastiCache/latest/dg/semantic-caching-benchmarks.html" target="_blank" rel="noreferrer">AWS benchmark setup</a>.</p><div class="takeaway"><span class="eyebrow">Takeaway</span><p><span class="hl">Cache within current authorized scope; measure hit rate, answer quality, full cost and latency before enabling it.</span></p></div><div class="quiz" data-correct="2"><span class="eyebrow">Quick check</span><p class="quiz-q">User B asks the same question as A in the same bot, but cannot read A’s source. Is a matching hash or a different prompt_cache_key enough?</p><button class="quiz-opt" onclick="quizPick(this,0)"><span class="quiz-letter">A</span><span>Yes: identical question means identical permissions.</span></button><button class="quiz-opt" onclick="quizPick(this,1)"><span class="quiz-letter">B</span><span>Yes: the provider key authorizes each tenant.</span></button><button class="quiz-opt" onclick="quizPick(this,2)"><span class="quiz-letter">C</span><span>No: enforce B’s current permissions before lookup and return; the key only identifies reusable work.</span></button><button class="quiz-opt" onclick="quizPick(this,3)"><span class="quiz-letter">D</span><span>Only raise the semantic threshold to0.99.</span></button><div class="quiz-feedback" role="status" data-explain="Question similarity and provider cache routing cannot authorize data. The application derives scope, checks current access and rejects stale or unauthorized hits."></div></div></div>
         <div class="lesson-nav" data-navfor="m4-l5"></div>
       </article>
     </div><!-- /container module 4 -->
@@ -1962,19 +1960,19 @@ dynamic: visitor data + date + retrieved evidence + current question</pre></div>
               <path d="M280 220 L240 220 L240 280 L540 280" stroke="var(--accent-2)" stroke-dasharray="3 3" fill="none" stroke-width="1"/>
               <text class="dgm-ink2" x="200" y="248" font-size="9" fill="var(--accent-2)">read</text>
               <text x="20" y="490" font-family="var(--font-mono)" font-size="10" fill="var(--ink-3)">Legend:</text>
-              <rect class="dgm-box" x="80" y="478" width="14" height="14"/><text class="dgm-ink2" x="100" y="490" font-size="10">2024 layer</text>
-              <rect x="170" y="478" width="14" height="14" fill="var(--warning-bg)" stroke="var(--warning)"/><text class="dgm-ink2" x="190" y="490" font-size="10">2026-Q3 layer (4.2–4.4)</text>
+              <rect class="dgm-box" x="80" y="478" width="14" height="14"/><text class="dgm-ink2" x="100" y="490" font-size="10">retrieval layer</text>
+              <rect x="170" y="478" width="14" height="14" fill="var(--warning-bg)" stroke="var(--warning)"/><text class="dgm-ink2" x="190" y="490" font-size="10">production (4.2–4.4)</text>
               <rect class="dgm-accent" x="320" y="478" width="14" height="14"/><text class="dgm-ink2" x="340" y="490" font-size="10">storage</text>
               <rect x="390" y="478" width="14" height="14" fill="var(--success-bg)" stroke="var(--success)"/><text class="dgm-ink2" x="410" y="490" font-size="10">final answer</text>
               <text x="460" y="530" text-anchor="middle" font-size="11" fill="var(--ink-3)" font-style="italic">Retrieval layers. 1 pipeline. Each layer fixes 1 failure mode of the layer below.</text>
               <defs><marker id="m5l1-a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0 L10 5 L0 10 Z" fill="var(--ink-3)"/></marker><marker id="m5l1-b" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0 L10 5 L0 10 Z" fill="var(--warning)"/></marker></defs>
             </svg></div>
-            <figcaption><b>Figure 5.1</b> — The full 2026-Q3 pipeline. Orange = the 2026-Q3 layer (distillation + dispatcher + curation); the rest is the 2024 pipeline. The 4-layer cache stack wraps the whole diagram.</figcaption>
+            <figcaption><b>Figure 5.1</b> — The full pipeline. Orange marks distillation, dispatching and curation; the 4-layer cache stack wraps the whole diagram.</figcaption>
           </figure>
 
-          <p>Not every query deserves the whole pipeline. <strong>Adaptive routing</strong> picks the path by difficulty: a simple lookup needs only vector + lexical; an ordinary question runs the full pipeline; and only multi-hop cross-document questions (where the answer is spread across several documents and has to be joined) justify considering agentic or GraphRAG. Even then, wait until evals (1.4) can answer "worth how many ×?", because the token cost of the agentic direction was measured back in 3.4.</p>
+          <p>Choose a processing path for each query. <strong>Adaptive routing</strong> picks the path by difficulty: a simple lookup needs only vector + lexical; an ordinary question runs the full pipeline; and only multi-hop cross-document questions (where the answer is spread across several documents and has to be joined) justify considering agentic or GraphRAG. Even then, wait until evals (1.4) can answer "worth how many ×?", because the token cost of the agentic direction was measured back in 3.4.</p>
 
-          <div class="callout danger"><div class="callout-title">Untrusted evidence is an attack surface</div><p>A crawled chunk may contain indirect prompt injection. Delimit/escape evidence as data, keep visitor text out of system/developer instructions, and enforce document/tool permissions in trusted code. Keep secrets out of model context. A newline-free malicious instruction still attacks the model: stripping control characters is not a security boundary. Red-team tests must check denied output/actions and data leakage, not only evidence-block formatting. These controls reduce risk; they do not guarantee immunity. <a href="https://genai.owasp.org/llmrisk/llm01-prompt-injection/" target="_blank" rel="noreferrer">OWASP LLM01:2025</a> (checked 12 Nov 2026).</p></div><div class="takeaway">
+          <div class="callout danger"><div class="callout-title">Untrusted evidence is an attack surface</div><p>A crawled chunk may contain indirect prompt injection. Delimit/escape evidence as data, keep visitor text out of system/developer instructions, and enforce document/tool permissions in trusted code. Keep secrets out of model context. A newline-free malicious instruction still attacks the model: stripping control characters is not a security boundary. Red-team tests must check denied output/actions and data leakage, not only evidence-block formatting. These controls reduce risk; they do not guarantee immunity. <a href="https://genai.owasp.org/llmrisk/llm01-prompt-injection/" target="_blank" rel="noreferrer">OWASP LLM01:2025</a>.</p></div><div class="takeaway">
             <span class="eyebrow"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true" focusable="false"><path d="M12 2v6m0 8v6M4.9 4.9l4.2 4.2m5.8 5.8l4.2 4.2M2 12h6m8 0h6M4.9 19.1l4.2-4.2m5.8-5.8l4.2-4.2"/></svg>Takeaway</span>
             <p>Retrieval layers, 1 pipeline, each layer fixing 1 failure of the layer below. Retrieval is also an attack surface: <span class="hl">a better retriever raises recall AND the blast radius of a poisoned document</span>.</p>
           </div>
@@ -2012,7 +2010,7 @@ dynamic: visitor data + date + retrieved evidence + current question</pre></div>
             <thead><tr><th>Lesson</th><th>One sentence to take away</th></tr></thead>
             <tbody>
               <tr><td>1.1 The hallucination floor</td><td>An LLM is a probability machine — load the facts before answering, don't force the model to "know".</td></tr>
-              <tr><td>1.2 Naive RAG</td><td>One Postgres table with a vector column — breaks the moment two products have similar names.</td></tr>
+              <tr><td>1.2 Naive RAG</td><td>One Postgres table with a vector column — can confuse two products with similar names.</td></tr>
               <tr><td>1.3 Chunking</td><td>Structure-aware chunking; validate token limits and overlap.</td></tr>
               <tr><td>1.4 Eval &amp; ablation</td><td>Frozen set, component metrics, one change at a time; no measured lift means remove the layer.</td></tr>
               <tr><td>2.1 Metadata</td><td>Hard tenant/ACL scope; language follows corpus policy.</td></tr>
@@ -2052,7 +2050,7 @@ dynamic: visitor data + date + retrieved evidence + current question</pre></div>
             </tbody>
           </table></div>
 
-          <div class="callout insight"><div class="callout-title">Design order</div><p>Design from the real problem up, not from the technique down. Each layer adds <em>one</em> idea and fixes <em>one</em> failure of the layer below — that's why the layers combine without becoming a tangle. Don't add a layer until you've felt the failure it fixes.</p></div>
+          <div class="callout insight"><div class="callout-title">Design order</div><p>Start from a measured failure on real queries. Each layer adds <em>one</em> idea and fixes <em>one</em> failure of the layer below. Keep a change only when evaluation supports its benefit and cost.</p></div>
 
           <div class="takeaway">
             <span class="eyebrow"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true" focusable="false"><path d="M12 2v6m0 8v6M4.9 4.9l4.2 4.2m5.8 5.8l4.2 4.2M2 12h6m8 0h6M4.9 19.1l4.2-4.2m5.8-5.8l4.2-4.2"/></svg>Takeaway</span>
@@ -2070,12 +2068,12 @@ dynamic: visitor data + date + retrieved evidence + current question</pre></div>
       <div class="complete">
         <div class="complete-badge">✓</div>
         <h2>Course complete</h2>
-        <p>You went from the hallucination problem → naive RAG → an evaluation/ablation gate → 13 retrieval layers → production engineering (distillation, dispatcher, curation) → caching. Next, take ONE real failing query, add it to the frozen eval set, run the baseline, then enable exactly one change. RAG is an independent specialty for knowledge and chatbot products, not a required step in a general AI path.</p>
+        <p>You went from the hallucination problem → naive RAG → an evaluation/ablation gate → retrieval techniques → production engineering (distillation, dispatcher, curation) → caching. Next, take one real failing query, add it to the frozen eval set, run the baseline, then enable exactly one change. RAG is an independent specialty for knowledge and chatbot products, not a required step in a general AI path.</p>
         <div style="margin-top:26px"><a class="btn btn-primary" href="#overview">Back to the start</a></div>
       </div>
     </section>
 
-    <footer class="site">RAG, Layer by Layer · interactive course · 2026</footer>
+    <footer class="site">RAG, Layer by Layer · interactive course</footer>
   </main>
 </div>
 
@@ -2090,16 +2088,16 @@ const STORAGE_PREFIX = 'ai-course:';
 
 /* One row per lesson, in order. `part` groups them in the sidebar. */
 const LESSONS = [
-  {id:'m1-l1', mod:1, part:'Part I · Retrieval foundations', title:'Why retrieval is needed — the hallucination problem', desc:'An LLM is a probability machine; retrieval loads the facts before answering so it doesn\'t confidently make things up.'},
-  {id:'m1-l2', mod:1, part:'Part I · Retrieval foundations', title:'Naive RAG — embed everything, find by cosine', desc:'4 steps chunk→embed→store→cosine; must embed with the same model; 5 failures waiting to be fixed.'},
+  {id:'m1-l1', mod:1, part:'Part I · Retrieval foundations', title:'Why retrieval is needed — the hallucination problem', desc:'Retrieval puts evidence into context; answers and citations still need checking.'},
+  {id:'m1-l2', mod:1, part:'Part I · Retrieval foundations', title:'Naive RAG — embed everything, find by cosine', desc:'4 steps chunk→embed→store→cosine; must embed with the same model; 5 failure classes to evaluate.'},
   {id:'m1-l3', mod:1, part:'Part I · Retrieval foundations', title:'Chunking — don\'t cut a table row in half', desc:'Structure-aware boundaries plus token-limit checks; evaluate size and overlap.'},
   {id:'m1-l4', mod:1, part:'Part I · Retrieval foundations', title:'Evaluate before layering — measure retrieval before upgrading', desc:'Frozen eval set + Recall/MRR/nDCG + faithfulness/cost; one-change ablation, remove layers with no lift.'},
   {id:'m2-l1', mod:2, part:'Part II · Identifying & fusing retrieval', title:'Metadata — a chunk is not just text', desc:'Metadata does 3 jobs: filter, boost, route; tenant/ACL are hard constraints; language follows corpus policy.'},
   {id:'m2-l2', mod:2, part:'Part II · Identifying & fusing retrieval', title:'Hybrid lexical — BM25 catches what vectors miss', desc:'BM25/tsvector catches proper nouns; runs parallel to the vector path; \'simple\' not \'english\'.'},
-  {id:'m2-l3', mod:2, part:'Part II · Identifying & fusing retrieval', title:'Reciprocal Rank Fusion — merging two rankings without normalization', desc:'RRF drops score and uses rank, k=60; no retuning when the corpus changes.'},
+  {id:'m2-l3', mod:2, part:'Part II · Identifying & fusing retrieval', title:'Reciprocal Rank Fusion — merging two rankings without normalization', desc:'RRF uses rank instead of score; k=60 is an example value to validate on the corpus.'},
   {id:'m2-l4', mod:2, part:'Part II · Identifying & fusing retrieval', title:'Multi-query expansion — ask one question four ways', desc:'Deterministic expansion into 4 variants, fused by RRF; cap variants to keep cost down.'},
   {id:'m3-l1', mod:3, part:'Part III · Advanced retrieval quality', title:'Contextual chunking — prepend "what this chunk is about"', desc:'Parent-conditioned context before embedding; −35%/−49% are Anthropic 2024 study results, not a workload guarantee.'},
-  {id:'m3-l2', mod:3, part:'Part III · Advanced retrieval quality', title:'Cross-encoder reranking — a smaller, smarter judge', desc:'Bi-encoder fast and blurry, cross-encoder slow and sharp; funnel top-30 → top-15.'},
+  {id:'m3-l2', mod:3, part:'Part III · Advanced retrieval quality', title:'Cross-encoder reranking — scoring query/document pairs', desc:'Separate encoding and joint query/document scoring; evaluate the synthetic top-30 → top-15 funnel.'},
   {id:'m3-l3', mod:3, part:'Part III · Advanced retrieval quality', title:'CRAG — knowing when retrieval has failed', desc:'Classify retrieval into 4 states confident/moderate/low/empty; \'I don\'t know\' is a feature; control plane G1/G2.'},
   {id:'m3-l4', mod:3, part:'Part III · Advanced retrieval quality', title:'Self-corrective retrieval — a bounded rescue loop', desc:'One retry changes soft preferences within unchanged authorization/publication scope; evaluate scores, quality and cost.'},
   {id:'m4-l1', mod:4, part:'Part IV · Production engineering', title:'Entity-aware planning — the production disambiguation layer', desc:'The planner resolves entities with a lexical match before retrieval; rejects the sibling trap; clarifies on a tie.'},

@@ -72,49 +72,31 @@ owns measurement; Loop owns repeated execution; Decision Systems owns interventi
 and action policy. Fine-tuning is optional for agent development, and DSS is not a
 prerequisite for ordinary RAG.
 
-### November 2026 edition
+### Course structure
 
-Knowledge cutoff: **12 November 2026**; source and browser checks: **13 November
-2026 (ICT)**. The review covers all 240 base lessons and 101 English mirror
-lessons across the 18 HTML files. Separate author and reviewer passes use four
-lenses: scientific validity, operational engineering, programmer comprehension,
-and concise teaching. This is an AI-assisted review, not external accreditation.
+Context and Harness stays in one course because its software-development and
+team workflows connect context choices with runtime controls. Splitting those
+chapters would duplicate the cross-layer examples.
 
-Mutable product documentation is linked and dated where used; access on
-13 November does not establish an immutable 12 November snapshot. Published
-studies retain their population, task and measurement limits. Worked examples
-and executable acceptance fixtures are labelled as exercises, not production
-benchmarks. Course labs do not certify a live vendor integration. Price, model,
-permission and preview status still need checking against the deployed version.
+### Standalone behavior
 
-The registry preserves standalone files and lesson IDs. Diagrams retain readable
-native scale with local scrolling where needed; quiz, copy, navigation, theme
-and progress behavior are checked in a real browser. Automated geometry checks
-complement manual inspection of labels, arrows and meaning.
+Preserve lesson IDs and the LMS message contract when editing a course. Dense
+diagrams use local horizontal scrolling, with captions at page width.
+
 Practical AI and its English mirror inherit the portal theme when embedded and
 the operating-system preference when standalone; they have no local theme
 toggle. The other course files provide an in-course theme control.
 
-### Historical review — September 2026
+### Editorial rules
 
-The following records the September snapshot; its counts, provider details and approval status do not describe the current registry above.
+Teach the concept directly. Keep worked examples, sources and the assumptions
+needed to interpret them. Product releases, research years and regulatory dates
+belong with the facts they qualify.
 
-Every course was reviewed by a four-lens panel (industrial AI expert · AI professor · world-class learner · end user) with facts re-verified live to 05/09/2026, then fixed and re-checked by a fresh-context verifier per course. Family-wide: Claude roster/prices as of 2026-09-01 (Fable 5.1 / Mythos 5.1, cache-read 0.025×, Sonnet 5 price permanent, 1M context standard), MCP spec 2026-07-28 details, OTel GenAI still Development, edition stamps → 05/09/2026. Cross-course overlaps were kept (each course stands alone) with one-line pointers; two lessons added (Playbook 4.5, Loop 5.2).
-
-**Verification closed 2026-09-12.** All 12 courses went review → fix → independent fresh-context verify → fix-up. The verify step earned its cost: 11 of 12 courses came back with at least one BLOCK or FIX that the fixer had missed or got wrong, including three courses where a corrected "fact" was itself wrong (OSWorld figures taken from third-party leaderboards, a SynthID robustness claim, a Bedrock EOL written in past tense before the date). One error surfaced only because two courses disagreed with each other: a `mid-conversation-tool-changes` beta asserted in MCP & Tool Layer does not exist — the documented mechanism is `defer_loading` + tool search. **Gate note:** `validate_course.py` was upgraded on 2026-09-12 and added file-wide prose checks (em-dash density against a 6.4/1k reference, soft-slop lexicon, negative parallelism, tagline-restates-heading). Every course now scores higher than before, *including the untouched committed ones*, so absolute warning counts from earlier rounds are not comparable — compare a working file against `git show HEAD:<file>` under the same validator. Run log: `docs/plans/panel-review-2026-09.md`.
-
-### Decision log — Context vs Harness split (2026-07)
-
-Evaluated splitting `context-harness-engineering.html` into two standalone
-courses. **Decided: keep it integrated.** Only 3 of 13 chapters are
-single-discipline (M2, M3 = context; M4 = harness); the other 10 (three-
-disciplines framing, tool mastery, SDLC application, team adoption) apply to
-both and are the course's backbone. Its core thesis — context and harness are
-complementary layers of *one stack, diagnosed together* — is exactly what a
-split would destroy. A split would duplicate 10 chapters or yield two thin
-courses failing the "stands alone" bar. The course is built with clean
-Part/level boundaries, so a future split remains cheap if a genuine two-audience
-need appears (see `reference.md §11`).
+Keep review dates, knowledge-cutoff badges, checker names and approval claims
+out of learner-facing copy. Record verification in the pull request instead.
+Use concrete titles and descriptions; remove repeated introductions, empty
+superlatives and slogans that restate the heading.
 
 ## Related skills
 

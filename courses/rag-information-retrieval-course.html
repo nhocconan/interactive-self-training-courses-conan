@@ -450,8 +450,6 @@ footer.site{border-top:1px solid var(--border);padding:26px 24px;text-align:cent
 }
 </style>
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E📚%3C/text%3E%3C/svg%3E">
-<meta name="course-knowledge-cutoff" content="2026-11-12">
-<meta name="course-reviewed" content="2026-11-13">
 </head>
 <body data-theme="midnight">
 <a href="#main" class="skip-link">Bỏ qua, tới nội dung chính</a>
@@ -466,7 +464,7 @@ footer.site{border-top:1px solid var(--border);padding:26px 24px;text-align:cent
   <aside class="sidebar" id="sidebar" aria-label="Điều hướng khoá học">
     <div class="sidebar-brand">
       <div class="sidebar-brand-title">RAG, <em>Layer by Layer</em></div>
-      <div class="sidebar-brand-sub">19 bài · phiên bản 2026</div>
+      <div class="sidebar-brand-sub">19 bài</div>
     </div>
     <div class="progress-wrap">
       <div class="progress-meta"><span>Tiến độ</span><span><b id="pg-done">0</b>/<span id="pg-total">0</span> · <span id="pg-pct">0</span>%</span></div>
@@ -511,7 +509,7 @@ footer.site{border-top:1px solid var(--border);padding:26px 24px;text-align:cent
           <thead><tr><th style="width:220px">Thuật ngữ</th><th>Nghĩa (như dùng trong khoá)</th></tr></thead>
           <tbody>
             <tr><td><b>Retrieval / RAG</b></td><td>Truy xuất tri thức rồi nạp vào prompt trước khi LLM trả lời — Retrieval-Augmented Generation.</td></tr>
-            <tr><td><b>Hallucination</b></td><td>LLM sinh văn bản tự tin dù không đúng — vì là máy xác suất over token, không máy sự thật.</td></tr>
+            <tr><td><b>Hallucination</b></td><td>LLM sinh phát biểu không đúng hoặc không được nguồn hỗ trợ, dù văn phong tự tin.</td></tr>
             <tr><td><b>Embedding</b></td><td>Hàm ánh xạ text → vector nhiều chiều; text gần nghĩa → gần nhau về hình học.</td></tr>
             <tr><td><b>Cosine similarity</b></td><td>Cos góc giữa 2 vector, [−1..1]; chỉ đo hướng, không đo độ lớn — thước khoảng cách ngữ nghĩa.</td></tr>
             <tr><td><b>Chunk</b></td><td>Đơn vị nguyên tử retrieval; một mảnh text được embed và truy xuất riêng.</td></tr>
@@ -522,7 +520,7 @@ footer.site{border-top:1px solid var(--border);padding:26px 24px;text-align:cent
             <tr><td><b>RRF (Reciprocal Rank Fusion)</b></td><td>Gộp nhiều ranking chỉ dùng thứ hạng: RRF(d)=Σ 1/(k+rank), k=60 — không cần chuẩn hoá score.</td></tr>
             <tr><td><b>Multi-query expansion</b></td><td>Mở rộng 1 query thành nhiều biến thể (entity/intent/paraphrase), RRF gộp kết quả — nâng recall.</td></tr>
             <tr><td><b>Contextual chunking</b></td><td>LLM sinh 1–2 câu ngữ cảnh, prepend trước chunk rồi embed — hỗ trợ phần ngữ cảnh bị mất; nghiên cứu Anthropic 2024 báo giảm 35% lỗi retrieval, hoặc 49% khi thêm contextual BM25.</td></tr>
-            <tr><td><b>Bi-encoder / Cross-encoder</b></td><td>Bi: encode query và doc riêng, nhanh/mờ. Cross: ghép (query,doc) cùng lúc, chậm/chính xác — dùng làm rerank top 30.</td></tr>
+            <tr><td><b>Bi-encoder / Cross-encoder</b></td><td>Bi: encode query và doc riêng. Cross: chấm chung cặp query/doc để rerank candidate; đo chất lượng, chi phí và độ trễ.</td></tr>
             <tr><td><b>CRAG</b></td><td>Corrective RAG — phân loại retrieval 4 trạng thái (confident/moderate/low/empty) trước khi sinh, quyết định có trả lời không.</td></tr>
             <tr><td><b>Self-corrective retrieval</b></td><td>Một retry có biên, đổi lựa chọn query mềm trong phạm vi quyền/xuất bản không đổi.</td></tr>
             <tr><td><b>Retrieval gate(G1) / Faithfulness gate(G2)</b></td><td>G1 kiểm retrieval trước sinh; G2 kiểm support sau sinh. Policy có thể xác định nhưng score/judge vẫn có thể sai; đo chất lượng và chi phí.</td></tr>
@@ -557,7 +555,7 @@ footer.site{border-top:1px solid var(--border);padding:26px 24px;text-align:cent
           </div>
         </div>
         <div class="lesson-body">
-          <div class="callout insight"><div class="callout-title">Về hệ ví dụ trong khoá</div><p>Để lý thuyết không bị khô, mỗi khái niệm được đối chiếu với một <strong>nền tảng chatbot multi-tenant ví dụ</strong> (nhiều tổ chức, mỗi tổ chức nhiều chatbot, mỗi chatbot nhiều user). Đây là một hệ <em>minh hoạ cho mục đích dạy học</em>: mọi tên product (Demo AM, Demo Media…), con số, và tham số (ngưỡng cosine, k=60, tỉ lệ cache hit…) đều là <strong>giá trị ví dụ</strong>, không phải dữ liệu vận hành hay khách hàng thật của bất kỳ tổ chức nào.</p></div>
+          <div class="callout insight"><div class="callout-title">Về hệ ví dụ trong khoá</div><p>Mỗi khái niệm được đối chiếu với một <strong>nền tảng chatbot multi-tenant ví dụ</strong> (nhiều tổ chức, mỗi tổ chức nhiều chatbot, mỗi chatbot nhiều user). Đây là một hệ <em>minh hoạ cho mục đích dạy học</em>: mọi tên product (Demo AM, Demo Media…), con số, và tham số (ngưỡng cosine, k=60, tỉ lệ cache hit…) đều là <strong>giá trị ví dụ</strong>, không phải dữ liệu vận hành hay khách hàng thật của bất kỳ tổ chức nào.</p></div>
 
           <div class="objectives">
             <span class="eyebrow">Học xong bạn có thể</span>
@@ -568,7 +566,7 @@ footer.site{border-top:1px solid var(--border);padding:26px 24px;text-align:cent
             </ul>
           </div>
 
-          <p>Một chatbot B2B bị hỏi: <em>"Demo AM có dùng thử miễn phí không?"</em> Nó trả lời tự tin: <em>"Có, 7 ngày miễn phí."</em> Đáng lẽ là 14 ngày. Văn phong trơn tru, giọng chắc nịch, và sai hoàn toàn. Với chatbot giải trí năm 2024 thì chuyện nhỏ. Với sản phẩm mà người dùng hỏi để <strong>ra quyết định mua</strong>, một câu trả lời sai tự tin <em>tồi tệ hơn</em> không trả lời lúc nào.</p>
+          <p>Một chatbot B2B bị hỏi: <em>"Demo AM có dùng thử miễn phí không?"</em> Nó trả lời tự tin: <em>"Có, 7 ngày miễn phí."</em> Đáng lẽ là 14 ngày. Câu trả lời sai dù văn phong tự tin. Với sản phẩm mà người dùng hỏi để <strong>ra quyết định mua</strong>, thông tin sai có thể <em>ảnh hưởng</em> quyết định của người dùng.</p>
 
           <p>Đó là vì một LLM là <strong>máy xác suất trên token</strong>. Nó sinh văn bản trơn tru, hợp lý, bất kể sự thật đằng sau đúng hay sai. Retrieval-Augmented Generation (RAG) là kiến trúc câu trả lời: <strong>trước khi</strong> model viết, tìm trong kho tri thức đã chọn, đưa cho model các đoạn liên quan, và bảo nó chỉ trả lời từ các đoạn đó (kèm trích nguồn). Pipeline có 3 việc:</p>
 
@@ -604,14 +602,14 @@ footer.site{border-top:1px solid var(--border);padding:26px 24px;text-align:cent
               <path class="dgm-line" d="M490 210 L430 210" stroke-width="1.5" stroke-dasharray="4 3" marker-end="url(#m1l1-a)"/>
               <defs><marker id="m1l1-a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0 L10 5 L0 10 Z" fill="var(--ink-3)"/></marker></defs>
             </svg></div>
-            <figcaption><b>Hình 1.1</b>: Cùng một câu hỏi, LLM một mình bịa tự tin; RAG truy xuất đúng đoạn rồi neo câu trả lời có nguồn. Chênh lệch duy nhất: retrieval đã chạy trước khi model mở miệng.</figcaption>
+            <figcaption><b>Hình 1.1</b>: Cùng một câu hỏi, LLM một mình bịa tự tin; RAG truy xuất đúng đoạn rồi neo câu trả lời có nguồn. Retrieval cung cấp bằng chứng trước bước sinh câu trả lời.</figcaption>
           </figure>
 
-          <div class="callout insight"><div class="callout-title">Mô hình ghi nhớ</div><p>LLM là một thực tập sinh đọc hết mọi thứ mà không nhớ gì chính xác. RAG là động tác trượt đúng trang tài liệu qua bàn trước khi họ nói.</p></div>
+          <div class="callout insight"><div class="callout-title">Mô hình ghi nhớ</div><p>RAG đưa các đoạn tài liệu liên quan vào ngữ cảnh trước khi LLM sinh câu trả lời. Cần kiểm cả đoạn được truy xuất lẫn mức độ câu trả lời bám nguồn.</p></div>
 
           <div class="takeaway">
             <span class="eyebrow"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true" focusable="false"><path d="M12 2v6m0 8v6M4.9 4.9l4.2 4.2m5.8 5.8l4.2 4.2M2 12h6m8 0h6M4.9 19.1l4.2-4.2m5.8-5.8l4.2-4.2"/></svg>Takeaway</span>
-            <p>LLM là máy xác suất: văn tự tin không phải bằng chứng sự thật. Retrieval là <span class="hl">nạp fact trước khi trả lời</span>, chứ không phải bắt model phải "biết".</p>
+            <p>Văn phong tự tin không chứng minh câu trả lời đúng. Retrieval là <span class="hl">nạp fact trước khi trả lời</span>, chứ không phải bắt model phải "biết".</p>
           </div>
 
           <div class="quiz" data-correct="1"><span class="eyebrow">Kiểm tra nhanh</span><p class="quiz-q">Corpus vừa context của model. Chọn retrieve hay đưa toàn bộ dựa vào gì?</p><button class="quiz-opt" onclick="quizPick(this,0)"><span class="quiz-letter">A</span><span>Luôn retrieve: whole context không thể dùng.</span></button><button class="quiz-opt" onclick="quizPick(this,1)"><span class="quiz-letter">B</span><span>So độ đúng, quyền nguồn, nhu cầu cập nhật, độ trễ và toàn chi phí trên câu hỏi đại diện.</span></button><button class="quiz-opt" onclick="quizPick(this,2)"><span class="quiz-letter">C</span><span>Chỉ context length chứng minh whole context tốt hơn.</span></button><button class="quiz-opt" onclick="quizPick(this,3)"><span class="quiz-letter">D</span><span>Số chiều embedding quyết mọi ca.</span></button><div class="quiz-feedback" role="status" data-explain="Whole context có thể phù hợp corpus nhỏ. Retrieval thêm bước chọn nhưng có thể bỏ sót; so cả hai trong cùng phạm vi và budget."></div></div>
@@ -632,13 +630,13 @@ footer.site{border-top:1px solid var(--border);padding:26px 24px;text-align:cent
           <div class="objectives">
             <span class="eyebrow">Học xong bạn có thể</span>
             <ul>
-              <li>Vẽ 4 bước của naive RAG và giải thích vì sao "magic" nằm ở vector space.</li>
+              <li>Vẽ 4 bước của naive RAG và giải thích quan hệ giữa ngữ nghĩa và vị trí vector.</li>
               <li>Giải thích vì sao query phải embed bằng đúng model đã embed chunk.</li>
-              <li>Liệt kê 5 lỗi tin cậy mà naive RAG sẽ gặp; mỗi lỗi sẽ được một lớp sau sửa.</li>
+              <li>Liệt kê 5 nhóm lỗi của naive RAG; mỗi nhóm có các thay đổi cần kiểm bằng eval.</li>
             </ul>
           </div>
 
-          <p>Hai sản phẩm tên gần nhau: "Demo AM" và "Demo Media". Naive RAG embed cả hai; vì cùng họ thương hiệu, vector của chúng nằm gần nhau trong không gian. User hỏi về Demo AM, hệ trả về chunk của Demo Media. Đó là lỗi kiến trúc, không phải lỗi tinh chỉnh, và các bài còn lại của khoá này tồn tại để sửa từng biến thể của nó.</p>
+          <p>Hai sản phẩm tên gần nhau: "Demo AM" và "Demo Media". Naive RAG embed cả hai; vì cùng họ thương hiệu, vector của chúng nằm gần nhau trong không gian. User hỏi về Demo AM, hệ trả về chunk của Demo Media. Cần kiểm khả năng phân biệt thực thể bằng lexical retrieval, metadata và entity planning.</p>
 
           <p>RAG đơn giản nhất bạn có thể xây có 4 phần:</p>
           <ol>
@@ -647,9 +645,9 @@ footer.site{border-top:1px solid var(--border);padding:26px 24px;text-align:cent
             <li>Lưu <code>(chunk_text, vector)</code> vào vector database.</li>
             <li>Lúc query, embed câu hỏi bằng <em>cùng</em> model, tìm K vector gần nhất theo cosine similarity, đưa các chunk đó cho LLM.</li>
           </ol>
-          <p>Toàn bộ "ma thuật" của vector search là: text <em>cùng nghĩa</em> kết thúc gần nhau về hình học dù không trùng từ ("free trial" embed gần "no-cost evaluation period").</p>
+          <p>Vector search dựa vào quan hệ: text <em>cùng nghĩa</em> kết thúc gần nhau về hình học dù không trùng từ ("free trial" embed gần "no-cost evaluation period").</p>
 
-          <p>Model được huấn luyện Matryoshka hỗ trợ prefix vector ngắn. Ví dụ EmbeddingGemma cho cắt chiều rồi chuẩn hoá lại; không áp dụng tuỳ tiện cho mọi encoder. Giá trị int8/binary dùng ít payload thô hơn float32 lần lượt 4×/32×, chưa tính index/metadata. Quantization có thể mất candidate liên quan; rerank chỉ xếp lại candidate đã tìm được. <a href="https://huggingface.co/google/embeddinggemma-300m" target="_blank" rel="noreferrer">EmbeddingGemma</a> (kiểm tra 12/11/2026).</p>
+          <p>Model được huấn luyện Matryoshka hỗ trợ prefix vector ngắn. Ví dụ EmbeddingGemma cho cắt chiều rồi chuẩn hoá lại; không áp dụng tuỳ tiện cho mọi encoder. Giá trị int8/binary dùng ít payload thô hơn float32 lần lượt 4×/32×, chưa tính index/metadata. Quantization có thể mất candidate liên quan; rerank chỉ xếp lại candidate đã tìm được. <a href="https://huggingface.co/google/embeddinggemma-300m" target="_blank" rel="noreferrer">EmbeddingGemma</a>.</p>
 
           <figure class="figure">
             <div class="diagram-viewport" role="region" tabindex="0" aria-label="Sơ đồ; cuộn ngang để đọc đầy đủ nhãn" style="--diagram-width:760px"><svg viewBox="0 0 760 320" role="img" aria-label="Naive RAG: phía trái là đường ống index (document → chunk 1000 ký tự → embedding model → vector 1.536 float), phía phải là query time (câu hỏi → cùng embedding model → query vector), rồi cosine sim vào không gian vector để lấy 3 chunk gần nhất.">
@@ -693,7 +691,7 @@ footer.site{border-top:1px solid var(--border);padding:26px 24px;text-align:cent
           <p>Giả sử tài liệu duy nhất của bạn là một PDF <code>Demo-AM-pricing.pdf</code>. Naive RAG cắt thành 3 chunk 1.000 ký tự, embed 3 vector, query <em>"trial free không?"</em> → embed 1 vector → cosine sim với 3 chunk → lấy top 1 → gửi chunk + câu hỏi cho LLM kèm <em>"Trả lời chỉ dùng đoạn này."</em> Tổng cơ sở hạ tầng: một bảng Postgres có cột <code>vector</code>.</p>
 
           <h3>Chỗ này hỏng ở đâu</h3>
-          <p>Naive RAG hỏng theo 5 cách tin cậy. Các bài còn lại của khoá tồn tại để sửa từng cái:</p>
+          <p>Năm nhóm lỗi cần kiểm trên naive RAG:</p>
           <div class="table-wrap"><table>
             <thead><tr><th>Lỗi</th><th>Việc xảy ra</th><th>Sửa bởi</th></tr></thead>
             <tbody>
@@ -707,7 +705,7 @@ footer.site{border-top:1px solid var(--border);padding:26px 24px;text-align:cent
 
           <div class="takeaway">
             <span class="eyebrow"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true" focusable="false"><path d="M12 2v6m0 8v6M4.9 4.9l4.2 4.2m5.8 5.8l4.2 4.2M2 12h6m8 0h6M4.9 19.1l4.2-4.2m5.8-5.8l4.2-4.2"/></svg>Takeaway</span>
-            <p>Naive RAG chỉ cần một bảng Postgres có cột <code>vector</code>, và nó <span class="hl">hỏng ngay khi hai sản phẩm có tên gần nhau</span>. Đó là dấu hiệu 5 lỗi đã sẵn sàng xuất hiện.</p>
+            <p>Naive RAG chỉ cần một bảng Postgres có cột <code>vector</code>, và nó <span class="hl">có thể nhầm hai sản phẩm có tên gần nhau</span>. Kiểm năm nhóm lỗi ở trên để chọn bước sửa.</p>
           </div>
 
           <div class="quiz" data-correct="1">
@@ -742,7 +740,7 @@ footer.site{border-top:1px solid var(--border);padding:26px 24px;text-align:cent
             </ul>
           </div>
 
-          <p>Một tài liệu có bảng giá: <code>| Plan A | $9 | … | Plan B | $19 | …</code>. Naive chunking chia cứ 1.000 ký tự, và cắt đúng giữa dòng <code>| Pl</code> / <code>an B | $19</code>. Embedding của chunk đó không đại diện cái gì hoàn chỉnh cả. Chunk là <strong>đơn vị nguyên tử</strong> của retrieval: cắt sai thì mọi lớp phía trên đều đang debug cái splitter của bạn.</p>
+          <p>Một tài liệu có bảng giá: <code>| Plan A | $9 | … | Plan B | $19 | …</code>. Naive chunking chia cứ 1.000 ký tự, và cắt đúng giữa dòng <code>| Pl</code> / <code>an B | $19</code>. Embedding của chunk đó không đại diện cái gì hoàn chỉnh cả. Chunk là <strong>đơn vị nguyên tử</strong> của retrieval: cắt thiếu thông tin làm giảm chất lượng retrieval ở các bước sau.</p>
 
           <p>Trước khi chunk là bước <strong>extract</strong>, và nó hỏng trước. PDF nhiều cột đọc thành zig-zag, bảng dẹp thành một dòng dài, bản scan không có text layer thì phải OCR, HTML crawl kéo theo cả nav và footer. Chunker giỏi không cứu được extract hỏng: mở 5 tài liệu khó nhất và đọc phần text đã trích bằng mắt trước khi đổ lỗi cho splitter.</p>
 
@@ -779,7 +777,7 @@ footer.site{border-top:1px solid var(--border);padding:26px 24px;text-align:cent
 
           <div class="callout warn"><div class="callout-title">Anti-pattern</div><p>Đếm ký tự giảm phụ thuộc tokenizer, nhưng chia theo token cũng hợp lệ. Luôn kiểm giới hạn token của model embedding. Ưu tiên cấu trúc; bảng quá dài cần chia theo dòng và lặp header. Cấu hình1500/300 và1000/200 là điểm khởi đầu giả lập để kiểm định.</p></div>
 
-          <details class="accordion"><summary><span class="chev">▶</span><span class="accordion-tag">Thứ hai bạn làm gì</span><span>Đo phân bố độ dài chunk của corpus hiện tại</span></summary>
+          <details class="accordion"><summary><span class="chev">▶</span><span class="accordion-tag">Bài thực hành</span><span>Đo phân bố độ dài chunk của corpus hiện tại</span></summary>
             <div class="accordion-body">Xuất độ dài của mọi chunk trong một chatbot, vẽ histogram, rồi đếm bằng tay số chunk bắt đầu hoặc kết thúc giữa một dòng bảng. Nếu con số đó khác 0, bạn vừa tìm được một lỗi retrieval trước khi thêm bất kỳ lớp nào.</div>
           </details>
 
@@ -826,7 +824,7 @@ footer.site{border-top:1px solid var(--border);padding:26px 24px;text-align:cent
             </tbody>
           </table></div>
 
-          <p>Fixture giả lập: mỗi query trong5 query có đúng một chunk canonical liên quan. Rank đầu tiên là 1, không thấy,2,1,3: MRR=(1+0+1/2+1+1/3)/5=0,5667≈0,57. Hit@5=4/5=0,80; chỉ bằng Recall@5 trung bình khi mỗi query có đúng một item liên quan. Gold{A,B,C}, retrieve{A,C} thì recall=2/3 nhưng hit=1. Câu không có đáp án đo abstention riêng. Chọn layer trên validation, giữ final test chưa dùng và so outcome theo cặp query; biến thể liên quan cần uncertainty theo nhóm. <a href="https://arxiv.org/html/2411.00640v1" target="_blank" rel="noreferrer">Adding Error Bars to Evals</a> (kiểm tra 12/11/2026).</p>
+          <p>Fixture giả lập: mỗi query trong5 query có đúng một chunk canonical liên quan. Rank đầu tiên là 1, không thấy,2,1,3: MRR=(1+0+1/2+1+1/3)/5=0,5667≈0,57. Hit@5=4/5=0,80; chỉ bằng Recall@5 trung bình khi mỗi query có đúng một item liên quan. Gold{A,B,C}, retrieve{A,C} thì recall=2/3 nhưng hit=1. Câu không có đáp án đo abstention riêng. Chọn layer trên validation, giữ final test chưa dùng và so outcome theo cặp query; biến thể liên quan cần uncertainty theo nhóm. <a href="https://arxiv.org/html/2411.00640v1" target="_blank" rel="noreferrer">Adding Error Bars to Evals</a>.</p>
 
           <div class="callout info"><div class="callout-title">Đừng gom thành một “RAG score”</div><p>Retrieval đúng mà answer sai là lỗi generator/prompt; retrieval sai mà answer nghe hợp lý là hallucination được che đẹp. Giữ metric theo component để biết sửa ở đâu. LLM-judge hữu ích cho faithfulness/relevance, nhưng phải calibrate trên một tập người đã gắn nhãn; không dùng điểm judge làm sự thật tuyệt đối. Cách tách retrieval · generation · efficiency này cũng là trục chính trong <a href="https://arxiv.org/abs/2504.14891" target="_blank" rel="noreferrer">survey RAG evaluation 2025</a>. Khi cần đồ có sẵn: RAGAS và TruLens cho faithfulness/answer-relevance, BEIR và TREC-RAG cho benchmark retrieval công khai. Dùng chúng để <em>khởi động</em> eval set, không thay eval set của corpus bạn. Benchmark công khai không chứa proper noun của tenant.</p></div>
 
@@ -869,7 +867,7 @@ footer.site{border-top:1px solid var(--border);padding:26px 24px;text-align:cent
             <figcaption><b>Hình 1.4</b>: Ablation gate giữ eval set cố định và thay đúng một biến. Một layer chỉ sống tiếp khi cải thiện đúng failure mode mà không phá segment hoặc budget quan trọng.</figcaption>
           </figure>
 
-          <h3>Ablation: layer phải tự trả tiền thuê</h3>
+          <h3>Ablation: so lợi ích với chi phí</h3>
           <ol>
             <li>Chạy naive baseline và lưu cả config, corpus version, model/version, K, latency, cost.</li>
             <li>Bật đúng <strong>một</strong> thay đổi (ví dụ hybrid) rồi chạy lại cùng eval set.</li>
@@ -877,13 +875,13 @@ footer.site{border-top:1px solid var(--border);padding:26px 24px;text-align:cent
             <li>Giữ khi metric mục tiêu tăng đủ để biện minh regression/cost; nếu không, hoàn tác. Không có ngưỡng chung cho mọi corpus.</li>
           </ol>
 
-          <details class="accordion"><summary><span class="chev">▶</span><span class="accordion-tag">Thứ hai bạn làm gì</span><span>Viết 30 query + qrels từ log tuần trước</span></summary>
+          <details class="accordion"><summary><span class="chev">▶</span><span class="accordion-tag">Bài thực hành</span><span>Viết 30 query + qrels từ log tuần trước</span></summary>
             <div class="accordion-body">Mở log hội thoại của tuần trước, lấy 30 câu hỏi thật, và với mỗi câu ghi lại chunk/document ID đáng lẽ phải trả về. Đó là frozen eval set đầu tiên của bạn. Chưa cần tool gì: một file CSV là đủ để chạy ablation đầu tiên.</div>
           </details>
 
           <div class="takeaway">
             <span class="eyebrow"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true" focusable="false"><path d="M12 2v6m0 8v6M4.9 4.9l4.2 4.2m5.8 5.8l4.2 4.2M2 12h6m8 0h6M4.9 19.1l4.2-4.2m5.8-5.8l4.2-4.2"/></svg>Takeaway</span>
-            <p>RAG không trưởng thành bằng số layer. Nó trưởng thành khi mỗi thay đổi đi qua <span class="hl">frozen eval set + component metrics + budget gate</span> và layer không tạo lift bị bỏ.</p>
+            <p>Đánh giá mỗi thay đổi bằng <span class="hl">frozen eval set + component metrics + budget gate</span>; bỏ layer không tạo lift.</p>
           </div>
 
           <div class="quiz" data-correct="2">
@@ -920,7 +918,7 @@ footer.site{border-top:1px solid var(--border);padding:26px 24px;text-align:cent
             <li>Giải thích vì sao không copy cả entity catalog vào mỗi chunk.</li>
           </ul></div>
 
-          <p>Một chunk nói <em>"giá $9 / ghế / tháng"</em>. Vector nói "chunk này về pricing". Nhưng <em>"the"</em> chỉ product nào? Chunk không biết mình từ đâu đến, khi nào cập nhật, có đáng rank cao hơn anh em không. Mọi pipeline RAG hiện đại đều kèm một <strong>hợp đồng metadata có kiểu</strong> bên cạnh vector.</p>
+          <p>Một chunk nói <em>"giá $9 / ghế / tháng"</em>. Vector nói "chunk này về pricing". Nhưng đó là giá của sản phẩm nào? Chunk không biết mình từ đâu đến, khi nào cập nhật, có đáng rank cao hơn anh em không. Pipeline ví dụ kèm một <strong>hợp đồng metadata có kiểu</strong> bên cạnh vector.</p>
 
           <p>Mỗi chunk mang một object <code>metadata</code> do một dịch vụ metadata (ví dụ) xây, gồm các trường như: <code>sourceId</code>, <code>sourceName</code>, <code>sourceType</code> (pdf), <code>trustLevel</code> (canonical | authoritative | standard | derived), <code>sourceRole</code> (product | pricing | policy | promo | release_notes…), <code>canonicalSource</code> (bool), <code>intentAllowlist</code> (["pricing","capability"]), <code>entities</code> ([{entityId:"demo-am",name:"Demo AM"}]), <code>sectionTitle</code>, <code>keywords</code>, <code>updatedAt</code>.</p>
 
@@ -959,14 +957,14 @@ footer.site{border-top:1px solid var(--border);padding:26px 24px;text-align:cent
               <text class="dgm-ink2" x="502" y="234" text-anchor="middle" font-size="11">Entity match: entities[] chứa "demo-am" → boost lớn</text>
               <defs><marker id="m2l1-a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0 L10 5 L0 10 Z" fill="var(--ink-3)"/></marker></defs>
             </svg></div>
-            <figcaption><b>Hình 2.1</b>: Metadata là cái khiến chunk biết "mình là ai"; retrieval dùng nó qua 3 cổng: filter (cứng), boost (mềm), route (theo intent).</figcaption>
+            <figcaption><b>Hình 2.1</b>: Metadata mô tả nguồn và thuộc tính của chunk; retrieval dùng nó qua 3 cổng: filter (cứng), boost (mềm), route (theo intent).</figcaption>
           </figure>
 
           <div class="callout info"><div class="callout-title">Quy tắc thiết kế</div><p>Metadata cấp nguồn sống trong config nguồn (catalog chính thức); metadata cấp chunk chỉ lưu cái <em>cục bộ</em> với chunk đó. Copy cả entity catalog vào mỗi chunk biến trang routing và mục lục thành false positive: chúng sẽ mang cùng entity boost như một đoạn mô tả thật. Giữ metadata chunk hẹp.</p></div>
 
           <p>Ràng buộc tenant/ACL do server xác định phải áp dụng trước ranking. Lọc ngôn ngữ theo yêu cầu phủ nguồn của sản phẩm, không phải quy tắc phổ quát.</p><div class="takeaway">
             <span class="eyebrow"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true" focusable="false"><path d="M12 2v6m0 8v6M4.9 4.9l4.2 4.2m5.8 5.8l4.2 4.2M2 12h6m8 0h6M4.9 19.1l4.2-4.2m5.8-5.8l4.2-4.2"/></svg>Takeaway</span>
-            <p>Vector nói "chunk này về X". Metadata nói <span class="hl">"chunk này từ trang pricing chính thức, cập nhật thứ Ba, nhắc Demo AM"</span>: retrieval không thể rank đúng nếu chunk không biết mình là ai.</p>
+            <p>Vector nói "chunk này về X". Metadata nói <span class="hl">"chunk này từ trang pricing chính thức, cập nhật thứ Ba, nhắc Demo AM"</span>: các thuộc tính này hỗ trợ xếp hạng đúng nguồn, phiên bản và thực thể.</p>
           </div>
 
           <div class="quiz" data-correct="1"><span class="eyebrow">Kiểm tra nhanh</span><p class="quiz-q">Chunk tenant khác không được phép nhưng rất liên quan. Đổi filter thành boost được không?</p><button class="quiz-opt" onclick="quizPick(this,0)"><span class="quiz-letter">A</span><span>Có, nếu score cao.</span></button><button class="quiz-opt" onclick="quizPick(this,1)"><span class="quiz-letter">B</span><span>Không. Loại chunk không được phép trước ranking; ngôn ngữ là chính sách corpus/sản phẩm riêng.</span></button><button class="quiz-opt" onclick="quizPick(this,2)"><span class="quiz-letter">C</span><span>Có, nếu trích nguồn.</span></button><button class="quiz-opt" onclick="quizPick(this,3)"><span class="quiz-letter">D</span><span>Chỉ giảm priority.</span></button><div class="quiz-feedback" role="status" data-explain="Quyền truy cập là ràng buộc cứng. Retrieval đa ngữ có thể trả lời tiếng Việt từ nguồn tiếng Anh nếu sản phẩm cho phép."></div></div>
@@ -1038,11 +1036,11 @@ footer.site{border-top:1px solid var(--border);padding:26px 24px;text-align:cent
 
           <div class="callout info"><div class="callout-title">Vì sao 'simple' không 'english'?</div><p>Từ điển <code>'english'</code> stem ("running" → "run") và bỏ stopword: tốt cho văn xuôi Anh, tồi khi nửa corpus tiếng Việt và nửa kia chứa tên thương hiệu. <code>'simple'</code> token hoá + lower-case không stem, giữ proper noun nguyên vẹn xuyên ngữ.</p></div>
 
-          <details class="accordion"><summary><span class="chev">▶</span><span class="accordion-tag">Thứ hai bạn làm gì</span><span>Chạy to_tsvector('simple') trên 100 chunk thật</span></summary>
+          <details class="accordion"><summary><span class="chev">▶</span><span class="accordion-tag">Bài thực hành</span><span>Chạy to_tsvector('simple') trên 100 chunk thật</span></summary>
             <div class="accordion-body">Lấy 100 chunk của một chatbot đang chạy, populate <code>search_vector</code>, rồi chọn 5 query chứa proper noun và so top-5 lexical với top-5 vector cạnh nhau. Chỗ hai danh sách khác nhau chính là phần recall mà đường lexical đang thêm vào.</div>
           </details>
 
-          <p>SQL ở đây là minh hoạ: bắt buộc phạm vi quyền do server xác định và bind tham số query. PostgreSQL ts_rank_cd tính cover-density ranking, không phải BM25; muốn BM25 cần implementation tương ứng. <a href="https://www.postgresql.org/docs/current/textsearch-controls.html" target="_blank" rel="noreferrer">PostgreSQL</a> (kiểm tra 12/11/2026).</p><div class="takeaway">
+          <p>SQL ở đây là minh hoạ: bắt buộc phạm vi quyền do server xác định và bind tham số query. PostgreSQL ts_rank_cd tính cover-density ranking, không phải BM25; muốn BM25 cần implementation tương ứng. <a href="https://www.postgresql.org/docs/current/textsearch-controls.html" target="_blank" rel="noreferrer">PostgreSQL</a>.</p><div class="takeaway">
             <span class="eyebrow"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true" focusable="false"><path d="M12 2v6m0 8v6M4.9 4.9l4.2 4.2m5.8 5.8l4.2 4.2M2 12h6m8 0h6M4.9 19.1l4.2-4.2m5.8-5.8l4.2-4.2"/></svg>Takeaway</span>
             <p>Vector giỏi nghĩa, tồi identifier. <span class="hl">BM25 song song bắt đúng tên riêng mà vector collapse</span>, và lexical hỏng khi rephrase, nên cần cả hai.</p>
           </div>
@@ -1077,7 +1075,7 @@ footer.site{border-top:1px solid var(--border);padding:26px 24px;text-align:cent
 
           <p><strong>Reciprocal Rank Fusion (RRF)</strong> tránh vấn đề bằng cách bỏ qua score hoàn toàn, chỉ dùng <em>rank</em>:</p>
           <div class="code-card"><pre>RRF(d) = Σ trên mỗi ranker r:  1 / (k + rank_r(d))</pre></div>
-          <p>Dùng k=60 làm ví dụ khởi đầu, không phải tối ưu phổ quát. Item vắng ở một list đóng góp0. Tác giả gốc chọn60 trong pilot rồi giữ khi validation. <a href="https://cormack.uwaterloo.ca/cormacksigir09-rrf.pdf" target="_blank" rel="noreferrer">RRF original paper</a> (kiểm tra 12/11/2026).</p>
+          <p>Dùng k=60 làm ví dụ khởi đầu, không phải tối ưu phổ quát. Item vắng ở một list đóng góp0. Tác giả gốc chọn60 trong pilot rồi giữ khi validation. <a href="https://cormack.uwaterloo.ca/cormacksigir09-rrf.pdf" target="_blank" rel="noreferrer">RRF original paper</a>.</p>
 
           <p>Một con số cụ thể: chunk-A đứng rank 1 bên vector → 1/(60+1) = 0,0164, và rank 2 bên lexical → 1/(60+2) = 0,0161, nên RRF(A) = 0,0325. chunk-F chỉ xuất hiện ở lexical rank 3 → 1/(60+3) = 0,0159. Nó vẫn sống, chỉ xếp sau. Các số trong Hình 2.3 chính là những giá trị đó, không phải cosine hay <code>ts_rank_cd</code>. Một chi tiết dễ bỏ qua: chunk-D (vector rank 4) và chunk-G (lexical rank 4) cùng ra 1/64 = 0,0156. Khi điểm hoà bạn phải có tiebreak tất định, chẳng hạn theo chunk id, để thứ hạng không đổi giữa hai lần chạy.</p>
 
@@ -1200,7 +1198,7 @@ footer.site{border-top:1px solid var(--border);padding:26px 24px;text-align:cent
       <header class="module-header" data-module="3">
         <span class="eyebrow">Module 03 · Phần III</span>
         <h2>Chất lượng retrieval nâng cao</h2>
-        <p>Có recall rồi, phải nâng chất lượng. Contextual chunking sửa mất ngữ cảnh, cross-encoder rerank sửa mờ bi-encoder, CRAG biết khi retrieval hỏng, và self-corrective retrieval cứu câu trả lời bị filter giấu.</p>
+        <p>Có recall rồi, phải nâng chất lượng. Contextual chunking sửa mất ngữ cảnh, cross-encoder rerank sửa mờ bi-encoder, CRAG biết khi retrieval hỏng, và self-corrective retrieval thử lại một lần trong phạm vi được phép.</p>
       </header>
 <article class="lesson" id="m3-l1" data-lesson>
         <div class="lesson-head">
@@ -1255,7 +1253,7 @@ footer.site{border-top:1px solid var(--border);padding:26px 24px;text-align:cent
 
           <div class="callout info"><div class="callout-title">Khác với việc gán section title vào chunk</div><p>Section title là tĩnh/cấu trúc. Context prefix sinh ra <em>biết cả tài liệu</em> và vai trò chunk: "Đoạn này từ mục 'pricing' của product brief Demo AM 2026, so sánh gói Pro và Enterprise." Đó là thông tin chunker không lấy lại được từ chunk đơn lẻ.</p></div>
 
-          <p>Các số 35%/49% là kết quả lỗi retrieval top20 của Anthropic năm 2024, không phải mức cải thiện được hứa cho ứng dụng. Ngữ cảnh sinh phải đối chiếu nguồn cha và sinh lại khi nguồn đổi. <a href="https://www.anthropic.com/research/contextual-retrieval" target="_blank" rel="noreferrer">Contextual Retrieval</a> (kiểm tra 12/11/2026).</p><div class="takeaway">
+          <p>Các số 35%/49% là kết quả lỗi retrieval top20 của Anthropic năm 2024, không phải mức cải thiện được hứa cho ứng dụng. Ngữ cảnh sinh phải đối chiếu nguồn cha và sinh lại khi nguồn đổi. <a href="https://www.anthropic.com/research/contextual-retrieval" target="_blank" rel="noreferrer">Contextual Retrieval</a>.</p><div class="takeaway">
             <span class="eyebrow"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true" focusable="false"><path d="M12 2v6m0 8v6M4.9 4.9l4.2 4.2m5.8 5.8l4.2 4.2M2 12h6m8 0h6M4.9 19.1l4.2-4.2m5.8-5.8l4.2-4.2"/></svg>Takeaway</span>
             <p><span class="hl">Context từ nguồn cha giúp định vị chunk trước embedding. Mức giảm lỗi35%/49% thuộc thí nghiệm Anthropic2024; ứng dụng cần eval riêng và cache theo đủ input sinh context.</span></p>
           </div>
@@ -1276,7 +1274,7 @@ footer.site{border-top:1px solid var(--border);padding:26px 24px;text-align:cent
       <article class="lesson" id="m3-l2" data-lesson>
         <div class="lesson-head">
           <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px">
-            <div><span class="eyebrow">Bài 3.2</span><h3>Cross-encoder reranking — trọng tài nhỏ hơn, khôn hơn</h3></div>
+            <div><span class="eyebrow">Bài 3.2</span><h3>Cross-encoder reranking — chấm cặp query/document</h3></div>
           </div>
         </div>
         <div class="lesson-body">
@@ -1306,14 +1304,14 @@ footer.site{border-top:1px solid var(--border);padding:26px 24px;text-align:cent
               <text class="dgm-ink" x="550" y="44" text-anchor="middle" font-weight="600" fill="var(--warning)" font-size="12">Cross-encoder</text>
               <text class="dgm-ink2" x="550" y="62" text-anchor="middle" font-size="11">top 30 → chấm từng cặp</text>
               <text class="dgm-ink2" x="550" y="82" text-anchor="middle" font-size="11">độ trễ: cần đo cho 30 cặp</text>
-              <text class="dgm-ink2" x="550" y="104" text-anchor="middle" font-size="10" fill="var(--ink-3)">sắc · tuỳ provider</text>
+              <text class="dgm-ink2" x="550" y="104" text-anchor="middle" font-size="10" fill="var(--ink-3)">chấm cặp</text>
               <path class="dgm-flow" d="M640 70 L680 70" marker-end="url(#m3l2-a)"/>
               <rect x="660" y="40" width="80" height="60" rx="6" fill="var(--success-bg)" stroke="var(--success)"/>
               <text class="dgm-ink" x="700" y="64" text-anchor="middle" font-weight="600" fill="var(--success)" font-size="12">Top 15</text>
               <text class="dgm-ink2" x="700" y="82" text-anchor="middle" font-size="11">cho LLM</text>
               <text class="dgm-ink2" x="380" y="170" text-anchor="middle" font-size="11">Bi: encode(Q), encode(D), dot(Q,D) — ~constant mỗi chunk.</text>
               <text class="dgm-ink2" x="380" y="195" text-anchor="middle" font-size="11">Cross: encode([Q|D]) → score — tăng theo số cặp.</text>
-              <text class="dgm-ink2" x="380" y="218" text-anchor="middle" font-size="10" font-style="italic">Funnel: rẻ-rộng rồi sắc-hẹp.</text>
+              <text class="dgm-ink2" x="380" y="218" text-anchor="middle" font-size="10" font-style="italic">Funnel: retrieval → rerank.</text>
               <defs><marker id="m3l2-a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0 L10 5 L0 10 Z" fill="var(--accent-2)"/></marker></defs>
             </svg></div>
             <figcaption><b>Hình 3.2</b>: Tạo candidate bằng lexical/dense rồi rerank30 cặp để chọn15 trong cấu hình giả lập. Đo recall candidate, chất lượng và latency toàn pipeline.</figcaption>
@@ -1321,7 +1319,7 @@ footer.site{border-top:1px solid var(--border);padding:26px 24px;text-align:cent
 
           <p>Ví dụ: query <em>"Demo AM trial bao lâu?"</em>. Bi-encoder top 5 lẫn chunk Demo Media trial (gần nghĩa, sai product: không thấy query+chunk cạnh nhau). Cross-encoder đọc <code>"Demo AM trial bao lâu?" + "Demo Media đánh giá 7 ngày…"</code> cùng lúc → nhận product mismatch → chấm thấp. Top-1 cuối là section Demo AM trial thật.</p>
 
-          <p>Late interaction, như <a href="https://arxiv.org/abs/2004.12832" target="_blank" rel="noreferrer">ColBERT(2020)</a>, giữ biểu diễn nhiều token và kết hợp tương tác lúc query; biểu diễn document có thể tính trước. Đây là lựa chọn kiến trúc để ablation: chất lượng, dung lượng index và thời gian phụ thuộc model, corpus và hardware; không có thứ tự chi phí/chất lượng phổ quát. Nguồn đọc13/11/2026.</p>
+          <p>Late interaction, như <a href="https://arxiv.org/abs/2004.12832" target="_blank" rel="noreferrer">ColBERT(2020)</a>, giữ biểu diễn nhiều token và kết hợp tương tác lúc query; biểu diễn document có thể tính trước. Đây là lựa chọn kiến trúc để ablation: chất lượng, dung lượng index và thời gian phụ thuộc model, corpus và hardware; không có thứ tự chi phí/chất lượng phổ quát.</p>
 
           <p>Candidate retrieval có thể lexical hoặc dense; BM25 không phải bi-encoder. Top30→15 là cấu hình giả lập. Score 100 thay vì30 cặp là 3,33× số cặp, không phải hệ số độ trễ cố định; thời gian phụ thuộc hardware/batch/model.</p><div class="takeaway">
             <span class="eyebrow"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true" focusable="false"><path d="M12 2v6m0 8v6M4.9 4.9l4.2 4.2m5.8 5.8l4.2 4.2M2 12h6m8 0h6M4.9 19.1l4.2-4.2m5.8-5.8l4.2-4.2"/></svg>Takeaway</span>
@@ -1446,7 +1444,7 @@ footer.site{border-top:1px solid var(--border);padding:26px 24px;text-align:cent
 
           <p>Nguồn đúng, được phép và còn hiệu lực vẫn chưa bảo đảm câu trả lời đúng: generator có thể đổi14 ngày thành7 ngày. G1 chạy trước sinh nên không kiểm được câu trả lời chưa có. G2 kiểm support/citation sau sinh bằng luật, NLI hoặc LLM judge; các phép kiểm có thể bỏ sót, cần đối chiếu nhãn người. Chi phí phụ thuộc cách triển khai từng gate.</p>
 
-          <p>Nếu bạn Google "CRAG" sẽ gặp paper gốc (Yan et al. 2024) với thuật ngữ khác bài này. Không mâu thuẫn; course đơn giản hoá có chủ đích cho corpus B2B closed-tenant:</p>
+          <p>Paper CRAG (Yan et al. 2024) và chính sách minh hoạ cho corpus B2B closed-tenant khác nhau ở các điểm sau:</p>
           <div class="table-wrap"><table>
             <thead><tr><th>Paper CRAG (Yan et al. 2024)</th><th>Course (production B2B)</th><th>Vì sao đơn giản hoá</th></tr></thead>
             <tbody>
@@ -1468,7 +1466,7 @@ footer.site{border-top:1px solid var(--border);padding:26px 24px;text-align:cent
 
           <p>Cuối cùng, nhớ giới hạn của bài này: CRAG chỉ <em>phân loại</em>; tự nó không sửa gì. Hành động sửa nằm ở Bài 3.4, và nó có biên: classifier + bounded policy, không phải agent tự do.</p>
 
-          <details class="accordion"><summary><span class="chev">▶</span><span class="accordion-tag">Thứ hai bạn làm gì</span><span>Log tier CRAG cho 200 query thật</span></summary>
+          <details class="accordion"><summary><span class="chev">▶</span><span class="accordion-tag">Bài thực hành</span><span>Log tier CRAG cho 200 query thật</span></summary>
             <div class="accordion-body">Log n, trạng thái score và tier vào <code>retrievalTrace</code>. Empty tăng thì kiểm hard filter, quyền, publication, corpus và lỗi retriever; floor chỉ ảnh hưởng low/moderate/confident khi n&gt;0.</div>
           </details>
 
@@ -1484,7 +1482,7 @@ footer.site{border-top:1px solid var(--border);padding:26px 24px;text-align:cent
             <button class="quiz-opt" onclick="quizPick(this,1)"><span class="quiz-letter">B</span><span>Vì user B2B thích câu trả lời ngắn.</span></button>
             <button class="quiz-opt" onclick="quizPick(this,2)"><span class="quiz-letter">C</span><span>Chatbot nói "tôi không có thông tin, bạn muốn nói chuyện với nhân viên hỗ trợ?" giữ niềm tin; chatbot bịa câu trả lời phá nó. Khi retrieval rỗng, model không được fallback vào training data.</span></button>
             <button class="quiz-opt" onclick="quizPick(this,3)"><span class="quiz-letter">D</span><span>Vì CRAG luôn phân loại rỗng khi không có rerank.</span></button>
-            <div class="quiz-feedback" role="status" data-explain="Đúng: niềm tin là tài sản của chatbot B2B. Quy tắc kiến trúc: không để model knowledge chung ghi đè tenant knowledge đã truy xuất — retrieval rỗng thì model phải nói không biết, không fallback training data."></div>
+            <div class="quiz-feedback" role="status" data-explain="Quy tắc của hệ ví dụ: không để model knowledge chung ghi đè tenant knowledge đã truy xuất — retrieval rỗng thì model phải nói không biết, không fallback training data."></div>
           </div>
 
           <div class="quiz" data-correct="1">
@@ -1516,7 +1514,7 @@ footer.site{border-top:1px solid var(--border);padding:26px 24px;text-align:cent
       <header class="module-header" data-module="4">
         <span class="eyebrow">Module 04 · Phần IV</span>
         <h2>Kỹ thuật production</h2>
-        <p>Production thật: entity planning giải sibling-confusion, rồi lớp 2026-Q3 (distillation + dispatcher + curation) sửa near-duplicate, version lifecycle và curation thủ công, kết bằng caching cắt cost & latency ở quy mô multi-tenant.</p>
+        <p>Entity planning xử lý sibling-confusion; distillation, dispatcher và curation xử lý candidate trùng, vòng đời phiên bản và biên tập. Caching cần đo chất lượng, chi phí và độ trễ trong phạm vi từng tenant.</p>
       </header>
 <article class="lesson" id="m4-l1" data-lesson>
         <div class="lesson-head">
@@ -1531,7 +1529,7 @@ footer.site{border-top:1px solid var(--border);padding:26px 24px;text-align:cent
             <li>Nêu cách thực thể giải quyết lan toả xuống multi-query/lexical/rerank.</li>
           </ul></div>
 
-          <p>Demo có hàng chục product tên chồng lấn: Demo AM, Demo Media, Demo Social, Demo Group. RAG generic retrieve anh em nào vector-match trước: đó là bug chất lượng, không phải vấn đề tinh chỉnh. Đây là phần ít giống tài liệu RAG tổng quát nhất, đặc thù cho vận hành nền tảng B2B có tiền tố thương hiệu chung.</p>
+          <p>Demo có hàng chục product tên chồng lấn: Demo AM, Demo Media, Demo Social, Demo Group. RAG generic retrieve anh em nào vector-match trước: đó là bug chất lượng, không phải vấn đề tinh chỉnh.</p>
 
           <p>Ý tưởng cốt lõi: mỗi nguồn khai báo một catalog thực thể trong config. Mỗi thực thể có <code>entityId</code> ổn định, <code>name</code> chính thức, danh sách <code>aliases</code>. Lúc query, <em>trước khi</em> retrieval chạy, một <strong>planner</strong> match text user với catalog. Planner có 3 việc:</p>
           <ol>
@@ -1572,7 +1570,7 @@ footer.site{border-top:1px solid var(--border);padding:26px 24px;text-align:cent
 
           <p>Khi planner <em>resolve</em> được, thực thể lan toả xuống pipeline như tín hiệu cứng: multi-query expander thêm thực thể vào biến thể entity-anchored; lexical recall boost chunk mà <code>metadata.entities[]</code> chứa entityId; reranker thấy thực thể trong query, giúp cross-encoder phán đoán.</p>
 
-          <p>Exact alias là baseline minh bạch cho catalog này. <a href="https://raw.githubusercontent.com/facebookresearch/BLINK/main/README.md" target="_blank" rel="noreferrer">BLINK</a> là phản ví dụ cho “chỉ lexical”: nó dùng dense retrieval và cross-encoder. Khi chưa resolve thì hỏi rõ; so giải pháp trên eval. Nguồn đọc13/11/2026.</p><div class="takeaway">
+          <p>Exact alias là baseline minh bạch cho catalog này. <a href="https://raw.githubusercontent.com/facebookresearch/BLINK/main/README.md" target="_blank" rel="noreferrer">BLINK</a> là phản ví dụ cho “chỉ lexical”: nó dùng dense retrieval và cross-encoder. Khi chưa resolve thì hỏi rõ; so giải pháp trên eval.</p><div class="takeaway">
             <span class="eyebrow"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true" focusable="false"><path d="M12 2v6m0 8v6M4.9 4.9l4.2 4.2m5.8 5.8l4.2 4.2M2 12h6m8 0h6M4.9 19.1l4.2-4.2m5.8-5.8l4.2-4.2"/></svg>Takeaway</span>
             <p><span class="hl">Với catalog đã biết này, alias chính xác là baseline dễ kiểm trước retrieval. Giữ trace và hỏi rõ mơ hồ chưa giải; so resolver khác thay vì cho rằng vector luôn sai công cụ.</span></p>
           </div>
@@ -1603,7 +1601,7 @@ footer.site{border-top:1px solid var(--border);padding:26px 24px;text-align:cent
             <li>Nêu vì sao Q→A index chỉ cho nguồn giá trị cao (cost).</li>
           </ul></div>
 
-          <p>Đợt Q3 2026 mang một loạt nâng cấp theo lớp, mỗi lớp nhắm một kiểu lỗi pipeline cũ vẫn gặp phải. Đợt đầu, <strong>distillation</strong>, định hình lại corpus để retrieval có candidate sạch hơn: semantic dedup, Q→A index opt-in, versionState lifecycle.</p>
+          <p><strong>Distillation</strong> định hình lại corpus để retrieval có candidate sạch hơn: semantic dedup, Q→A index opt-in, versionState lifecycle.</p>
 
           <h3>A · Gộp trùng theo ngữ nghĩa</h3>
           <p>Tenant thường huấn luyện một chatbot trên 3 nguồn chồng lấn: PDF, trang web, FAQ gõ tay, đều mô tả cùng product. Sau ingestion, index giữ 5–15 vector gần-trùng mỗi fact. Top-K phân tán xác suất, dìm bản canonical. Job đề xuất dedup chạy <em>sau</em> ingestion; kiểm duyệt quyết định candidate nào thật sự tương đương:</p>
@@ -1679,7 +1677,7 @@ footer.site{border-top:1px solid var(--border);padding:26px 24px;text-align:cent
           <div class="objectives"><span class="eyebrow">Học xong bạn có thể</span><ul>
             <li>Áp dụng versionState lifecycle và filter current + approved.</li>
             <li>Giải thích kiến trúc reranker dispatcher nhiều adapter, opt-in.</li>
-            <li>Nêu vì sao reranker off-by-default dù benchmark nói luôn tốt.</li>
+            <li>Nêu điều kiện để giữ reranker tắt hoặc bật theo kết quả eval.</li>
           </ul></div>
 
           <h3>C · versionState lifecycle</h3>
@@ -1794,7 +1792,7 @@ footer.site{border-top:1px solid var(--border);padding:26px 24px;text-align:cent
               <text x="35" y="134" font-family="var(--font-mono)" font-size="10">trustLevel: "authoritative"</text>
               <rect x="20" y="170" width="220" height="100" rx="6" fill="var(--warning-bg)" stroke="var(--warning)" stroke-width="2"/>
               <text class="dgm-ink" x="130" y="192" text-anchor="middle" font-weight="600" fill="var(--warning)">website_pages.metadata</text>
-              <text class="dgm-ink2" x="130" y="210" text-anchor="middle" font-size="11">(sparse, per URL — MỚI)</text>
+              <text class="dgm-ink2" x="130" y="210" text-anchor="middle" font-size="11">(sparse, per URL)</text>
               <text x="35" y="232" font-family="var(--font-mono)" font-size="10">sourceRole: "policy"</text>
               <text x="35" y="248" font-family="var(--font-mono)" font-size="10">intentAllowlist: ["policy"]</text>
               <path class="dgm-flow" d="M240 105 L320 165" marker-end="url(#m4l4-a)"/>
@@ -1882,10 +1880,10 @@ footer.site{border-top:1px solid var(--border);padding:26px 24px;text-align:cent
         <h3>Nội dung ổn định trước</h3><div class="code-card"><pre>stable: chỉ dẫn chung đã duyệt + ngữ cảnh chung được phép
 dynamic: dữ liệu visitor + ngày + bằng chứng truy xuất + câu hỏi</pre></div>
         <p>Đặt nội dung thay đổi sau prefix tái dùng, dùng control của API hỗ trợ. Giữ text visitor ở trường user/data không tin cậy. Prefix ổn định có thể tăng reuse nhưng không bảo đảm hit. <code>prompt_cache_key</code> của OpenAI ảnh hưởng routing/accounting; nó không xác thực tenant hay cấp quyền tài liệu. Cô lập organization/workspace của provider không tự tách các khách hàng trong cùng tài khoản ứng dụng.</p>
-        <p>Kiểm tra ngày 12/11/2026: model OpenAI GPT-5.6+ được hỗ trợ còn có explicit breakpoint; model cũ khác nhau. Gemini Interactions và Gemini4 chỉ implicit caching; một số model cũ qua generateContent có explicit caching. Prefix tối thiểu của Claude thay đổi theo model và nền tảng hosting. Tra bảng model/API hiện hành, không suy từ tên cả họ model.</p>
+        <p>Model OpenAI GPT-5.6+ được hỗ trợ còn có explicit breakpoint; model cũ khác nhau. Gemini Interactions và Gemini4 chỉ implicit caching; một số model cũ qua generateContent có explicit caching. Prefix tối thiểu của Claude thay đổi theo model và nền tảng hosting. Tra bảng model/API hiện hành, không suy từ tên cả họ model.</p>
         <h3>Bài tính chi phí giả lập</h3><p>Chọn 100 request, mỗi request có 1.000 token input chung đủ điều kiện. Giả sử 20 lần ghi lạnh giá 1,25 đơn vị/1.000 token và 80 lần đọc giá 0,10. Chi phí = 20×1,25+80×0,10=33 đơn vị, so với 100 đơn vị không cache: giảm 67% cho phần input chung này. Giá và số hit đều do bài tập đặt ra, không phải báo giá provider, độ trễ đo được hay mức giảm toàn request; chưa tính output, token động, hết hạn và chi phí app cache.</p>
         <p>Benchmark công khai là loại bằng chứng khác: AWS báo 56% hit và 92,6% đáp án cache chính xác tại ngưỡng 0,95 trên 63.796 query/paraphrase, giảm 51,9% chi phí và 57,7% độ trễ trong cấu hình Titan/Claude/ElastiCache được nêu. Các số đó không dự đoán hiệu năng ứng dụng ví dụ.</p>
-        <h3>Kiểm tra ranh giới</h3><p>A được đọc lương và tạo cache cho “Lương của An?”. B cùng bot không có quyền đọc: B không được nhận câu trả lời cache đó. Thu hồi quyền A rồi chạy lại. Kiểm thêm “giá của nó?” sau hai lịch sử sản phẩm khác nhau. Khi miss, kiểm prefix đủ điều kiện, byte thực tế, TTL, routing và concurrency; cached token bằng0 chưa chỉ ra một nguyên nhân duy nhất. <a href="https://developers.openai.com/api/docs/guides/prompt-caching" target="_blank" rel="noreferrer">OpenAI prompt caching</a>. Nguồn kiểm tra ngày 12/11/2026: <a href="https://platform.claude.com/docs/en/build-with-claude/prompt-caching" target="_blank" rel="noreferrer">Claude prompt caching</a>. <a href="https://aistudio.google.com/docs/caching" target="_blank" rel="noreferrer">Gemini caching</a>. Nguồn kiểm tra ngày 12/11/2026: <a href="https://docs.aws.amazon.com/AmazonElastiCache/latest/dg/semantic-caching-benchmarks.html" target="_blank" rel="noreferrer">Cấu hình benchmark AWS</a>.</p><div class="takeaway"><span class="eyebrow">Takeaway</span><p><span class="hl">Cache trong phạm vi hiện đang được phép; đo hit rate, chất lượng đáp án, toàn chi phí và độ trễ trước khi bật.</span></p></div><div class="quiz" data-correct="2"><span class="eyebrow">Kiểm tra nhanh</span><p class="quiz-q">B hỏi đúng câu A đã hỏi trong cùng bot nhưng không được đọc nguồn của A. Hash khớp hoặc prompt_cache_key khác có đủ không?</p><button class="quiz-opt" onclick="quizPick(this,0)"><span class="quiz-letter">A</span><span>Có: cùng câu hỏi thì cùng quyền.</span></button><button class="quiz-opt" onclick="quizPick(this,1)"><span class="quiz-letter">B</span><span>Có: key provider cấp quyền cho tenant.</span></button><button class="quiz-opt" onclick="quizPick(this,2)"><span class="quiz-letter">C</span><span>Không: kiểm quyền hiện tại của B trước lookup và trả kết quả; key chỉ nhận diện công việc tái dùng.</span></button><button class="quiz-opt" onclick="quizPick(this,3)"><span class="quiz-letter">D</span><span>Chỉ cần nâng ngưỡng semantic lên0,99.</span></button><div class="quiz-feedback" role="status" data-explain="Độ giống câu hỏi và routing cache provider không cấp quyền dữ liệu. Ứng dụng xác định phạm vi, kiểm quyền hiện tại, từ chối hit cũ hoặc không được phép."></div></div></div>
+        <h3>Kiểm tra ranh giới</h3><p>A được đọc lương và tạo cache cho “Lương của An?”. B cùng bot không có quyền đọc: B không được nhận câu trả lời cache đó. Thu hồi quyền A rồi chạy lại. Kiểm thêm “giá của nó?” sau hai lịch sử sản phẩm khác nhau. Khi miss, kiểm prefix đủ điều kiện, byte thực tế, TTL, routing và concurrency; cached token bằng0 chưa chỉ ra một nguyên nhân duy nhất. <a href="https://developers.openai.com/api/docs/guides/prompt-caching" target="_blank" rel="noreferrer">OpenAI prompt caching</a>. <a href="https://platform.claude.com/docs/en/build-with-claude/prompt-caching" target="_blank" rel="noreferrer">Claude prompt caching</a>. <a href="https://aistudio.google.com/docs/caching" target="_blank" rel="noreferrer">Gemini caching</a>. <a href="https://docs.aws.amazon.com/AmazonElastiCache/latest/dg/semantic-caching-benchmarks.html" target="_blank" rel="noreferrer">Cấu hình benchmark AWS</a>.</p><div class="takeaway"><span class="eyebrow">Takeaway</span><p><span class="hl">Cache trong phạm vi hiện đang được phép; đo hit rate, chất lượng đáp án, toàn chi phí và độ trễ trước khi bật.</span></p></div><div class="quiz" data-correct="2"><span class="eyebrow">Kiểm tra nhanh</span><p class="quiz-q">B hỏi đúng câu A đã hỏi trong cùng bot nhưng không được đọc nguồn của A. Hash khớp hoặc prompt_cache_key khác có đủ không?</p><button class="quiz-opt" onclick="quizPick(this,0)"><span class="quiz-letter">A</span><span>Có: cùng câu hỏi thì cùng quyền.</span></button><button class="quiz-opt" onclick="quizPick(this,1)"><span class="quiz-letter">B</span><span>Có: key provider cấp quyền cho tenant.</span></button><button class="quiz-opt" onclick="quizPick(this,2)"><span class="quiz-letter">C</span><span>Không: kiểm quyền hiện tại của B trước lookup và trả kết quả; key chỉ nhận diện công việc tái dùng.</span></button><button class="quiz-opt" onclick="quizPick(this,3)"><span class="quiz-letter">D</span><span>Chỉ cần nâng ngưỡng semantic lên0,99.</span></button><div class="quiz-feedback" role="status" data-explain="Độ giống câu hỏi và routing cache provider không cấp quyền dữ liệu. Ứng dụng xác định phạm vi, kiểm quyền hiện tại, từ chối hit cũ hoặc không được phép."></div></div></div>
         <div class="lesson-nav" data-navfor="m4-l5"></div>
       </article>
     </div><!-- /container module 4 -->
@@ -1962,19 +1960,19 @@ dynamic: dữ liệu visitor + ngày + bằng chứng truy xuất + câu hỏi</
               <path d="M280 220 L240 220 L240 280 L540 280" stroke="var(--accent-2)" stroke-dasharray="3 3" fill="none" stroke-width="1"/>
               <text class="dgm-ink2" x="200" y="248" font-size="9" fill="var(--accent-2)">read</text>
               <text x="20" y="490" font-family="var(--font-mono)" font-size="10" fill="var(--ink-3)">Legend:</text>
-              <rect class="dgm-box" x="80" y="478" width="14" height="14"/><text class="dgm-ink2" x="100" y="490" font-size="10">lớp 2024</text>
-              <rect x="170" y="478" width="14" height="14" fill="var(--warning-bg)" stroke="var(--warning)"/><text class="dgm-ink2" x="190" y="490" font-size="10">lớp 2026-Q3 (4.2–4.4)</text>
+              <rect class="dgm-box" x="80" y="478" width="14" height="14"/><text class="dgm-ink2" x="100" y="490" font-size="10">retrieval</text>
+              <rect x="170" y="478" width="14" height="14" fill="var(--warning-bg)" stroke="var(--warning)"/><text class="dgm-ink2" x="190" y="490" font-size="10">production (4.2–4.4)</text>
               <rect class="dgm-accent" x="320" y="478" width="14" height="14"/><text class="dgm-ink2" x="340" y="490" font-size="10">storage</text>
               <rect x="390" y="478" width="14" height="14" fill="var(--success-bg)" stroke="var(--success)"/><text class="dgm-ink2" x="410" y="490" font-size="10">final answer</text>
               <text x="460" y="530" text-anchor="middle" font-size="11" fill="var(--ink-3)" font-style="italic">Các lớp retrieval. 1 pipeline. Mỗi lớp sửa 1 failure mode của lớp dưới.</text>
               <defs><marker id="m5l1-a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0 L10 5 L0 10 Z" fill="var(--ink-3)"/></marker><marker id="m5l1-b" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0 L10 5 L0 10 Z" fill="var(--warning)"/></marker></defs>
             </svg></div>
-            <figcaption><b>Hình 5.1</b>: Toàn bộ pipeline 2026-Q3. Cam = lớp 2026-Q3 (distillation + dispatcher + curation); còn lại là pipeline 2024. Cache stack 4 lớp bọc quanh toàn sơ đồ.</figcaption>
+            <figcaption><b>Hình 5.1</b>: Toàn bộ pipeline. Cam = distillation, dispatcher và curation; cache stack 4 lớp bọc quanh toàn sơ đồ.</figcaption>
           </figure>
 
-          <p>Không phải query nào cũng xứng cả pipeline này. <strong>Adaptive routing</strong> chọn đường theo độ khó: lookup đơn giản chỉ cần vector + lexical; câu hỏi thường đi hết pipeline; còn multi-hop cross-doc (câu trả lời nằm rải ở nhiều tài liệu, phải nối lại) mới cân nhắc agentic hoặc GraphRAG. Kể cả lúc đó, hãy chờ tới khi eval (1.4) trả lời được "đáng bao nhiêu ×?", vì chi phí token của hướng agentic đã đo ở 3.4.</p>
+          <p>Chọn đường xử lý phù hợp từng query. <strong>Adaptive routing</strong> chọn đường theo độ khó: lookup đơn giản chỉ cần vector + lexical; câu hỏi thường đi hết pipeline; còn multi-hop cross-doc (câu trả lời nằm rải ở nhiều tài liệu, phải nối lại) mới cân nhắc agentic hoặc GraphRAG. Kể cả lúc đó, hãy chờ tới khi eval (1.4) trả lời được "đáng bao nhiêu ×?", vì chi phí token của hướng agentic đã đo ở 3.4.</p>
 
-          <div class="callout danger"><div class="callout-title">Bằng chứng không tin cậy là attack surface</div><p>Chunk crawl có thể chứa indirect prompt injection. Định khung/escape bằng chứng như dữ liệu, không đưa text visitor vào chỉ dẫn system/developer, và thực thi quyền tài liệu/tool trong code tin cậy. Không đặt bí mật vào context. Chỉ thị độc không xuống dòng vẫn tấn công model: strip control character không phải ranh giới an toàn. Red-team phải kiểm output/action bị cấm và rò dữ liệu, không chỉ hình dạng evidence block. Các biện pháp giảm rủi ro, không bảo đảm miễn nhiễm. <a href="https://genai.owasp.org/llmrisk/llm01-prompt-injection/" target="_blank" rel="noreferrer">OWASP LLM01:2025</a> (kiểm tra 12/11/2026).</p></div><div class="takeaway">
+          <div class="callout danger"><div class="callout-title">Bằng chứng không tin cậy là attack surface</div><p>Chunk crawl có thể chứa indirect prompt injection. Định khung/escape bằng chứng như dữ liệu, không đưa text visitor vào chỉ dẫn system/developer, và thực thi quyền tài liệu/tool trong code tin cậy. Không đặt bí mật vào context. Chỉ thị độc không xuống dòng vẫn tấn công model: strip control character không phải ranh giới an toàn. Red-team phải kiểm output/action bị cấm và rò dữ liệu, không chỉ hình dạng evidence block. Các biện pháp giảm rủi ro, không bảo đảm miễn nhiễm. <a href="https://genai.owasp.org/llmrisk/llm01-prompt-injection/" target="_blank" rel="noreferrer">OWASP LLM01:2025</a>.</p></div><div class="takeaway">
             <span class="eyebrow"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true" focusable="false"><path d="M12 2v6m0 8v6M4.9 4.9l4.2 4.2m5.8 5.8l4.2 4.2M2 12h6m8 0h6M4.9 19.1l4.2-4.2m5.8-5.8l4.2-4.2"/></svg>Takeaway</span>
             <p>Các lớp retrieval, 1 pipeline, mỗi lớp sửa 1 lỗi của lớp dưới, và retrieval là attack surface: <span class="hl">retriever giỏi hơn nâng recall VÀ bán kính vụ nổ của document bị poison</span>.</p>
           </div>
@@ -2052,7 +2050,7 @@ dynamic: dữ liệu visitor + ngày + bằng chứng truy xuất + câu hỏi</
             </tbody>
           </table></div>
 
-          <div class="callout insight"><div class="callout-title">Thứ tự thiết kế</div><p>Thiết kế từ vấn đề thực tế lên, không từ kỹ thuật xuống. Mỗi lớp thêm <em>một</em> ý, sửa <em>một</em> kiểu lỗi của lớp dưới. Đó là vì sao các lớp kết hợp được mà không rối. Đừng thêm lớp nếu bạn chưa cảm thấy lỗi nó sửa.</p></div>
+          <div class="callout insight"><div class="callout-title">Thứ tự thiết kế</div><p>Bắt đầu từ lỗi đo được trên truy vấn thực tế. Mỗi lớp thêm <em>một</em> ý, sửa <em>một</em> kiểu lỗi của lớp dưới. Chỉ giữ thay đổi khi eval xác nhận lợi ích và chi phí phù hợp.</p></div>
 
           <div class="takeaway">
             <span class="eyebrow"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true" focusable="false"><path d="M12 2v6m0 8v6M4.9 4.9l4.2 4.2m5.8 5.8l4.2 4.2M2 12h6m8 0h6M4.9 19.1l4.2-4.2m5.8-5.8l4.2-4.2"/></svg>Takeaway</span>
@@ -2070,12 +2068,12 @@ dynamic: dữ liệu visitor + ngày + bằng chứng truy xuất + câu hỏi</
       <div class="complete">
         <div class="complete-badge">✓</div>
         <h2>Hoàn thành khoá học</h2>
-        <p>Bạn đã đi từ vấn đề hallucination → naive RAG → eval/ablation gate → các lớp retrieval → kỹ thuật production (distillation, dispatcher, curation) → caching. Việc đáng làm tiếp theo: lấy MỘT query thật đang hỏng, thêm nó vào frozen eval set, chạy baseline rồi chỉ bật đúng một thay đổi. RAG là chuyên đề độc lập cho sản phẩm knowledge/chatbot; không phải bước bắt buộc của một lộ trình AI chung.</p>
+        <p>Bạn đã đi từ vấn đề hallucination → naive RAG → eval/ablation gate → các lớp retrieval → kỹ thuật production (distillation, dispatcher, curation) → caching. Việc đáng làm tiếp theo: lấy một query thật đang hỏng, thêm nó vào frozen eval set, chạy baseline rồi chỉ bật đúng một thay đổi. RAG là chuyên đề độc lập cho sản phẩm knowledge/chatbot; không phải bước bắt buộc của một lộ trình AI chung.</p>
         <div style="margin-top:26px"><a class="btn btn-primary" href="#overview">Về trang đầu</a></div>
       </div>
     </section>
 
-    <footer class="site">RAG, Layer by Layer · khoá học tương tác · 2026</footer>
+    <footer class="site">RAG, Layer by Layer · khoá học tương tác</footer>
   </main>
 </div>
 
@@ -2090,16 +2088,16 @@ const STORAGE_PREFIX = 'ai-course:';
 
 /* One row per lesson, in order. `part` groups them in the sidebar. */
 const LESSONS = [
-  {id:'m1-l1', mod:1, part:'Phần I · Nền tảng retrieval', title:'Vì sao cần retrieval — vấn đề hallucination', desc:'LLM là máy xác suất; retrieval nạp fact trước khi trả lời để không bịa tự tin.'},
-  {id:'m1-l2', mod:1, part:'Phần I · Nền tảng retrieval', title:'RAG ngây thơ — embed hết, tìm bằng cosine', desc:'4 bước chunk→embed→store→cosine; phải cùng model embed; 5 lỗi chờ sửa.'},
+  {id:'m1-l1', mod:1, part:'Phần I · Nền tảng retrieval', title:'Vì sao cần retrieval — vấn đề hallucination', desc:'Retrieval đưa bằng chứng vào ngữ cảnh; vẫn cần kiểm câu trả lời và trích nguồn.'},
+  {id:'m1-l2', mod:1, part:'Phần I · Nền tảng retrieval', title:'RAG ngây thơ — embed hết, tìm bằng cosine', desc:'4 bước chunk→embed→store→cosine; phải cùng model embed; 5 nhóm lỗi cần đánh giá.'},
   {id:'m1-l3', mod:1, part:'Phần I · Nền tảng retrieval', title:'Chunking — đừng cắt đứt dòng bảng', desc:'Chia theo cấu trúc, kiểm giới hạn token; chọn size/overlap bằng eval.'},
   {id:'m1-l4', mod:1, part:'Phần I · Nền tảng retrieval', title:'Eval trước layer — đo retrieval rồi mới nâng cấp', desc:'Frozen eval set + Recall/MRR/nDCG + faithfulness/cost; ablation một thay đổi mỗi lần, không lift thì bỏ.'},
   {id:'m2-l1', mod:2, part:'Phần II · Nhận diện & trộn retrieval', title:'Metadata — chunk không chỉ là text', desc:'Metadata làm 3 việc: filter, boost, route; tenant/ACL là ràng buộc cứng; language theo chính sách corpus.'},
   {id:'m2-l2', mod:2, part:'Phần II · Nhận diện & trộn retrieval', title:'Hybrid lexical — BM25 bắt cái vector bỏ sót', desc:'BM25/tsvector bắt proper noun; chạy song song vector; \'simple\' không \'english\'.'},
-  {id:'m2-l3', mod:2, part:'Phần II · Nhận diện & trộn retrieval', title:'Reciprocal Rank Fusion — gộp hai ranking không chuẩn hoá', desc:'RRF bỏ score dùng rank, k=60; không tune lại khi corpus đổi.'},
+  {id:'m2-l3', mod:2, part:'Phần II · Nhận diện & trộn retrieval', title:'Reciprocal Rank Fusion — gộp hai ranking không chuẩn hoá', desc:'RRF dùng rank thay cho score; k=60 là giá trị ví dụ, cần kiểm định trên corpus.'},
   {id:'m2-l4', mod:2, part:'Phần II · Nhận diện & trộn retrieval', title:'Multi-query expansion — hỏi một câu bốn cách', desc:'Mở rộng deterministic 4 biến thể, RRF gộp; cap variant để giữ cost.'},
   {id:'m3-l1', mod:3, part:'Phần III · Chất lượng retrieval nâng cao', title:'Contextual chunking — thêm tiền tố "chunk này nói gì"', desc:'Context từ nguồn cha trước embed; −35%/−49% là kết quả nghiên cứu Anthropic 2024, không hứa cho mọi workload.'},
-  {id:'m3-l2', mod:3, part:'Phần III · Chất lượng retrieval nâng cao', title:'Cross-encoder reranking — trọng tài nhỏ hơn, khôn hơn', desc:'Bi-encoder nhanh mờ, cross-encoder chậm sắc; funnel top-30 → top-15.'},
+  {id:'m3-l2', mod:3, part:'Phần III · Chất lượng retrieval nâng cao', title:'Cross-encoder reranking — chấm cặp query/document', desc:'Encode riêng và chấm chung cặp query/document; đo funnel top-30 → top-15 giả lập.'},
   {id:'m3-l3', mod:3, part:'Phần III · Chất lượng retrieval nâng cao', title:'CRAG — biết khi retrieval hỏng', desc:'Phân loại retrieval 4 trạng thái confident/moderate/low/empty; \'tôi không biết\' là feature; control plane G1/G2.'},
   {id:'m3-l4', mod:3, part:'Phần III · Chất lượng retrieval nâng cao', title:'Self-corrective retrieval — vòng cứu hỏng có biên', desc:'Một retry thay soft preference trong hard scope quyền/publication bất biến; đo score, chất lượng và chi phí.'},
   {id:'m4-l1', mod:4, part:'Phần IV · Kỹ thuật production', title:'Entity-aware planning — lớp khử nhập nhằng của production', desc:'Planner giải thực thể bằng match lexical trước retrieval; reject sibling trap; clarify khi tie.'},
