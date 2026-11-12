@@ -8,6 +8,12 @@ up LDAP / Active Directory single sign-on.
 > Built with **Next.js 16** (App Router), **React 19**, **TypeScript**,
 > **Tailwind v4**, **Prisma 6 + PostgreSQL 16**, **Auth.js v5**, **ldapts**.
 
+## Self-study courses
+
+Open the [public course catalog](https://nhocconan.github.io/interactive-self-training-courses-conan/courses/)
+for standalone interactive lessons. The [course registry](docs/INTERACTIVE-COURSE-STANDARD.md#course-registry)
+lists prerequisites and practice outcomes for the 13 courses. No portal login is required on GitHub Pages.
+
 ## Quick start
 
 ```bash

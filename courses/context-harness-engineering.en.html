@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<!-- TRANSLATION_PARENT: vi LOCALE: en LAST_SYNCED: 2026-09-22 SIBLINGS: context-harness-engineering.html -->
+<!-- TRANSLATION_PARENT: vi LOCALE: en LAST_SYNCED: 2026-11-13 SIBLINGS: context-harness-engineering.html -->
 <html lang="en">
 <head>
 <meta charset="UTF-8">
@@ -160,6 +160,11 @@ code{font-family:var(--font-mono);font-size:.85em;background:var(--surface-2);pa
 .figure svg{display:block;width:100%;height:auto;background:var(--surface)}
 .figure figcaption{padding:10px 16px;font-size:12.5px;color:var(--ink-2);border-top:1px solid var(--border);background:var(--surface-2)}
 .figure figcaption b{color:var(--ink)}
+.diagram-viewport{overflow-x:auto;max-width:100%}
+.diagram-viewport:focus-visible{outline:2px solid var(--accent-2);outline-offset:-2px}
+.figure .diagram-viewport svg{min-width:var(--diagram-width)}
+.containment-table table{min-width:0;table-layout:fixed;width:100%}
+.containment-table th:first-child{width:32%}
 .dgm-box{fill:var(--surface-2);stroke:var(--border-strong)}
 .dgm-accent{fill:color-mix(in srgb,var(--accent-2) 14%,var(--surface));stroke:var(--accent-2)}
 .dgm-warn{fill:var(--warning-bg);stroke:var(--warning)}
@@ -207,8 +212,8 @@ tbody tr:last-child td{border-bottom:none}tbody tr:hover{background:var(--surfac
 .quiz-letter{font-family:var(--font-mono);font-weight:600;color:var(--ink-2);flex-shrink:0}
 .quiz-opt.correct{background:var(--success);color:#fff;border-color:var(--success)}.quiz-opt.correct .quiz-letter{color:#fff}
 .quiz-opt.wrong{background:var(--danger);color:#fff;border-color:var(--danger)}.quiz-opt.wrong .quiz-letter{color:#fff}
-.quiz-feedback{margin-top:14px;font-size:14px;padding:12px 14px;border-radius:var(--radius-sm);display:none;line-height:1.6}
-.quiz-feedback.show{display:block}
+.quiz-feedback{margin:0;font-size:14px;padding:0;border-radius:var(--radius-sm);display:block;line-height:1.6}
+.quiz-feedback.show{margin-top:14px;padding:12px 14px}
 .quiz-feedback.ok{background:var(--success-bg);color:var(--success);border:1px solid color-mix(in srgb,var(--success) 40%,transparent)}
 .quiz-feedback.no{background:var(--danger-bg);color:var(--danger);border:1px solid color-mix(in srgb,var(--danger) 40%,transparent)}
 .lesson-nav{display:grid;grid-template-columns:1fr auto 1fr;gap:12px;padding:22px 30px 28px;border-top:1px solid var(--border);margin-top:22px}
@@ -226,6 +231,9 @@ tbody tr:last-child td{border-bottom:none}tbody tr:hover{background:var(--surfac
 .complete h2{font-size:2.2rem}.complete p{color:var(--ink-2);max-width:56ch;margin:14px auto 0}
 footer.site{border-top:1px solid var(--border);padding:26px 24px;text-align:center;font-family:var(--font-mono);font-size:11px;color:var(--ink-3)}
 </style>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E📚%3C/text%3E%3C/svg%3E">
+<meta name="course-knowledge-cutoff" content="2026-11-12">
+<meta name="course-reviewed" content="2026-11-13">
 </head>
 <body data-theme="midnight">
 <a href="#main" class="skip-link">Skip to content</a>
@@ -242,12 +250,12 @@ footer.site{border-top:1px solid var(--border);padding:26px 24px;text-align:cent
     </div>
     <div class="progress-wrap">
       <div class="progress-meta"><span>Progress</span><span><b id="pg-done">0</b>/<span id="pg-total">0</span> · <span id="pg-pct">0</span>%</span></div>
-      <div class="progress-track"><div class="progress-fill" id="pg-fill"></div></div>
+      <div class="progress-track" role="progressbar" aria-label="Course progress" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"><div class="progress-fill" id="pg-fill"></div></div>
     </div>
     <nav class="nav-scroll" id="nav-list" aria-label="Lesson list"></nav>
   </aside>
 
-  <main class="main" id="main">
+  <main class="main" id="main" tabindex="-1">
     <div class="topbar">
       <span class="mono" id="tb-crumb">Overview</span>
       <div class="topbar-mini"><div class="topbar-mini-fill" id="tb-fill"></div></div>
@@ -286,7 +294,7 @@ footer.site{border-top:1px solid var(--border);padding:26px 24px;text-align:cent
               <tr><td><strong>Attention budget</strong></td><td>A useful mental model: every new token adds both signal and competition. It is not an official meter in the API.</td></tr>
               <tr><td><strong>Lost in the middle</strong></td><td>Empirical results show information in the middle of a long input can be used less well than at the start or end; not every model/task follows the same U-shaped curve. The original paper (TACL, 2024) measured 2023-era models — read it as a design warning, not as a figure for the model you run today.</td></tr>
               <tr><td><strong>Prompt caching / prefix</strong></td><td>Reuse processing for a matching rendered <em>prefix</em> up to an eligible cache boundary. Providers differ in breakpoints, TTL and pricing; the durable rule is stable prefix first, variable suffix last.</td></tr>
-              <tr><td><strong>Tool registry</strong></td><td>The set of registered tools; their names + descriptions + schemas are packed into the context on every call (a standing fixed cost).</td></tr>
+              <tr><td><strong>Tool registry</strong></td><td>The available tool catalog. Upfront registration loads definitions into context; API deferred loading keeps deferred definitions out until discovery. Claude Code separately starts with tool names and server instructions. Measure the actual request.</td></tr>
               <tr><td><strong>JIT retrieval</strong></td><td>Fetch information <em>when needed</em> via tool search instead of loading everything up front — fewer tokens, higher accuracy.</td></tr>
               <tr><td><strong>Compaction</strong></td><td>Summarize-and-reset a bloated conversation history to reclaim token budget and fight context rot.</td></tr>
               <tr><td><strong>Working memory / scratchpad</strong></td><td>Agent state written out to a file/note externally instead of kept entirely inside the context window.</td></tr>
@@ -314,7 +322,7 @@ footer.site{border-top:1px solid var(--border);padding:26px 24px;text-align:cent
       <header class="module-header" data-module="1">
         <span class="eyebrow">Chapter 01 · Part I · Foundations</span>
         <h2>One stack, three layers: Prompt · Context · Harness</h2>
-        <p>Prompt engineering is <em>what you say</em> to the model. Context engineering is <em>what the model sees</em>. Harness engineering is <em>the world the model lives in</em>. Confusing these three layers is the most common reason AI features break when they reach production.</p>
+        <p>Prompt engineering is <em>what you say</em> to the model. Context engineering is <em>what the model sees</em>. Harness engineering is <em>the world the model lives in</em>. Distinguishing these layers gives you testable hypotheses when an AI feature fails in production.</p>
       </header>
 
       <article class="lesson" id="m1-l1" data-lesson>
@@ -415,7 +423,7 @@ PROMPT:
           </div>
           <div class="callout warn">
             <div class="callout-title">The "tweak the prompt first" trap</div>
-            <p>The "fix the prompt first" reflex exists because the prompt is <em>visible and immediately editable</em>. Harness and context bugs demand reading logs, instrumenting code, and reasoning about state: unpleasant work. Many teams we've watched optimize for comfort, and stay in the broken state longer.</p>
+            <p>The "fix the prompt first" reflex exists because the prompt is <em>visible and immediately editable</em>. Harness and context bugs demand reading logs, instrumenting code, and reasoning about state: unpleasant work. Check retrieval and runtime evidence before assuming the prompt is the cause.</p>
           </div>
 
           <h4>The team-level consequence</h4>
@@ -450,7 +458,7 @@ PROMPT:
             <button class="quiz-opt" onclick="quizPick(this,1)"><span class="quiz-letter">B</span><span>Switch to a stronger model (e.g. Opus instead of Sonnet, or a newer GPT generation).</span></button>
             <button class="quiz-opt" onclick="quizPick(this,2)"><span class="quiz-letter">C</span><span>Prioritize inspecting <em>what actually gets retrieved into the context</em> for prod queries vs test queries; a mismatch in retrieval, chunking or ordering is the first hypothesis to test.</span></button>
             <button class="quiz-opt" onclick="quizPick(this,3)"><span class="quiz-letter">D</span><span>Add more few-shot examples of correct answers to the prompt.</span></button>
-            <div class="quiz-feedback" data-explain="A cause worth checking early is retrieval distribution skew: test queries hit cleanly chunked seed data; prod queries hit messy real data, off-topic neighbors or stale chunks. Log the documents actually retrieved, compare them against the correct answer, fix retrieval if needed, and only then tune the prompt. If the evidence shows retrieval is fine, move on to check the model, the template and the runtime."></div>
+            <div class="quiz-feedback" role="status" aria-live="polite" aria-atomic="true" data-explain="A cause worth checking early is retrieval distribution skew: test queries hit cleanly chunked seed data; prod queries hit messy real data, off-topic neighbors or stale chunks. Log the documents actually retrieved, compare them against the correct answer, fix retrieval if needed, and only then tune the prompt. If the evidence shows retrieval is fine, move on to check the model, the template and the runtime."></div>
           </div>
         </div>
         <div class="lesson-nav" data-navfor="m1-l1"></div>
@@ -494,7 +502,8 @@ PROMPT:
           <p>In the <em>Lost in the Middle</em> experiment, many models do better when the information they need is at the start or end of the input and worse when it's in the middle. This is a design warning, not a law for every model: keep key instructions prominent, reduce noise, and test on your actual workload.</p>
           <p>Both sources have aged: <em>Lost in the Middle</em> (TACL, 2024) measured 2023-era models: GPT-3.5-turbo, Claude 1.3, MPT-30B, LongChat; <em>Context Rot</em> (Chroma, Jul 2025) measured 18 LLMs whose newest members are GPT-4.1, Claude 4, Gemini 2.5 and Qwen3; the rest of the roster is older still (GPT-3.5 Turbo, GPT-4 Turbo). Not one 2026-generation model among them. The U-shape is still a reasonable design warning, but if you want a number for the model you run, you have to measure it: place the same fact at the start, middle and end on your own eval.</p>
           <figure class="figure">
-            <svg viewBox="0 0 640 220" role="img" aria-label="A U-shaped graph: attention is high at the start and end of the context, lowest in the middle">
+            <div class="diagram-viewport" role="region" tabindex="0" aria-label="Diagram; scroll horizontally to read all labels" style="--diagram-width:640px"><svg viewBox="0 0 640 220" role="img" aria-label="Schematic relative task performance by evidence position in cited QA and key-value experiments; some models did worse in the middle, not a measured attention curve or universal law">
+              <text class="dgm-ink2" x="330" y="22" text-anchor="middle" font-size="11">Relative task performance · schematic</text>
               <line class="dgm-line" x1="60" y1="30" x2="60" y2="180" stroke-width="1.5"/>
               <line class="dgm-line" x1="60" y1="180" x2="600" y2="180" stroke-width="1.5"/>
               <text class="dgm-ink2" x="30" y="40" font-size="11" font-family="IBM Plex Mono">high</text>
@@ -503,10 +512,10 @@ PROMPT:
               <circle cx="60" cy="46" r="5" fill="var(--accent-2)"/>
               <circle cx="330" cy="150" r="5" fill="var(--warning)"/>
               <circle cx="600" cy="46" r="5" fill="var(--accent-2)"/>
-              <text class="dgm-ink" x="60" y="200" text-anchor="middle" font-size="11" font-family="IBM Plex Mono">start · system</text>
-              <text class="dgm-ink" x="330" y="200" text-anchor="middle" font-size="11" font-family="IBM Plex Mono">middle · dead zone</text>
-              <text class="dgm-ink" x="590" y="200" text-anchor="middle" font-size="11" font-family="IBM Plex Mono">end · new turn</text>
-            </svg>
+              <text class="dgm-ink" x="60" y="200" text-anchor="middle" font-size="11" font-family="IBM Plex Mono">start of input</text>
+              <text class="dgm-ink" x="330" y="200" text-anchor="middle" font-size="11" font-family="IBM Plex Mono">middle · may dip</text>
+              <text class="dgm-ink" x="590" y="200" text-anchor="middle" font-size="11" font-family="IBM Plex Mono">end of input</text>
+            </svg></div>
             <figcaption><b>Figure 2.1</b>: The U shape is a common result in positional experiments: the same fact can be used better at the start/end than in the middle. This curve illustrates the trend; it doesn't precisely predict every model.</figcaption>
           </figure>
 
@@ -514,7 +523,7 @@ PROMPT:
           <p>Every model call assembles <em>a single linear sequence</em>. Understanding how many tokens each segment costs, and how it interacts with the cache, is the foundation for every other context-engineering technique.</p>
           <div class="callout insight">
             <div class="callout-title">The 1M-token window · what changes, what doesn't</div>
-            <p>A 1M-token window is the <strong>default capacity on the main current Claude models</strong>, for example Fable 5.1, Opus 5.5 and Sonnet 5.5; current 1M-capable offerings are priced at their standard input rates across the window rather than adding a special long-context surcharge. That capacity is useful for long documents and tasks, but doesn't prove that any given monorepo or PDF will be understood in full. <strong>The context window is capacity; effective context is the part the model uses correctly on your eval.</strong></p>
+            <p>In the Claude API, models documented with a 1M-token window, including Fable 5.2, Opus 5.5 and Sonnet 5.5, use that capacity by default; these 1M-capable API models are priced at their standard input rates across the window rather than adding a special long-context surcharge. Client and plan limits must be checked separately. That API capacity is useful for long documents and tasks, but doesn't prove that any given monorepo or PDF will be understood in full. <strong>The context window is capacity; effective context is the part the model uses correctly on your eval.</strong></p>
           </div>
           <figure class="figure" style="padding:18px 20px 4px">
             <div class="stack-caption">a typical agent call · 200k working budget (1M ceiling)</div>
@@ -555,7 +564,7 @@ PROMPT:
             <button class="quiz-opt" onclick="quizPick(this,1)"><span class="quiz-letter">B</span><span>Move the key content to the <em>start</em> (the system zone) or the <em>end</em> (the most recent turn), and keep the context lean — the "lost in the middle" positional bias makes tokens in the middle the easiest to overlook.</span></button>
             <button class="quiz-opt" onclick="quizPick(this,2)"><span class="quiz-letter">C</span><span>Switch to a larger-window model so the document "fits" better.</span></button>
             <button class="quiz-opt" onclick="quizPick(this,3)"><span class="quiz-letter">D</span><span>Repeat the instruction "please read the document above" several times so the model remembers.</span></button>
-            <div class="quiz-feedback" data-explain="B is right because it addresses both observed risks: position and noise. max_tokens only limits output, so A doesn't help the model find the document; the larger window in C only adds capacity; repeating the reminder in D just adds noise. After reordering the context you must still run the eval, because the positional effect depends on the model and the task."></div>
+            <div class="quiz-feedback" role="status" aria-live="polite" aria-atomic="true" data-explain="B is right because it addresses both observed risks: position and noise. max_tokens only limits output, so A doesn't help the model find the document; the larger window in C only adds capacity; repeating the reminder in D just adds noise. After reordering the context you must still run the eval, because the positional effect depends on the model and the task."></div>
           </div>
         </div>
         <div class="lesson-nav" data-navfor="m2-l1"></div>
@@ -577,13 +586,13 @@ PROMPT:
             </ul>
           </div>
 
-          <p>Your internal assistant ships the same 100k-token instruction block with every request. From the second call on, that block should cost the equivalent of 10k thanks to caching; instead the bill stays flat and time-to-first-token never moves. Open the payload: the first line of the system prompt is the current timestamp, rewritten on every call, so no prefix ever matches. Tokens are <strong>money</strong> and they are <strong>latency</strong>, and the order you lay them out decides how much you pay.</p>
+          <p>Your internal assistant ships the same 100k-token instruction block with every request. With an illustrative 0.1× cache-read rate, a cache hit on a later call would make that block cost the equivalent of 10k input tokens; instead the bill stays flat and time-to-first-token never moves. Open the payload: the first line of the system prompt is the current timestamp, rewritten on every call, so no prefix ever matches. Tokens are <strong>money</strong> and they are <strong>latency</strong>, and the order you lay them out decides how much you pay.</p>
 
           <h4>Token economics — what actually costs</h4>
           <p>Input, cached input and output have different unit prices per model. Because price lists change fast, don't memorize a ratio; read the usage of a real request and compute against the model you're running. The part usually missed is the cost that repeats through every agent loop:</p>
           <ul>
             <li><strong>Latency tax</strong>: long input usually raises time-to-first-token; in an agent loop, that increase repeats on every iteration.</li>
-            <li><strong>Quality tax</strong>: every irrelevant token dilutes attention on the relevant ones (that's context rot).</li>
+            <li><strong>Quality tax</strong>: irrelevant tokens can reduce reliability on some tasks; measure the effect for the model and workload.</li>
             <li><strong>Cache-miss tax</strong>: see just below.</li>
           </ul>
 
@@ -596,27 +605,25 @@ PROMPT:
             <p><strong>1)</strong> Most stable first: system prompt, tool definitions, large reference documents. <strong>2)</strong> Stable per session: project context, user persona. <strong>3)</strong> Variable suffix: conversation history, current message. Anything dynamic (timestamp, ID) must sit in the <em>suffix</em>.</p>
           </div>
           <div class="code-card">
-            <div class="prompt-head"><span>typescript · vercel ai sdk · cache-friendly order</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
-<pre>const result = await generateText({
-  // Sonnet 5: changing instructions mid-session breaks the cache (see callout below).
-  model: anthropic('claude-sonnet-5'),
+            <div class="prompt-head"><span>typescript · AI SDK 6 · cache breakpoint</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
+<pre>import { generateText } from 'ai';
+import { anthropic } from '@ai-sdk/anthropic';
 
-  // 1. SYSTEM — most stable. Cache aggressively.
-  system: [{
-    type: 'text',
-    text: SYSTEM_PROMPT_STABLE,
-    providerOptions: { anthropic: { cacheControl: { type: 'ephemeral' } } }
-  }],
-
-  // 2. TOOLS — also stable. The registry rarely changes within a session.
+const result = await generateText({
+  model: anthropic('claude-sonnet-5-5'),
   tools: TOOL_REGISTRY,
-
-  // 3. MESSAGES — variable suffix. A cache hit stops here.
-  messages: [ ...conversationHistory, { role: 'user', content: userMessage } ],
+  messages: [
+    {
+      role: 'system',
+      content: SYSTEM_PROMPT_STABLE,
+      providerOptions: { anthropic: { cacheControl: { type: 'ephemeral' } } }
+    },
+    ...conversationHistory,
+    { role: 'user', content: userMessage }
+  ]
 });
-
-// Inspect cache stats — the dashboard should track cache_creation & cache_read.
-console.log(result.providerMetadata?.anthropic);</pre>
+console.log(result.usage.inputTokenDetails.cacheReadTokens);
+console.log(result.usage.inputTokenDetails.cacheWriteTokens);</pre>
           </div>
 
           <h4>Hidden tax — tool results left behind in history</h4>
@@ -626,8 +633,8 @@ console.log(result.providerMetadata?.anthropic);</pre>
             <p>Don't conclude the model is "tired". Open the trace and check whether the history is buried under old tool output. If it is, use the tool's compaction/reset, write important state out to a structured artifact, or start a new session with a compact brief.</p>
           </div>
 
-          <h4>The tool registry — a standing fixed cost</h4>
-          <p>Every registered tool in principle injects its name + description + JSON schema into the context <em>on every call</em>. Tool search has moved the schema part out of the default (see below), but the name + description stay: a bloating registry still eats tokens in every conversation.</p>
+          <h4>The tool registry — cost depends on loading</h4>
+          <p>With upfront registration, tool names, descriptions and schemas enter the model context. In the Claude API, tools marked <code>defer_loading: true</code> stay entirely outside the initial context until discovery; only the search tool and non-deferred definitions load. Claude Code has a different client strategy: tool names and server instructions load initially, with full definitions deferred. A 100-tool API catalog therefore does not necessarily mean 100 descriptions on every call. Audit the actual payload and client mode.</p>
           <div class="compare">
             <div class="compare-col bad"><span class="eyebrow">Bloated tool def · ~200 tokens</span>
 <pre>{
@@ -640,7 +647,7 @@ console.log(result.providerMetadata?.anthropic);</pre>
    SQL syntax and our system conventions...",
   parameters: { /* loose schema */ }
 }</pre>
-              <ul><li>Vague description = wrong calls. Long description = a standing token tax. Loose schema = invalid calls slip through.</li></ul>
+              <ul><li>Vague description = wrong calls. Long descriptions cost tokens when loaded. Loose schema = invalid calls slip through.</li></ul>
             </div>
             <div class="compare-col good"><span class="eyebrow">Tight tool def · ~60 tokens</span>
 <pre>{
@@ -695,7 +702,7 @@ console.log(result.providerMetadata?.anthropic);</pre>
               <textarea id="tokenInput" rows="4" style="width:100%;font-family:var(--font-mono);font-size:12.5px;padding:12px;border:1px solid var(--border);border-radius:10px;background:var(--surface);color:var(--ink);resize:vertical" oninput="estTokens()">You are a senior backend engineer reviewing code changes for a multi-tenant SaaS platform built on Next.js, tRPC, Drizzle ORM and Postgres. For each change, assess: correctness, fit with the codebase style, security risk, performance impact, tenant isolation. Output structured JSON.</textarea>
               <div style="display:flex;align-items:center;gap:12px;margin-top:12px;flex-wrap:wrap">
                 <span class="badge" id="tokEst">~0 tokens</span>
-                <span class="mono" style="font-size:11px;color:var(--ink-3)">~4 chars/token · English only; Vietnamese and similar text usually runs ~1.6–2× higher</span>
+                <span class="mono" style="font-size:11px;color:var(--ink-3)">~4 chars/token · rough English estimate; tokenizer and language can change this substantially</span>
               </div>
               <div class="progress-track" style="margin-top:12px;height:10px"><div class="progress-fill" id="tokBar" style="width:0"></div></div>
               <div class="mono" id="tokLegend" style="font-size:11px;color:var(--ink-3);margin-top:6px">taking up <strong>0%</strong> of a 200k window</div>
@@ -725,7 +732,7 @@ console.log(result.providerMetadata?.anthropic);</pre>
             <button class="quiz-opt" onclick="quizPick(this,1)"><span class="quiz-letter">B</span><span>The context has accumulated tool results (file reads, command output, search results) past the useful threshold — context rot is eroding recall. Run <code>/compact</code> to summarize-and-reset, or <code>/clear</code> to start clean with a new brief.</span></button>
             <button class="quiz-opt" onclick="quizPick(this,2)"><span class="quiz-letter">C</span><span>Switch to a stronger model — Opus will handle it better.</span></button>
             <button class="quiz-opt" onclick="quizPick(this,3)"><span class="quiz-letter">D</span><span>Raise output max_tokens so the model has more room to think.</span></button>
-            <div class="quiz-feedback" data-explain="B is right because it checks the cause with the trace and then reduces history that's no longer useful. A restarts without handing off state, losing progress; C swaps the model before measuring, which can hide a design flaw; D only widens the output. There is no universal compaction mark: pick the trigger point from token usage, latency and quality on the real workload."></div>
+            <div class="quiz-feedback" role="status" aria-live="polite" aria-atomic="true" data-explain="B is right because it checks the cause with the trace and then reduces history that's no longer useful. A restarts without handing off state, losing progress; C swaps the model before measuring, which can hide a design flaw; D only widens the output. There is no universal compaction mark: pick the trigger point from token usage, latency and quality on the real workload."></div>
           </div>
         </div>
         <div class="lesson-nav" data-navfor="m2-l2"></div>
@@ -831,7 +838,7 @@ console.log(result.providerMetadata?.anthropic);</pre>
           <h4>Pattern 4 · Subagent isolation</h4>
           <p>Spawn a fresh agent context for a focused task. The parent only receives the final artifact/summary, so the child's detailed exploration doesn't spill into the main context. Anthropic recommends this pattern for long-running tasks; it's close to how a lead receives a report instead of reading every action of each team member.</p>
           <figure class="figure">
-            <svg viewBox="0 0 660 150" role="img" aria-label="An illustrative subagent-isolation flow: the parent agent spawns a subagent with a brief, the subagent explores in its own context and returns a short summary for the parent to continue">
+            <div class="diagram-viewport" role="region" tabindex="0" aria-label="Diagram; scroll horizontally to read all labels" style="--diagram-width:660px"><svg viewBox="0 0 660 150" role="img" aria-label="An illustrative subagent-isolation flow: the parent agent spawns a subagent with a brief, the subagent explores in its own context and returns a short summary for the parent to continue">
               <rect class="dgm-accent" x="16" y="54" width="110" height="42" rx="9" stroke-width="2"/>
               <text class="dgm-ink" x="71" y="80" text-anchor="middle" font-size="12" font-weight="700">parent agent</text>
               <path class="dgm-flow" d="M126 75 H176" stroke-width="2" marker-end="url(#a3)"/>
@@ -847,15 +854,16 @@ console.log(result.providerMetadata?.anthropic);</pre>
               <rect class="dgm-box" x="392" y="112" width="252" height="26" rx="7"/>
               <text class="dgm-ink2" x="518" y="129" text-anchor="middle" font-size="10" font-family="IBM Plex Mono">parent context stays clean · uncontaminated</text>
               <defs><marker id="a3" markerWidth="9" markerHeight="9" refX="7" refY="4.5" orient="auto"><path d="M0 0 L9 4.5 L0 9 z" fill="var(--accent-2)"/></marker></defs>
-            </svg>
+            </svg></div>
             <figcaption><b>Figure 3.2</b>. Hypothetical example: the subagent uses 80k tokens to explore; the parent receives only the 200-token conclusion. The real numbers depend on the task and tools. This pattern fits research/exploration, specialized tasks (migration, security review), and fanning out across multiple hypotheses.</figcaption>
           </figure>
 
           <h4>Pattern 5 · Structured output (the safety net)</h4>
-          <p>Free-form text output can drift off format; in production, just a few parse failures are enough to break a pipeline. Enforce structure at the API layer. In priority order: <strong>(1)</strong> a tool-call as output (define a "submit the answer" tool, the API validates the schema); <strong>(2)</strong> an SDK helper (<code>generateObject</code> + Zod, or <code>response_format: json_schema</code>); <strong>(3)</strong> JSON mode + validate + retry.</p>
+          <p>Free-form output can break a pipeline when parsing fails. Use a provider-supported schema-constrained output or strict tool-call mode, then validate the returned data. In AI SDK 6, use <code>generateText</code> with <code>Output.object</code>; <code>generateObject</code> is deprecated. Schema validity checks shape, not factual truth or permission.</p>
           <div class="code-card">
-            <div class="prompt-head"><span>typescript · vercel ai sdk · structured output</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
-<pre>import { generateObject } from 'ai';
+            <div class="prompt-head"><span>typescript · AI SDK 6 · structured output</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
+<pre>import { generateText, Output, NoObjectGeneratedError } from 'ai';
+import { anthropic } from '@ai-sdk/anthropic';
 import { z } from 'zod';
 
 const PostAnalysis = z.object({
@@ -868,19 +876,28 @@ const PostAnalysis = z.object({
   language: z.enum(['vi','en','mixed'])
 });
 
-const { object } = await generateObject({
-  model: anthropic('claude-sonnet-5'),
-  schema: PostAnalysis,
-  prompt: `Analyze this post: "${postText}"`
-});
-// `object` is type-safe & schema-validated. No JSON.parse,
-// no try/catch on junk output. Wrong field → the SDK retries with the schema error.</pre>
+async function analyzePost(postText) {
+try {
+  const { output } = await generateText({
+    model: anthropic('claude-sonnet-5-5'),
+    output: Output.object({ schema: PostAnalysis }),
+    prompt: `Analyze this post: "${postText}"`
+  });
+  return output;
+} catch (error) {
+  if (NoObjectGeneratedError.isInstance(error)) {
+    return { status: 'invalid_output' };
+  }
+  throw error;
+}
+}</pre>
           </div>
-          <div class="callout danger"><div class="callout-title">Non-negotiable for production</div><p>Always validate. Always type. <strong>Don't <code>JSON.parse</code> raw output and hope the shape holds.</strong> In our experience this is one of the most common places a feature breaks once it reaches production.</p></div>
+          <div class="callout danger"><div class="callout-title">Non-negotiable for production</div><p>Always validate. Always type. <strong>Don't <code>JSON.parse</code> raw output and hope the shape holds.</strong> Handle schema failure explicitly and test malformed output at the boundary.</p></div>
 
+          <p>Parsing or schema validation can fail with <code>NoObjectGeneratedError</code>. This example returns a failure state; it does not retry automatically. If your harness adds a repair attempt, bound its calls and cost and re-check the result. <a href="https://ai-sdk.dev/docs/ai-sdk-core/generating-structured-data" target="_blank" rel="noopener noreferrer">AI SDK structured-output documentation</a> (checked 12 Nov 2026).</p>
           <h4>Pattern 6 · Few-shot via in-context examples</h4>
           <p>Instructions <em>tell</em> the model what to do; examples <em>show</em> it an answer that meets the bar. Examples are usually helpful for format, edge cases and tone, but bad examples can drag quality down too. <strong>How to do it:</strong> pick diverse examples, including a refuse/uncertain case; run the eval when you add or remove examples; and keep the stable part in the prefix to reuse the cache.</p>
-          <p><strong>Two uses worth separating.</strong> For <em>output format</em>, refusal cases and tone, examples are still the most direct tool. For <em>tool-calling</em>, Anthropic notes an observation pointing the other way (24 Jul 2026): <em>"giving examples actually constrains them to a certain exploration space"</em>: tool-use examples can make the model retrace the example's exact path instead of exploring on its own. The direction they shift toward is investing in the tool design itself: parameter names that state intent, and enums instead of free-form strings (a status like <code>pending</code>/<code>in_progress</code>/<code>completed</code> already suggests how to use it). More on this in Lesson 5.2.</p>
+          <p><strong>Two uses worth separating.</strong> For <em>output format</em>, refusal cases and tone, examples are still the most direct tool. For <em>tool-calling</em>, Anthropic notes an observation pointing the other way (24 Jul 2026): examples can narrow exploration: tool-use examples can make the model retrace the example's exact path instead of exploring on its own. The direction they shift toward is investing in the tool design itself: parameter names that state intent, and enums instead of free-form strings (a status like <code>pending</code>/<code>in_progress</code>/<code>completed</code> already suggests how to use it). More on this in Lesson 5.2.</p>
           <div class="callout insight"><div class="callout-title">Two Anthropic sources point in opposite directions</div><p>In 11/2025 they introduced <em>tool use examples</em> and reported accuracy on complex parameter handling rising from 72% to 90%; in 07/2026 they advise investing in schemas rather than examples. The reconciling reading: examples help with <em>hard parameter formatting</em>, schemas help with <em>choosing the path</em>. Don't strip your examples because you read one post: strip them and then run the eval.</p></div>
 
           <h4>Anti-pattern · Context poisoning</h4>
@@ -906,9 +923,9 @@ const { object } = await generateObject({
             <p class="quiz-q">You're building an AI assistant for a social-listening dashboard with months of data. Users ask all kinds of things, from "how many mentions did brand X get last week" to "what's the overall sentiment about the new product launch". Which context strategy do you choose?</p>
             <button class="quiz-opt" onclick="quizPick(this,0)"><span class="quiz-letter">A</span><span>Embed every post, take top-50 by cosine per query, stuff the results into the context.</span></button>
             <button class="quiz-opt" onclick="quizPick(this,1)"><span class="quiz-letter">B</span><span>Pre-load the most recent month of data into the system prompt so the model "has context".</span></button>
-            <button class="quiz-opt" onclick="quizPick(this,2)"><span class="quiz-letter">C</span><span>Route on intent first — structured questions ("how many", "top 10") to a SQL/aggregation tool, semantic ones ("what's the sentiment") to a tight top-k retrieval tool. Both via JIT tools. The agent picks the branch.</span></button>
+            <button class="quiz-opt" onclick="quizPick(this,2)"><span class="quiz-letter">C</span><span>Route counts and overall sentiment to labeled-data aggregation over the defined corpus, or a documented representative sample with denominator and uncertainty. Use top-k retrieval for themes and illustrative quotations. Both can be JIT tools.</span></button>
             <button class="quiz-opt" onclick="quizPick(this,3)"><span class="quiz-letter">D</span><span>Use the largest context window and dump everything in.</span></button>
-            <div class="quiz-feedback" data-explain="Most dashboard questions are aggregation queries that semantic search hurts (cosine doesn't give you a count). Some are genuinely semantic. Route on intent first, then pick the retriever that fits that intent; use JIT tools for both branches to keep context lean. This is the architecture you want behind any 'AI dashboard' feature — and it generalizes to support tickets, product analytics, document search."></div>
+            <div class="quiz-feedback" role="status" aria-live="polite" aria-atomic="true" data-explain="Overall sentiment is a population claim: define the corpus, time range, label coverage and denominator. A representative sample also needs its selection method and uncertainty. Similarity top-k can overselect complaints: 10 complaints among 1000 posts do not establish negative overall sentiment. Use retrieval for themes/examples, not an overall proportion."></div>
           </div>
         </div>
         <div class="lesson-nav" data-navfor="m3-l1"></div>
@@ -939,12 +956,12 @@ const { object } = await generateObject({
 
           <h4>Context has a lifecycle, not just a window</h4>
           <p>Every piece of context passes through four stages. You learned patterns for the first three in Chapters 2–3; the fourth (<em>forgetting</em>) is the missing piece in most systems.</p>
-          <figure class="figure">
-            <svg viewBox="0 0 720 214" role="img" aria-label="A four-stage context lifecycle in sequence: ingest, use, consolidate, forget; a loop arrow from forget back to ingest shows this is a repeating cycle">
+          <figure class="figure diagram-scroll">
+            <div class="diagram-viewport" style="--diagram-width:900px" role="region" tabindex="0" aria-label="Memory lifecycle diagram; scroll horizontally for readable labels"><svg viewBox="0 0 720 214" role="img" aria-label="A four-stage context lifecycle in sequence: ingest, use, consolidate, forget; a loop arrow from forget back to ingest shows this is a repeating cycle">
               <rect class="dgm-accent" x="14" y="46" width="150" height="60" rx="10" stroke-width="2"/>
               <text class="dgm-ink" x="89" y="72" text-anchor="middle" font-size="12.5" font-weight="700">1 · Ingest</text>
               <text class="dgm-ink2" x="89" y="92" text-anchor="middle" font-size="9" font-family="IBM Plex Mono">ingest</text>
-              <text class="dgm-ink2" x="89" y="128" text-anchor="middle" font-size="9.5" font-family="IBM Plex Mono">JIT + write gate</text>
+              <text class="dgm-ink2" x="89" y="128" text-anchor="middle" font-size="9.5" font-family="IBM Plex Mono">JIT / checked writes</text>
               <path class="dgm-flow" d="M164 76 H190" stroke-width="2" marker-end="url(#m3l2-ah)"/>
               <rect class="dgm-box" x="190" y="46" width="150" height="60" rx="10"/>
               <text class="dgm-ink" x="265" y="72" text-anchor="middle" font-size="12.5" font-weight="700">2 · Use</text>
@@ -954,7 +971,7 @@ const { object } = await generateObject({
               <rect class="dgm-box" x="366" y="46" width="150" height="60" rx="10"/>
               <text class="dgm-ink" x="441" y="72" text-anchor="middle" font-size="12.5" font-weight="700">3 · Consolidate</text>
               <text class="dgm-ink2" x="441" y="92" text-anchor="middle" font-size="9" font-family="IBM Plex Mono">consolidate</text>
-              <text class="dgm-ink2" x="441" y="128" text-anchor="middle" font-size="9.5" font-family="IBM Plex Mono">compaction + notes</text>
+              <text class="dgm-ink2" x="441" y="128" text-anchor="middle" font-size="9.5" font-family="IBM Plex Mono">check notes / compact</text>
               <path class="dgm-flow" d="M516 76 H542" stroke-width="2" marker-end="url(#m3l2-ah)"/>
               <rect class="dgm-warn" x="542" y="46" width="150" height="60" rx="10" stroke-width="1.5"/>
               <text class="dgm-ink" x="617" y="72" text-anchor="middle" font-size="12.5" font-weight="700">4 · Forget</text>
@@ -963,8 +980,8 @@ const { object } = await generateObject({
               <path class="dgm-line" d="M676 106 V180 H36 V110" stroke-width="1.6" stroke-dasharray="5 4" marker-end="url(#m3l2-ah)"/>
               <text class="dgm-ink2" x="353" y="200" text-anchor="middle" font-size="9.5" font-family="IBM Plex Mono">the lifecycle repeats · forgetting feeds ingest again</text>
               <defs><marker id="m3l2-ah" markerWidth="9" markerHeight="9" refX="7" refY="4.5" orient="auto"><path d="M0 0 L9 4.5 L0 9 z" fill="var(--accent-2)"/></marker></defs>
-            </svg>
-            <figcaption><b>Figure 3.3</b>: The context lifecycle. <strong>Ingest</strong> = JIT retrieval through a write gate; <strong>use</strong> = layout by stability (Lesson 2.1); <strong>consolidate</strong> = compaction + structured notes; <strong>forget</strong> = evict/expiry. Most systems stop at the first three rungs. Missing the forgetting rung is why memory rots over time.</figcaption>
+            </svg></div>
+            <figcaption><b>Figure 3.3</b>: The context lifecycle. <strong>Ingest</strong> = JIT retrieval; durable writes pass a write gate; <strong>use</strong> = layout by stability (Lesson 2.1); <strong>consolidate</strong> = checked persistent notes; compacting active history is a separate operation; <strong>forget</strong> = evict/expiry. Most systems stop at the first three rungs. Missing the forgetting rung is why memory rots over time. On narrow screens, scroll the diagram horizontally.</figcaption>
           </figure>
 
           <h4>Provenance &amp; authority — who may write, what beats what</h4>
@@ -990,12 +1007,16 @@ const { object } = await generateObject({
 
           <div class="callout danger">
             <div class="callout-title">Write gate — the check before a write</div>
-            <p>A fact only enters long-term memory once it has passed verification, by a <strong>verifier</strong> (test/eval/schema) or by a human. Without a write gate, one misunderstanding by the agent means every later session <em>inherits</em> the error, and it reinforces itself each time it's cited again. This is exactly the durable version of context poisoning: instead of dying with the session, the error is stamped in permanently.</p>
+            <p>A fact only enters long-term memory once it has passed verification, against a trusted source, a domain test or a responsible human. A schema checks structure only. Without a write gate, one misunderstanding by the agent means every later session <em>inherits</em> the error, and it reinforces itself each time it's cited again. This is exactly the durable version of context poisoning: instead of dying with the session, the error is stamped in permanently.</p>
           </div>
 
+          <h4>A checked correction, from transcript to next session</h4>
+          <p>Synthetic exercise: a reviewed migration record <code>queue-migration#42</code> says production moved to SQS on 1 October. An old note still says Redis. Keep the original record as evidence; propose a replacement note, check its environment and effective date against the record, and mark the old note superseded. Keep the audit history outside active retrieval. Never promote an instruction found inside a log into policy.</p>
+          <div class="table-wrap"><table><thead><tr><th>Component</th><th>What this example keeps</th></tr></thead><tbody><tr><td>Transcript / source record</td><td>Original migration evidence and its scope; access-controlled</td></tr><tr><td>Memory note</td><td>Production uses SQS; source #42; effective 1 October; checked by owner</td></tr><tr><td>Representation</td><td>A repo infrastructure page linking to the checked note</td></tr><tr><td>Injected context</td><td>Only the relevant queue note for the current task</td></tr></tbody></table></div>
+          <p><a href="https://www.anthropic.com/research/components-of-agent-memory" target="_blank" rel="noopener noreferrer">Anthropic's 6 November 2026 memory article</a> separates these components and describes checking notes against original transcripts. This is vendor evidence on named tasks; one wiki experiment showed no clear gain over search. Persistent memory differs from compaction of a current conversation. Reorganizing notes can propose a correction; it does not guarantee one. Run the stale-note questions again and check the answers against source #42.</p>
           <div class="callout insight">
             <div class="callout-title">Forgetting is a feature, not an incident</div>
-            <p>A minimal forgetting mechanism: each item carries a <strong>date + source</strong>; periodically audit two questions, "is this still true?" and "when was it last used?"; and for a wrong item, <strong>delete</strong> it rather than append a correction line (two contradictory facts coexisting is worse). <strong>Measure:</strong> the average age of memory items, the share referenced in the last 30 days, and how often the agent cites an expired fact on the eval. Good memory shrinks over time, it doesn't bloat forever.</p>
+            <p>A minimal forgetting mechanism: each item carries a <strong>date + source</strong>; periodically audit two questions, "is this still true?" and "when was it last used?"; and for a wrong item, <strong>delete</strong> it rather than append a correction line (two contradictory facts coexisting is worse). <strong>Measure:</strong> the average age of memory items, the share referenced in the last 30 days, and how often the agent cites an expired fact on the eval. Useful verified knowledge can grow. Judge governance by stale-fact reuse, task success, retrieval relevance and injected-token cost; stored size and loaded context are different quantities.</p>
           </div>
 
           <div class="exercise">
@@ -1003,7 +1024,7 @@ const { object } = await generateObject({
             <ol>
               <li>Open the <code>CLAUDE.md</code> / <code>AGENTS.md</code> / memory store you use. For <em>each</em> item, write down three answers: is it still true? what source did it come from? when was it last actually useful?</li>
               <li>Act on the results: <strong>delete</strong> dead items, <strong>date-stamp</strong> the ones you keep, and <strong>move</strong> "work in progress" items to a task file (the correct working-memory layer, Chapter 4) instead of leaving them in long-term memory.</li>
-              <li>Measure before/after: the token size of the loaded-per-session part. If it doesn't shrink, you're hoarding, not governing.</li>
+              <li>Compare before/after on the same questions: stale Redis answers, correct SQS answers, relevant retrieved notes and injected tokens. A smaller context that loses the migration evidence fails; a larger store can pass when it retrieves the right verified note.</li>
             </ol>
           </div>
 
@@ -1014,12 +1035,12 @@ const { object } = await generateObject({
 
           <div class="quiz" data-correct="2">
             <span class="eyebrow">Quick check</span>
-            <p class="quiz-q">The team's agent keeps asserting "the system uses Redis for the queue" when the team switched to SQS two months ago. The stale fact lives in a memory store shared across every session. The right way to handle it?</p>
+            <p class="quiz-q">The team's agent keeps asserting "the system uses Redis for the queue" when the team switched to SQS on 1 October. The stale fact lives in a memory store shared across every session. The right way to handle it?</p>
             <button class="quiz-opt" onclick="quizPick(this,0)"><span class="quiz-letter">A</span><span>Add a reminder "double-check before answering about infrastructure" to the system prompt.</span></button>
             <button class="quiz-opt" onclick="quizPick(this,1)"><span class="quiz-letter">B</span><span>Grow the memory store so it can hold the new SQS fact too, giving the model full context on both.</span></button>
             <button class="quiz-opt" onclick="quizPick(this,2)"><span class="quiz-letter">C</span><span>This is the memory that never forgets: delete/fix the wrong item <em>at the source</em>, add a date-stamp + source to every item, put in a write gate and a periodic audit — then verify with an eval that the agent no longer cites the stale fact.</span></button>
             <button class="quiz-opt" onclick="quizPick(this,3)"><span class="quiz-letter">D</span><span>Switch to a newer model — it will reason more accurately about the current infrastructure.</span></button>
-            <div class="quiz-feedback" data-explain="The root cause is in memory, not the prompt or the model. B makes it worse: when both 'Redis' and 'SQS' live in the store, the model has no signal for which is fresher, so it picks almost at random — you've just turned a deterministic bug into a sometimes-right-sometimes-wrong one, much harder to catch. A and D both ignore the cause: the wrong fact is still there, and a reminder or a stronger model can still surface it. The right fix is at the source, tag source + trust class + date so freshness only breaks ties among trusted sources, add a write gate so the error can't re-enter, and verify with an eval — that's the context lifecycle with a forgetting direction."></div>
+            <div class="quiz-feedback" role="status" aria-live="polite" aria-atomic="true" data-explain="The root cause is in memory, not the prompt or the model. B makes it worse: when both 'Redis' and 'SQS' live in the store, the model has no signal for which is fresher, so it can reuse the stale claim. Coexisting contradictions do not define a measured probability of error. A and D both ignore the cause: the wrong fact is still there, and a reminder or a stronger model can still surface it. The right fix is at the source, tag source + trust class + date so freshness only breaks ties among trusted sources, add a write gate so the error can't re-enter, and verify with an eval — that's the context lifecycle with a forgetting direction."></div>
           </div>
         </div>
         <div class="lesson-nav" data-navfor="m3-l2"></div>
@@ -1029,7 +1050,7 @@ const { object } = await generateObject({
       <header class="module-header" data-module="4">
         <span class="eyebrow">Chapter 04 · Part I · Foundations</span>
         <h2>Harness Engineering · Runtime</h2>
-        <p>Five pillars that turn a model into a product. <strong>For many teams we've watched, the harness is the part that compounds longest — the model underneath can be swapped.</strong></p>
+        <p>Five pillars that turn a model into a product. <strong>Keep application policy, state and verification explicit when changing the model underneath.</strong></p>
       </header>
 
       <article class="lesson" id="m4-l1" data-lesson>
@@ -1081,8 +1102,10 @@ const { object } = await generateObject({
             <p>Optimize <em>selection clarity</em> for what happens often, and <em>standing cost</em> for the long tail (following the writing-tools-for-agents guidance, Anthropic 09/2025; re-measure on your own eval, since registry shape differs per system).</p>
           </div>
           <div class="code-card">
-            <div class="prompt-head"><span>typescript · production-grade tool</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
-<pre>const searchPosts = tool({
+            <div class="prompt-head"><span>typescript · tool with application auth helpers</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
+<pre>const actor = requireAuthenticatedActor(session);
+authorize(actor, 'posts:read');
+const searchPosts = tool({
   // CLEAR description: say when to use it, when NOT to.
   description: 'Search posts by keyword. Returns up to 20 most recent results with ' +
     'engagement metrics. Use for content/sentiment questions, do NOT use for ' +
@@ -1092,20 +1115,19 @@ const { object } = await generateObject({
     keyword: z.string().min(2).max(100),
     days_back: z.number().int().min(1).max(90).default(7),
   }),
-  execute: async ({ keyword, days_back }, ctx) => {
+  execute: async ({ keyword, days_back }) => {
     try {
       const rows = await db.searchPosts({
         keyword, days_back,
-        tenantId: ctx.tenantId   // auth from the HARNESS, never from the model
+        tenantId: actor.tenantId, limit: 20   // auth from the HARNESS, never from the model
       });
       if (rows.length === 0)
         return { status:'empty', message:`No posts for "${keyword}". Try a broader keyword.` };
       // BOUNDED output: max 20, key fields only, truncated text.
       return { status:'ok', count: rows.length,
         posts: rows.slice(0,20).map(p => ({ id:p.id, author:p.author, excerpt:p.text.slice(0,200) })) };
-    } catch (err) {
-      // RICH error: the model can act, not just fail.
-      return { status:'error', message:`Search failed: ${err.message}. Try a simpler keyword.` };
+    } catch {
+      return { status:'error', code:'SEARCH_FAILED', message:'Search unavailable. Retry within the run budget.' };
     }
   }
 });</pre>
@@ -1114,37 +1136,50 @@ const { object } = await generateObject({
           <h4>Pillar 2 · The agent loop</h4>
           <p>The agent loop is conceptually very simple: call the model → if there's a tool_use, run the tool, append the result → call again → repeat until the response is text-only or the budget is hit. <strong>The complexity is in the BOUNDS.</strong></p>
           <div class="code-card">
-            <div class="prompt-head"><span>typescript · production loop with all 4 bounds</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
-<pre>async function runAgent(messages, tools, opts) {
-  let iter = 0, totalCost = 0;
-  const seen = new Set();                      // loop detection
+            <div class="prompt-head"><span>pseudocode · bounded loop</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
+<pre>async function runAgent(messages, tools, opts = {}) {
+  let totalCost = 0, lastOutcome = null, stalledRounds = 0;
   const MAX_ITER = opts.maxIter ?? 25;
   const MAX_COST = opts.maxCost ?? 2.0;
   const TOKEN_BUDGET = opts.tokenBudget ?? 150_000;
+  const MAX_STALL_ROUNDS = opts.maxStallRounds ?? 3;
+  const deadline = Date.now() + (opts.timeoutMs ?? 60_000);
 
-  while (iter++ < MAX_ITER) {
-    if (estimateTokens(messages) > TOKEN_BUDGET)   // BOUND 1 · tokens → compact
-      messages = await compact(messages);
-    if (totalCost > MAX_COST)                        // BOUND 2 · cost ceiling → kill
-      throw new CostExceededError(totalCost);
+  for (let iter = 1; iter &lt;= MAX_ITER; iter++) {
+    if (Date.now() &gt;= deadline) throw new Error('deadline');
+    if (estimateTokens(messages) &gt; TOKEN_BUDGET)
+      messages = await withDeadline(() =&gt; compact(messages), deadline);
+    if (estimateTokens(messages) &gt; TOKEN_BUDGET)
+      throw new Error('context_budget');
+    if (totalCost &gt;= MAX_COST) throw new Error('cost_budget');
 
-    const resp = await model({ messages, tools });
+    const resp = await withDeadline(() =&gt; model({ messages, tools }), deadline);
     totalCost += resp.usage.totalCost;
     messages.push(resp.message);
-    if (!resp.toolCalls?.length) return { text: resp.text, totalCost, iter };  // done
+    if (totalCost &gt; MAX_COST) throw new Error('cost_budget');
+    if (!resp.toolCalls?.length) return { text: resp.text, totalCost, iter };
 
-    for (const tc of resp.toolCalls) {               // BOUND 3 · repeat-call guard
-      const key = `${tc.toolName}:${JSON.stringify(tc.args)}`;
-      if (seen.has(key)) { pushToolError(messages, tc, 'Duplicate call. Try a different approach.'); continue; }
-      seen.add(key);
+    const results = [];
+    for (const tc of resp.toolCalls) {
+      try {
+        const value = await withDeadline(
+          () =&gt; executeAuthorizedTool(tc, tools), deadline);
+        results.push({ id: tc.id, value });
+      } catch (error) {
+        if (error.code === 'deadline') throw error;
+        results.push({ id: tc.id, error: 'tool_failed_or_denied' });
+      }
     }
-    const results = await Promise.all(resp.toolCalls.map(tc =>
-      withTimeout(executeTool(tc, tools), 30_000).catch(err => ({ id: tc.id, error: err.message }))));
-    messages.push({ role:'tool', content: results });
+    messages.push({ role: 'tool', content: results });
+    const outcome = progressFingerprint(resp.toolCalls, results);
+    stalledRounds = outcome === lastOutcome ? stalledRounds + 1 : 1;
+    lastOutcome = outcome;
+    if (stalledRounds &gt;= MAX_STALL_ROUNDS) throw new Error('no_progress');
   }
-  throw new Error(`Agent exceeded ${MAX_ITER} iterations. Most likely stuck.`);  // BOUND 4 · max iter
+  throw new Error('max_iterations');
 }</pre>
           </div>
+          <p>This is adapter pseudocode, not a provider wire format. Reads may retry after transient failures or poll changed state within the run budget; equal arguments alone do not prove duplication. <code>progressFingerprint</code> compares task-relevant outcomes/state versions, excluding call IDs and timestamps: 3 identical no-progress rounds stop for re-planning, rather than blocking the next read before it runs. Tune this heuristic for the task.</p><p><code>executeAuthorizedTool</code> validates schema, takes actor/tenant from the authenticated session and checks policy on every attempt. For writes, a trusted operation ID identifies the intended mutation; an atomic durable idempotency record replays its result without repeating the side effect. Equal arguments can represent different intended writes; new call IDs do not justify new writes. <code>withDeadline</code> must cancel supported operations at the run deadline; reconcile a timed-out write before retry. Test pending→complete reads, failure→retry, no-progress stopping, write replays and denied actors.</p><p><code>MAX_COST</code> stops on observed model cost; the last request can exceed it, and compaction/tool costs are omitted here. A strict total cap needs a shared budget ledger that reserves an upper-bound cost before every model/tool/compaction request, plus output limits and settlement. Context length is checked separately from cumulative spend. Test the guard with duplicate calls, a denied actor, failed compaction and an exhausted budget.</p>
           <div class="callout warn"><div class="callout-title">Three loop types that cause incidents</div><p><strong>(1) Infinite retry</strong>: the same tool fails identically over and over → duplicate-call detection. <strong>(2) Circular reasoning</strong>: the model flips between two states → cap the iterations. <strong>(3) Over-exploration</strong>: the model "double-checks" forever → the cost ceiling forces a stop. Set bounds and log enough messages, tool calls, errors, tokens and timing to reconstruct the agent's path.</p></div>
 
           <h4>Pillar 3 · Memory architecture</h4>
@@ -1155,11 +1190,11 @@ const { object } = await generateObject({
               <tbody>
                 <tr><td><strong>Short-term · in-context</strong></td><td>Conversation history within one session</td><td>Session</td><td>Coherent multi-turn dialogue, immediate task state</td></tr>
                 <tr><td><strong>Working · scratchpad</strong></td><td>Files the agent reads/writes while working (plan.md, notes/)</td><td>Task</td><td>Long-running tasks, plans, todos, intermediate results</td></tr>
-                <tr><td><strong>Long-term · external</strong></td><td>Vector DB, KV, structured DB, behind retrieval tools</td><td>Permanent</td><td>User preferences, old conversations, organizational knowledge</td></tr>
+                <tr><td><strong>Long-term · external</strong></td><td>Vector DB, KV, structured DB, behind retrieval tools</td><td>Persistent, with expiry / correction</td><td>User preferences, old conversations, organizational knowledge</td></tr>
               </tbody>
             </table>
           </div>
-          <p>Claude Code's <code>CLAUDE.md</code> &amp; Codex's <code>AGENTS.md</code> = the working-memory pattern at the project level (read at session start; you write as the project evolves). n8n's "Postgres Chat Memory" = long-term memory keyed by <code>sessionId</code>: the wrong key mixes users together; Claude Code's subagent memory = long-term memory per role.</p>
+          <p>Claude Code's <code>CLAUDE.md</code> &amp; Codex's <code>AGENTS.md</code> = reviewed persistent project instructions, distinct from task scratchpads (read at session start; you write as the project evolves). n8n's "Postgres Chat Memory" = long-term memory keyed by <code>sessionId</code>: the wrong key mixes users together; Claude Code's subagent memory = long-term memory per role.</p>
 
           <h4>Pillar 4 · Recovery — ranking failure modes</h4>
           <div class="table-wrap">
@@ -1201,37 +1236,21 @@ const { object } = await generateObject({
           <h4>Containment before alignment</h4>
           <p>The threat-model table above still assumes you notice the agent going wrong in time. There is a question that comes <em>before</em> it: what can the agent <strong>reach at all</strong>? Anthropic (05/2026) describes running its internal agents in exactly that order: govern what the agent <em>can</em> do before governing what it <em>did</em> do. The reason is practical: the first layer holds even when the model is prompt-injected, misreads the task, or simply calls the wrong tool; the second layer depends on you reading the logs in time.</p>
           <figure class="figure">
-            <svg viewBox="0 0 700 244" role="img" aria-label="Four containment levels for an agent ordered by decreasing blast radius: running directly on the real machine, a disposable container, an OS sandbox that asks a human at the boundary, and a sealed VM with no network egress by default">
-              <defs><marker id="m4l1a" markerWidth="9" markerHeight="9" refX="7" refY="4.5" orient="auto"><path d="M0 0 L9 4.5 L0 9 z" fill="var(--accent-2)"/></marker></defs>
-              <text class="dgm-ink" x="16" y="22" font-size="12.5" font-weight="700">Containment · bound what the agent CAN do</text>
-              <text class="dgm-ink2" x="16" y="40" font-size="10" font-family="IBM Plex Mono">pick a level by blast radius when the agent gets it wrong</text>
-              <rect class="dgm-warn" x="16" y="56" width="150" height="94" rx="10" stroke-width="2"/>
-              <text class="dgm-ink" x="91" y="84" text-anchor="middle" font-size="11.5" font-weight="700">No isolation</text>
-              <text class="dgm-ink2" x="91" y="106" text-anchor="middle" font-size="9.5">real machine · real repo</text>
-              <text class="dgm-ink2" x="91" y="124" text-anchor="middle" font-size="9.5">only the prompt guards</text>
-              <rect class="dgm-box" x="190" y="56" width="150" height="94" rx="10" stroke-width="1.5"/>
-              <text class="dgm-ink" x="265" y="84" text-anchor="middle" font-size="11.5" font-weight="700">Container</text>
-              <text class="dgm-ink2" x="265" y="106" text-anchor="middle" font-size="9.5">a fresh one per task</text>
-              <text class="dgm-ink2" x="265" y="124" text-anchor="middle" font-size="9.5">thrown away when done</text>
-              <rect class="dgm-box" x="364" y="56" width="150" height="94" rx="10" stroke-width="1.5"/>
-              <text class="dgm-ink" x="439" y="84" text-anchor="middle" font-size="11.5" font-weight="700">OS sandbox</text>
-              <text class="dgm-ink2" x="439" y="106" text-anchor="middle" font-size="9.5">files &amp; network bounded</text>
-              <text class="dgm-ink2" x="439" y="124" text-anchor="middle" font-size="9.5">crossing out → ask a human</text>
-              <rect class="dgm-accent" x="538" y="56" width="150" height="94" rx="10" stroke-width="2"/>
-              <text class="dgm-ink" x="613" y="84" text-anchor="middle" font-size="11.5" font-weight="700">Sealed VM</text>
-              <text class="dgm-ink2" x="613" y="106" text-anchor="middle" font-size="9.5">separate from your machine</text>
-              <text class="dgm-ink2" x="613" y="124" text-anchor="middle" font-size="9.5">no egress by default</text>
-              <path class="dgm-flow" d="M16 176 H676" stroke-width="2" marker-end="url(#m4l1a)"/>
-              <text class="dgm-ink2" x="16" y="196" font-size="10" font-family="IBM Plex Mono">blast radius LARGE</text>
-              <text class="dgm-ink2" x="676" y="196" text-anchor="end" font-size="10" font-family="IBM Plex Mono">SMALL</text>
-              <text class="dgm-ink" x="16" y="226" font-size="10.5">alignment lowers the <tspan font-weight="700">probability</tspan> of a wrong action · containment lowers the <tspan font-weight="700">consequence</tspan></text>
-            </svg>
-            <figcaption><b>Figure 4.2</b>: Three isolation patterns that already ship in today's tools, placed next to "no isolation" so the cost is visible. Moving right, you trade convenience for a smaller blast radius, and for a different number of human prompts (see the callout below).</figcaption>
+            <div class="table-wrap containment-table"><table>
+              <thead><tr><th>Boundary pattern</th><th>What to check before granting autonomy</th></tr></thead>
+              <tbody>
+                <tr><td>Host execution</td><td>Runs with granted host rights; inspect filesystem access, credentials and approval policy.</td></tr>
+                <tr><td>Disposable container</td><td>A fresh task environment limits carried-over state. Mounted files, credentials, host privileges and egress still need explicit policy.</td></tr>
+                <tr><td>OS sandbox</td><td>Enforces configured filesystem/network limits. Check any approval or unsandboxed escape route separately.</td></tr>
+                <tr><td>Cowork VM example</td><td>Isolates code execution; the agent loop runs outside the VM. Mounted workspace files and host MCP tools remain capabilities. Network uses a configured allowlist, not a universal no-egress default.</td></tr>
+              </tbody>
+            </table></div>
+            <figcaption><b>Figure 4.2</b> — Different protected surfaces, not a safety ranking. Inspect mounts, credentials, egress capabilities and approval escape paths for each deployment.</figcaption>
           </figure>
-          <p>Three isolation patterns you can adopt today: <strong>(1) disposable containers</strong>: each task runs in a fresh environment that is destroyed afterwards, so dirty state can't leak into the next task; <strong>(2) OS sandbox plus a human gate</strong>: file read/write and network access are bounded at the operating-system level, and the agent only has to ask when it genuinely needs to cross the boundary; <strong>(3) a sealed VM</strong>: the whole session lives in a separate virtual machine with no network egress by default, which suits long unattended runs.</p>
+          <p>In Anthropic's example, an allowed API domain still enabled file uploads to an attacker's account. The destination allowlist worked, yet data escaped; they added credential-aware filtering. A VM or container label alone does not establish a smaller blast radius. Configure and test the actual boundaries, including allowed endpoints and tools outside the sandbox.</p>
           <div class="callout warn">
             <div class="callout-title">Product state: why "ask a human" alone isn't enough</div>
-            <p>Anthropic reports (05/2026) that roughly <strong>93% of permission prompts are approved</strong>: approval fatigue: the more you ask, the cheaper "yes" becomes, and the human gate is thinner than it looks. In the same report, turning on OS-level sandboxing cut the <strong>number of prompts by about 84%</strong>, because most actions were already hard-blocked and no longer needed a question. These are one vendor's numbers on their own workload, so read them as a direction, not a constant for your team. The durable reading: <em>use containment to reduce how often you must ask, then spend the human gate on the genuinely irreversible actions</em> (Pillar 4). Mode names and UI can change; re-check before relying on them.</p>
+            <p>Anthropic reports (05/2026) that roughly <strong>93% of permission prompts are approved</strong>: approval fatigue: the more you ask, the cheaper "yes" becomes, and the human gate is thinner than it looks. In the same report, turning on OS-level sandboxing cut the <strong>number of prompts by about 84%</strong>, because allowed actions within an enforced boundary can run without individual approvals. These are one vendor's numbers on their own workload, so read them as a direction, not a constant for your team. The durable reading: <em>use containment to reduce how often you must ask, then spend the human gate on the genuinely irreversible actions</em> (Pillar 4). Mode names and UI can change; re-check before relying on them.</p>
           </div>
 
           <h4>Pillar 5 · Observability — log the path you need to reconstruct</h4>
@@ -1261,7 +1280,7 @@ const { object } = await generateObject({
             <button class="quiz-opt" onclick="quizPick(this,1)"><span class="quiz-letter">B</span><span>Bound the tool: return a <code>transcript_id</code> + a compact summary; provide a separate <code>get_full_transcript(id)</code> tool the model only calls when it truly needs the verbatim text. This is bounded-output + JIT retrieval combined.</span></button>
             <button class="quiz-opt" onclick="quizPick(this,2)"><span class="quiz-letter">C</span><span>Lower max iterations so the loop stops sooner.</span></button>
             <button class="quiz-opt" onclick="quizPick(this,3)"><span class="quiz-letter">D</span><span>Raise output max_tokens so the model has more room to reason.</span></button>
-            <div class="quiz-feedback" data-explain="This is classic 'tool output bloat'. The fix is at the tool-design layer, not the model layer — every tool needs an output budget. Even with a 1M window, you still waste most of the budget on old transcripts the model no longer attends to (context rot scales with the window). Return a handle + summary; let the model fetch the verbatim text on demand. A larger window doesn't fix bad harness design."></div>
+            <div class="quiz-feedback" role="status" aria-live="polite" aria-atomic="true" data-explain="This is classic 'tool output bloat'. The fix is at the tool-design layer, not the model layer — every tool needs an output budget. A 1M window still incurs cost for old transcripts; effects on quality depend on the model and task, rather than scaling by a universal law. Return a handle + summary; let the model fetch the verbatim text on demand. A larger window doesn't fix bad harness design."></div>
           </div>
 
           <div class="quiz" data-correct="2">
@@ -1271,7 +1290,7 @@ const { object } = await generateObject({
             <button class="quiz-opt" onclick="quizPick(this,1)"><span class="quiz-letter">B</span><span>Use a stronger model so it judges more accurately when a refund is warranted.</span></button>
             <button class="quiz-opt" onclick="quizPick(this,2)"><span class="quiz-letter">C</span><span>Authorization must sit in the <em>harness</em>, not the model: identity &amp; limits come from the session/JWT + policy; the model may only <em>propose</em> a refund; the harness checks permission, enforces an amount ceiling, and puts actions above the threshold through an approval gate.</span></button>
             <button class="quiz-opt" onclick="quizPick(this,3)"><span class="quiz-letter">D</span><span>Just let the model decide, and log every refund for later auditing.</span></button>
-            <div class="quiz-feedback" data-explain="The principle: authorization belongs to the harness, not the model. The prompt is data — it can be bent by a customer's words (or prompt injection); 'be careful' is not a control mechanism. A stronger model can still be talked into a wrong refund, and log-for-audit only catches it after the money is gone. The right design: identity &amp; limits come from the session/JWT + policy in the harness; the model only proposes; the harness checks permission, enforces the ceiling, and sends above-threshold actions through a human-approval gate. The model proposes, the harness decides."></div>
+            <div class="quiz-feedback" role="status" aria-live="polite" aria-atomic="true" data-explain="The principle: authorization belongs to the harness, not the model. The prompt is data — it can be bent by a customer's words (or prompt injection); 'be careful' is not a control mechanism. A stronger model can still be talked into a wrong refund, and log-for-audit only catches it after the money is gone. The right design: identity &amp; limits come from the session/JWT + policy in the harness; the model only proposes; the harness checks permission, enforces the ceiling, and sends above-threshold actions through a human-approval gate. The model proposes, the harness decides."></div>
           </div>
         </div>
         <div class="lesson-nav" data-navfor="m4-l1"></div>
@@ -1377,8 +1396,8 @@ description: Use when exporting the weekly client report from the internal
           <p>A subagent both <em>isolates</em> context and can <em>accumulate</em> it. As of Jul 2026, a subagent can declare a <code>memory</code> field (scope <code>user</code> / <code>project</code> / <code>local</code>) to have a memory directory that persists across sessions, turning it into an "expert" that deepens over time: a reviewer that remembers the repo's traps, a debugger that remembers the failure patterns it has seen. But a subagent's persistent memory also needs a <strong>write gate + a forgetting mechanism</strong> (Lesson 3.2): otherwise each subagent becomes its own nest of the memory that never forgets.</p>
 
           <h4>EXTENSION · Hooks &amp; MCP</h4>
-          <p><strong>Hooks</strong> are programmable harness behavior: run <em>your</em> command on events (PreToolUse, PostToolUse, Stop…) to block dangerous commands, auto-run tests/lint, or enforce conventions. A hook's output is treated as feedback to the agent. <strong>MCP</strong> extends the tool registry with external servers (DB, API, services). Remember the registry tax from Chapter 2: <em>every</em> MCP enabled costs tokens on every call, enable per project scope, audit with <code>/mcp</code>.</p>
-          <div class="callout warn"><div class="callout-title">The MCP paradox — and how far it has been patched</div><p>The mechanism still holds: every registered tool in principle stuffs its name + description + schema into every call. But as of Sep 2026, Claude Code has <strong>tool search on by default</strong>: at session start only tool <em>names</em> load, and full JSON schemas stay deferred until Claude actually needs a specific tool. Set <code>ENABLE_TOOL_SEARCH=false</code> to load everything as before, or <code>=auto</code> to load schemas upfront when they fit within 10% of the context window. So the registry tax has dropped sharply — but not to zero, and every extra MCP still gives the model more wrong options to reach for. Keep enabling per project scope, and measure with <code>/context all</code> rather than by feel.</p></div>
+          <p><strong>Hooks</strong> are programmable harness behavior: run <em>your</em> command on events (PreToolUse, PostToolUse, Stop…) to block dangerous commands, auto-run tests/lint, or enforce conventions. A hook's output is treated as feedback to the agent. <strong>MCP</strong> extends the tool registry with external servers (DB, API, services). The client loading mode determines the registry cost (Chapter 2); enable relevant servers per project and audit with <code>/mcp</code>.</p>
+          <div class="callout warn"><div class="callout-title">The MCP paradox — and how far it has been patched</div><p>Upfront registration loads complete definitions. In Claude Code as documented in Sep 2026, <strong>tool search on by default</strong>: at session start tool <em>names and server instructions</em> load, and full JSON schemas stay deferred until Claude actually needs a specific tool. Set <code>ENABLE_TOOL_SEARCH=false</code> to load everything as before, or <code>=auto</code> to load schemas upfront when they fit within 10% of the context window. So the registry tax has dropped sharply — but not to zero, and every extra MCP still gives the model more wrong options to reach for. Keep enabling per project scope, and measure with <code>/context all</code> rather than by feel.</p></div>
 
           <h4>EXTENSION · ToolSearch — the tool registry at scale (2026)</h4>
           <p>The escape hatch for a large registry: keep a lean tool index, then load only the <em>JSON schema</em> of the tools that fit the task. This is JIT retrieval applied to the <em>tool definitions themselves</em>. The token savings depend on the number of tools and schema length; measure on real requests.</p>
@@ -1409,7 +1428,7 @@ description: Use when exporting the weekly client report from the internal
             </div>
             <figcaption style="border:0;background:transparent;padding:10px 0 12px"><b>Figure 5.2</b>: Three orchestration rungs. Each rung wraps the one below it; climbing up only makes sense once the rung below stands firm.</figcaption>
           </figure>
-          <div class="callout warn"><div class="callout-title">Only climb the next rung once the one below has a verifier</div><p>A loop that repeats an <em>unverified</em> harness just repeats errors faster; a graph that wires up multiple agents with <em>no</em> verifier multiplies errors exponentially. <strong>Measure:</strong> before adding a rung, be able to point to the current rung's verifier — which test, eval or schema is gating. If you can't name it, you're not ready to climb.</p></div>
+          <div class="callout warn"><div class="callout-title">Only climb the next rung once the one below has a verifier</div><p>A loop that repeats an <em>unverified</em> harness just repeats errors faster; a graph that wires up multiple agents with <em>no</em> verifier can propagate unchecked errors across nodes. <strong>Measure:</strong> before adding a rung, be able to point to the current rung's verifier — which test, eval or schema is gating. If you can't name it, you're not ready to climb.</p></div>
 
           <div class="exercise">
             <h5>Exercise · Layer your setup</h5>
@@ -1428,7 +1447,7 @@ description: Use when exporting the weekly client report from the internal
             <button class="quiz-opt" onclick="quizPick(this,1)"><span class="quiz-letter">B</span><span>Turn off MCPs unrelated to the current project — every extra server still gives the model more wrong options to reach for. Enable per project scope, and in Claude Code check <code>/context all</code> to see what each tool actually costs, because tool search is already on by default.</span></button>
             <button class="quiz-opt" onclick="quizPick(this,2)"><span class="quiz-letter">C</span><span>Switch to Opus — it picks tools better.</span></button>
             <button class="quiz-opt" onclick="quizPick(this,3)"><span class="quiz-letter">D</span><span>Merge all MCPs into one "super-MCP" holding every tool.</span></button>
-            <div class="quiz-feedback" data-explain="This is the registry tax (Chapter 2) disguised as a prompt problem. Tool search is on by default, so schemas no longer enter every call — but tool names still do, and every extra MCP gives the model more wrong options to reach for. A 'don't use it' instruction doesn't remove that cost and the model is still tempted. The root fix is to narrow scope: turn off unrelated MCPs (per project scope) and measure with /context all instead of guessing. A only writes the instruction louder for a problem that isn't in the prompt; C swaps the model without touching the registry; D makes it worse, because merging servers doesn't reduce the number of choices."></div>
+            <div class="quiz-feedback" role="status" aria-live="polite" aria-atomic="true" data-explain="This is the registry tax (Chapter 2) disguised as a prompt problem. Tool search is on by default, so schemas no longer enter every call — but tool names still do, and every extra MCP gives the model more wrong options to reach for. A 'don't use it' instruction doesn't remove that cost and the model is still tempted. The root fix is to narrow scope: turn off unrelated MCPs (per project scope) and measure with /context all instead of guessing. A only writes the instruction louder for a problem that isn't in the prompt; C swaps the model without touching the registry; D makes it worse, because merging servers doesn't reduce the number of choices."></div>
           </div>
         </div>
         <div class="lesson-nav" data-navfor="m5-l1"></div>
@@ -1454,7 +1473,7 @@ description: Use when exporting the weekly client report from the internal
 
           <div class="callout info">
             <div class="callout-title">Product state</div>
-            <p>Anthropic reported (24 Jul 2026, Thariq Shihipar) that they had <em>"removed over 80% of Claude Code's system prompt for models like Claude Opus 5 and Claude Fable 5 with no measurable loss on our coding evaluations"</em>. Three scope limits worth reading alongside that: this is <strong>Claude Code's own system prompt</strong> — written by the vendor for their product, not your CLAUDE.md; <em>"no measurable loss"</em> means <strong>a wash</strong>, not an improvement; and the yardstick is <strong>their own internal eval</strong>, on their workload. The reason they give: they noticed they were <em>"overconstraining Claude Code, both through our system prompt and in our CLAUDE.md files and skills"</em>.</p>
+            <p>Anthropic reported on 24 July 2026 that they removed over 80% of Claude Code’s own system prompt for Opus 5 and Fable 5 without a measurable loss on their coding evaluations. This is a vendor result for its product and workload, not a target for your CLAUDE.md. A lack of measured loss is not evidence of improvement or equivalence on untested tasks. Their diagnosis was excessive instructions in the system prompt, CLAUDE.md and skills.</p>
           </div>
 
           <div class="callout success">
@@ -1462,10 +1481,10 @@ description: Use when exporting the weekly client report from the internal
             <p>OpenAI's 11 Sep 2026 guidance for GPT-6 Astra lands on nearly the same design: keep skill descriptions short and specific, make the root skill a <strong>minimal router</strong> to supporting docs/scripts, stop forcing the agent to read a full repo map before every edit, and revisit old scaffolding after model upgrades. That convergence is more important than either vendor's exact command names: <strong>progressive disclosure + eval-driven trimming is now a cross-vendor pattern.</strong></p>
           </div>
 
-          <p>Chapter 2 already counted the first cost of excess context: tokens and the registry tax. This lesson adds a second, harder-to-see cost: <strong>arbitration work</strong>. The main example Anthropic gives is about comments: one place says <em>"leave documentation as appropriate"</em>, another says <em>"DO NOT add comments"</em>, all at once, in the system prompt, in an enabled Skill, and in the message the user just sent. By their own description, the model then has to <em>"think more carefully about these overlapping and conflicting messages before deciding what to do"</em>. Every rule you add costs tokens and adds one more chance to collide with a rule already there.</p>
+          <p>Chapter 2 already counted the first cost of excess context: tokens and the registry tax. This lesson adds a second, harder-to-see cost: <strong>arbitration work</strong>. The main example Anthropic gives is about comments: one place says <em>"leave documentation as appropriate"</em>, another says <em>"DO NOT add comments"</em>, all at once, in the system prompt, in an enabled Skill, and in the message the user just sent. By their own description, the model then has to spend effort reconciling conflicting instructions. Every rule you add costs tokens and adds one more chance to collide with a rule already there.</p>
 
           <figure class="figure">
-            <svg viewBox="0 0 660 212" role="img" aria-label="Diagram of three instruction sources all addressing comments but conflicting with each other: the system prompt, an enabled skill, and the user's message, all feeding down into one arbitration step for the model">
+            <div class="diagram-viewport" role="region" tabindex="0" aria-label="Diagram; scroll horizontally to read all labels" style="--diagram-width:660px"><svg viewBox="0 0 660 212" role="img" aria-label="Diagram of three instruction sources all addressing comments but conflicting with each other: the system prompt, an enabled skill, and the user's message, all feeding down into one arbitration step for the model">
               <defs><marker id="m5l2-ah" markerWidth="9" markerHeight="9" refX="7" refY="4.5" orient="auto"><path d="M0 0 L9 4.5 L0 9 z" fill="var(--accent-2)"/></marker></defs>
               <text class="dgm-ink2" x="110" y="18" text-anchor="middle" font-size="9" font-weight="700">SYSTEM PROMPT</text>
               <text class="dgm-ink2" x="330" y="18" text-anchor="middle" font-size="9" font-weight="700">ENABLED SKILL</text>
@@ -1484,7 +1503,7 @@ description: Use when exporting the weekly client report from the internal
               <path class="dgm-flow" d="M330 148 V166" stroke-width="2" marker-end="url(#m5l2-ah)"/>
               <rect class="dgm-box" x="150" y="170" width="360" height="32" rx="8"/>
               <text class="dgm-ink2" x="330" y="190" text-anchor="middle" font-size="9" font-family="IBM Plex Mono">each rule added is one more chance to collide</text>
-            </svg>
+            </svg></div>
             <figcaption><b>Figure 5.3</b> — All three sources make sense read alone, and conflict when read together. This is why a long CLAUDE.md is both more expensive and <em>harder to predict</em>: the work the model spends reconciling instructions is work that produces no result for you.</figcaption>
           </figure>
 
@@ -1495,12 +1514,12 @@ description: Use when exporting the weekly client report from the internal
             <table>
               <thead><tr><th style="width:150px">Before</th><th style="width:170px">Now</th><th>Notes for applying this to your repo</th></tr></thead>
               <tbody>
-                <tr><td>Give the model a rule</td><td><strong>Let the model use judgment</strong></td><td>The example they give: swap <em>"Never write multi-paragraph docstrings or multi-line comment blocks — one short line max."</em> for <em>"Write code that reads like the surrounding code: match its comment density, naming, and idiom."</em> This argument is about <em>style</em>. It isn't about authority — see the callout below.</td></tr>
-                <tr><td>Show the model examples</td><td><strong>Design the interface</strong></td><td>For tool-calling, they note <em>"giving examples actually constrains them to a certain exploration space"</em>. Investing in the schema — parameter names that carry meaning, enums instead of free-form strings — tends to hold up better than adding examples (Lesson 3.1, Pattern 6).</td></tr>
+                <tr><td>Give the model a rule</td><td><strong>Let the model use judgment</strong></td><td>The example they give: swap <em>a rigid one-line-comment rule</em> for <em>guidance to match the surrounding code’s comment density, names and idiom</em> This argument is about <em>style</em>. It isn't about authority — see the callout below.</td></tr>
+                <tr><td>Show the model examples</td><td><strong>Design the interface</strong></td><td>For tool-calling, they note examples can narrow exploration. Investing in the schema — parameter names that carry meaning, enums instead of free-form strings — tends to hold up better than adding examples (Lesson 3.1, Pattern 6).</td></tr>
                 <tr><td>Load everything upfront</td><td><strong>Progressive disclosure</strong></td><td>This is what the course already built in Lessons 3.1 and 5.1: CLAUDE.md is the map, a Skill is the content loaded on demand. One addition: for a long Skill, <em>"divide it into many files"</em> rather than one large file.</td></tr>
                 <tr><td>Repeat the instruction</td><td><strong>A lean tool description</strong></td><td>Guidance about a tool should live in exactly one place — the tool's own description. Repeating it in the system prompt creates two copies that can drift apart over time.</td></tr>
-                <tr><td>Memory in CLAUDE.md files</td><td><strong>Auto-memory</strong></td><td>Anthropic used to encourage users to save things with the <code>#</code> hotkey, which wrote into their <code>CLAUDE.md</code> automatically. As of Sep 2026, the model automatically saves learnings, corrections, repository context, and user preferences on its own, in place of writing into CLAUDE.md by hand. You can view and edit everything it stored with <code>/memory</code> — one directory per repo at <code>~/.claude/projects/&lt;project&gt;/memory/</code>, and only the first 200 lines (or 25KB) of <code>MEMORY.md</code> load each session; turn it off with <code>autoMemoryEnabled: false</code>. A suggested split: CLAUDE.md / AGENTS.md holds the <em>repo's</em> mandatory invariants and conventions (team-shared, version-controlled via Git; needed by anyone who clones it), while auto-memory holds working context and session learnings (regularly audit and clear outdated items with <code>/memory</code> to avoid drift).</td></tr>
-                <tr><td>Simple specs</td><td><strong>Rich references</strong></td><td>A test suite, a function to port, an HTML artifact — they describe this as <em>"clear, high-fidelity instructions to Claude in a language it knows very well"</em>. This connects directly to Chapter 10: a test is an executable spec.</td></tr>
+                <tr><td>Memory in CLAUDE.md files</td><td><strong>Auto-memory</strong></td><td>Anthropic used to encourage users to save things with the <code>#</code> hotkey, which wrote into their <code>CLAUDE.md</code> automatically. As of Sep 2026, when auto-memory is enabled, the model can save learnings, corrections, repository context and user preferences, in place of writing into CLAUDE.md by hand. You can view and edit everything it stored with <code>/memory</code> — one directory per repo at <code>~/.claude/projects/&lt;project&gt;/memory/</code>, and only the first 200 lines (or 25KB) of <code>MEMORY.md</code> load each session; turn it off with <code>autoMemoryEnabled: false</code>. A suggested split: CLAUDE.md / AGENTS.md holds the <em>repo's</em> mandatory invariants and conventions (team-shared, version-controlled via Git; needed by anyone who clones it), while auto-memory holds working context and session learnings (regularly audit and clear outdated items with <code>/memory</code> to avoid drift).</td></tr>
+                <tr><td>Simple specs</td><td><strong>Rich references</strong></td><td>A test suite, a function to port, an HTML artifact — they describe this as <em>references with a precise structure Claude can inspect</em>. This connects directly to Chapter 10: a test is an executable spec.</td></tr>
               </tbody>
             </table>
           </div>
@@ -1536,7 +1555,7 @@ description: Use when exporting the weekly client report from the internal
 
           <div class="callout warn">
             <div class="callout-title">They could cut 80% because they had something to measure against</div>
-            <p>Anthropic could cut that much partly because they have a coding eval suite that tells them whether they broke anything. Without an equivalent measurement, "cut 80%" is a gamble rather than a decision, and the breakage tends to show up sparsely, hard to trace back to the cut that caused it. One way to manage without an eval: keep 5–10 tasks that have previously tripped up the agent, run them before and after the cut, and compare how many needed a manual fix. Small, but still better than a feeling. Claude Code also has <code>/doctor</code>, and it proposes the trims directly for a checked-in CLAUDE.md: it cuts what Claude can derive from the codebase (directory layouts, dependency lists, architecture overviews) and <strong>keeps</strong> pitfalls, rationale, and conventions that differ from tool defaults — exactly the KEEP / CUT·obvious labels in the table above. The command name can change, the habit of auditing shouldn't.</p>
+            <p>Anthropic could cut that much partly because they have a coding eval suite that tells them whether they broke anything. Without an equivalent measurement, "cut 80%" is a gamble rather than a decision, and the breakage tends to show up sparsely, hard to trace back to the cut that caused it. One way to manage without an eval: keep 5–10 tasks that have previously tripped up the agent, run them before and after the cut, and compare how many needed a manual fix. Small, but still better than a feeling. Claude Code also has <code>/doctor prompt-audit</code> (v2.1.283+; requires the bundled skill), and it proposes the trims directly for a checked-in CLAUDE.md: it cuts what Claude can derive from the codebase (directory layouts, dependency lists, architecture overviews) and <strong>keeps</strong> pitfalls, rationale, and conventions that differ from tool defaults — exactly the KEEP / CUT·obvious labels in the table above. The command name can change, the habit of auditing shouldn't.</p>
           </div>
 
           <div class="exercise">
@@ -1556,7 +1575,7 @@ description: Use when exporting the weekly client report from the internal
             <button class="quiz-opt" onclick="quizPick(this,1)"><span class="quiz-letter">B</span><span>Keep the lean version (it's cheaper and less conflict-prone for the same result), but reread what you cut for any line in the safety-boundary group — if there is one, its real home is harness configuration, not just deleting it and moving on. Then keep watching for a few more weeks.</span></button>
             <button class="quiz-opt" onclick="quizPick(this,2)"><span class="quiz-letter">C</span><span>Cut the remaining 60% too — since this proves CLAUDE.md does nothing.</span></button>
             <button class="quiz-opt" onclick="quizPick(this,3)"><span class="quiz-letter">D</span><span>The 8-task set isn't enough to conclude anything; keep the status quo until there's a full eval.</span></button>
-            <div class="quiz-feedback" data-explain="B. The same result with fewer tokens and less chance of conflict makes the lean version the one worth keeping — going back to the long version 'to be safe' pays for something just measured to contribute nothing (A). But the 8-task set only measures what it covers: lines in the safety-boundary group usually only earn their keep in the rare situation this set of 8 tasks almost certainly doesn't touch, so they need to move down to the harness rather than simply get deleted. C over-generalizes from a narrow measurement. D is right to be cautious but stops in the wrong place: imperfect evidence is still evidence, and 'wait for a full eval' in practice usually means never auditing at all."></div>
+            <div class="quiz-feedback" role="status" aria-live="polite" aria-atomic="true" data-explain="B. The same observed result with fewer tokens supports a limited trial of the lean version — going back to the long version 'to be safe' pays for something just measured to contribute nothing (A). But the 8-task set only measures what it covers: lines in the safety-boundary group usually only earn their keep in the rare situation this set of 8 tasks almost certainly doesn't touch, so they need to move down to the harness rather than simply get deleted. C over-generalizes from a narrow measurement. D is right to be cautious but stops in the wrong place: imperfect evidence is still evidence, and 'wait for a full eval' in practice usually means never auditing at all."></div>
           </div>
         </div>
         <div class="lesson-nav" data-navfor="m5-l2"></div>
@@ -1613,6 +1632,7 @@ description: Use when exporting the weekly client report from the internal
             <p>OpenAI launched the <strong>Agents API</strong> in public beta on 10 Sep 2026, exposing the same Codex harness pattern to developers: automatic compaction across long sessions, tool search, programmatic tool calling, subagents with isolated contexts, and hosted or bring-your-own sandboxes. On 29 Sep 2026 the API added computer use in an OpenAI-hosted browser. The important lesson is not "use this API"; it is that the techniques in Chapters 2–4 have moved from bespoke glue code into first-class platform primitives. Build your own harness when you need control; buy the primitive when its boundaries fit.</p>
           </div>
 
+          <p>Checked against the <a href="https://developers.openai.com/api/docs/changelog" target="_blank" rel="noopener noreferrer">30 October 2026 API changelog</a>: Agents API compaction now runs in the background by default; <code>compaction.async=false</code> requests blocking behavior. An existing-session tool update replaces its full tool list. Function/MCP changes take effect at the next model call, built-ins by the next turn. These are API-specific lifecycle rules; check your client separately and retain external budget and permission checks.</p>
           <h4><code>AGENTS.md</code> · persistent context, concatenated per directory</h4>
           <p>The equivalent of <code>CLAUDE.md</code> but with a <strong>hierarchical discovery order</strong>: Codex walks from the repo root down to the current directory and <strong>concatenates</strong> the files it finds, taking at most one file per directory. A closer file sits <em>later</em> in the prompt, so it usually wins a conflict, but the root content stays in context and still costs tokens; this is a soft override, not a replacement. To make one directory genuinely skip the <code>AGENTS.md</code> beside it, put an <code>AGENTS.override.md</code> there. The combined size is capped by <code>project_doc_max_bytes</code>, 32 KiB by default, and Codex stops adding files once it hits the cap. That lets a monorepo have shared conventions at the root and per-package conventions of its own, exactly the "context closest to the work wins" principle.</p>
           <div class="callout warn">
@@ -1629,10 +1649,10 @@ description: Use when exporting the weekly client report from the internal
           <div class="callout insight"><div class="callout-title">Agent legibility</div><p>If the agent cannot inspect the fact while it is working, that fact effectively does not exist to the workflow. Move important decisions out of chat threads and people's heads into versioned, discoverable artifacts — but point to them <em>just in time</em> instead of preloading all of them. This reconciles two ideas that look opposed: <strong>more knowledge in the repository, less knowledge in every prompt.</strong></p></div>
 
           <h4>Sandbox · safe execution by default</h4>
-          <p><strong>A sandbox is no longer one tool's speciality.</strong> Both sides now have an OS-level sandbox: Codex runs every command in a sandbox with declared permissions; Claude Code ships a built-in Bash sandbox (the <code>/sandbox</code> command, or <code>sandbox.enabled</code> in settings to turn it on across projects) using Seatbelt on macOS and bubblewrap on Linux/WSL2, isolating both the filesystem and the network with a domain allowlist — the very sandbox behind the "84% fewer permission prompts" figure quoted in Lesson 4.1. What's worth learning isn't which logo has a sandbox, but the <strong>two dials</strong>: what the agent <em>can</em> do, and <em>when it must ask</em>. Choose the mode by risk (read-only, write-in-workspace, or full-access) instead of trusting the agent to "behave". This is the <em>authorization belongs to the harness</em> principle (Chapter 4) packaged for you: the harness decides what the agent can touch, not the model's judgment.</p>
+          <p><strong>A sandbox is no longer one tool's speciality.</strong> Both sides now have an OS-level sandbox: Codex can run local commands in an OS sandbox with declared permissions; Claude Code ships a built-in Bash sandbox (the <code>/sandbox</code> command, or <code>sandbox.enabled</code> in settings to turn it on across projects) using Seatbelt on macOS and bubblewrap on Linux/WSL2, isolating both the filesystem and the network with a domain allowlist — the very sandbox behind the "84% fewer permission prompts" figure quoted in Lesson 4.1. What's worth learning isn't which logo has a sandbox, but the <strong>two dials</strong>: what the agent <em>can</em> do, and <em>when it must ask</em>. Choose the mode by risk (read-only, write-in-workspace, or full-access) instead of trusting the agent to "behave". This is the <em>authorization belongs to the harness</em> principle (Chapter 4) packaged for you: the harness decides what the agent can touch, not the model's judgment.</p>
           <p>The part people usually flatten: these are really <strong>two independent dials</strong>, not one "safe ↔ free" slider. One dial says what the agent <em>can</em> do (read-only / write in the workspace / full access); the other says <em>when it must ask</em> you (ask on request / never ask, or the <code>granular</code> form that opens one prompt category at a time). They cross into a grid, and the cell you're standing in is the session's real configuration.</p>
           <figure class="figure">
-            <svg viewBox="0 0 700 226" role="img" aria-label="A two-axis grid of Codex configuration: the horizontal axis is sandbox mode with read-only, workspace-write and full-access; the vertical axis is approval policy with on-request and never; three cells are marked as the Auto preset, reading the repo, and full-access with never ask which has no guardrail left">
+            <div class="diagram-viewport" role="region" tabindex="0" aria-label="Diagram; scroll horizontally to read all labels" style="--diagram-width:700px"><svg viewBox="0 0 700 226" role="img" aria-label="A two-axis grid of Codex configuration: the horizontal axis is sandbox mode with read-only, workspace-write and full-access; the vertical axis is approval policy with on-request and never; three cells are marked as the Auto preset, reading the repo, and full-access with never ask which has no guardrail left">
               <text class="dgm-ink" x="16" y="20" font-size="12.5" font-weight="700">Codex · two independent dials, not one slider</text>
               <text class="dgm-ink2" x="16" y="38" font-size="10" font-family="IBM Plex Mono">across: what the agent CAN do · down: when it must ASK</text>
               <text class="dgm-ink2" x="230" y="66" text-anchor="middle" font-size="10" font-family="IBM Plex Mono">read-only</text>
@@ -1652,7 +1672,7 @@ description: Use when exporting the weekly client report from the internal
               <rect class="dgm-warn" x="500" y="142" width="180" height="62" rx="8" stroke-width="2"/>
               <text class="dgm-ink" x="590" y="170" text-anchor="middle" font-size="10.5" font-weight="700">no guardrail left</text>
               <text class="dgm-ink2" x="590" y="188" text-anchor="middle" font-size="9.5">full access + never ask</text>
-            </svg>
+            </svg></div>
             <figcaption><b>Figure 6.2</b> — The same "allowed to do" level can be safe or dangerous depending on the other dial (approval policies include <code>on-request</code>, <code>never</code>; former <code>untrusted</code> has been retired from <code>approval_policy</code>). The bottom-right cell is the only one with no guardrail at all — if you choose it, the guardrail has to live somewhere else (a separate VM, a throwaway repo, or a review gate before merge).</figcaption>
           </figure>
           <div class="code-card">
@@ -1668,7 +1688,12 @@ network_access = false   # the default; turn it on before commands get any netwo
 # enabled = true
 # domains = { "registry.npmjs.org" = "allow", "example.com" = "deny" }</pre>
           </div>
-          <p>Two flags, two <em>different</em> value sets; do not merge them. <code>--sandbox</code> takes <code>read-only</code> / <code>workspace-write</code> / <code>danger-full-access</code>. <code>--ask-for-approval</code> takes <code>on-request</code> or <code>never</code>. In <code>config.toml</code>, <code>approval_policy</code> has a third shape, <code>{ granular = { … } }</code>, which keeps a few prompt categories interactive and auto-rejects the rest; the value <code>untrusted</code> has been retired from <code>approval_policy</code> (to keep the stricter approval rule, declare <code>trust_level = "untrusted"</code> for the project in <code>~/.codex/config.toml</code>), and <code>on-failure</code> is deprecated.</p>
+          <p>Two flags, two <em>different</em> value sets; do not merge them. <code>--sandbox</code> takes <code>read-only</code> / <code>workspace-write</code> / <code>danger-full-access</code>. <code>--ask-for-approval</code> takes <code>on-request</code> or <code>never</code>. In <code>config.toml</code>, <code>approval_policy</code> has a third shape, <code>{ granular = { … } }</code>, which keeps a few prompt categories interactive and auto-rejects the rest; the value <code>untrusted</code> has been retired from <code>approval_policy</code> (see the separate stricter-trust recipe below), and <code>on-failure</code> is deprecated.</p>
+          <p>For project-derived stricter command approval, <strong>omit explicit <code>approval_policy</code></strong> (and an explicit approval CLI override): <code>on-request</code> overrides the policy derived from project trust. Use this separately from the Auto example; managed policy may constrain availability.</p>
+          <div class="code-card"><div class="prompt-head"><span>~/.codex/config.toml · separate stricter-trust example</span></div>
+<pre># No explicit approval_policy = "on-request" in this configuration
+[projects."/absolute/path/to/repo"]
+trust_level = "untrusted"</pre></div>
           <p>Call the <code>workspace-write</code> + <code>on-request</code> pair above the <strong>Auto preset</strong>, not "the default": the Codex docs disagree with themselves. The sample config marks <code>sandbox_mode = "read-only"</code> as the default; the approvals page recommends Auto for version-controlled folders and read-only for the rest, and says that depending on your setup it may still start in read-only until you explicitly trust the working directory.</p>
           <div class="callout info">
             <div class="callout-title">Product state</div>
@@ -1699,7 +1724,7 @@ network_access = false   # the default; turn it on before commands get any netwo
             <button class="quiz-opt" onclick="quizPick(this,1)"><span class="quiz-letter">B</span><span>Use Codex Cloud for both — the cloud is faster.</span></button>
             <button class="quiz-opt" onclick="quizPick(this,2)"><span class="quiz-letter">C</span><span>Codex CLI (or App) for the new feature — sync, in-the-loop, you want to steer. Codex Cloud for the typos/docs — small, well-scoped, fire-and-forget work, batched into a PR to review later.</span></button>
             <button class="quiz-opt" onclick="quizPick(this,3)"><span class="quiz-letter">D</span><span>Use the IDE extension for everything to stay in flow.</span></button>
-            <div class="quiz-feedback" data-explain="The decision axis is sync-vs-async. Feature design needs you to steer step by step with constant feedback → a synchronous environment (CLI/App). The 12 typos are small, well-scoped, low-risk work — a good fit to delegate to Cloud running in the background, then review the result. Forcing both into one environment wastes Codex's strengths."></div>
+            <div class="quiz-feedback" role="status" aria-live="polite" aria-atomic="true" data-explain="The decision axis is sync-vs-async. Feature design needs you to steer step by step with constant feedback → a synchronous environment (CLI/App). The 12 typos are small, well-scoped, low-risk work — a good fit to delegate to Cloud running in the background, then review the result. Forcing both into one environment wastes Codex's strengths."></div>
           </div>
         </div>
         <div class="lesson-nav" data-navfor="m6-l1"></div>
@@ -1727,10 +1752,10 @@ network_access = false   # the default; turn it on before commands get any netwo
               <li>Balance the benefit of parallelism against the reality of cost &amp; merge risk.</li>
             </ul>
           </div>
-          <p>You ask an agent to design an auth endpoint, then in that same session ask it to security-review what it just wrote. It re-reads its own code and reports "no issues". The same model run twice on the same context produces two highly correlated answers, and the errors correlate too. An independent view only comes from a <em>different</em> agent: different tool, different system prompt, blind to the original design rationale.</p>
+          <p>You ask an agent to build an auth endpoint, then review it in the same session. It reports no issues. That review can inherit the assumptions that produced the code. Give a fresh reviewer the criteria, diff and original evidence, and require independent checks. A new context can reduce anchoring; a different tool or model alone does not guarantee independent errors.</p>
 
           <figure class="figure">
-            <svg viewBox="0 0 660 250" role="img" aria-label="A decision tree: work that needs step-by-step steering uses a synchronous tool; well-scoped fire-and-forget work goes to the async cloud; always review with a second tool">
+            <div class="diagram-viewport" role="region" tabindex="0" aria-label="Diagram; scroll horizontally to read all labels" style="--diagram-width:660px"><svg viewBox="0 0 660 250" role="img" aria-label="A decision tree: work that needs step-by-step steering uses a synchronous tool; well-scoped fire-and-forget work goes to the async cloud; review in a separate context">
               <rect class="dgm-accent" x="240" y="14" width="180" height="40" rx="9" stroke-width="2"/>
               <text class="dgm-ink" x="330" y="39" text-anchor="middle" font-size="12.5" font-weight="700">New work to do</text>
               <path class="dgm-flow" d="M330 54 V84" stroke-width="2" marker-end="url(#a7)"/>
@@ -1749,10 +1774,10 @@ network_access = false   # the default; turn it on before commands get any netwo
               <path class="dgm-flow" d="M120 178 V206 H330 V222" stroke-width="2"/>
               <path class="dgm-flow" d="M540 178 V206 H330" stroke-width="2"/>
               <rect class="dgm-accent" x="215" y="212" width="230" height="34" rx="9" stroke-width="2" style="fill:color-mix(in srgb,var(--brand-gold) 18%,var(--surface))"/>
-              <text class="dgm-ink" x="330" y="234" text-anchor="middle" font-size="12" font-weight="700">Review with a SECOND tool</text>
+              <text class="dgm-ink" x="330" y="234" text-anchor="middle" font-size="12" font-weight="700">Review in a FRESH context</text>
               <defs><marker id="a7" markerWidth="9" markerHeight="9" refX="7" refY="4.5" orient="auto"><path d="M0 0 L9 4.5 L0 9 z" fill="var(--accent-2)"/></marker></defs>
-            </svg>
-            <figcaption><b>Figure 7.1</b> — The sync/async axis chooses the <em>build</em> tool; but whichever branch, <em>review with a second agent</em>. That's where coordination delivers the biggest benefit.</figcaption>
+            </svg></div>
+            <figcaption><b>Figure 7.1</b> — The sync/async axis chooses the <em>build</em> tool; but whichever branch, <em>review with a second agent</em>. Verify the findings before accepting the change.</figcaption>
           </figure>
 
           <h4>Coordination patterns</h4>
@@ -1788,7 +1813,7 @@ network_access = false   # the default; turn it on before commands get any netwo
             <button class="quiz-opt" onclick="quizPick(this,1)"><span class="quiz-letter">B</span><span>The reviewer is sharing the builder's assumptions and self-justification. Create a fresh review session/context, feed only the acceptance criteria, diff and evidence; require running a separate security verifier. You can use the same model, a subagent or a different tool.</span></button>
             <button class="quiz-opt" onclick="quizPick(this,2)"><span class="quiz-letter">C</span><span>You need a smarter model.</span></button>
             <button class="quiz-opt" onclick="quizPick(this,3)"><span class="quiz-letter">D</span><span>Security review should come later, once the implementation is done.</span></button>
-            <div class="quiz-feedback" data-explain="A reviewer using the builder's whole context can inherit the same assumptions and be anchored to the earlier rationale. Separate the review context, feed acceptance criteria + diff + evidence, then run a separate security verifier. Swapping the tool logo doesn't create independence on its own; designing the context and the check is what creates it."></div>
+            <div class="quiz-feedback" role="status" aria-live="polite" aria-atomic="true" data-explain="A reviewer using the builder's whole context can inherit the same assumptions and be anchored to the earlier rationale. Separate the review context, feed acceptance criteria + diff + evidence, then run a separate security verifier. Swapping the tool logo doesn't create independence on its own; designing the context and the check is what creates it."></div>
           </div>
         </div>
         <div class="lesson-nav" data-navfor="m7-l1"></div>
@@ -1822,10 +1847,10 @@ network_access = false   # the default; turn it on before commands get any netwo
             <div class="compare-col bad"><span class="eyebrow">Failure mode 1 · spec too thin</span><ul><li>"Build me a dashboard" → the agent guesses, producing something that looks right but misses the implicit requirements.</li><li>The faster it goes, the more wrong code there is to clean up.</li></ul></div>
             <div class="compare-col bad"><span class="eyebrow">Failure mode 2 · spec so detailed it's paralyzing</span><ul><li>Writing a 40-page spec before validating any assumption.</li><li>Locks in early wrong decisions; wasted effort before you've learned anything.</li></ul></div>
           </div>
-          <div class="callout danger"><div class="callout-title">Root error: merging the spec phase and the code phase into one session</div><p>When spec and code share one context, the agent starts coding before the spec is mature, and the spec gets bent to fit the code already written. <strong>Separate the phases:</strong> brainstorm options → draft a PRD with multi-perspective review → <em>only then</em> implement against the finalized spec. Each phase its own context, its own bar.</p></div>
+          <div class="callout danger"><div class="callout-title">Test the cause before changing the workflow</div><p>A missing edge case may come from incomplete acceptance criteria, implementation, or tooling. Inspect the spec and execution evidence before choosing the fix. A separate spec review is useful when requirements are unsettled; it does not guarantee correct code.</p></div>
 
           <figure class="figure">
-            <svg viewBox="0 0 640 250" role="img" aria-label="A phase-separation diagram: a SPEC PHASE box with brainstorm, scout, multi-perspective PRD leads through a finalized-PRD gate to a CODE PHASE box that implements against the spec, with a loop-back arrow to update the PRD when something new is learned">
+            <div class="diagram-viewport" role="region" tabindex="0" aria-label="Diagram; scroll horizontally to read all labels" style="--diagram-width:640px"><svg viewBox="0 0 640 250" role="img" aria-label="A phase-separation diagram: a SPEC PHASE box with brainstorm, scout, multi-perspective PRD leads through a finalized-PRD gate to a CODE PHASE box that implements against the spec, with a loop-back arrow to update the PRD when something new is learned">
               <defs><marker id="a8" markerWidth="9" markerHeight="9" refX="7" refY="4.5" orient="auto"><path d="M0 0 L9 4.5 L0 9 z" fill="var(--accent-2)"/></marker></defs>
               <rect class="dgm-accent" x="16" y="46" width="230" height="120" rx="10" stroke-width="2"/>
               <text class="dgm-ink" x="131" y="70" text-anchor="middle" font-size="13" font-weight="700">SPEC PHASE</text>
@@ -1845,7 +1870,7 @@ network_access = false   # the default; turn it on before commands get any netwo
               <text class="dgm-ink2" x="513" y="140" text-anchor="middle" font-size="10.5" font-family="IBM Plex Mono">(own context)</text>
               <path class="dgm-line" d="M513 166 V196 H131 V166" stroke-width="1.5" stroke-dasharray="5 4" marker-end="url(#a8)"/>
               <text class="dgm-ink2" x="322" y="214" text-anchor="middle" font-size="10.5" font-family="IBM Plex Mono">learn something new → update the PRD</text>
-            </svg>
+            </svg></div>
             <figcaption><b>Figure 8.1</b> — Two phases, two contexts, one gate. The finalized PRD is the hard boundary between "still thinking" and "started coding". The dashed line is the learning loop: when the code reveals something the spec didn't anticipate, go back and fix the PRD — don't bend the spec to fit code already written.</figcaption>
           </figure>
 
@@ -1861,22 +1886,22 @@ network_access = false   # the default; turn it on before commands get any netwo
 
           <div class="exercise">
             <h5>Exercise · Separate the phases on a real feature</h5>
-            <p>Pick a feature you're about to build. Session 1: <em>only</em> brainstorm options + draft the PRD, no code. Have a second agent review the PRD as a security + QA role. Session 2 (fresh): implement against the finalized PRD. Compare with the old "think and code at once" habit — how much did rework drop?</p>
+            <p>Pick a feature you're about to build. Session 1: <em>only</em> brainstorm options + draft the PRD, no code. Have a second agent review the PRD as a security + QA role. Session 2 (fresh): implement against the finalized PRD. Compare with the old "think and code at once" habit — did rework, quality and review time improve or regress?</p>
           </div>
 
           <div class="takeaway">
             <span class="eyebrow"><svg aria-hidden="true" focusable="false" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 2v6m0 8v6M4.9 4.9l4.2 4.2m5.8 5.8l4.2 4.2M2 12h6m8 0h6M4.9 19.1l4.2-4.2m5.8-5.8l4.2-4.2"/></svg>Takeaway</span>
-            <p>AI creates the most value <span class="hl">before the first line of code</span>. Don't merge spec and code into one session — <span class="hl">separate the phases</span>: brainstorm → a PRD with multi-perspective review → only then implement. The spec is the source of truth; scout first so the spec rests on reality.</p>
+            <p>Use AI to examine requirements <span class="hl">before coding</span> when uncertainty is high. Review acceptance criteria, then implement and verify. Keep the spec in an artifact and update it when evidence changes; measure the value of this workflow rather than assuming one SDLC phase always wins.</p>
           </div>
 
           <div class="quiz" data-correct="2">
             <span class="eyebrow">Quick check</span>
-            <p class="quiz-q">You prompt an agent to "build a CSV import feature" and get back working code that misses all sorts of edge cases (encoding, missing columns, huge files). The prompt was fairly detailed. What's the root problem?</p>
+            <p class="quiz-q">Your agent builds CSV import code that runs but misses encoding, missing-column and large-file cases. The prompt was detailed. What should you do next?</p>
             <button class="quiz-opt" onclick="quizPick(this,0)"><span class="quiz-letter">A</span><span>The model isn't good enough — switch to a stronger model.</span></button>
             <button class="quiz-opt" onclick="quizPick(this,1)"><span class="quiz-letter">B</span><span>The prompt should be longer, with even more specific requirements.</span></button>
-            <button class="quiz-opt" onclick="quizPick(this,2)"><span class="quiz-letter">C</span><span>Spec and code were merged into one session. Separate the phases: brainstorm the edge cases → draft a PRD with multi-perspective review (QA, security) → THEN implement against the finalized spec. Each phase has its own context and quality bar.</span></button>
+            <button class="quiz-opt" onclick="quizPick(this,2)"><span class="quiz-letter">C</span><span>Inspect the acceptance criteria and trace: were encoding, missing columns and file-size limits specified and tested? Review missing requirements separately, then fix and verify the implementation; the symptom alone does not identify the root cause.</span></button>
             <button class="quiz-opt" onclick="quizPick(this,3)"><span class="quiz-letter">D</span><span>You need more code review — fix the bugs after it's done.</span></button>
-            <div class="quiz-feedback" data-explain="The missed edge cases aren't because the model is weak or the prompt is short — it's because the edge-case discovery phase never happened separately. When you jump straight to code, the agent optimizes for 'it runs' rather than 'it's complete'. Separate the spec phase: enumerate the edge cases first (a QA-persona agent is very good at this), finalize the PRD, then implement. Reviewing afterwards only patches the symptoms of a missing spec."></div>
+            <div class="quiz-feedback" role="status" aria-live="polite" aria-atomic="true" data-explain="A detailed prompt is not evidence of complete requirements or correct implementation. Check the spec, tests and tool trace to distinguish missing criteria from implementation errors. Separate review can help expose gaps; verify its findings. Code review and model/tool limitations remain relevant."></div>
           </div>
         </div>
         <div class="lesson-nav" data-navfor="m8-l1"></div>
@@ -1907,7 +1932,7 @@ network_access = false   # the default; turn it on before commands get any netwo
           <p>Your orders system needs one transaction touching three tables at once: orders, payments, inventory. You ask an AI "which database should we use?" and get back an even-handed paragraph, true for every system and therefore useless for yours. The real question is which of <em>your</em> constraints eliminates which option, and who owns what the elimination costs. AI widens the option space and plays the expert; you carry the trade-off against the real context, then write it down as an ADR.</p>
 
           <figure class="figure">
-            <svg viewBox="0 0 720 210" role="img" aria-label="An architecture-with-AI flow: AI widens into many options, three persona-subagents (SRE, security, cost) critique against constraints, you arbitrate and hold the trade-offs, then finalize with an ADR">
+            <div class="diagram-viewport" role="region" tabindex="0" aria-label="Diagram; scroll horizontally to read all labels" style="--diagram-width:720px"><svg viewBox="0 0 720 210" role="img" aria-label="An architecture-with-AI flow: AI widens into many options, three persona-subagents (SRE, security, cost) critique against constraints, you arbitrate and hold the trade-offs, then finalize with an ADR">
               <rect class="dgm-accent" x="14" y="64" width="150" height="82" rx="10" stroke-width="2"/>
               <text class="dgm-ink" x="89" y="98" text-anchor="middle" font-size="12" font-weight="700">AI widens</text>
               <text class="dgm-ink2" x="89" y="118" text-anchor="middle" font-size="10" font-family="IBM Plex Mono">many options</text>
@@ -1928,7 +1953,7 @@ network_access = false   # the default; turn it on before commands get any netwo
               <text class="dgm-ink" x="656" y="100" text-anchor="middle" font-size="13" font-weight="700">ADR</text>
               <text class="dgm-ink2" x="656" y="119" text-anchor="middle" font-size="9" font-family="IBM Plex Mono">the recorded decision</text>
               <defs><marker id="m9l1-ah" markerWidth="9" markerHeight="9" refX="7" refY="4.5" orient="auto"><path d="M0 0 L9 4.5 L0 9 z" fill="var(--accent-2)"/></marker></defs>
-            </svg>
+            </svg></div>
             <figcaption><b>Figure 9.1</b> — Architecture = constrained search: AI widens the options, each persona-subagent critiques against one constraint, you arbitrate the trade-offs and then finalize with an ADR.</figcaption>
           </figure>
 
@@ -1946,7 +1971,7 @@ network_access = false   # the default; turn it on before commands get any netwo
 
           <div class="callout insight"><div class="callout-title">The architecture review meeting · with AI in the room</div><p>Have each subagent-persona critique the design <em>before</em> the human meeting. Walk in with a list of risks &amp; questions AI already surfaced — people focus on trade-offs, not on finding basic gaps. Remember Chapter 7: the reviewer must be a <em>different</em> agent from the builder.</p></div>
 
-          <div class="callout info"><div class="callout-title">30-second example · a 5-line condensed ADR</div><p><strong>Context:</strong> an orders system needs multi-table transactions (orders, payments, inventory) with strong consistency constraints. <strong>Decision:</strong> use Postgres as the primary store. <strong>Rejected option:</strong> MongoDB, rejected because it lacks easy multi-document transactions and the order schema is inherently relational. <strong>Consequences:</strong> we gain ACID + JOINs + foreign-key constraints; in exchange we manage schema migrations and accept harder horizontal scaling. These five lines are an entire ADR — AI drafts it fast, you make the final trade-off.</p></div>
+          <div class="callout info"><div class="callout-title">30-second example · a 5-line condensed ADR</div><p><strong>Context:</strong> an orders system needs multi-table transactions (orders, payments, inventory) with strong consistency constraints. <strong>Decision:</strong> use Postgres as the primary store. <strong>Rejected option:</strong> MongoDB supports multi-document ACID transactions; in this synthetic case, the team chooses Postgres for relational constraints and its existing SQL expertise, not because MongoDB lacks transactions. <strong>Consequences:</strong> we gain ACID + JOINs + foreign-key constraints; in exchange we manage schema migrations and accept harder horizontal scaling. These five lines are an entire ADR — AI drafts it fast, you make the final trade-off.</p></div>
 
           <div class="exercise">
             <h5>Exercise · An expert panel for a real decision</h5>
@@ -1965,7 +1990,7 @@ network_access = false   # the default; turn it on before commands get any netwo
             <button class="quiz-opt" onclick="quizPick(this,1)"><span class="quiz-letter">B</span><span>Ask "which architecture is best?" and follow the answer.</span></button>
             <button class="quiz-opt" onclick="quizPick(this,2)"><span class="quiz-letter">C</span><span>Let AI choose and implement it right away for speed.</span></button>
             <button class="quiz-opt" onclick="quizPick(this,3)"><span class="quiz-letter">D</span><span>Pick the architecture you know best, skip AI at this step.</span></button>
-            <div class="quiz-feedback" data-explain="AI is strong at widening the search space and playing multi-perspective experts, weak at bearing the trade-offs against your real context. 'Which architecture is best?' yields a context-free average answer. A persona panel critiquing each option against specific constraints (operations, security, cost) surfaces real risks; you — the one who knows the context — arbitrate and decide, recording it as an ADR."></div>
+            <div class="quiz-feedback" role="status" aria-live="polite" aria-atomic="true" data-explain="AI is strong at widening the search space and playing multi-perspective experts, weak at bearing the trade-offs against your real context. 'Which architecture is best?' yields a context-free average answer. A persona panel critiquing each option against specific constraints (operations, security, cost) surfaces real risks; you — the one who knows the context — arbitrate and decide, recording it as an ADR."></div>
           </div>
         </div>
         <div class="lesson-nav" data-navfor="m9-l1"></div>
@@ -2014,7 +2039,7 @@ network_access = false   # the default; turn it on before commands get any netwo
           </ol>
 
           <figure class="figure">
-            <svg viewBox="0 0 620 300" role="img" aria-label="A Red–Green–Refactor loop: write a red test, let the agent make it green, refactor on the safety net, then repeat — this is the loop you steer instead of typing code yourself">
+            <div class="diagram-viewport" role="region" tabindex="0" aria-label="Diagram; scroll horizontally to read all labels" style="--diagram-width:620px"><svg viewBox="0 0 620 300" role="img" aria-label="A Red–Green–Refactor loop: write a red test, let the agent make it green, refactor on the safety net, then repeat — this is the loop you steer instead of typing code yourself">
               <path class="dgm-flow" d="M204 82 C 280 48, 340 48, 416 82" stroke-width="2.5" marker-end="url(#m10l1-ah)"/>
               <path class="dgm-flow" d="M436 132 C 424 176, 396 190, 360 197" stroke-width="2.5" marker-end="url(#m10l1-ah)"/>
               <path class="dgm-flow" d="M260 197 C 224 190, 196 176, 184 132" stroke-width="2.5" marker-end="url(#m10l1-ah)"/>
@@ -2029,7 +2054,7 @@ network_access = false   # the default; turn it on before commands get any netwo
               <text class="dgm-ink2" x="310" y="248" text-anchor="middle" font-size="9.5" font-family="IBM Plex Mono">clean up · safety net</text>
               <text class="dgm-ink2" x="310" y="142" text-anchor="middle" font-size="10.5" font-family="IBM Plex Mono">the loop you steer</text>
               <defs><marker id="m10l1-ah" markerWidth="9" markerHeight="9" refX="7" refY="4.5" orient="auto"><path d="M0 0 L9 4.5 L0 9 z" fill="var(--accent-2)"/></marker></defs>
-            </svg>
+            </svg></div>
             <figcaption><b>Figure 10.1</b> — With an agent you don't type code, you steer a loop: a red test defines "not done", the agent makes it green (running automatically via a hook), then refactors on the safety net — repeat.</figcaption>
           </figure>
 
@@ -2054,7 +2079,7 @@ network_access = false   # the default; turn it on before commands get any netwo
             <button class="quiz-opt" onclick="quizPick(this,1)"><span class="quiz-letter">B</span><span>No plan, no test loop, accumulating context. Use plan mode to lock the strategy first; have the agent run tests after each file (or use a hook); consider a worktree for genuinely independent files; compact periodically to avoid degradation.</span></button>
             <button class="quiz-opt" onclick="quizPick(this,2)"><span class="quiz-letter">C</span><span>Refactoring isn't a fit for AI — do it by hand.</span></button>
             <button class="quiz-opt" onclick="quizPick(this,3)"><span class="quiz-letter">D</span><span>Raise the agent's max iterations.</span></button>
-            <div class="quiz-feedback" data-explain="Drift in a big task is a symptom of a missing feedback loop + context bloat, not a weak model. Plan mode locks the strategy before touching code (avoiding random trial-and-error). Tests after each file give an objective right/wrong signal (a hook automates it). A worktree isolates independent parts. Compaction fights the context rot of a long session. Swapping the model or raising iterations doesn't touch the root cause."></div>
+            <div class="quiz-feedback" role="status" aria-live="polite" aria-atomic="true" data-explain="Drift can come from an unclear plan, missing feedback or context bloat. Inspect the trace to test these hypotheses; this symptom alone does not rule out model limitations. Plan mode locks the strategy before touching code (avoiding random trial-and-error). Tests after each file give an objective right/wrong signal (a hook automates it). A worktree isolates independent parts. Compaction fights the context rot of a long session. Change the model or iteration budget only if the trace/eval supports that hypothesis."></div>
           </div>
         </div>
         <div class="lesson-nav" data-navfor="m10-l1"></div>
@@ -2081,7 +2106,7 @@ network_access = false   # the default; turn it on before commands get any netwo
               <li>Know what AI is good/bad at when generating tests, and use evals as regression tests for AI features.</li>
             </ul>
           </div>
-          <p>Your team wants to add "AI review" to the process, and someone proposes the cheapest version: let the agent that just wrote the code review itself before opening the PR. It sounds reasonable, because an AI reviewer does have a real structural advantage: it <em>doesn't get tired and doesn't defer</em>, line 800 gets the same attitude as line 1, no "too long to read carefully", no worry about bruising the author's ego. That advantage evaporates when the reviewer is the agent that wrote the code: it inherits the exact blind spots that produced the bug (Chapter 7). It also still lives under the Chapter 2 attention budget, so <strong>split large diffs into coherent change clusters and review them one cluster at a time</strong> instead of dropping 3,000 lines into a single turn.</p>
+          <p>Your team asks the builder agent to review its own PR. Self-review can catch mistakes, but it can also preserve the assumptions that caused them. A separate reviewer can run a focused checklist; it can still miss bugs or invent findings. Split large diffs into coherent changes, check every finding, and measure missed defects rather than assuming line 800 receives the same attention as line 1.</p>
 
           <div class="table-wrap">
             <table>
@@ -2100,7 +2125,7 @@ network_access = false   # the default; turn it on before commands get any netwo
           </div>
 
           <figure class="figure">
-            <svg viewBox="0 0 640 260" role="img" aria-label="A builder-validator chain diagram: the builder agent produces an artifact or diff, three parallel lenses (correctness, security, performance) inspect it, then the findings are merged; a note says the validators don't see the design rationale">
+            <div class="diagram-viewport" role="region" tabindex="0" aria-label="Diagram; scroll horizontally to read all labels" style="--diagram-width:640px"><svg viewBox="0 0 640 260" role="img" aria-label="A builder-validator chain diagram: the builder agent produces an artifact or diff, three parallel lenses (correctness, security, performance) inspect it, then the findings are merged; a note says the validators don't see the design rationale">
               <defs><marker id="a11" markerWidth="9" markerHeight="9" refX="7" refY="4.5" orient="auto"><path d="M0 0 L9 4.5 L0 9 z" fill="var(--accent-2)"/></marker></defs>
               <rect class="dgm-accent" x="16" y="104" width="104" height="52" rx="9" stroke-width="2"/>
               <text class="dgm-ink" x="68" y="126" text-anchor="middle" font-size="12" font-weight="700">BUILDER</text>
@@ -2125,8 +2150,8 @@ network_access = false   # the default; turn it on before commands get any netwo
               <text class="dgm-ink" x="598" y="124" text-anchor="middle" font-size="10.5" font-weight="700">MERGE</text>
               <text class="dgm-ink" x="598" y="140" text-anchor="middle" font-size="9" font-weight="700">FINDINGS</text>
               <text class="dgm-ink2" x="419" y="250" text-anchor="middle" font-size="10.5" font-family="IBM Plex Mono">the 3 lenses are separate agents · blind to the design rationale</text>
-            </svg>
-            <figcaption><b>Figure 11.1</b> — The builder hands the artifact to <em>independent</em> validators. Three lenses run in parallel, each with its own focus, then the findings are merged. The key point: the validators don't see the builder's design rationale — so they don't inherit the blind spot that produced the bug.</figcaption>
+            </svg></div>
+            <figcaption><b>Figure 11.1</b> — The builder hands the artifact to <em>independent</em> validators. Three lenses run in parallel, each with its own focus, then the findings are merged. The key point: the validators don't see the builder's design rationale — which can reduce anchoring; they can still share training-related blind spots.</figcaption>
           </figure>
 
           <h4>Test generation — what AI is good and bad at</h4>
@@ -2136,6 +2161,7 @@ network_access = false   # the default; turn it on before commands get any netwo
           </div>
           <div class="callout insight"><div class="callout-title">Eval-driven development for AI features</div><p>For an LLM-powered feature, the "test" is an <strong>eval</strong>: a set of input/expected-output examples run as a regression test. Start with cases representing the happy path, the hard cases, and the expensive failures; expand by the diversity and risk you observe. Re-run every time you change the prompt, model or context.</p></div>
 
+          <p>A deterministic checker returns the same grade for the same input and fixture, but the model, tools, task mix and measured latency can vary between runs. A wrong fixture can deterministically accept a wrong result. Freeze and review expected outcomes, repeat representative tasks, and compare paired results; one before/after run cannot identify a unique cause.</p>
           <div class="exercise">
             <h5>Exercise · A minimal eval set</h5>
             <p>For an existing AI feature: collect 20 real inputs (including a few that once went wrong). Record the expected outputs. Write a simple scoring script. Now change one thing in the prompt and re-run — you'll see immediately whether it improves or regresses, instead of guessing.</p>
@@ -2150,10 +2176,10 @@ network_access = false   # the default; turn it on before commands get any netwo
             <span class="eyebrow">Quick check</span>
             <p class="quiz-q">Your team wants to add "AI review" to the process. Someone proposes: have the same agent that wrote the code review it, then open the PR. What's the problem, and a better way?</p>
             <button class="quiz-opt" onclick="quizPick(this,0)"><span class="quiz-letter">A</span><span>No problem — self-review is enough and saves time.</span></button>
-            <button class="quiz-opt" onclick="quizPick(this,1)"><span class="quiz-letter">B</span><span>A reviewer sharing the builder's context inherits the very blind spots that created the bug. Use an independent agent/tool with a review-specialized system prompt, blind to the design rationale; even better, multiple lenses (correctness, security, performance) each with its own agent.</span></button>
+            <button class="quiz-opt" onclick="quizPick(this,1)"><span class="quiz-letter">B</span><span>Self-review can preserve the builder's assumptions. Add a separate review context with a focused checklist; use extra lenses where risk justifies them, then reproduce and validate each finding.</span></button>
             <button class="quiz-opt" onclick="quizPick(this,2)"><span class="quiz-letter">C</span><span>AI shouldn't review — only humans review.</span></button>
             <button class="quiz-opt" onclick="quizPick(this,3)"><span class="quiz-letter">D</span><span>One review is enough, multi-perspective is a waste.</span></button>
-            <div class="quiz-feedback" data-explain="Self-review shares context and so inherits the same assumptions that created the bug — and the model tends to rationalize its own code. The AI reviewer's structural advantage only appears when it's INDEPENDENT: a different agent/tool, a review-specialized prompt, blind to the design rationale. Multiple lenses (correctness/security/performance, each its own agent) catch more classes of error than a single review."></div>
+            <div class="quiz-feedback" role="status" aria-live="polite" aria-atomic="true" data-explain="Separate context can reduce anchoring in the builder's reasoning, but does not guarantee statistical independence or more bugs found. Self-review may help too. Evaluate missed bugs and false positives, and accept only evidence-backed findings."></div>
           </div>
         </div>
         <div class="lesson-nav" data-navfor="m11-l1"></div>
@@ -2183,7 +2209,7 @@ network_access = false   # the default; turn it on before commands get any netwo
           <p>It is 2 a.m., queue depth is climbing steeply and the oldest message keeps getting older. You paste the error log and the in/out throughput charts to an agent; it reconstructs a four-step frame to work from: confirm the symptom, isolate the cause, relieve pressure, verify. It can do that because everything it needs is an <em>objective signal</em> (logs, measurements, diffs); at the other end of that axis, vague work with no feedback loop, it wobbles. Whether to scale consumers or throttle producers still belongs to the person on call.</p>
 
           <figure class="figure">
-            <svg viewBox="0 0 640 210" role="img" aria-label="A signal map: a horizontal axis from a fuzzy signal on the left to a clear signal (diff, log, test) on the right; the AI application points — PR review, runbook, incident triage — sit on the clear-signal side; a human-holds-the-decision zone is marked at the risky actions rollback, merge, on-call">
+            <div class="diagram-viewport" role="region" tabindex="0" aria-label="Diagram; scroll horizontally to read all labels" style="--diagram-width:640px"><svg viewBox="0 0 640 210" role="img" aria-label="A signal map: a horizontal axis from a fuzzy signal on the left to a clear signal (diff, log, test) on the right; the AI application points — PR review, runbook, incident triage — sit on the clear-signal side; a human-holds-the-decision zone is marked at the risky actions rollback, merge, on-call">
               <defs><marker id="a12" markerWidth="9" markerHeight="9" refX="7" refY="4.5" orient="auto"><path d="M0 0 L9 4.5 L0 9 z" fill="var(--accent-2)"/></marker></defs>
               <line class="dgm-line" x1="40" y1="120" x2="600" y2="120" stroke-width="1.5" marker-end="url(#a12)"/>
               <text class="dgm-ink2" x="40" y="146" font-size="11" font-family="IBM Plex Mono">fuzzy signal</text>
@@ -2198,7 +2224,7 @@ network_access = false   # the default; turn it on before commands get any netwo
               <text class="dgm-ink" x="200" y="186" text-anchor="middle" font-size="11" font-weight="700">human holds the decision · rollback / merge / on-call</text>
               <path class="dgm-line" d="M120 164 V132" stroke-width="1.3" stroke-dasharray="4 3"/>
               <text class="dgm-ink2" x="120" y="120" text-anchor="middle" font-size="10" font-family="IBM Plex Mono">risky action</text>
-            </svg>
+            </svg></div>
             <figcaption><b>Figure 12.1</b> — Place AI on the clear-signal side of the axis: PR review, runbooks, incident triage all have diffs/logs/tests to anchor to. The orange zone is risky actions (rollback, merge, on-call) — there the model only proposes, humans hold the decision.</figcaption>
           </figure>
 
@@ -2235,7 +2261,7 @@ network_access = false   # the default; turn it on before commands get any netwo
             <button class="quiz-opt" onclick="quizPick(this,1)"><span class="quiz-letter">B</span><span>Let the agent auto-merge a PR if the AI review says "OK".</span></button>
             <button class="quiz-opt" onclick="quizPick(this,2)"><span class="quiz-letter">C</span><span>Generate runbooks from scattered knowledge &amp; postmortems, and PR review that auto-labels risk (suggestions, no auto-merge) — work with a clear signal, humans still hold the final decision.</span></button>
             <button class="quiz-opt" onclick="quizPick(this,3)"><span class="quiz-letter">D</span><span>Give the agent full on-call authority in place of a human.</span></button>
-            <div class="quiz-feedback" data-explain="A good starting point is work with a clear objective signal AND that keeps humans in the high-risk decision loop. Runbook generation and risk-labeling PR review hit both criteria: high value, low risk, no dangerous authority handed to the model's judgment. Auto-rollback, auto-merge, or replacing on-call all hand high-risk authority to the model — violating the 'authorization belongs to the harness/human, not the model' principle (Chapter 4)."></div>
+            <div class="quiz-feedback" role="status" aria-live="polite" aria-atomic="true" data-explain="A good starting point is work with a clear objective signal AND that keeps humans in the high-risk decision loop. Runbook generation and risk-labeling PR review hit both criteria: high value, low risk, no dangerous authority handed to the model's judgment. Auto-rollback, auto-merge, or replacing on-call all hand high-risk authority to the model — violating the 'authorization belongs to the harness/human, not the model' principle (Chapter 4)."></div>
           </div>
         </div>
         <div class="lesson-nav" data-navfor="m12-l1"></div>
@@ -2264,11 +2290,11 @@ network_access = false   # the default; turn it on before commands get any netwo
           </div>
           <p>Your team opens licenses for everyone, runs one training session off slides, then puts "lines of AI-generated code per week" on a dashboard. A few weeks later everyone prompts a different way, nobody can reuse anyone else's work, and the line count climbs alongside review time. Nobody did any single thing wrong: what is missing is a shared standard, a learn-by-doing pilot, and a metric that measures the thing worth measuring. Adoption failure has a clear pattern, so it's avoidable.</p>
 
-          <div class="callout danger"><div class="callout-title">Why adoption fails</div><p>Not because the tools are bad. Because: <strong>(1)</strong> no shared standard (everyone does it their own way, nothing reusable); <strong>(2)</strong> training via slides instead of learn-by-doing; <strong>(3)</strong> measuring success wrong (lines of code/day instead of outcomes); <strong>(4)</strong> forgetting "when NOT to use AI".</p></div>
+          <div class="callout danger"><div class="callout-title">Why adoption fails</div><p>Inspect tool fit as well as these process risks: <strong>(1)</strong> no shared standard (everyone does it their own way, nothing reusable); <strong>(2)</strong> training via slides instead of learn-by-doing; <strong>(3)</strong> measuring success wrong (lines of code/day instead of outcomes); <strong>(4)</strong> forgetting "when NOT to use AI".</p></div>
 
           <h4>Three rollout phases</h4>
           <figure class="figure">
-            <svg viewBox="0 0 640 180" role="img" aria-label="A three-phase adoption timeline, horizontal: Phase 1 Standards weeks 1-2, Phase 2 Pilot weeks 3-6, Phase 3 Mentored rollout week 7 onward, each phase a box and a mono description line">
+            <div class="diagram-viewport" role="region" tabindex="0" aria-label="Diagram; scroll horizontally to read all labels" style="--diagram-width:640px"><svg viewBox="0 0 640 180" role="img" aria-label="A three-phase adoption timeline, horizontal: Phase 1 Standards weeks 1-2, Phase 2 Pilot weeks 3-6, Phase 3 Mentored rollout week 7 onward, each phase a box and a mono description line">
               <defs><marker id="a13" markerWidth="9" markerHeight="9" refX="7" refY="4.5" orient="auto"><path d="M0 0 L9 4.5 L0 9 z" fill="var(--accent-2)"/></marker></defs>
               <line class="dgm-line" x1="24" y1="150" x2="616" y2="150" stroke-width="1.5" marker-end="url(#a13)"/>
               <rect class="dgm-accent" x="24" y="40" width="176" height="66" rx="10" stroke-width="2"/>
@@ -2286,7 +2312,7 @@ network_access = false   # the default; turn it on before commands get any netwo
               <text class="dgm-ink2" x="528" y="86" text-anchor="middle" font-size="10.5" font-family="IBM Plex Mono">week 7+</text>
               <text class="dgm-ink2" x="528" y="126" text-anchor="middle" font-size="10" font-family="IBM Plex Mono">pair mentoring · spreads by pairing</text>
               <path class="dgm-line" d="M528 106 V150" stroke-width="1.3" stroke-dasharray="4 3"/>
-            </svg>
+            </svg></div>
             <figcaption><b>Figure 13.1</b> — Adoption is a timeline, not an event. Each phase lays the foundation for the next: with no standard (Phase 1) the pilot isn't reusable; with no learn-by-doing pilot (Phase 2) the rollout is just handing out documents.</figcaption>
           </figure>
           <ol class="steps">
@@ -2310,7 +2336,7 @@ network_access = false   # the default; turn it on before commands get any netwo
             </table>
           </div>
 
-          <div class="callout insight"><div class="callout-title">The closing principle</div><p>AI doesn't replace good engineers — it <em>amplifies</em> them. A team with good standards, context &amp; harness discipline, and the sense to know when to stop, will pull far ahead of a team that "uses a lot of AI" without those three. The tool only amplifies; discipline decides what gets amplified.</p></div>
+          <div class="callout insight"><div class="callout-title">The closing principle</div><p>Measure accepted outcomes, review effort and escaped defects; tool volume alone does not establish team improvement. Keep the standards that improve measured outcomes and revise the rest.</p></div>
 
           <div class="exercise">
             <h5>Exercise · A minimal standard for your team</h5>
@@ -2329,7 +2355,7 @@ network_access = false   # the default; turn it on before commands get any netwo
             <button class="quiz-opt" onclick="quizPick(this,1)"><span class="quiz-letter">B</span><span>Just measuring the total API bill is enough.</span></button>
             <button class="quiz-opt" onclick="quizPick(this,2)"><span class="quiz-letter">C</span><span>Measure the hours saved as self-reported by the agent.</span></button>
             <button class="quiz-opt" onclick="quizPick(this,3)"><span class="quiz-letter">D</span><span>Lines of code is a counterproductive metric (it encourages bloated, hard-to-maintain code). Measure team-level outcomes: lead time, escaped-to-prod defect rate, review health, cost/outcome (per merged PR, per closed ticket) — and watch for skill atrophy.</span></button>
-            <div class="quiz-feedback" data-explain="Lines of code/week rewards exactly what we don't want: more code, more bloat, harder to maintain — and AI generates volume very easily. A good metric ties to OUTCOMES at the team level: shorter lead time, fewer defects escaping to prod, healthy review, and cost per unit of value (merged PR/closed ticket). Also watch for skill atrophy so today's 'productivity' doesn't become tomorrow's technical &amp; cognitive debt."></div>
+            <div class="quiz-feedback" role="status" aria-live="polite" aria-atomic="true" data-explain="Lines of code/week rewards exactly what we don't want: more code, more bloat, harder to maintain — and AI generates volume very easily. A good metric ties to OUTCOMES at the team level: shorter lead time, fewer defects escaping to prod, healthy review, and cost per unit of value (merged PR/closed ticket). Also watch for skill atrophy so today's 'productivity' doesn't become tomorrow's technical &amp; cognitive debt."></div>
           </div>
         </div>
         <div class="lesson-nav" data-navfor="m13-l1"></div>
@@ -2371,10 +2397,10 @@ network_access = false   # the default; turn it on before commands get any netwo
                 <tr><td><strong>5 · Claude Code</strong></td><td>A programmable harness. Use progressive disclosure across CLAUDE.md/Skills/subagents; model upgrades are a reason to re-audit scaffolding. Trim procedural micromanagement, keep explicit success criteria, and never move safety boundaries back into prompt text.</td></tr>
                 <tr><td><strong>6 · Codex</strong></td><td>Choose sync vs async by how much steering you need; keep repo knowledge as a discoverable system of record, not a giant instruction blob. Managed harnesses now expose compaction, tool search, programmatic calls, subagents and sandboxes as platform primitives.</td></tr>
                 <tr><td><strong>7 · Combining two agents</strong></td><td>Separate the builder/reviewer contexts; the reviewer gets the criteria, diff and evidence, then runs a separate verifier. Scout before big work; choose sync/async by the need to steer.</td></tr>
-                <tr><td><strong>8 · Discovery &amp; Specification</strong></td><td>AI creates the most value before the first line of code. Separate the phases: brainstorm → a PRD with multi-perspective review → only then implement.</td></tr>
+                <tr><td><strong>8 · Discovery &amp; Specification</strong></td><td>Use AI to expose assumptions before coding. Separate the phases: brainstorm → a PRD with multi-perspective review → only then implement.</td></tr>
                 <tr><td><strong>9 · Architecture</strong></td><td>Architecture is constrained search. Let AI widen the options and play multiple expert personas; you hold the decisions &amp; trade-offs, recorded as ADRs.</td></tr>
                 <tr><td><strong>10 · Implementation</strong></td><td>With an agent you don't write code — you steer a loop. Tests are an executable spec; plan mode locks the strategy; worktrees enable parallel refactors.</td></tr>
-                <tr><td><strong>11 · Review &amp; Test</strong></td><td>An AI reviewer has a structural advantage only when independent of the builder. Multi-perspective review, each lens an agent; AI features need evals as regression tests.</td></tr>
+                <tr><td><strong>11 · Review &amp; Test</strong></td><td>Give the reviewer a separate context and verify its findings. Choose focused review lenses and check findings; AI features need regression evals.</td></tr>
                 <tr><td><strong>12 · Operations</strong></td><td>AI is easier to check where there's a clear signal (diff/log/incident). Keep humans in the high-risk decision loop; AI features also need observability + a hard cost ceiling.</td></tr>
                 <tr><td><strong>13 · Team adoption</strong></td><td>Standardize a lean map + maintained system of record, pilot on real work, then mentor the rollout. Measure team outcomes and continuously garden docs/rules so higher agent throughput does not compound entropy.</td></tr>
               </tbody>
@@ -2411,9 +2437,9 @@ network_access = false   # the default; turn it on before commands get any netwo
             <p class="quiz-q">An AI feature running in prod suddenly returns skewed results after you "just added a few documents to the context to be safe". What's the right diagnosis &amp; fix sequence, combining what you've learned?</p>
             <button class="quiz-opt" onclick="quizPick(this,0)"><span class="quiz-letter">A</span><span>Rewrite the system prompt tighter and switch to a stronger model, then redeploy immediately.</span></button>
             <button class="quiz-opt" onclick="quizPick(this,1)"><span class="quiz-letter">B</span><span>Add even more documents so the model has enough context, and raise max_tokens so it thinks harder.</span></button>
-            <button class="quiz-opt" onclick="quizPick(this,2)"><span class="quiz-letter">C</span><span>Diagnose bottom-up: inspect the <em>actual context</em> (Ch.1–2) — the "few documents" you just added almost certainly cause context rot/lost-in-the-middle; log what's being loaded, trim it, place the key part at the start/end; build an <em>eval</em> (Ch.11) to measure regression; and have an <em>independent</em> tool (Ch.7,11) review the change before it hits prod.</span></button>
+            <button class="quiz-opt" onclick="quizPick(this,2)"><span class="quiz-letter">C</span><span>Diagnose bottom-up: inspect the <em>actual context</em> (Ch.1–2) — the added documents may introduce stale facts, conflicting instructions or positional noise; compare against the prior payload; log what's being loaded, trim it, place the key part at the start/end; build an <em>eval</em> (Ch.11) to measure regression; and have an <em>independent</em> tool (Ch.7,11) review the change before it hits prod.</span></button>
             <button class="quiz-opt" onclick="quizPick(this,3)"><span class="quiz-letter">D</span><span>A rollback is enough — the problem will fix itself once the added documents are removed, no measurement or verification needed.</span></button>
-            <div class="quiz-feedback" data-explain="This is a synthesis test: 'add documents to be safe' is exactly the reflex Chapter 2 warns about — stuffing context dilutes attention and pushes the signal into the dead zone in the middle of the window. The right sequence is to diagnose bottom-up (Ch.1): see what the context actually holds before touching the prompt or the model. Then make the fix measurable with an eval (Ch.11) so you're sure it improved and didn't regress, and have an independent tool review the change (Ch.7,11) before prod. A plain rollback restores the state but gives you no understanding — and you'll repeat the mistake."></div>
+            <div class="quiz-feedback" role="status" aria-live="polite" aria-atomic="true" data-explain="This is a synthesis test: 'add documents to be safe' is exactly the reflex Chapter 2 warns about — added context may introduce stale facts, conflicts or position-sensitive failures; the symptom does not establish which cause applies. The right sequence is to diagnose bottom-up (Ch.1): see what the context actually holds before touching the prompt or the model. Then make the fix measurable with an eval (Ch.11) so you're sure it improved and didn't regress, and have an independent tool review the change (Ch.7,11) before prod. A plain rollback restores the state but gives you no understanding — and you'll repeat the mistake."></div>
           </div>
         </div>
         <div class="lesson-nav" data-navfor="m14-l1"></div>
@@ -2440,7 +2466,7 @@ const STORAGE_PREFIX='ai-course:';
 /* Color mode — light by default, dark via toggle, persisted (house standard) */
 (function(){
   const KEY=STORAGE_PREFIX+COURSE_SLUG+':mode', root=document.documentElement, btn=document.getElementById('modeToggle');
-  function apply(m){ if(m==='dark'){root.setAttribute('data-mode','dark'); if(btn) btn.textContent='☀️';} else {root.removeAttribute('data-mode'); if(btn) btn.textContent='🌙';} }
+  function apply(m){ if(btn){btn.setAttribute('aria-pressed',String(m==='dark'));btn.setAttribute('aria-label',m==='dark'?'Switch to light mode':'Switch to dark mode');} if(m==='dark'){root.setAttribute('data-mode','dark'); if(btn) btn.textContent='☀️';} else {root.removeAttribute('data-mode'); if(btn) btn.textContent='🌙';} }
   let saved=null; try{saved=localStorage.getItem(KEY);}catch(e){}
   apply(saved==='dark'?'dark':'light');
   if(btn) btn.addEventListener('click',()=>{ const next=root.getAttribute('data-mode')==='dark'?'light':'dark'; apply(next); try{localStorage.setItem(KEY,next);}catch(e){} });
@@ -2504,6 +2530,7 @@ async function refreshProgress(){
   let done=0;for(const l of LESSONS){if(await sGet(DONE_KEY(l.id))==='done')done++}
   const pct=LESSONS.length?Math.round(done/LESSONS.length*100):0;
   document.getElementById('pg-fill').style.width=pct+'%';document.getElementById('tb-fill').style.width=pct+'%';
+  document.querySelector('.progress-track').setAttribute('aria-valuenow',String(pct));
   document.getElementById('pg-done').textContent=done;document.getElementById('pg-total').textContent=LESSONS.length;document.getElementById('pg-pct').textContent=pct;
   try{window.parent.postMessage({type:'lms:progress',course:COURSE_SLUG,percent:pct,done,total:LESSONS.length},'*')}catch(e){}
 }
@@ -2521,11 +2548,12 @@ function show(id){
   if(!PANES.includes(id)){const mod=id.split('-')[0].slice(1);const mh=document.querySelector(`.module-header[data-module="${mod}"]`);if(mh)mh.classList.add('active');const l=LESSONS.find(x=>x.id===id);if(l)crumb=l.title}
   else if(id==='overview')crumb='Overview';else if(id==='complete')crumb='Complete';
   document.getElementById('tb-crumb').textContent=crumb;
-  document.querySelectorAll('.nav-link').forEach(a=>a.classList.toggle('active',a.dataset.lesson===id));
+  document.querySelectorAll('.nav-link').forEach(a=>{const active=a.dataset.lesson===id;a.classList.toggle('active',active);if(active)a.setAttribute('aria-current','page');else a.removeAttribute('aria-current')});
   const an=document.querySelector('.nav-link.active'),ns=document.querySelector('.nav-scroll');
   if(an&&ns){ns.scrollTo({top:Math.max(0,an.offsetTop-ns.clientHeight/2),behavior:'auto'})}
   sSet(LAST_KEY,id);
   if(window.innerWidth<1024){document.getElementById('sidebar').classList.remove('open');document.getElementById('backdrop').classList.remove('show')}
+  document.getElementById('main').focus({preventScroll:true});
   window.scrollTo({top:0,behavior:'instant'});
   try{window.parent.postMessage({type:'lms:lesson-change',course:COURSE_SLUG,lessonId:id},'*')}catch(e){}
 }
@@ -2569,7 +2597,7 @@ document.addEventListener('DOMContentLoaded',async()=>{
 });
 let _st;window.addEventListener('scroll',()=>{clearTimeout(_st);_st=setTimeout(()=>{const id=document.querySelector('.nav-link.active')?.dataset.lesson||'overview',y=Math.round(window.scrollY);if(y<64)sDel(SCROLL_KEY+id);else sSet(SCROLL_KEY+id,String(y))},400)},{passive:true});
 document.addEventListener('keydown',e=>{
-  if(e.target.closest?.('input,textarea,select')||e.metaKey||e.ctrlKey||e.altKey)return;
+  if(e.defaultPrevented||e.target.closest?.('input,textarea,select,[contenteditable],.figure,.table-wrap,pre')||e.metaKey||e.ctrlKey||e.altKey)return;
   if(e.key!=='ArrowLeft'&&e.key!=='ArrowRight')return;
   const cur=document.querySelector('.nav-link.active')?.dataset.lesson;
   const i=LESSONS.findIndex(l=>l.id===cur);

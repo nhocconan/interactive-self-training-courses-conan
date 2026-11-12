@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<!-- TRANSLATION_PARENT: vi LOCALE: vi LAST_SYNCED: 2026-09-22 SIBLINGS: context-harness-engineering.en.html -->
+<!-- TRANSLATION_PARENT: vi LOCALE: vi LAST_SYNCED: 2026-11-13 SIBLINGS: context-harness-engineering.en.html -->
 <!-- Context & Harness Engineering — Vietnamese · house standard (interactive-course-builder) · theme: midnight -->
 <html lang="vi">
 <head>
@@ -161,6 +161,11 @@ code{font-family:var(--font-mono);font-size:.85em;background:var(--surface-2);pa
 .figure svg{display:block;width:100%;height:auto;background:var(--surface)}
 .figure figcaption{padding:10px 16px;font-size:12.5px;color:var(--ink-2);border-top:1px solid var(--border);background:var(--surface-2)}
 .figure figcaption b{color:var(--ink)}
+.diagram-viewport{overflow-x:auto;max-width:100%}
+.diagram-viewport:focus-visible{outline:2px solid var(--accent-2);outline-offset:-2px}
+.figure .diagram-viewport svg{min-width:var(--diagram-width)}
+.containment-table table{min-width:0;table-layout:fixed;width:100%}
+.containment-table th:first-child{width:32%}
 .dgm-box{fill:var(--surface-2);stroke:var(--border-strong)}
 .dgm-accent{fill:color-mix(in srgb,var(--accent-2) 14%,var(--surface));stroke:var(--accent-2)}
 .dgm-warn{fill:var(--warning-bg);stroke:var(--warning)}
@@ -208,8 +213,8 @@ tbody tr:last-child td{border-bottom:none}tbody tr:hover{background:var(--surfac
 .quiz-letter{font-family:var(--font-mono);font-weight:600;color:var(--ink-2);flex-shrink:0}
 .quiz-opt.correct{background:var(--success);color:#fff;border-color:var(--success)}.quiz-opt.correct .quiz-letter{color:#fff}
 .quiz-opt.wrong{background:var(--danger);color:#fff;border-color:var(--danger)}.quiz-opt.wrong .quiz-letter{color:#fff}
-.quiz-feedback{margin-top:14px;font-size:14px;padding:12px 14px;border-radius:var(--radius-sm);display:none;line-height:1.6}
-.quiz-feedback.show{display:block}
+.quiz-feedback{margin:0;font-size:14px;padding:0;border-radius:var(--radius-sm);display:block;line-height:1.6}
+.quiz-feedback.show{margin-top:14px;padding:12px 14px}
 .quiz-feedback.ok{background:var(--success-bg);color:var(--success);border:1px solid color-mix(in srgb,var(--success) 40%,transparent)}
 .quiz-feedback.no{background:var(--danger-bg);color:var(--danger);border:1px solid color-mix(in srgb,var(--danger) 40%,transparent)}
 .lesson-nav{display:grid;grid-template-columns:1fr auto 1fr;gap:12px;padding:22px 30px 28px;border-top:1px solid var(--border);margin-top:22px}
@@ -227,6 +232,9 @@ tbody tr:last-child td{border-bottom:none}tbody tr:hover{background:var(--surfac
 .complete h2{font-size:2.2rem}.complete p{color:var(--ink-2);max-width:56ch;margin:14px auto 0}
 footer.site{border-top:1px solid var(--border);padding:26px 24px;text-align:center;font-family:var(--font-mono);font-size:11px;color:var(--ink-3)}
 </style>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E📚%3C/text%3E%3C/svg%3E">
+<meta name="course-knowledge-cutoff" content="2026-11-12">
+<meta name="course-reviewed" content="2026-11-13">
 </head>
 <body data-theme="midnight">
 <a href="#main" class="skip-link">Tới nội dung</a>
@@ -243,12 +251,12 @@ footer.site{border-top:1px solid var(--border);padding:26px 24px;text-align:cent
     </div>
     <div class="progress-wrap">
       <div class="progress-meta"><span>Tiến độ</span><span><b id="pg-done">0</b>/<span id="pg-total">0</span> · <span id="pg-pct">0</span>%</span></div>
-      <div class="progress-track"><div class="progress-fill" id="pg-fill"></div></div>
+      <div class="progress-track" role="progressbar" aria-label="Tiến độ khóa học" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"><div class="progress-fill" id="pg-fill"></div></div>
     </div>
     <nav class="nav-scroll" id="nav-list" aria-label="Danh sách bài học"></nav>
   </aside>
 
-  <main class="main" id="main">
+  <main class="main" id="main" tabindex="-1">
     <div class="topbar">
       <span class="mono" id="tb-crumb">Tổng quan</span>
       <div class="topbar-mini"><div class="topbar-mini-fill" id="tb-fill"></div></div>
@@ -287,7 +295,7 @@ footer.site{border-top:1px solid var(--border);padding:26px 24px;text-align:cent
               <tr><td><strong>Attention budget</strong></td><td>Một mental model hữu ích: mỗi token mới thêm cả tín hiệu lẫn cạnh tranh. Đây không phải đồng hồ đo chính thức trong API.</td></tr>
               <tr><td><strong>Lost in the middle</strong></td><td>Kết quả thực nghiệm cho thấy thông tin ở giữa input dài có thể được dùng kém hơn đầu hoặc cuối; không phải mọi model/task đều có cùng một đường chữ U. Bài gốc (TACL, 2024) đo trên model đời 2023 — hãy đọc như cảnh báo thiết kế, không phải số liệu cho model bạn đang chạy.</td></tr>
               <tr><td><strong>Prompt caching / prefix</strong></td><td>Tái sử dụng xử lý cho phần <em>prefix đã render</em> trùng nhau tới một cache boundary hợp lệ. Mỗi provider khác nhau về breakpoint, TTL và giá; nguyên tắc bền là prefix ổn định trước, suffix biến thiên sau.</td></tr>
-              <tr><td><strong>Tool registry</strong></td><td>Tập tool đã đăng ký; tên + mô tả + schema của chúng nhét vào context trên mọi lệnh gọi (chi phí cố định thường trực).</td></tr>
+              <tr><td><strong>Tool registry</strong></td><td>Danh mục tool có sẵn. Nạp upfront đưa định nghĩa vào context; API deferred loading giữ toàn bộ định nghĩa deferred bên ngoài tới khi tìm thấy. Claude Code dùng chỉ mục tên tool và server instructions. Đo request thật.</td></tr>
               <tr><td><strong>JIT retrieval</strong></td><td>Lấy thông tin <em>khi cần</em> qua tool search thay vì nạp sẵn tất cả — giảm token, tăng độ chính xác.</td></tr>
               <tr><td><strong>Compaction</strong></td><td>Tóm tắt-và-reset lịch sử hội thoại đã phình để lấy lại ngân sách token và chống context rot.</td></tr>
               <tr><td><strong>Working memory / scratchpad</strong></td><td>State agent được ghi ra file/ghi chú bên ngoài thay vì giữ hết trong cửa sổ context.</td></tr>
@@ -315,7 +323,7 @@ footer.site{border-top:1px solid var(--border);padding:26px 24px;text-align:cent
       <header class="module-header" data-module="1">
         <span class="eyebrow">Chương 01 · Phần I · Nền tảng</span>
         <h2>Một stack, ba lớp: Prompt · Context · Harness</h2>
-        <p>Prompt engineering là <em>điều bạn nói</em> với mô hình. Context engineering là <em>những gì mô hình nhìn thấy</em>. Harness engineering là <em>thế giới mô hình sống trong đó</em>. Nhầm lẫn ba lớp này là lý do phổ biến nhất khiến tính năng AI hỏng khi lên production.</p>
+        <p>Prompt engineering là <em>điều bạn nói</em> với mô hình. Context engineering là <em>những gì mô hình nhìn thấy</em>. Harness engineering là <em>thế giới mô hình sống trong đó</em>. Phân biệt ba lớp giúp đặt giả thuyết kiểm được khi tính năng AI hỏng ở production.</p>
       </header>
 
       <article class="lesson" id="m1-l1" data-lesson>
@@ -416,7 +424,7 @@ PROMPT:
           </div>
           <div class="callout warn">
             <div class="callout-title">Cái bẫy "chỉnh prompt trước đã"</div>
-            <p>Phản xạ "sửa prompt trước" tồn tại vì prompt <em>nhìn thấy được và sửa được ngay</em>. Bug harness và context đòi đọc log, gắn instrument vào code, và suy nghĩ về state: công việc khó chịu. Nhiều nhóm chúng tôi quan sát tối ưu cho sự dễ chịu, và ở lại trạng thái hỏng lâu hơn.</p>
+            <p>Phản xạ "sửa prompt trước" tồn tại vì prompt <em>nhìn thấy được và sửa được ngay</em>. Bug harness và context đòi đọc log, gắn instrument vào code, và suy nghĩ về state: công việc khó chịu. Kiểm bằng chứng retrieval và runtime trước khi mặc định lỗi nằm ở prompt.</p>
           </div>
 
           <h4>Hệ quả ở cấp đội nhóm</h4>
@@ -451,7 +459,7 @@ PROMPT:
             <button class="quiz-opt" onclick="quizPick(this,1)"><span class="quiz-letter">B</span><span>Đổi sang model mạnh hơn (ví dụ Opus thay Sonnet, hoặc một đời GPT mới hơn).</span></button>
             <button class="quiz-opt" onclick="quizPick(this,2)"><span class="quiz-letter">C</span><span>Ưu tiên soi <em>thực tế những gì được retrieve vào context</em> cho truy vấn prod so với truy vấn test; lệch retrieval, chunking hoặc thứ tự là giả thuyết cần kiểm đầu tiên.</span></button>
             <button class="quiz-opt" onclick="quizPick(this,3)"><span class="quiz-letter">D</span><span>Thêm nhiều ví dụ few-shot về câu trả lời đúng vào prompt.</span></button>
-            <div class="quiz-feedback" data-explain="Một nguyên nhân đáng kiểm tra sớm là lệch phân phối retrieval: truy vấn test trúng seed data được chunk sạch; truy vấn prod trúng dữ liệu thật lộn xộn, hàng xóm lạc đề hoặc chunk cũ. Hãy log tài liệu thực sự được lấy về, đối chiếu với đáp án đúng, sửa retrieval nếu cần rồi mới tinh chỉnh prompt. Nếu bằng chứng cho thấy retrieval ổn, tiếp tục kiểm tra model, template và runtime."></div>
+            <div class="quiz-feedback" role="status" aria-live="polite" aria-atomic="true" data-explain="Một nguyên nhân đáng kiểm tra sớm là lệch phân phối retrieval: truy vấn test trúng seed data được chunk sạch; truy vấn prod trúng dữ liệu thật lộn xộn, hàng xóm lạc đề hoặc chunk cũ. Hãy log tài liệu thực sự được lấy về, đối chiếu với đáp án đúng, sửa retrieval nếu cần rồi mới tinh chỉnh prompt. Nếu bằng chứng cho thấy retrieval ổn, tiếp tục kiểm tra model, template và runtime."></div>
           </div>
         </div>
         <div class="lesson-nav" data-navfor="m1-l1"></div>
@@ -495,7 +503,8 @@ PROMPT:
           <p>Trong thí nghiệm <em>Lost in the Middle</em>, nhiều model làm tốt hơn khi thông tin cần tìm nằm ở đầu hoặc cuối input và kém hơn khi nó nằm giữa. Đây là cảnh báo thiết kế, không phải định luật cho mọi model: giữ chỉ dẫn then chốt nổi bật, giảm nhiễu và test đúng workload của bạn.</p>
           <p>Hai nguồn này đã có tuổi: <em>Lost in the Middle</em> (TACL, 2024) đo trên model đời 2023: GPT-3.5-turbo, Claude 1.3, MPT-30B, LongChat; <em>Context Rot</em> (Chroma, 07/2025) đo trên 18 LLM, trong đó những cái mới nhất là GPT-4.1, Claude 4, Gemini 2.5 và Qwen3; phần còn lại của danh sách còn cũ hơn thế (GPT-3.5 Turbo, GPT-4 Turbo). Không model đời 2026 nào trong đó. Hình chữ U vẫn là một cảnh báo thiết kế hợp lý, nhưng nếu bạn muốn một con số cho model đang chạy, phải tự đo: đặt cùng một fact ở đầu, giữa, cuối trên chính eval của bạn.</p>
           <figure class="figure">
-            <svg viewBox="0 0 640 220" role="img" aria-label="Đồ thị hình chữ U: mức chú ý cao ở đầu và cuối context, thấp nhất ở giữa">
+            <div class="diagram-viewport" role="region" tabindex="0" aria-label="Sơ đồ; cuộn ngang để đọc đầy đủ nhãn" style="--diagram-width:640px"><svg viewBox="0 0 640 220" role="img" aria-label="Sơ đồ hiệu năng task tương đối theo vị trí bằng chứng trong thí nghiệm QA và key-value được dẫn; một số model kém hơn ở giữa, không phải đường đo attention hay định luật chung">
+              <text class="dgm-ink2" x="330" y="22" text-anchor="middle" font-size="11">Hiệu năng task tương đối · minh họa</text>
               <line class="dgm-line" x1="60" y1="30" x2="60" y2="180" stroke-width="1.5"/>
               <line class="dgm-line" x1="60" y1="180" x2="600" y2="180" stroke-width="1.5"/>
               <text class="dgm-ink2" x="30" y="40" font-size="11" font-family="IBM Plex Mono">cao</text>
@@ -504,10 +513,10 @@ PROMPT:
               <circle cx="60" cy="46" r="5" fill="var(--accent-2)"/>
               <circle cx="330" cy="150" r="5" fill="var(--warning)"/>
               <circle cx="600" cy="46" r="5" fill="var(--accent-2)"/>
-              <text class="dgm-ink" x="60" y="200" text-anchor="middle" font-size="11" font-family="IBM Plex Mono">đầu · system</text>
-              <text class="dgm-ink" x="330" y="200" text-anchor="middle" font-size="11" font-family="IBM Plex Mono">giữa · vùng chết</text>
-              <text class="dgm-ink" x="590" y="200" text-anchor="middle" font-size="11" font-family="IBM Plex Mono">cuối · lượt mới</text>
-            </svg>
+              <text class="dgm-ink" x="60" y="200" text-anchor="middle" font-size="11" font-family="IBM Plex Mono">đầu input</text>
+              <text class="dgm-ink" x="330" y="200" text-anchor="middle" font-size="11" font-family="IBM Plex Mono">giữa · có thể kém</text>
+              <text class="dgm-ink" x="590" y="200" text-anchor="middle" font-size="11" font-family="IBM Plex Mono">cuối input</text>
+            </svg></div>
             <figcaption><b>Hình 2.1</b>: Dạng chữ U là kết quả thường thấy trong thí nghiệm vị trí: cùng một fact có thể được dùng tốt hơn ở đầu/cuối so với giữa. Đường này minh họa xu hướng, không dự báo chính xác mọi model.</figcaption>
           </figure>
 
@@ -515,7 +524,7 @@ PROMPT:
           <p>Mỗi lệnh gọi mô hình lắp ráp <em>một chuỗi tuyến tính duy nhất</em>. Hiểu mỗi đoạn tốn bao nhiêu token, và tương tác với cache thế nào, là nền của mọi kỹ thuật context engineering còn lại.</p>
           <div class="callout insight">
             <div class="callout-title">Cửa sổ 1M token · cái gì đổi, cái gì không</div>
-            <p>Cửa sổ 1M token là <strong>dung lượng mặc định trên các model Claude chính hiện tại</strong>, ví dụ Fable 5.1, Opus 5.5 và Sonnet 5.5; các model 1M hiện tại được tính theo đơn giá input chuẩn trên toàn cửa sổ thay vì thêm phụ phí long-context riêng. Sức chứa này hữu ích cho tài liệu và task dài, nhưng không chứng minh một monorepo hay PDF bất kỳ sẽ được hiểu trọn vẹn. <strong>Context window là sức chứa; effective context là phần model dùng đúng trên eval của bạn.</strong></p>
+            <p>Trong Claude API, model được tài liệu ghi có cửa sổ 1M token, gồm Fable 5.2, Opus 5.5 và Sonnet 5.5, dùng dung lượng đó mặc định; các model API 1M này được tính theo đơn giá input chuẩn trên toàn cửa sổ thay vì thêm phụ phí long-context riêng. Hạn mức client và gói sử dụng cần kiểm riêng. Sức chứa API này hữu ích cho tài liệu và task dài, nhưng không chứng minh một monorepo hay PDF bất kỳ sẽ được hiểu trọn vẹn. <strong>Context window là sức chứa; effective context là phần model dùng đúng trên eval của bạn.</strong></p>
           </div>
           <figure class="figure" style="padding:18px 20px 4px">
             <div class="stack-caption">một lệnh gọi agent điển hình · ngân sách làm việc 200k (trần 1M)</div>
@@ -556,7 +565,7 @@ PROMPT:
             <button class="quiz-opt" onclick="quizPick(this,1)"><span class="quiz-letter">B</span><span>Đưa nội dung then chốt lên <em>đầu</em> (vùng system) hoặc xuống <em>cuối</em> (lượt gần nhất), và giữ context gọn — thiên lệch vị trí "lost in the middle" khiến token ở giữa dễ bị bỏ quên nhất.</span></button>
             <button class="quiz-opt" onclick="quizPick(this,2)"><span class="quiz-letter">C</span><span>Đổi sang model cửa sổ lớn hơn để tài liệu "vừa vặn" hơn.</span></button>
             <button class="quiz-opt" onclick="quizPick(this,3)"><span class="quiz-letter">D</span><span>Lặp lại chỉ dẫn "hãy đọc tài liệu ở trên" nhiều lần cho model nhớ.</span></button>
-            <div class="quiz-feedback" data-explain="B đúng vì nó xử lý cả hai rủi ro đã quan sát: vị trí và nhiễu. max_tokens chỉ giới hạn output nên A không giúp model tìm tài liệu; cửa sổ lớn hơn ở C chỉ thêm sức chứa; lặp câu nhắc ở D lại thêm nhiễu. Sau khi sắp lại context, vẫn phải chạy eval vì hiệu ứng vị trí phụ thuộc model và task."></div>
+            <div class="quiz-feedback" role="status" aria-live="polite" aria-atomic="true" data-explain="B đúng vì nó xử lý cả hai rủi ro đã quan sát: vị trí và nhiễu. max_tokens chỉ giới hạn output nên A không giúp model tìm tài liệu; cửa sổ lớn hơn ở C chỉ thêm sức chứa; lặp câu nhắc ở D lại thêm nhiễu. Sau khi sắp lại context, vẫn phải chạy eval vì hiệu ứng vị trí phụ thuộc model và task."></div>
           </div>
         </div>
         <div class="lesson-nav" data-navfor="m2-l1"></div>
@@ -578,13 +587,13 @@ PROMPT:
             </ul>
           </div>
 
-          <p>Trợ lý nội bộ của bạn gửi kèm cùng một khối 100k token chỉ dẫn ở mọi request. Từ lần thứ hai, phần đó lẽ ra chỉ còn tương đương 10k nhờ cache; nhưng hóa đơn không giảm và time-to-first-token vẫn nằm nguyên. Mở payload ra: dòng đầu system prompt là timestamp hiện tại, đổi mỗi lần gọi, nên không lần nào prefix trùng. Token vừa là <strong>tiền</strong> vừa là <strong>độ trễ</strong>, và thứ tự bạn xếp chúng quyết định bạn trả bao nhiêu.</p>
+          <p>Trợ lý nội bộ của bạn gửi kèm cùng một khối 100k token chỉ dẫn ở mọi request. Với đơn giá cache-read giả định 0,1×, một lượt sau có cache hit sẽ tính phần đó tương đương 10k input token; nhưng hóa đơn không giảm và time-to-first-token vẫn nằm nguyên. Mở payload ra: dòng đầu system prompt là timestamp hiện tại, đổi mỗi lần gọi, nên không lần nào prefix trùng. Token vừa là <strong>tiền</strong> vừa là <strong>độ trễ</strong>, và thứ tự bạn xếp chúng quyết định bạn trả bao nhiêu.</p>
 
           <h4>Kinh tế token — cái gì thực sự tốn</h4>
           <p>Input, cached input và output có đơn giá khác nhau theo model. Vì bảng giá đổi nhanh, đừng học thuộc một tỷ lệ; hãy đọc usage của request thật và tính theo model đang chạy. Phần thường bị bỏ sót là chi phí lặp lại qua từng vòng agent:</p>
           <ul>
             <li><strong>Thuế độ trễ</strong>: input dài thường làm tăng time-to-first-token; trong loop agent, phần tăng này lặp lại ở mỗi vòng.</li>
-            <li><strong>Thuế chất lượng</strong>: mỗi token không liên quan làm loãng chú ý trên token liên quan (chính là context rot).</li>
+            <li><strong>Thuế chất lượng</strong>: token không liên quan có thể giảm độ ổn định trên một số task; cần đo theo model và workload.</li>
             <li><strong>Thuế mất cache</strong>: xem ngay dưới đây.</li>
           </ul>
 
@@ -597,27 +606,25 @@ PROMPT:
             <p><strong>1)</strong> Ổn định nhất trước: system prompt, tool definitions, tài liệu tham chiếu lớn. <strong>2)</strong> Ổn định theo phiên: bối cảnh dự án, persona người dùng. <strong>3)</strong> Hậu tố biến thiên: lịch sử hội thoại, message hiện tại. Mọi thứ động (timestamp, ID) phải nằm ở <em>hậu tố</em>.</p>
           </div>
           <div class="code-card">
-            <div class="prompt-head"><span>typescript · vercel ai sdk · thứ tự thân thiện cache</span><button class="copy-btn" onclick="copyCode(this)">Chép</button></div>
-<pre>const result = await generateText({
-  // Sonnet 5: đổi chỉ thị giữa phiên là phá cache (xem callout dưới).
-  model: anthropic('claude-sonnet-5'),
+            <div class="prompt-head"><span>typescript · AI SDK 6 · điểm cache</span><button class="copy-btn" onclick="copyCode(this)">Chép</button></div>
+<pre>import { generateText } from 'ai';
+import { anthropic } from '@ai-sdk/anthropic';
 
-  // 1. SYSTEM — ổn định nhất. Cache mạnh tay.
-  system: [{
-    type: 'text',
-    text: SYSTEM_PROMPT_STABLE,
-    providerOptions: { anthropic: { cacheControl: { type: 'ephemeral' } } }
-  }],
-
-  // 2. TOOLS — cũng ổn định. Registry hiếm khi đổi trong phiên.
+const result = await generateText({
+  model: anthropic('claude-sonnet-5-5'),
   tools: TOOL_REGISTRY,
-
-  // 3. MESSAGES — hậu tố biến thiên. Cache trúng sẽ dừng ở đây.
-  messages: [ ...conversationHistory, { role: 'user', content: userMessage } ],
+  messages: [
+    {
+      role: 'system',
+      content: SYSTEM_PROMPT_STABLE,
+      providerOptions: { anthropic: { cacheControl: { type: 'ephemeral' } } }
+    },
+    ...conversationHistory,
+    { role: 'user', content: userMessage }
+  ]
 });
-
-// Soi cache stats — dashboard nên theo dõi cache_creation & cache_read.
-console.log(result.providerMetadata?.anthropic);</pre>
+console.log(result.usage.inputTokenDetails.cacheReadTokens);
+console.log(result.usage.inputTokenDetails.cacheWriteTokens);</pre>
           </div>
 
           <h4>Thuế ẩn — kết quả tool nằm lại trong lịch sử</h4>
@@ -627,8 +634,8 @@ console.log(result.providerMetadata?.anthropic);</pre>
             <p>Đừng kết luận model "mệt". Mở trace và kiểm xem lịch sử có bị phủ bởi output tool cũ không. Nếu có, dùng compaction/reset của tool, ghi state quan trọng ra artifact có cấu trúc, hoặc mở phiên mới với brief gọn.</p>
           </div>
 
-          <h4>Registry tool — chi phí cố định thường trực</h4>
-          <p>Mỗi tool đăng ký về nguyên tắc nhét tên + mô tả + JSON schema vào context <em>trên mọi lệnh gọi</em>. Tool search đã dời phần schema ra khỏi mặc định (xem dưới), nhưng tên + mô tả vẫn ở lại: registry phình vẫn ăn token của mọi hội thoại.</p>
+          <h4>Registry tool — chi phí tùy cách nạp</h4>
+          <p>Nạp upfront đưa tên, mô tả và schema vào model context. Với Claude API, tool có <code>defer_loading: true</code> giữ toàn bộ định nghĩa ngoài context ban đầu tới khi được tìm thấy; chỉ search tool và định nghĩa không deferred được nạp. Claude Code có cách riêng: ban đầu nạp tên tool và server instructions, hoãn định nghĩa đầy đủ. Vì vậy catalog API có 100 tool không mặc nhiên tốn 100 mô tả trên mọi call. Audit payload và chế độ client thực tế.</p>
           <div class="compare">
             <div class="compare-col bad"><span class="eyebrow">Tool def phình · ~200 token</span>
 <pre>{
@@ -641,7 +648,7 @@ console.log(result.providerMetadata?.anthropic);</pre>
    hệ thống chúng ta...",
   parameters: { /* schema lỏng */ }
 }</pre>
-              <ul><li>Mô tả mơ hồ = gọi sai. Mô tả dài = thuế token thường trực. Schema lỏng = lệnh gọi không hợp lệ lọt qua.</li></ul>
+              <ul><li>Mô tả mơ hồ = gọi sai. Mô tả dài tốn token khi được nạp. Schema lỏng = lệnh gọi không hợp lệ lọt qua.</li></ul>
             </div>
             <div class="compare-col good"><span class="eyebrow">Tool def chặt · ~60 token</span>
 <pre>{
@@ -696,7 +703,7 @@ console.log(result.providerMetadata?.anthropic);</pre>
               <textarea id="tokenInput" rows="4" style="width:100%;font-family:var(--font-mono);font-size:12.5px;padding:12px;border:1px solid var(--border);border-radius:10px;background:var(--surface);color:var(--ink);resize:vertical" oninput="estTokens()">Bạn là senior backend engineer review thay đổi code cho một nền tảng SaaS multi-tenant dùng Next.js, tRPC, Drizzle ORM và Postgres. Với mỗi thay đổi, đánh giá: đúng đắn, hợp phong cách codebase, rủi ro bảo mật, ảnh hưởng hiệu năng, cô lập tenant. Xuất JSON có cấu trúc.</textarea>
               <div style="display:flex;align-items:center;gap:12px;margin-top:12px;flex-wrap:wrap">
                 <span class="badge" id="tokEst">~0 token</span>
-                <span class="mono" style="font-size:11px;color:var(--ink-3)">~4 ký tự/token · chỉ đúng cho tiếng Anh; tiếng Việt thường gấp ~1,6–2×</span>
+                <span class="mono" style="font-size:11px;color:var(--ink-3)">~4 ký tự/token · ước lượng thô cho tiếng Anh; tokenizer và ngôn ngữ có thể đổi đáng kể</span>
               </div>
               <div class="progress-track" style="margin-top:12px;height:10px"><div class="progress-fill" id="tokBar" style="width:0"></div></div>
               <div class="mono" id="tokLegend" style="font-size:11px;color:var(--ink-3);margin-top:6px">chiếm <strong>0%</strong> của cửa sổ 200k</div>
@@ -726,7 +733,7 @@ console.log(result.providerMetadata?.anthropic);</pre>
             <button class="quiz-opt" onclick="quizPick(this,1)"><span class="quiz-letter">B</span><span>Context đã tích lũy kết quả tool (đọc file, output lệnh, kết quả tìm) quá ngưỡng hữu ích — context rot đang bào mòn recall. Chạy <code>/compact</code> để tóm-tắt-và-reset, hoặc <code>/clear</code> để bắt đầu sạch với brief mới.</span></button>
             <button class="quiz-opt" onclick="quizPick(this,2)"><span class="quiz-letter">C</span><span>Đổi sang model mạnh hơn — Opus sẽ xử lý tốt hơn.</span></button>
             <button class="quiz-opt" onclick="quizPick(this,3)"><span class="quiz-letter">D</span><span>Tăng max_tokens output để mô hình có thêm chỗ suy nghĩ.</span></button>
-            <div class="quiz-feedback" data-explain="B đúng vì nó kiểm nguyên nhân bằng trace rồi giảm lịch sử không còn hữu ích. A khởi động lại mà không bàn giao state sẽ mất tiến độ; C đổi model trước khi đo có thể che lỗi thiết kế; D chỉ nới output. Không có mốc compact phổ quát: chọn điểm kích hoạt từ token usage, latency và chất lượng trên workload thật."></div>
+            <div class="quiz-feedback" role="status" aria-live="polite" aria-atomic="true" data-explain="B đúng vì nó kiểm nguyên nhân bằng trace rồi giảm lịch sử không còn hữu ích. A khởi động lại mà không bàn giao state sẽ mất tiến độ; C đổi model trước khi đo có thể che lỗi thiết kế; D chỉ nới output. Không có mốc compact phổ quát: chọn điểm kích hoạt từ token usage, latency và chất lượng trên workload thật."></div>
           </div>
         </div>
         <div class="lesson-nav" data-navfor="m2-l2"></div>
@@ -832,7 +839,7 @@ console.log(result.providerMetadata?.anthropic);</pre>
           <h4>Pattern 4 · Cô lập subagent</h4>
           <p>Sinh một context agent mới cho một task tập trung. Cha chỉ nhận artifact/tóm tắt cuối, nên phần khám phá chi tiết của con không tràn vào context chính. Anthropic khuyến nghị pattern này cho task dài hơi; nó gần với cách một lead nhận báo cáo thay vì đọc mọi thao tác của từng IC.</p>
           <figure class="figure">
-            <svg viewBox="0 0 660 150" role="img" aria-label="Ví dụ minh hoạ luồng cô lập subagent: agent cha sinh subagent với brief, subagent khám phá trong context riêng rồi trả về một bản tóm tắt ngắn để cha tiếp tục">
+            <div class="diagram-viewport" role="region" tabindex="0" aria-label="Sơ đồ; cuộn ngang để đọc đầy đủ nhãn" style="--diagram-width:660px"><svg viewBox="0 0 660 150" role="img" aria-label="Ví dụ minh hoạ luồng cô lập subagent: agent cha sinh subagent với brief, subagent khám phá trong context riêng rồi trả về một bản tóm tắt ngắn để cha tiếp tục">
               <rect class="dgm-accent" x="16" y="54" width="110" height="42" rx="9" stroke-width="2"/>
               <text class="dgm-ink" x="71" y="80" text-anchor="middle" font-size="12" font-weight="700">agent cha</text>
               <path class="dgm-flow" d="M126 75 H176" stroke-width="2" marker-end="url(#a3)"/>
@@ -848,15 +855,16 @@ console.log(result.providerMetadata?.anthropic);</pre>
               <rect class="dgm-box" x="392" y="112" width="252" height="26" rx="7"/>
               <text class="dgm-ink2" x="518" y="129" text-anchor="middle" font-size="10" font-family="IBM Plex Mono">context cha vẫn sạch · không nhiễm</text>
               <defs><marker id="a3" markerWidth="9" markerHeight="9" refX="7" refY="4.5" orient="auto"><path d="M0 0 L9 4.5 L0 9 z" fill="var(--accent-2)"/></marker></defs>
-            </svg>
+            </svg></div>
             <figcaption><b>Hình 3.2</b>. Ví dụ giả định: subagent dùng 80k token để khám phá; cha chỉ nhận bản kết luận 200 token. Con số thật phụ thuộc task và tool. Pattern này hợp với research/exploration, task chuyên biệt (migration, security review), và fan-out nhiều giả thuyết.</figcaption>
           </figure>
 
           <h4>Pattern 5 · Structured output (lưới an toàn)</h4>
-          <p>Output text tự do có thể lệch định dạng; trong production, chỉ vài case parse lỗi cũng đủ làm gãy pipeline. Ép cấu trúc ở tầng API. Theo thứ tự ưu tiên: <strong>(1)</strong> tool-call làm output (định nghĩa một tool "nộp câu trả lời", API kiểm schema); <strong>(2)</strong> helper SDK (<code>generateObject</code> + Zod, hoặc <code>response_format: json_schema</code>); <strong>(3)</strong> JSON mode + validate + retry.</p>
+          <p>Output tự do có thể làm gãy pipeline khi parse lỗi. Dùng chế độ output theo schema hoặc strict tool-call mà provider hỗ trợ, rồi validate dữ liệu nhận về. Với AI SDK 6, dùng <code>generateText</code> cùng <code>Output.object</code>; <code>generateObject</code> đã deprecated. Đúng schema chỉ kiểm hình dạng, không chứng minh fact đúng hay có quyền hành động.</p>
           <div class="code-card">
-            <div class="prompt-head"><span>typescript · vercel ai sdk · structured output</span><button class="copy-btn" onclick="copyCode(this)">Chép</button></div>
-<pre>import { generateObject } from 'ai';
+            <div class="prompt-head"><span>typescript · AI SDK 6 · structured output</span><button class="copy-btn" onclick="copyCode(this)">Chép</button></div>
+<pre>import { generateText, Output, NoObjectGeneratedError } from 'ai';
+import { anthropic } from '@ai-sdk/anthropic';
 import { z } from 'zod';
 
 const PostAnalysis = z.object({
@@ -869,19 +877,28 @@ const PostAnalysis = z.object({
   language: z.enum(['vi','en','mixed'])
 });
 
-const { object } = await generateObject({
-  model: anthropic('claude-sonnet-5'),
-  schema: PostAnalysis,
-  prompt: `Phân tích post này: "${postText}"`
-});
-// `object` type-safe & đã validate schema. Không JSON.parse,
-// không try/catch output rác. Sai field → SDK tự retry với lỗi schema.</pre>
+async function analyzePost(postText) {
+try {
+  const { output } = await generateText({
+    model: anthropic('claude-sonnet-5-5'),
+    output: Output.object({ schema: PostAnalysis }),
+    prompt: `Analyze this post: "${postText}"`
+  });
+  return output;
+} catch (error) {
+  if (NoObjectGeneratedError.isInstance(error)) {
+    return { status: 'invalid_output' };
+  }
+  throw error;
+}
+}</pre>
           </div>
-          <div class="callout danger"><div class="callout-title">Bất di bất dịch cho production</div><p>Luôn validate. Luôn gõ kiểu. <strong>Đừng <code>JSON.parse</code> output thô rồi hy vọng nó đúng định dạng.</strong> Theo quan sát của chúng tôi, đây là một trong những chỗ hay sinh sự cố nhất khi tính năng lên production.</p></div>
+          <div class="callout danger"><div class="callout-title">Bất di bất dịch cho production</div><p>Luôn validate. Luôn gõ kiểu. <strong>Đừng <code>JSON.parse</code> output thô rồi hy vọng nó đúng định dạng.</strong> Xử lý schema failure rõ ràng và thử output sai định dạng tại ranh giới.</p></div>
 
+          <p>Parse hoặc validate schema có thể lỗi bằng <code>NoObjectGeneratedError</code>. Ví dụ trả trạng thái thất bại, không tự retry. Nếu harness thêm lượt sửa output, phải giới hạn số lần và chi phí rồi kiểm lại kết quả. <a href="https://ai-sdk.dev/docs/ai-sdk-core/generating-structured-data" target="_blank" rel="noopener noreferrer">Tài liệu structured output của AI SDK</a> (kiểm tra 12/11/2026).</p>
           <h4>Pattern 6 · Few-shot bằng ví dụ in-context</h4>
           <p>Chỉ dẫn <em>nói</em> mô hình phải làm gì; ví dụ <em>cho nó xem</em> một câu trả lời đạt chuẩn. Ví dụ thường hữu ích cho định dạng, edge case và giọng điệu, nhưng ví dụ xấu cũng có thể kéo chất lượng xuống. <strong>Cách làm:</strong> chọn ví dụ đa dạng, có cả trường hợp từ chối/không chắc; chạy eval khi thêm hoặc bớt ví dụ; và đặt phần ổn định trong prefix để tận dụng cache.</p>
-          <p><strong>Hai chỗ dùng nên tách ra.</strong> Với <em>định dạng output</em>, ca từ chối và giọng điệu, ví dụ vẫn là công cụ trực tiếp nhất. Với <em>cách gọi tool</em> thì Anthropic ghi nhận một quan sát ngược chiều (24/07/2026): <em>"giving examples actually constrains them to a certain exploration space"</em>: ví dụ tool-use có thể khiến model đi lại đúng lối của ví dụ thay vì tự khám phá. Hướng họ chuyển sang là đầu tư vào chính thiết kế tool: tên tham số nói lên ý định, và enum thay cho string tự do (ví dụ trạng thái <code>pending</code>/<code>in_progress</code>/<code>completed</code> tự nó đã gợi ý cách dùng). Chi tiết ở Bài 5.2.</p>
+          <p><strong>Hai chỗ dùng nên tách ra.</strong> Với <em>định dạng output</em>, ca từ chối và giọng điệu, ví dụ vẫn là công cụ trực tiếp nhất. Với <em>cách gọi tool</em> thì Anthropic ghi nhận một quan sát ngược chiều (24/07/2026): ví dụ có thể thu hẹp không gian khám phá: ví dụ tool-use có thể khiến model đi lại đúng lối của ví dụ thay vì tự khám phá. Hướng họ chuyển sang là đầu tư vào chính thiết kế tool: tên tham số nói lên ý định, và enum thay cho string tự do (ví dụ trạng thái <code>pending</code>/<code>in_progress</code>/<code>completed</code> tự nó đã gợi ý cách dùng). Chi tiết ở Bài 5.2.</p>
           <div class="callout insight"><div class="callout-title">Hai nguồn của chính Anthropic nói ngược chiều nhau</div><p>11/2025 họ giới thiệu <em>tool use examples</em> và báo cáo độ chính xác trên tham số phức tạp tăng 72% → 90%; 07/2026 họ khuyên đầu tư vào schema thay vì ví dụ. Cách đọc hoà giải: ví dụ giúp <em>định dạng tham số khó</em>, schema giúp <em>chọn đường đi</em>. Đừng bỏ ví dụ vì đọc một bài: bỏ rồi chạy eval.</p></div>
 
           <h4>Anti-pattern · Context poisoning (đầu độc ngữ cảnh)</h4>
@@ -907,9 +924,9 @@ const { object } = await generateObject({
             <p class="quiz-q">Bạn xây trợ lý AI cho dashboard social listening với nhiều tháng dữ liệu. Người dùng hỏi đủ kiểu, từ "brand X có bao nhiêu mention tuần trước" đến "sentiment chung về đợt ra mắt sản phẩm mới thế nào". Chọn chiến lược context nào?</p>
             <button class="quiz-opt" onclick="quizPick(this,0)"><span class="quiz-letter">A</span><span>Embed toàn bộ post, lấy top-50 cosine mỗi truy vấn, nhồi kết quả vào context.</span></button>
             <button class="quiz-opt" onclick="quizPick(this,1)"><span class="quiz-letter">B</span><span>Pre-load dữ liệu tháng gần nhất vào system prompt để mô hình "có context".</span></button>
-            <button class="quiz-opt" onclick="quizPick(this,2)"><span class="quiz-letter">C</span><span>Định tuyến ý định trước — câu hỏi cấu trúc ("bao nhiêu", "top 10") vào tool SQL/aggregation, câu ngữ nghĩa ("sentiment thế nào") vào tool retrieval top-k chặt. Cả hai qua tool JIT. Agent tự chọn nhánh.</span></button>
+            <button class="quiz-opt" onclick="quizPick(this,2)"><span class="quiz-letter">C</span><span>Định tuyến câu đếm và sentiment chung vào aggregate dữ liệu đã gán nhãn trên tập xác định, hoặc mẫu đại diện có mẫu số và độ bất định. Dùng retrieval top-k cho chủ đề và trích dẫn minh họa. Cả hai có thể là tool JIT.</span></button>
             <button class="quiz-opt" onclick="quizPick(this,3)"><span class="quiz-letter">D</span><span>Dùng cửa sổ context lớn nhất và đổ hết vào.</span></button>
-            <div class="quiz-feedback" data-explain="Đa số câu hỏi dashboard là truy vấn aggregation mà semantic search làm hại (cosine không nói cho bạn một con số đếm). Một số câu thật sự ngữ nghĩa. Định tuyến ý định trước, rồi chọn retriever hợp với ý định đó; dùng tool JIT cho cả hai nhánh để context gọn. Đây là kiến trúc bạn muốn sau bất kỳ tính năng 'AI dashboard' nào — và nó tổng quát hóa sang support ticket, product analytics, document search."></div>
+            <div class="quiz-feedback" role="status" aria-live="polite" aria-atomic="true" data-explain="Sentiment chung là kết luận về cả tập: xác định corpus, thời gian, độ phủ nhãn và mẫu số. Mẫu đại diện còn cần cách chọn và độ bất định. Top-k tương đồng có thể chọn lệch về phàn nàn: 10 phàn nàn trong 1000 post chưa chứng minh sentiment chung âm. Retrieval dùng cho chủ đề/ví dụ, không tự cho tỷ lệ toàn tập."></div>
           </div>
         </div>
         <div class="lesson-nav" data-navfor="m3-l1"></div>
@@ -940,12 +957,12 @@ const { object } = await generateObject({
 
           <h4>Context có vòng đời, không chỉ có cửa sổ</h4>
           <p>Mọi mảnh context đi qua bốn giai đoạn. Bạn đã học pattern cho ba giai đoạn đầu ở Chương 2–3; giai đoạn thứ tư (<em>quên</em>) là mảnh còn thiếu trong đa số hệ.</p>
-          <figure class="figure">
-            <svg viewBox="0 0 720 214" role="img" aria-label="Vòng đời context bốn giai đoạn nối tiếp: thu nạp, sử dụng, cô đọng, quên; một mũi tên vòng từ quên quay lại thu nạp cho thấy đây là chu trình lặp lại">
+          <figure class="figure diagram-scroll">
+            <div class="diagram-viewport" style="--diagram-width:900px" role="region" tabindex="0" aria-label="Sơ đồ vòng đời bộ nhớ; cuộn ngang để đọc nhãn"><svg viewBox="0 0 720 214" role="img" aria-label="Vòng đời context bốn giai đoạn nối tiếp: thu nạp, sử dụng, cô đọng, quên; một mũi tên vòng từ quên quay lại thu nạp cho thấy đây là chu trình lặp lại">
               <rect class="dgm-accent" x="14" y="46" width="150" height="60" rx="10" stroke-width="2"/>
               <text class="dgm-ink" x="89" y="72" text-anchor="middle" font-size="12.5" font-weight="700">1 · Thu nạp</text>
               <text class="dgm-ink2" x="89" y="92" text-anchor="middle" font-size="9" font-family="IBM Plex Mono">ingest</text>
-              <text class="dgm-ink2" x="89" y="128" text-anchor="middle" font-size="9.5" font-family="IBM Plex Mono">JIT + write gate</text>
+              <text class="dgm-ink2" x="89" y="128" text-anchor="middle" font-size="9.5" font-family="IBM Plex Mono">JIT / ghi có kiểm</text>
               <path class="dgm-flow" d="M164 76 H190" stroke-width="2" marker-end="url(#m3l2-ah)"/>
               <rect class="dgm-box" x="190" y="46" width="150" height="60" rx="10"/>
               <text class="dgm-ink" x="265" y="72" text-anchor="middle" font-size="12.5" font-weight="700">2 · Sử dụng</text>
@@ -955,7 +972,7 @@ const { object } = await generateObject({
               <rect class="dgm-box" x="366" y="46" width="150" height="60" rx="10"/>
               <text class="dgm-ink" x="441" y="72" text-anchor="middle" font-size="12.5" font-weight="700">3 · Cô đọng</text>
               <text class="dgm-ink2" x="441" y="92" text-anchor="middle" font-size="9" font-family="IBM Plex Mono">consolidate</text>
-              <text class="dgm-ink2" x="441" y="128" text-anchor="middle" font-size="9.5" font-family="IBM Plex Mono">compaction + ghi chú</text>
+              <text class="dgm-ink2" x="441" y="128" text-anchor="middle" font-size="9.5" font-family="IBM Plex Mono">kiểm note / compact</text>
               <path class="dgm-flow" d="M516 76 H542" stroke-width="2" marker-end="url(#m3l2-ah)"/>
               <rect class="dgm-warn" x="542" y="46" width="150" height="60" rx="10" stroke-width="1.5"/>
               <text class="dgm-ink" x="617" y="72" text-anchor="middle" font-size="12.5" font-weight="700">4 · Quên</text>
@@ -964,8 +981,8 @@ const { object } = await generateObject({
               <path class="dgm-line" d="M676 106 V180 H36 V110" stroke-width="1.6" stroke-dasharray="5 4" marker-end="url(#m3l2-ah)"/>
               <text class="dgm-ink2" x="353" y="200" text-anchor="middle" font-size="9.5" font-family="IBM Plex Mono">vòng đời lặp lại · quên nuôi lại thu nạp</text>
               <defs><marker id="m3l2-ah" markerWidth="9" markerHeight="9" refX="7" refY="4.5" orient="auto"><path d="M0 0 L9 4.5 L0 9 z" fill="var(--accent-2)"/></marker></defs>
-            </svg>
-            <figcaption><b>Hình 3.3</b>: Vòng đời context. <strong>Thu nạp</strong> = JIT retrieval qua một write gate; <strong>sử dụng</strong> = bố cục theo độ ổn định (Bài 2.1); <strong>cô đọng</strong> = compaction + ghi chú có cấu trúc; <strong>quên</strong> = evict/expiry. Đa số hệ dừng ở ba nấc đầu. Thiếu nấc quên là lý do bộ nhớ hỏng theo thời gian.</figcaption>
+            </svg></div>
+            <figcaption><b>Hình 3.3</b>: Vòng đời context. <strong>Thu nạp</strong> = JIT retrieval; ghi bền qua write gate; <strong>sử dụng</strong> = bố cục theo độ ổn định (Bài 2.1); <strong>cô đọng</strong> = kiểm ghi chú với nguồn; compact lịch sử là thao tác riêng; <strong>quên</strong> = evict/expiry. Đa số hệ dừng ở ba nấc đầu. Thiếu nấc quên là lý do bộ nhớ hỏng theo thời gian. Trên màn hình hẹp, cuộn ngang sơ đồ để xem hết.</figcaption>
           </figure>
 
           <h4>Provenance &amp; authority — ai được ghi, cái gì thắng cái gì</h4>
@@ -991,12 +1008,16 @@ const { object } = await generateObject({
 
           <div class="callout danger">
             <div class="callout-title">Write gate — cổng kiểm trước khi ghi</div>
-            <p>Một fact chỉ được vào bộ nhớ dài hạn khi đã qua kiểm chứng, bởi một <strong>verifier</strong> (test/eval/schema) hoặc bởi người. Không có write gate, một lần agent hiểu nhầm là mọi phiên sau <em>thừa hưởng</em> cái sai, và nó tự củng cố mỗi lần được trích lại. Đây chính là phiên bản bền vững của context poisoning: thay vì chết theo phiên, lỗi được đóng dấu vĩnh viễn.</p>
+            <p>Một fact chỉ được vào bộ nhớ dài hạn khi đã qua kiểm chứng, bằng đối chiếu nguồn đáng tin, test miền nghiệp vụ hoặc người có trách nhiệm. Schema chỉ kiểm cấu trúc. Không có write gate, một lần agent hiểu nhầm là mọi phiên sau <em>thừa hưởng</em> cái sai, và nó tự củng cố mỗi lần được trích lại. Đây chính là phiên bản bền vững của context poisoning: thay vì chết theo phiên, lỗi được đóng dấu vĩnh viễn.</p>
           </div>
 
+          <h4>Một lượt sửa có bằng chứng, từ log tới phiên sau</h4>
+          <p>Bài tập giả lập: biên bản migration đã review <code>queue-migration#42</code> ghi production chuyển sang SQS từ 1/10. Ghi chú cũ vẫn ghi Redis. Giữ biên bản gốc làm bằng chứng; đề xuất ghi chú thay thế, đối chiếu môi trường và ngày hiệu lực với biên bản, rồi đánh dấu mục cũ đã bị thay thế. Giữ lịch sử audit ngoài retrieval đang dùng. Chỉ dẫn trong log không được nâng thành policy.</p>
+          <div class="table-wrap"><table><thead><tr><th>Thành phần</th><th>Ví dụ giữ gì</th></tr></thead><tbody><tr><td>Transcript / biên bản gốc</td><td>Bằng chứng migration nguyên gốc và phạm vi; có kiểm soát truy cập</td></tr><tr><td>Ghi chú nhớ</td><td>Production dùng SQS; nguồn #42; hiệu lực 1/10; owner đã kiểm</td></tr><tr><td>Cách tổ chức tri thức</td><td>Trang hạ tầng repo trỏ tới ghi chú đã kiểm</td></tr><tr><td>Context nạp vào</td><td>Chỉ ghi chú queue liên quan tới task hiện tại</td></tr></tbody></table></div>
+          <p><a href="https://www.anthropic.com/research/components-of-agent-memory" target="_blank" rel="noopener noreferrer">Bài memory của Anthropic ngày 6/11/2026</a> tách các thành phần này và mô tả đối chiếu ghi chú với transcript gốc. Đây là bằng chứng vendor trên những task cụ thể; một thử nghiệm wiki không cho thấy lợi ích rõ so với search. Bộ nhớ qua phiên khác với compaction hội thoại hiện tại. Tổ chức lại ghi chú có thể đề xuất đính chính, không bảo đảm sửa đúng. Chạy lại bộ câu hỏi có ghi chú cũ và so đáp án với nguồn #42.</p>
           <div class="callout insight">
             <div class="callout-title">Quên là một tính năng, không phải sự cố</div>
-            <p>Cơ chế quên tối thiểu: mỗi mục mang <strong>ngày + nguồn</strong>; định kỳ audit hai câu: "còn đúng không?" và "lần cuối được dùng là khi nào?"; và với mục sai thì <strong>xóa</strong>, đừng nối thêm một dòng đính chính (hai fact mâu thuẫn cùng sống còn tệ hơn). <strong>Đo:</strong> tuổi trung bình các mục memory, tỷ lệ mục được tham chiếu trong 30 ngày qua, và số lần agent trích một fact đã hết hạn trên eval. Bộ nhớ tốt co lại theo thời gian, không phình mãi.</p>
+            <p>Cơ chế quên tối thiểu: mỗi mục mang <strong>ngày + nguồn</strong>; định kỳ audit hai câu: "còn đúng không?" và "lần cuối được dùng là khi nào?"; và với mục sai thì <strong>xóa</strong>, đừng nối thêm một dòng đính chính (hai fact mâu thuẫn cùng sống còn tệ hơn). <strong>Đo:</strong> tuổi trung bình các mục memory, tỷ lệ mục được tham chiếu trong 30 ngày qua, và số lần agent trích một fact đã hết hạn trên eval. Tri thức đã kiểm chứng có thể tăng. Đánh giá quản trị bằng tỷ lệ dùng lại fact cũ, kết quả task, độ liên quan của retrieval và chi phí token nạp vào; dung lượng lưu và context nạp mỗi lượt là hai đại lượng khác nhau.</p>
           </div>
 
           <div class="exercise">
@@ -1004,7 +1025,7 @@ const { object } = await generateObject({
             <ol>
               <li>Mở <code>CLAUDE.md</code> / <code>AGENTS.md</code> / memory store bạn đang dùng. Với <em>từng</em> mục, ghi ba câu trả lời: còn đúng không? đến từ nguồn nào? lần cuối nó thật sự hữu ích là khi nào?</li>
               <li>Xử lý theo kết quả: <strong>xóa</strong> mục đã chết, <strong>date-stamp</strong> mục giữ lại, và <strong>chuyển</strong> mục "đang làm dở" về một file task (đúng tầng working memory, Chương 4) thay vì để trong bộ nhớ dài hạn.</li>
-              <li>Đo trước/sau: kích thước token của phần nạp-mỗi-phiên. Nếu nó không giảm, bạn đang tích trữ chứ chưa quản trị.</li>
+              <li>So trước/sau trên cùng bộ câu hỏi: số câu dùng Redis cũ, số câu trả lời đúng SQS, ghi chú được retrieve có liên quan và token nạp vào. Context ngắn hơn nhưng làm mất bằng chứng migration là thất bại; store lớn hơn vẫn có thể tốt nếu lấy đúng ghi chú đã kiểm chứng.</li>
             </ol>
           </div>
 
@@ -1015,12 +1036,12 @@ const { object } = await generateObject({
 
           <div class="quiz" data-correct="2">
             <span class="eyebrow">Kiểm tra nhanh</span>
-            <p class="quiz-q">Agent của đội liên tục khẳng định "hệ đang dùng Redis cho queue" trong khi đội đã chuyển sang SQS hai tháng trước. Fact cũ nằm trong một memory store dùng chung cho mọi phiên. Cách xử lý đúng?</p>
+            <p class="quiz-q">Agent của đội liên tục khẳng định "hệ đang dùng Redis cho queue" trong khi đội đã chuyển sang SQS từ 1/10. Fact cũ nằm trong một memory store dùng chung cho mọi phiên. Cách xử lý đúng?</p>
             <button class="quiz-opt" onclick="quizPick(this,0)"><span class="quiz-letter">A</span><span>Thêm câu nhắc "hãy kiểm tra kỹ hơn trước khi trả lời về hạ tầng" vào system prompt.</span></button>
             <button class="quiz-opt" onclick="quizPick(this,1)"><span class="quiz-letter">B</span><span>Tăng kích thước memory store để chứa được cả fact mới về SQS, cho model có đủ ngữ cảnh cả hai.</span></button>
             <button class="quiz-opt" onclick="quizPick(this,2)"><span class="quiz-letter">C</span><span>Đây là bộ-nhớ-không-bao-giờ-quên: xóa/sửa mục sai <em>tại nguồn</em>, thêm date-stamp + nguồn cho mọi mục, đặt một write gate và lịch audit định kỳ — rồi kiểm bằng eval xem agent còn trích fact cũ không.</span></button>
             <button class="quiz-opt" onclick="quizPick(this,3)"><span class="quiz-letter">D</span><span>Chuyển sang một model mới hơn — nó sẽ suy luận chính xác hơn về hạ tầng hiện tại.</span></button>
-            <div class="quiz-feedback" data-explain="Gốc vấn đề nằm ở bộ nhớ, không ở prompt hay model. B làm tệ hơn: khi cả 'Redis' lẫn 'SQS' cùng sống trong store, model không có tín hiệu nào để biết cái nào tươi hơn, nên nó chọn gần như ngẫu nhiên — bạn vừa biến một lỗi tất định thành một lỗi lúc-đúng-lúc-sai, khó bắt hơn nhiều. A và D đều bỏ qua nguyên nhân: fact sai vẫn ở đó, một câu nhắc hay một model mạnh hơn vẫn có thể trích nó ra. Đúng là sửa tại nguồn, gắn nguồn + trust class + ngày để freshness chỉ phân xử giữa các nguồn tin cậy, đặt write gate để lỗi không tái nhập, và xác minh bằng eval — chính là vòng đời context có chiều quên."></div>
+            <div class="quiz-feedback" role="status" aria-live="polite" aria-atomic="true" data-explain="Gốc vấn đề nằm ở bộ nhớ, không ở prompt hay model. B làm tệ hơn: khi cả 'Redis' lẫn 'SQS' cùng sống trong store, model không có tín hiệu nào để biết cái nào tươi hơn, nên nó vẫn có thể dùng lại fact cũ. Hai mục mâu thuẫn cùng tồn tại không cho biết xác suất lỗi đo được. A và D đều bỏ qua nguyên nhân: fact sai vẫn ở đó, một câu nhắc hay một model mạnh hơn vẫn có thể trích nó ra. Đúng là sửa tại nguồn, gắn nguồn + trust class + ngày để freshness chỉ phân xử giữa các nguồn tin cậy, đặt write gate để lỗi không tái nhập, và xác minh bằng eval — chính là vòng đời context có chiều quên."></div>
           </div>
         </div>
         <div class="lesson-nav" data-navfor="m3-l2"></div>
@@ -1030,7 +1051,7 @@ const { object } = await generateObject({
       <header class="module-header" data-module="4">
         <span class="eyebrow">Chương 04 · Phần I · Nền tảng</span>
         <h2>Harness Engineering · Runtime</h2>
-        <p>Năm trụ cột biến một mô hình thành một sản phẩm. <strong>Với nhiều đội chúng tôi quan sát, harness là phần tích lũy giá trị lâu nhất — model bên dưới thì có thể thay.</strong></p>
+        <p>Năm trụ cột biến một mô hình thành một sản phẩm. <strong>Giữ policy ứng dụng, state và kiểm chứng rõ ràng khi thay model bên dưới.</strong></p>
       </header>
 
       <article class="lesson" id="m4-l1" data-lesson>
@@ -1082,8 +1103,10 @@ const { object } = await generateObject({
             <p>Tối ưu <em>độ rõ khi chọn</em> cho việc hay xảy ra, tối ưu <em>chi phí thường trực</em> cho phần đuôi dài (theo hướng dẫn writing tools for agents, Anthropic 09/2025; hãy đo lại trên eval của bạn, vì hình dạng registry mỗi hệ mỗi khác).</p>
           </div>
           <div class="code-card">
-            <div class="prompt-head"><span>typescript · tool cấp production</span><button class="copy-btn" onclick="copyCode(this)">Chép</button></div>
-<pre>const searchPosts = tool({
+            <div class="prompt-head"><span>typescript · tool với helper kiểm quyền của ứng dụng</span><button class="copy-btn" onclick="copyCode(this)">Chép</button></div>
+<pre>const actor = requireAuthenticatedActor(session);
+authorize(actor, 'posts:read');
+const searchPosts = tool({
   // Mô tả RÕ RÀNG: nói rõ khi nào dùng, khi nào KHÔNG.
   description: 'Tìm post theo keyword. Trả tối đa 20 kết quả mới nhất kèm ' +
     'metric tương tác. Dùng cho câu hỏi nội dung/sentiment, KHÔNG dùng để ' +
@@ -1093,20 +1116,19 @@ const { object } = await generateObject({
     keyword: z.string().min(2).max(100),
     days_back: z.number().int().min(1).max(90).default(7),
   }),
-  execute: async ({ keyword, days_back }, ctx) => {
+  execute: async ({ keyword, days_back }) => {
     try {
       const rows = await db.searchPosts({
         keyword, days_back,
-        tenantId: ctx.tenantId   // auth từ HARNESS, không bao giờ từ model
+        tenantId: actor.tenantId, limit: 20   // auth từ HARNESS, không bao giờ từ model
       });
       if (rows.length === 0)
         return { status:'empty', message:`Không có post cho "${keyword}". Thử keyword rộng hơn.` };
       // Output CÓ GIỚI HẠN: tối đa 20, chỉ field then chốt, cắt text.
       return { status:'ok', count: rows.length,
         posts: rows.slice(0,20).map(p => ({ id:p.id, author:p.author, excerpt:p.text.slice(0,200) })) };
-    } catch (err) {
-      // Lỗi GIÀU: model hành động được, không chỉ fail.
-      return { status:'error', message:`Search lỗi: ${err.message}. Thử keyword đơn giản hơn.` };
+    } catch {
+      return { status:'error', code:'SEARCH_FAILED', message:'Tìm kiếm chưa khả dụng. Chỉ thử lại trong ngân sách run.' };
     }
   }
 });</pre>
@@ -1115,37 +1137,50 @@ const { object } = await generateObject({
           <h4>Trụ 2 · Vòng lặp agent</h4>
           <p>Loop agent về khái niệm rất đơn giản: gọi model → nếu có tool_use, chạy tool, nối kết quả → gọi lại → lặp tới khi response chỉ có text hoặc chạm ngân sách. <strong>Độ phức tạp nằm ở các GIỚI HẠN.</strong></p>
           <div class="code-card">
-            <div class="prompt-head"><span>typescript · loop production với đủ 4 giới hạn</span><button class="copy-btn" onclick="copyCode(this)">Chép</button></div>
-<pre>async function runAgent(messages, tools, opts) {
-  let iter = 0, totalCost = 0;
-  const seen = new Set();                      // phát hiện lặp
+            <div class="prompt-head"><span>pseudocode · loop có giới hạn</span><button class="copy-btn" onclick="copyCode(this)">Chép</button></div>
+<pre>async function runAgent(messages, tools, opts = {}) {
+  let totalCost = 0, lastOutcome = null, stalledRounds = 0;
   const MAX_ITER = opts.maxIter ?? 25;
   const MAX_COST = opts.maxCost ?? 2.0;
   const TOKEN_BUDGET = opts.tokenBudget ?? 150_000;
+  const MAX_STALL_ROUNDS = opts.maxStallRounds ?? 3;
+  const deadline = Date.now() + (opts.timeoutMs ?? 60_000);
 
-  while (iter++ < MAX_ITER) {
-    if (estimateTokens(messages) > TOKEN_BUDGET)   // GIỚI HẠN 1 · token → compact
-      messages = await compact(messages);
-    if (totalCost > MAX_COST)                        // GIỚI HẠN 2 · trần chi phí → kill
-      throw new CostExceededError(totalCost);
+  for (let iter = 1; iter &lt;= MAX_ITER; iter++) {
+    if (Date.now() &gt;= deadline) throw new Error('deadline');
+    if (estimateTokens(messages) &gt; TOKEN_BUDGET)
+      messages = await withDeadline(() =&gt; compact(messages), deadline);
+    if (estimateTokens(messages) &gt; TOKEN_BUDGET)
+      throw new Error('context_budget');
+    if (totalCost &gt;= MAX_COST) throw new Error('cost_budget');
 
-    const resp = await model({ messages, tools });
+    const resp = await withDeadline(() =&gt; model({ messages, tools }), deadline);
     totalCost += resp.usage.totalCost;
     messages.push(resp.message);
-    if (!resp.toolCalls?.length) return { text: resp.text, totalCost, iter };  // xong
+    if (totalCost &gt; MAX_COST) throw new Error('cost_budget');
+    if (!resp.toolCalls?.length) return { text: resp.text, totalCost, iter };
 
-    for (const tc of resp.toolCalls) {               // GIỚI HẠN 3 · chống gọi lặp
-      const key = `${tc.toolName}:${JSON.stringify(tc.args)}`;
-      if (seen.has(key)) { pushToolError(messages, tc, 'Lệnh gọi trùng. Thử cách khác.'); continue; }
-      seen.add(key);
+    const results = [];
+    for (const tc of resp.toolCalls) {
+      try {
+        const value = await withDeadline(
+          () =&gt; executeAuthorizedTool(tc, tools), deadline);
+        results.push({ id: tc.id, value });
+      } catch (error) {
+        if (error.code === 'deadline') throw error;
+        results.push({ id: tc.id, error: 'tool_failed_or_denied' });
+      }
     }
-    const results = await Promise.all(resp.toolCalls.map(tc =>
-      withTimeout(executeTool(tc, tools), 30_000).catch(err => ({ id: tc.id, error: err.message }))));
-    messages.push({ role:'tool', content: results });
+    messages.push({ role: 'tool', content: results });
+    const outcome = progressFingerprint(resp.toolCalls, results);
+    stalledRounds = outcome === lastOutcome ? stalledRounds + 1 : 1;
+    lastOutcome = outcome;
+    if (stalledRounds &gt;= MAX_STALL_ROUNDS) throw new Error('no_progress');
   }
-  throw new Error(`Agent vượt ${MAX_ITER} vòng. Nhiều khả năng bị kẹt.`);  // GIỚI HẠN 4 · max iter
+  throw new Error('max_iterations');
 }</pre>
           </div>
+          <p>Đây là pseudocode adapter, không phải wire format provider. Read được retry sau lỗi tạm thời hoặc poll trạng thái mới trong ngân sách; cùng tham số chưa chứng minh call trùng. <code>progressFingerprint</code> so kết quả/state version liên quan task, bỏ call ID và timestamp: 3 vòng cùng kết quả không tiến bộ thì dừng để re-plan, thay vì chặn read kế trước khi chạy. Điều chỉnh heuristic này theo task.</p><p><code>executeAuthorizedTool</code> validate schema, lấy actor/tenant từ phiên xác thực và kiểm policy mỗi lần. Với write, operation ID do ứng dụng tin cậy cấp xác định thao tác định làm; bản ghi idempotency bền và mutation phải atomic để replay kết quả mà không lặp side effect. Cùng tham số có thể là hai write khác ý định; call ID mới không tự cấp phép write mới. <code>withDeadline</code> phải hủy tác vụ được hỗ trợ khi hết deadline run; đối soát write bị timeout trước khi retry. Thử read pending→complete, lỗi→retry, dừng không tiến bộ, replay write và actor bị từ chối.</p><p><code>MAX_COST</code> dừng theo chi phí model đã quan sát; request cuối vẫn có thể vượt ngưỡng, và ví dụ chưa cộng chi phí compaction/tool. Trần tổng cứng cần sổ ngân sách chung đặt trước cận trên chi phí của mỗi request model/tool/compaction, giới hạn output và quyết toán sau đó. Độ dài context được kiểm riêng với tổng tiền tích lũy. Thử guard bằng call trùng, actor bị từ chối, compaction không giảm đủ và ngân sách đã cạn.</p>
           <div class="callout warn"><div class="callout-title">Ba loại loop dễ gây sự cố</div><p><strong>(1) Retry vô tận</strong>: cùng tool fail y hệt lặp lại → phát hiện gọi trùng. <strong>(2) Suy luận vòng tròn</strong>: model đảo qua lại hai state → cap số vòng. <strong>(3) Khám phá quá đà</strong>: model "kiểm tra lại" mãi → trần chi phí ép dừng. Đặt giới hạn và log đủ message, tool call, lỗi, token, thời gian để tái hiện đường đi của agent.</p></div>
 
           <h4>Trụ 3 · Kiến trúc bộ nhớ</h4>
@@ -1156,11 +1191,11 @@ const { object } = await generateObject({
               <tbody>
                 <tr><td><strong>Ngắn hạn · in-context</strong></td><td>Lịch sử hội thoại trong một phiên</td><td>Phiên</td><td>Đối thoại nhiều lượt mạch lạc, state task tức thời</td></tr>
                 <tr><td><strong>Làm việc · scratchpad</strong></td><td>File agent đọc/ghi khi làm (plan.md, notes/)</td><td>Task</td><td>Task dài hơi, kế hoạch, todo, kết quả trung gian</td></tr>
-                <tr><td><strong>Dài hạn · ngoại vi</strong></td><td>Vector DB, KV, DB có cấu trúc — sau các tool retrieval</td><td>Vĩnh viễn</td><td>Sở thích người dùng, hội thoại cũ, tri thức tổ chức</td></tr>
+                <tr><td><strong>Dài hạn · ngoại vi</strong></td><td>Vector DB, KV, DB có cấu trúc — sau các tool retrieval</td><td>Qua phiên, có hạn dùng / đính chính</td><td>Sở thích người dùng, hội thoại cũ, tri thức tổ chức</td></tr>
               </tbody>
             </table>
           </div>
-          <p><code>CLAUDE.md</code> của Claude Code &amp; <code>AGENTS.md</code> của Codex = pattern working memory ở mức dự án (đọc lúc mở phiên; bạn ghi khi dự án tiến hóa). "Postgres Chat Memory" của n8n = bộ nhớ dài hạn khóa theo <code>sessionId</code> — sai khóa là bạn trộn lẫn người dùng; subagent memory của Claude Code = bộ nhớ dài hạn theo vai.</p>
+          <p><code>CLAUDE.md</code> của Claude Code &amp; <code>AGENTS.md</code> của Codex = chỉ dẫn dự án bền đã review, khác scratchpad theo task (đọc lúc mở phiên; bạn ghi khi dự án tiến hóa). "Postgres Chat Memory" của n8n = bộ nhớ dài hạn khóa theo <code>sessionId</code> — sai khóa là bạn trộn lẫn người dùng; subagent memory của Claude Code = bộ nhớ dài hạn theo vai.</p>
 
           <h4>Trụ 4 · Recovery — xếp hạng failure mode</h4>
           <div class="table-wrap">
@@ -1202,37 +1237,21 @@ const { object } = await generateObject({
           <h4>Containment trước alignment</h4>
           <p>Bảng threat model ở trên vẫn giả định bạn kịp phát hiện agent làm sai. Có một câu hỏi đi <em>trước</em> nó: agent <strong>có thể</strong> chạm tới cái gì? Anthropic (05/2026) mô tả cách họ vận hành agent nội bộ theo đúng thứ tự này — giám sát cái agent <em>có thể</em> làm trước khi giám sát cái nó <em>đã</em> làm. Lý do rất thực dụng: lớp thứ nhất vẫn đứng vững cả khi model bị prompt injection, hiểu sai việc, hay chỉ đơn giản là gọi nhầm tool; lớp thứ hai thì phụ thuộc vào việc bạn đọc kịp log.</p>
           <figure class="figure">
-            <svg viewBox="0 0 700 244" role="img" aria-label="Bốn mức cô lập agent xếp theo bán kính ảnh hưởng giảm dần: chạy thẳng trên máy thật, container dùng xong vứt, OS sandbox có hỏi người khi vượt ranh, và VM niêm phong không có đường ra mạng mặc định">
-              <defs><marker id="m4l1a" markerWidth="9" markerHeight="9" refX="7" refY="4.5" orient="auto"><path d="M0 0 L9 4.5 L0 9 z" fill="var(--accent-2)"/></marker></defs>
-              <text class="dgm-ink" x="16" y="22" font-size="12.5" font-weight="700">Containment · giới hạn cái agent CÓ THỂ làm</text>
-              <text class="dgm-ink2" x="16" y="40" font-size="10" font-family="IBM Plex Mono">chọn mức theo bán kính ảnh hưởng khi agent sai</text>
-              <rect class="dgm-warn" x="16" y="56" width="150" height="94" rx="10" stroke-width="2"/>
-              <text class="dgm-ink" x="91" y="84" text-anchor="middle" font-size="11.5" font-weight="700">Không cô lập</text>
-              <text class="dgm-ink2" x="91" y="106" text-anchor="middle" font-size="9.5">máy thật · repo thật</text>
-              <text class="dgm-ink2" x="91" y="124" text-anchor="middle" font-size="9.5">chỉ còn prompt gác cửa</text>
-              <rect class="dgm-box" x="190" y="56" width="150" height="94" rx="10" stroke-width="1.5"/>
-              <text class="dgm-ink" x="265" y="84" text-anchor="middle" font-size="11.5" font-weight="700">Container</text>
-              <text class="dgm-ink2" x="265" y="106" text-anchor="middle" font-size="9.5">mỗi task một bản mới</text>
-              <text class="dgm-ink2" x="265" y="124" text-anchor="middle" font-size="9.5">dùng xong thì vứt</text>
-              <rect class="dgm-box" x="364" y="56" width="150" height="94" rx="10" stroke-width="1.5"/>
-              <text class="dgm-ink" x="439" y="84" text-anchor="middle" font-size="11.5" font-weight="700">OS sandbox</text>
-              <text class="dgm-ink2" x="439" y="106" text-anchor="middle" font-size="9.5">giới hạn file &amp; network</text>
-              <text class="dgm-ink2" x="439" y="124" text-anchor="middle" font-size="9.5">vượt ranh → hỏi người</text>
-              <rect class="dgm-accent" x="538" y="56" width="150" height="94" rx="10" stroke-width="2"/>
-              <text class="dgm-ink" x="613" y="84" text-anchor="middle" font-size="11.5" font-weight="700">VM niêm phong</text>
-              <text class="dgm-ink2" x="613" y="106" text-anchor="middle" font-size="9.5">tách hẳn khỏi máy bạn</text>
-              <text class="dgm-ink2" x="613" y="124" text-anchor="middle" font-size="9.5">không đường ra mặc định</text>
-              <path class="dgm-flow" d="M16 176 H676" stroke-width="2" marker-end="url(#m4l1a)"/>
-              <text class="dgm-ink2" x="16" y="196" font-size="10" font-family="IBM Plex Mono">bán kính ảnh hưởng LỚN</text>
-              <text class="dgm-ink2" x="676" y="196" text-anchor="end" font-size="10" font-family="IBM Plex Mono">NHỎ</text>
-              <text class="dgm-ink" x="16" y="226" font-size="10.5">alignment hạ <tspan font-weight="700">xác suất</tspan> agent làm sai · containment hạ <tspan font-weight="700">hậu quả</tspan> khi nó vẫn làm</text>
-            </svg>
-            <figcaption><b>Hình 4.2</b> — Ba pattern cô lập đã có trong công cụ hôm nay, xếp cạnh mức "không cô lập" để thấy cái giá. Leo sang phải, bạn đổi độ tiện tay lấy bán kính ảnh hưởng nhỏ hơn — và đổi cả số lần phải hỏi người (xem callout dưới).</figcaption>
+            <div class="table-wrap containment-table"><table>
+              <thead><tr><th>Pattern ranh giới</th><th>Cần kiểm trước khi trao tự chủ</th></tr></thead>
+              <tbody>
+                <tr><td>Chạy trên host</td><td>Dùng quyền host đã cấp; kiểm phạm vi file, credential và chính sách duyệt.</td></tr>
+                <tr><td>Container dùng một task</td><td>Môi trường mới giảm state sót từ task trước. File mount, credential, quyền host và đường ra mạng vẫn cần policy rõ ràng.</td></tr>
+                <tr><td>OS sandbox</td><td>Cưỡng chế phạm vi filesystem/network đã cấu hình. Kiểm riêng đường xin duyệt hoặc thoát sang chạy ngoài sandbox.</td></tr>
+                <tr><td>Ví dụ VM của Cowork</td><td>Cô lập code execution; agent loop chạy ngoài VM. Workspace được mount và tool MCP trên host vẫn là capability. Mạng dùng allowlist đã cấu hình, không mặc định chung là cấm mọi egress.</td></tr>
+              </tbody>
+            </table></div>
+            <figcaption><b>Hình 4.2</b> — Các bề mặt được bảo vệ khác nhau, không phải bảng xếp hạng an toàn. Kiểm mount, credential, capability mạng và đường vượt duyệt ở từng deployment.</figcaption>
           </figure>
-          <p>Ba pattern isolation đã ship và bạn dùng được ngay: <strong>(1) container dùng-xong-vứt</strong>: mỗi task chạy trong một bản môi trường mới, xong thì huỷ, nên state bẩn không rò sang task sau; <strong>(2) OS sandbox + hỏi người</strong>: quyền đọc/ghi file và truy cập mạng bị chặn ở tầng hệ điều hành, agent chỉ phải hỏi khi thật sự cần vượt ranh; <strong>(3) VM niêm phong</strong>: cả phiên nằm trong máy ảo tách rời, mặc định không có đường ra mạng, hợp với việc chạy dài không người ngồi canh.</p>
+          <p>Trong ví dụ Anthropic, domain API được phép vẫn cho upload file sang tài khoản kẻ tấn công. Allowlist đích hoạt động nhưng dữ liệu vẫn thoát; họ bổ sung lọc theo credential. Nhãn VM/container chưa chứng minh bán kính thiệt hại nhỏ hơn. Cấu hình và thử ranh giới thực tế, kể cả endpoint được phép và tool nằm ngoài sandbox.</p>
           <div class="callout warn">
             <div class="callout-title">Trạng thái sản phẩm: vì sao "hỏi người" một mình không đủ</div>
-            <p>Anthropic báo cáo (05/2026) rằng khoảng <strong>93% permission prompt được người dùng bấm đồng ý</strong> — hiện tượng approval fatigue: hỏi càng nhiều, cái "có" càng rẻ, và hàng rào người trên thực tế mỏng hơn nó trông. Cũng theo báo cáo đó, khi bật sandbox ở tầng OS, <strong>số prompt phải hỏi giảm khoảng 84%</strong>, vì phần lớn hành động vốn đã bị chặn cứng nên không cần hỏi nữa. Đây là số từ một nhà cung cấp trên workload của họ, hãy coi là chỉ dấu hướng, không phải hằng số cho đội bạn. Cách đọc bền: <em>dùng containment để cắt số lần phải hỏi, rồi dành hàng rào người cho đúng nhóm hành động không đảo ngược</em> (Trụ 4). Tên chế độ và giao diện có thể đổi; kiểm tra lại trước khi dựa vào.</p>
+            <p>Anthropic báo cáo (05/2026) rằng khoảng <strong>93% permission prompt được người dùng bấm đồng ý</strong> — hiện tượng approval fatigue: hỏi càng nhiều, cái "có" càng rẻ, và hàng rào người trên thực tế mỏng hơn nó trông. Cũng theo báo cáo đó, khi bật sandbox ở tầng OS, <strong>số prompt phải hỏi giảm khoảng 84%</strong>, vì hành động được phép trong ranh giới đã cưỡng chế có thể chạy mà không cần duyệt từng lần. Đây là số từ một nhà cung cấp trên workload của họ, hãy coi là chỉ dấu hướng, không phải hằng số cho đội bạn. Cách đọc bền: <em>dùng containment để cắt số lần phải hỏi, rồi dành hàng rào người cho đúng nhóm hành động không đảo ngược</em> (Trụ 4). Tên chế độ và giao diện có thể đổi; kiểm tra lại trước khi dựa vào.</p>
           </div>
 
           <h4>Trụ 5 · Observability — log đường đi cần để tái hiện</h4>
@@ -1262,7 +1281,7 @@ const { object } = await generateObject({
             <button class="quiz-opt" onclick="quizPick(this,1)"><span class="quiz-letter">B</span><span>Đặt giới hạn cho tool: trả về <code>transcript_id</code> + tóm tắt gọn; cung cấp riêng tool <code>get_full_transcript(id)</code> để model chỉ gọi khi thật sự cần bản nguyên văn. Đây là output-có-giới-hạn + JIT retrieval kết hợp.</span></button>
             <button class="quiz-opt" onclick="quizPick(this,2)"><span class="quiz-letter">C</span><span>Giảm max iteration để loop dừng sớm hơn.</span></button>
             <button class="quiz-opt" onclick="quizPick(this,3)"><span class="quiz-letter">D</span><span>Tăng max_tokens output để model có thêm chỗ suy luận.</span></button>
-            <div class="quiz-feedback" data-explain="Đây là 'tool output bloat' kinh điển. Cách sửa ở tầng thiết kế tool, không phải tầng model — mọi tool cần ngân sách output. Kể cả cửa sổ 1M, bạn vẫn phí phần lớn ngân sách cho transcript cũ mà model không còn chú ý tới (context rot co giãn theo cửa sổ). Trả handle + tóm tắt; để model lấy nguyên văn theo yêu cầu. Cửa sổ lớn không sửa được thiết kế harness tệ."></div>
+            <div class="quiz-feedback" role="status" aria-live="polite" aria-atomic="true" data-explain="Đây là 'tool output bloat' kinh điển. Cách sửa ở tầng thiết kế tool, không phải tầng model — mọi tool cần ngân sách output. Cửa sổ 1M vẫn tốn chi phí cho transcript cũ; ảnh hưởng chất lượng phụ thuộc model/task, không co giãn theo một luật chung. Trả handle + tóm tắt; để model lấy nguyên văn theo yêu cầu. Cửa sổ lớn không sửa được thiết kế harness tệ."></div>
           </div>
 
           <div class="quiz" data-correct="2">
@@ -1272,7 +1291,7 @@ const { object } = await generateObject({
             <button class="quiz-opt" onclick="quizPick(this,1)"><span class="quiz-letter">B</span><span>Dùng model mạnh hơn để nó phán đoán chuẩn hơn khi nào nên hoàn tiền.</span></button>
             <button class="quiz-opt" onclick="quizPick(this,2)"><span class="quiz-letter">C</span><span>Authorization phải nằm ở <em>harness</em>, không ở model: danh tính &amp; hạn mức lấy từ session/JWT + policy; model chỉ được <em>đề xuất</em> hoàn tiền; harness kiểm quyền, ép trần số tiền, và bật cổng duyệt với hành động vượt ngưỡng.</span></button>
             <button class="quiz-opt" onclick="quizPick(this,3)"><span class="quiz-letter">D</span><span>Cứ để model tự quyết, chỉ cần log lại mọi lần hoàn tiền để sau này audit.</span></button>
-            <div class="quiz-feedback" data-explain="Nguyên tắc: authorization thuộc harness, không thuộc model. Prompt là dữ liệu — có thể bị lời khách (hoặc prompt injection) uốn cong; 'hãy cẩn thận' không phải một cơ chế kiểm soát. Model mạnh hơn vẫn có thể bị thuyết phục hoàn tiền sai, và log-để-audit chỉ phát hiện sau khi tiền đã mất. Thiết kế đúng: danh tính &amp; hạn mức đến từ session/JWT + policy ở harness; model chỉ đề xuất; harness kiểm quyền, ép trần, và đưa hành động vượt ngưỡng qua cổng người duyệt. Model đề xuất, harness quyết định."></div>
+            <div class="quiz-feedback" role="status" aria-live="polite" aria-atomic="true" data-explain="Nguyên tắc: authorization thuộc harness, không thuộc model. Prompt là dữ liệu — có thể bị lời khách (hoặc prompt injection) uốn cong; 'hãy cẩn thận' không phải một cơ chế kiểm soát. Model mạnh hơn vẫn có thể bị thuyết phục hoàn tiền sai, và log-để-audit chỉ phát hiện sau khi tiền đã mất. Thiết kế đúng: danh tính &amp; hạn mức đến từ session/JWT + policy ở harness; model chỉ đề xuất; harness kiểm quyền, ép trần, và đưa hành động vượt ngưỡng qua cổng người duyệt. Model đề xuất, harness quyết định."></div>
           </div>
         </div>
         <div class="lesson-nav" data-navfor="m4-l1"></div>
@@ -1378,8 +1397,8 @@ description: Dùng khi cần xuất báo cáo tuần cho khách từ dashboard n
           <p>Subagent vừa <em>cô lập</em> context vừa có thể <em>tích lũy</em>. Tính đến 07/2026, một subagent có thể khai báo trường <code>memory</code> (phạm vi <code>user</code> / <code>project</code> / <code>local</code>) để có một thư mục bộ nhớ bền qua các phiên, biến nó thành một "chuyên gia" sâu dần theo thời gian: reviewer nhớ những cái bẫy của repo, debugger nhớ các pattern lỗi từng gặp. Nhưng bộ nhớ bền của subagent cũng cần <strong>write gate + cơ chế quên</strong> (Bài 3.2): nếu không, mỗi subagent thành một ổ bộ-nhớ-không-bao-giờ-quên riêng.</p>
 
           <h4>EXTENSION · Hooks &amp; MCP</h4>
-          <p><strong>Hooks</strong> là hành vi harness lập trình được: chạy lệnh của <em>bạn</em> tại các sự kiện (PreToolUse, PostToolUse, Stop…) để chặn lệnh nguy hiểm, tự chạy test/lint, hay ép quy ước. Output của hook được coi như phản hồi cho agent. <strong>MCP</strong> mở rộng registry tool bằng server ngoài (DB, API, dịch vụ). Nhớ thuế registry ở Chương 2: <em>mỗi</em> MCP bật đều tốn token mọi lệnh gọi — bật theo phạm vi dự án, audit bằng <code>/mcp</code>.</p>
-          <div class="callout warn"><div class="callout-title">Nghịch lý MCP — và nó đã được vá tới đâu</div><p>Cơ chế thì vẫn đúng: mỗi tool đăng ký về nguyên tắc nhồi tên + mô tả + schema vào mọi lệnh gọi. Nhưng tính đến 09/2026, Claude Code đã bật <strong>tool search mặc định</strong>: lúc mở phiên chỉ <em>tên</em> tool được nạp, schema JSON đầy đủ để dành tới khi Claude thật sự cần một tool cụ thể. Tắt bằng <code>ENABLE_TOOL_SEARCH=false</code> để nạp hết như trước, hoặc <code>=auto</code> để nạp trước schema khi chúng vừa trong 10% cửa sổ context. Nghĩa là thuế registry đã giảm mạnh — nhưng chưa về 0, và mỗi MCP bật thêm vẫn cho model nhiều lựa chọn sai để với tới. Vẫn bật theo phạm vi dự án, và đo bằng <code>/context all</code> chứ đừng đo bằng cảm giác.</p></div>
+          <p><strong>Hooks</strong> là hành vi harness lập trình được: chạy lệnh của <em>bạn</em> tại các sự kiện (PreToolUse, PostToolUse, Stop…) để chặn lệnh nguy hiểm, tự chạy test/lint, hay ép quy ước. Output của hook được coi như phản hồi cho agent. <strong>MCP</strong> mở rộng registry tool bằng server ngoài (DB, API, dịch vụ). Cách client nạp tool quyết định thuế registry (Chương 2); bật server theo phạm vi dự án và audit bằng <code>/mcp</code>.</p>
+          <div class="callout warn"><div class="callout-title">Nghịch lý MCP — và nó đã được vá tới đâu</div><p>Nạp upfront đưa toàn bộ định nghĩa vào context. Theo tài liệu Claude Code 09/2026, client bật <strong>tool search mặc định</strong>: lúc mở phiên nạp <em>tên tool và server instructions</em>, schema JSON đầy đủ để dành tới khi Claude thật sự cần một tool cụ thể. Tắt bằng <code>ENABLE_TOOL_SEARCH=false</code> để nạp hết như trước, hoặc <code>=auto</code> để nạp trước schema khi chúng vừa trong 10% cửa sổ context. Nghĩa là thuế registry đã giảm mạnh — nhưng chưa về 0, và mỗi MCP bật thêm vẫn cho model nhiều lựa chọn sai để với tới. Vẫn bật theo phạm vi dự án, và đo bằng <code>/context all</code> chứ đừng đo bằng cảm giác.</p></div>
 
           <h4>EXTENSION · ToolSearch — registry tool ở quy mô lớn (2026)</h4>
           <p>Lối thoát cho registry lớn: giữ một chỉ mục tool gọn, rồi chỉ nạp <em>JSON schema</em> của tool phù hợp với task. Đây là JIT retrieval áp cho <em>chính định nghĩa tool</em>. Mức token tiết kiệm phụ thuộc số tool và độ dài schema; hãy đo trên request thật.</p>
@@ -1410,7 +1429,7 @@ description: Dùng khi cần xuất báo cáo tuần cho khách từ dashboard n
             </div>
             <figcaption style="border:0;background:transparent;padding:10px 0 12px"><b>Hình 5.2</b> — Ba nấc điều phối. Mỗi nấc trên bọc lấy nấc dưới; leo lên chỉ có nghĩa khi nấc dưới đã đứng vững.</figcaption>
           </figure>
-          <div class="callout warn"><div class="callout-title">Chỉ leo nấc trên khi nấc dưới đã có verifier</div><p>Loop lặp một harness <em>không</em> kiểm chứng là lặp lỗi nhanh hơn; graph nối nhiều agent <em>không</em> verifier là nhân lỗi theo cấp số. <strong>Đo:</strong> trước khi thêm một nấc, hãy chỉ ra được verifier của nấc hiện tại — test, eval hay schema nào đang gác cổng. Không chỉ ra được thì bạn chưa sẵn sàng leo.</p></div>
+          <div class="callout warn"><div class="callout-title">Chỉ leo nấc trên khi nấc dưới đã có verifier</div><p>Loop lặp một harness <em>không</em> kiểm chứng là lặp lỗi nhanh hơn; graph nối nhiều agent <em>không</em> verifier có thể truyền lỗi chưa kiểm qua nhiều nút. <strong>Đo:</strong> trước khi thêm một nấc, hãy chỉ ra được verifier của nấc hiện tại — test, eval hay schema nào đang gác cổng. Không chỉ ra được thì bạn chưa sẵn sàng leo.</p></div>
 
           <div class="exercise">
             <h5>Bài tập · Sắp lớp cho setup của bạn</h5>
@@ -1429,7 +1448,7 @@ description: Dùng khi cần xuất báo cáo tuần cho khách từ dashboard n
             <button class="quiz-opt" onclick="quizPick(this,1)"><span class="quiz-letter">B</span><span>Tắt các MCP không liên quan tới dự án hiện tại — mỗi server bật thêm vẫn cho model nhiều lựa chọn sai để với tới. Bật theo phạm vi dự án, và ở Claude Code hãy kiểm tra <code>/context all</code> để thấy tool nào thật sự tốn bao nhiêu, vì tool search đã bật sẵn.</span></button>
             <button class="quiz-opt" onclick="quizPick(this,2)"><span class="quiz-letter">C</span><span>Đổi sang Opus — nó chọn tool tốt hơn.</span></button>
             <button class="quiz-opt" onclick="quizPick(this,3)"><span class="quiz-letter">D</span><span>Gộp tất cả MCP thành một "super-MCP" chứa mọi tool.</span></button>
-            <div class="quiz-feedback" data-explain="Đây là thuế registry (Chương 2) đội lốt bài toán prompt. Tool search đã bật mặc định nên schema không còn vào mọi lệnh gọi — nhưng tên tool thì vẫn, và mỗi MCP bật thêm vẫn cho model nhiều lựa chọn sai để với tới. Chỉ dẫn 'đừng dùng' không xóa được chi phí đó và model vẫn bị cám dỗ. Sửa gốc là thu hẹp phạm vi: tắt MCP không liên quan (phạm vi dự án) và đo bằng /context all thay vì đoán. A chỉ là viết chỉ dẫn to hơn cho cùng một vấn đề không nằm ở prompt; C đổi model mà không đụng tới registry; D gộp thành super-MCP làm tệ hơn vì gộp lại không giảm số lựa chọn."></div>
+            <div class="quiz-feedback" role="status" aria-live="polite" aria-atomic="true" data-explain="Đây là thuế registry (Chương 2) đội lốt bài toán prompt. Tool search đã bật mặc định nên schema không còn vào mọi lệnh gọi — nhưng tên tool thì vẫn, và mỗi MCP bật thêm vẫn cho model nhiều lựa chọn sai để với tới. Chỉ dẫn 'đừng dùng' không xóa được chi phí đó và model vẫn bị cám dỗ. Sửa gốc là thu hẹp phạm vi: tắt MCP không liên quan (phạm vi dự án) và đo bằng /context all thay vì đoán. A chỉ là viết chỉ dẫn to hơn cho cùng một vấn đề không nằm ở prompt; C đổi model mà không đụng tới registry; D gộp thành super-MCP làm tệ hơn vì gộp lại không giảm số lựa chọn."></div>
           </div>
         </div>
         <div class="lesson-nav" data-navfor="m5-l1"></div>
@@ -1455,7 +1474,7 @@ description: Dùng khi cần xuất báo cáo tuần cho khách từ dashboard n
 
           <div class="callout info">
             <div class="callout-title">Trạng thái sản phẩm</div>
-            <p>Anthropic công bố (24/07/2026, Thariq Shihipar) rằng họ đã <em>"removed over 80% of Claude Code's system prompt for models like Claude Opus 5 and Claude Fable 5 with no measurable loss on our coding evaluations"</em>. Ba giới hạn của phạm vi nên đọc kèm: đó là <strong>system prompt của Claude Code</strong> — do chính hãng viết cho sản phẩm của họ, không phải CLAUDE.md của bạn; <em>"no measurable loss"</em> nghĩa là <strong>hoà</strong>, không phải tốt lên; và thước đo là <strong>eval nội bộ của họ</strong>, trên workload của họ. Lý do họ đưa ra: họ nhận thấy mình đang <em>"overconstraining Claude Code, both through our system prompt and in our CLAUDE.md files and skills"</em>.</p>
+            <p>Anthropic báo cáo ngày 24/7/2026 rằng họ bỏ hơn 80% system prompt của chính Claude Code cho Opus 5 và Fable 5 mà không đo thấy suy giảm trên eval coding nội bộ. Đây là kết quả vendor cho sản phẩm và workload của họ, không phải mục tiêu cho CLAUDE.md của bạn. Không đo thấy giảm không chứng minh tốt hơn hay tương đương trên task chưa thử. Họ cho rằng system prompt, CLAUDE.md và skill đang áp quá nhiều ràng buộc.</p>
           </div>
 
           <div class="callout success">
@@ -1463,10 +1482,10 @@ description: Dùng khi cần xuất báo cáo tuần cho khách từ dashboard n
             <p>Guidance OpenAI ngày 11/09/2026 cho GPT-6 Astra đi gần như cùng hướng: description của Skill phải ngắn và trigger rõ, root Skill nên là <strong>router tối thiểu</strong> trỏ sang docs/scripts hỗ trợ, đừng ép agent đọc full repo map trước mọi edit, và model mới là dịp audit lại scaffold cũ. Điểm đáng học hơn tên model là: <strong>progressive disclosure + trim có eval đã thành pattern cross-vendor.</strong></p>
           </div>
 
-          <p>Chương 2 đã tính chi phí thứ nhất của context thừa: token và thuế registry. Bài này thêm chi phí thứ hai, khó thấy hơn: <strong>công phân xử</strong>. Ví dụ chính Anthropic đưa ra là chuyện comment: một chỗ nói <em>"leave documentation as appropriate"</em>, chỗ khác nói <em>"DO NOT add comments"</em>, cùng lúc trong system prompt, trong một Skill đang bật, và trong câu người dùng vừa nhắn. Theo mô tả của họ, model khi đó phải <em>"think more carefully about these overlapping and conflicting messages before deciding what to do"</em>. Mỗi luật thêm vào vừa cộng token, vừa cộng thêm một khả năng va chạm với những luật đã có.</p>
+          <p>Chương 2 đã tính chi phí thứ nhất của context thừa: token và thuế registry. Bài này thêm chi phí thứ hai, khó thấy hơn: <strong>công phân xử</strong>. Ví dụ chính Anthropic đưa ra là chuyện comment: một chỗ nói <em>"leave documentation as appropriate"</em>, chỗ khác nói <em>"DO NOT add comments"</em>, cùng lúc trong system prompt, trong một Skill đang bật, và trong câu người dùng vừa nhắn. Theo mô tả của họ, model khi đó phải tốn công phân xử các chỉ dẫn chồng chéo và mâu thuẫn. Mỗi luật thêm vào vừa cộng token, vừa cộng thêm một khả năng va chạm với những luật đã có.</p>
 
           <figure class="figure">
-            <svg viewBox="0 0 660 212" role="img" aria-label="Sơ đồ ba nguồn chỉ dẫn cùng nói về comment nhưng mâu thuẫn nhau: system prompt, skill đang bật, và câu người dùng, cùng dồn xuống một bước phân xử của model">
+            <div class="diagram-viewport" role="region" tabindex="0" aria-label="Sơ đồ; cuộn ngang để đọc đầy đủ nhãn" style="--diagram-width:660px"><svg viewBox="0 0 660 212" role="img" aria-label="Sơ đồ ba nguồn chỉ dẫn cùng nói về comment nhưng mâu thuẫn nhau: system prompt, skill đang bật, và câu người dùng, cùng dồn xuống một bước phân xử của model">
               <defs><marker id="m5l2-ah" markerWidth="9" markerHeight="9" refX="7" refY="4.5" orient="auto"><path d="M0 0 L9 4.5 L0 9 z" fill="var(--accent-2)"/></marker></defs>
               <text class="dgm-ink2" x="110" y="18" text-anchor="middle" font-size="9" font-weight="700">SYSTEM PROMPT</text>
               <text class="dgm-ink2" x="330" y="18" text-anchor="middle" font-size="9" font-weight="700">SKILL ĐANG BẬT</text>
@@ -1485,7 +1504,7 @@ description: Dùng khi cần xuất báo cáo tuần cho khách từ dashboard n
               <path class="dgm-flow" d="M330 148 V166" stroke-width="2" marker-end="url(#m5l2-ah)"/>
               <rect class="dgm-box" x="150" y="170" width="360" height="32" rx="8"/>
               <text class="dgm-ink2" x="330" y="190" text-anchor="middle" font-size="9" font-family="IBM Plex Mono">mỗi luật thêm vào cộng thêm một khả năng va chạm</text>
-            </svg>
+            </svg></div>
             <figcaption><b>Hình 5.3</b> — Ba nguồn đều hợp lý khi đọc riêng, và mâu thuẫn khi đọc cùng nhau. Đây là lý do một CLAUDE.md dài vừa đắt hơn vừa <em>khó đoán hơn</em>: phần công model bỏ ra để hoà giải các chỉ dẫn là phần không sinh ra kết quả nào cho bạn.</figcaption>
           </figure>
 
@@ -1496,12 +1515,12 @@ description: Dùng khi cần xuất báo cáo tuần cho khách từ dashboard n
             <table>
               <thead><tr><th style="width:150px">Trước kia</th><th style="width:170px">Bây giờ</th><th>Ghi chú khi áp vào repo của bạn</th></tr></thead>
               <tbody>
-                <tr><td>Đưa luật cho model</td><td><strong>Để model tự phán đoán</strong></td><td>Ví dụ họ đưa: thay <em>"Never write multi-paragraph docstrings or multi-line comment blocks — one short line max."</em> bằng <em>"Write code that reads like the surrounding code: match its comment density, naming, and idiom."</em> Lập luận này nói về <em>style</em>. Nó không nói về quyền hạn — xem callout bên dưới.</td></tr>
-                <tr><td>Cho model xem ví dụ</td><td><strong>Thiết kế interface</strong></td><td>Với cách gọi tool, họ ghi nhận <em>"giving examples actually constrains them to a certain exploration space"</em>. Đầu tư vào schema — tên tham số rõ nghĩa, enum thay string tự do — thường bền hơn thêm ví dụ (Bài 3.1, Pattern 6).</td></tr>
+                <tr><td>Đưa luật cho model</td><td><strong>Để model tự phán đoán</strong></td><td>Ví dụ họ đưa: thay <em>luật cứng chỉ cho comment một dòng</em> bằng <em>hướng dẫn theo mật độ comment, cách đặt tên và idiom của code xung quanh</em> Lập luận này nói về <em>style</em>. Nó không nói về quyền hạn — xem callout bên dưới.</td></tr>
+                <tr><td>Cho model xem ví dụ</td><td><strong>Thiết kế interface</strong></td><td>Với cách gọi tool, họ ghi nhận ví dụ có thể thu hẹp không gian khám phá. Đầu tư vào schema — tên tham số rõ nghĩa, enum thay string tự do — thường bền hơn thêm ví dụ (Bài 3.1, Pattern 6).</td></tr>
                 <tr><td>Nạp hết từ đầu</td><td><strong>Progressive disclosure</strong></td><td>Đây là thứ khoá học đã dựng từ Bài 3.1 và 5.1: CLAUDE.md là bản đồ, Skill là nội dung nạp khi cần. Điểm thêm: Skill dài thì <em>"divide it into many files"</em> thay vì một file to.</td></tr>
                 <tr><td>Lặp lại chỉ dẫn</td><td><strong>Mô tả tool gọn</strong></td><td>Hướng dẫn về một tool nên sống ở đúng một chỗ — <em>mô tả của chính tool đó</em>. Nhắc lại nó trong system prompt tạo ra hai bản có thể lệch nhau theo thời gian.</td></tr>
-                <tr><td>Ghi nhớ trong các file CLAUDE.md</td><td><strong>Auto-memory</strong></td><td>Trước kia Anthropic khuyến khích người dùng tự lưu bằng phím tắt <code>#</code>, nó ghi thẳng vào <code>CLAUDE.md</code> của bạn. Tính đến 09/2026, model tự lưu những gì liên quan tới learnings, corrections, context theo repo và preferences của bạn, thay cho thói quen tự tay ghi vào CLAUDE.md. Bạn xem và sửa được mọi thứ nó đã lưu bằng <code>/memory</code> — mỗi repo một thư mục <code>~/.claude/projects/&lt;project&gt;/memory/</code>, và chỉ 200 dòng đầu (hoặc 25KB) của <code>MEMORY.md</code> được nạp mỗi phiên; tắt bằng <code>autoMemoryEnabled: false</code>. Cách chia vai gợi ý: CLAUDE.md / AGENTS.md giữ quy ước bắt buộc và invariant của <em>repo</em> (team-shared, version control qua Git; ai clone về cũng cần), còn auto-memory giữ kinh nghiệm làm việc và context phiên (cần định kỳ audit/xóa bằng <code>/memory</code> khi context cũ trôi dạt).</td></tr>
-                <tr><td>Spec đơn giản</td><td><strong>Tham chiếu giàu (rich references)</strong></td><td>Một test suite, một hàm cần port, một HTML artifact — họ mô tả đây là <em>"clear, high-fidelity instructions to Claude in a language it knows very well"</em>. Nối thẳng với Chương 10: test là spec thực thi được.</td></tr>
+                <tr><td>Ghi nhớ trong các file CLAUDE.md</td><td><strong>Auto-memory</strong></td><td>Trước kia Anthropic khuyến khích người dùng tự lưu bằng phím tắt <code>#</code>, nó ghi thẳng vào <code>CLAUDE.md</code> của bạn. Tính đến 09/2026, khi auto-memory được bật, model có thể lưu learnings, corrections, context theo repo và preferences của bạn, thay cho thói quen tự tay ghi vào CLAUDE.md. Bạn xem và sửa được mọi thứ nó đã lưu bằng <code>/memory</code> — mỗi repo một thư mục <code>~/.claude/projects/&lt;project&gt;/memory/</code>, và chỉ 200 dòng đầu (hoặc 25KB) của <code>MEMORY.md</code> được nạp mỗi phiên; tắt bằng <code>autoMemoryEnabled: false</code>. Cách chia vai gợi ý: CLAUDE.md / AGENTS.md giữ quy ước bắt buộc và invariant của <em>repo</em> (team-shared, version control qua Git; ai clone về cũng cần), còn auto-memory giữ kinh nghiệm làm việc và context phiên (cần định kỳ audit/xóa bằng <code>/memory</code> khi context cũ trôi dạt).</td></tr>
+                <tr><td>Spec đơn giản</td><td><strong>Tham chiếu giàu (rich references)</strong></td><td>Một test suite, một hàm cần port, một HTML artifact — họ mô tả đây là <em>tài liệu tham chiếu có cấu trúc chính xác để Claude kiểm tra</em>. Nối thẳng với Chương 10: test là spec thực thi được.</td></tr>
               </tbody>
             </table>
           </div>
@@ -1537,7 +1556,7 @@ description: Dùng khi cần xuất báo cáo tuần cho khách từ dashboard n
 
           <div class="callout warn">
             <div class="callout-title">Cắt được 80% vì có cái để đo</div>
-            <p>Anthropic cắt được nhiều như vậy một phần vì họ có bộ eval coding để biết mình đã làm hỏng gì chưa. Không có bộ đo tương đương, "cắt 80%" là một canh bạc chứ chưa phải một quyết định, và cái hỏng sẽ xuất hiện thưa thớt, khó truy ngược về lần cắt. Một cách xoay xở khi chưa có eval: giữ lại 5–10 task đã từng làm agent sai, chạy chúng trước và sau khi cắt, so số lần phải sửa tay. Nhỏ, nhưng vẫn hơn cảm nhận. Claude Code cũng có <code>/doctor</code>, và nó đề xuất trực tiếp phần nên cắt khỏi một CLAUDE.md đã commit: nó cắt thứ Claude tự suy được từ codebase (cây thư mục, danh sách dependency, mô tả kiến trúc) và <strong>giữ</strong> cái bẫy, lý do, cùng những quy ước khác với mặc định của tool — đúng ba nhãn GIỮ / BỎ·hiển nhiên ở bảng trên. Tên lệnh có thể đổi, thao tác rà thì không.</p>
+            <p>Anthropic cắt được nhiều như vậy một phần vì họ có bộ eval coding để biết mình đã làm hỏng gì chưa. Không có bộ đo tương đương, "cắt 80%" là một canh bạc chứ chưa phải một quyết định, và cái hỏng sẽ xuất hiện thưa thớt, khó truy ngược về lần cắt. Một cách xoay xở khi chưa có eval: giữ lại 5–10 task đã từng làm agent sai, chạy chúng trước và sau khi cắt, so số lần phải sửa tay. Nhỏ, nhưng vẫn hơn cảm nhận. Claude Code cũng có <code>/doctor prompt-audit</code> (v2.1.283+; cần bundled skill), và nó đề xuất trực tiếp phần nên cắt khỏi một CLAUDE.md đã commit: nó cắt thứ Claude tự suy được từ codebase (cây thư mục, danh sách dependency, mô tả kiến trúc) và <strong>giữ</strong> cái bẫy, lý do, cùng những quy ước khác với mặc định của tool — đúng ba nhãn GIỮ / BỎ·hiển nhiên ở bảng trên. Tên lệnh có thể đổi, thao tác rà thì không.</p>
           </div>
 
           <div class="exercise">
@@ -1557,7 +1576,7 @@ description: Dùng khi cần xuất báo cáo tuần cho khách từ dashboard n
             <button class="quiz-opt" onclick="quizPick(this,1)"><span class="quiz-letter">B</span><span>Giữ bản gọn (nó rẻ hơn và ít mâu thuẫn hơn với cùng kết quả), nhưng đọc lại phần đã xoá xem có dòng nào thuộc nhóm ranh giới an toàn không — nếu có thì chỗ của nó là cấu hình harness, không phải xoá đi là xong. Rồi tiếp tục theo dõi thêm vài tuần.</span></button>
             <button class="quiz-opt" onclick="quizPick(this,2)"><span class="quiz-letter">C</span><span>Xoá tiếp 60% còn lại — vì đã chứng minh được là CLAUDE.md không có tác dụng.</span></button>
             <button class="quiz-opt" onclick="quizPick(this,3)"><span class="quiz-letter">D</span><span>Bộ 8 task chưa đủ nên chưa kết luận được gì; giữ nguyên hiện trạng cho tới khi có eval đầy đủ.</span></button>
-            <div class="quiz-feedback" data-explain="B. Cùng kết quả với ít token hơn và ít khả năng mâu thuẫn hơn thì bản gọn là bản đáng giữ: quay lại bản dài 'cho chắc' là trả tiền cho một thứ vừa được đo là không đóng góp gì (A). Nhưng bộ 8 task chỉ đo được cái nó phủ: những dòng thuộc nhóm ranh giới an toàn thường chỉ phát huy vai trò ở tình huống hiếm mà 8 task này gần như chắc chắn không chạm tới, nên chúng cần được chuyển xuống harness chứ không đơn giản là xoá. C suy rộng quá xa từ một phép đo hẹp. D đúng ở chỗ thận trọng nhưng dừng sai chỗ: bằng chứng chưa đầy đủ vẫn là bằng chứng, và 'chờ eval đầy đủ' trên thực tế thường có nghĩa là không bao giờ rà lại."></div>
+            <div class="quiz-feedback" role="status" aria-live="polite" aria-atomic="true" data-explain="B. Cùng kết quả quan sát với ít token hơn là lý do thử bản gọn trong phạm vi đã đo: quay lại bản dài 'cho chắc' là trả tiền cho một thứ vừa được đo là không đóng góp gì (A). Nhưng bộ 8 task chỉ đo được cái nó phủ: những dòng thuộc nhóm ranh giới an toàn thường chỉ phát huy vai trò ở tình huống hiếm mà 8 task này gần như chắc chắn không chạm tới, nên chúng cần được chuyển xuống harness chứ không đơn giản là xoá. C suy rộng quá xa từ một phép đo hẹp. D đúng ở chỗ thận trọng nhưng dừng sai chỗ: bằng chứng chưa đầy đủ vẫn là bằng chứng, và 'chờ eval đầy đủ' trên thực tế thường có nghĩa là không bao giờ rà lại."></div>
           </div>
         </div>
         <div class="lesson-nav" data-navfor="m5-l2"></div>
@@ -1614,6 +1633,7 @@ description: Dùng khi cần xuất báo cáo tuần cho khách từ dashboard n
             <p>OpenAI đưa <strong>Agents API</strong> ra public beta ngày 10/09/2026, expose cùng pattern harness của Codex cho developer: tự compaction qua long session, tool search, programmatic tool calling, subagent có context cô lập, và sandbox hosted hoặc tự mang hạ tầng. Ngày 29/09/2026 API này có thêm computer use trong trình duyệt do OpenAI host. Bài học không phải "phải dùng API này"; mà là kỹ thuật ở Chương 2–4 đã đi từ glue code tự chế thành platform primitive. Tự build khi cần control; mua primitive khi boundary của nó khớp.</p>
           </div>
 
+          <p>Đối chiếu <a href="https://developers.openai.com/api/docs/changelog" target="_blank" rel="noopener noreferrer">changelog API ngày 30/10/2026</a>: compaction của Agents API chạy nền mặc định; <code>compaction.async=false</code> chọn chế độ chặn. Cập nhật tool cho session đang có thay cả danh sách tool. Function/MCP có hiệu lực từ model call tiếp theo, builtin từ turn tiếp theo. Đây là luật vòng đời riêng của API; kiểm hỗ trợ client riêng và vẫn giữ cổng quyền, ngân sách bên ngoài.</p>
           <h4><code>AGENTS.md</code> · ngữ cảnh thường trực, cộng dồn theo thư mục</h4>
           <p>Tương đương <code>CLAUDE.md</code> nhưng theo <strong>thứ tự khám phá phân cấp</strong>: Codex đi từ gốc repo xuống thư mục hiện tại và <strong>nối (concatenate)</strong> các file lại, mỗi thư mục lấy tối đa một file. File gần hơn nằm <em>sau</em> trong prompt nên thường thắng khi mâu thuẫn, nhưng nội dung ở gốc vẫn nằm nguyên trong context và vẫn tốn token; đây là ghi đè mềm, không phải thay thế. Muốn một thư mục thực sự bỏ qua <code>AGENTS.md</code> cùng chỗ thì đặt <code>AGENTS.override.md</code> vào đó. Tổng dung lượng bị chặn ở <code>project_doc_max_bytes</code>, mặc định 32 KiB, chạm trần là Codex ngừng nối thêm file. Nhờ vậy một monorepo có thể có quy ước chung ở gốc và quy ước riêng cho từng package, đúng nguyên tắc "context gần việc thì thắng".</p>
           <div class="callout warn">
@@ -1630,10 +1650,10 @@ description: Dùng khi cần xuất báo cáo tuần cho khách từ dashboard n
           <div class="callout insight"><div class="callout-title">Agent legibility</div><p>Fact mà agent không inspect được lúc đang làm thì về thực tế gần như không tồn tại trong workflow. Đưa quyết định quan trọng ra khỏi chat/đầu người vào artifact có version, discover được — nhưng chỉ trỏ tới chúng <em>khi cần</em>, đừng preload hết. Hai ý tưởng tưởng ngược nhau thực ra cùng đúng: <strong>nhiều tri thức hơn trong repo, ít tri thức hơn trong mỗi prompt.</strong></p></div>
 
           <h4>Sandbox · thực thi an toàn mặc định</h4>
-          <p><strong>Sandbox không còn là đặc sản của riêng một công cụ.</strong> Cả hai bên đều có sandbox ở tầng hệ điều hành: Codex chạy mọi lệnh trong sandbox với quyền khai báo; Claude Code có Bash sandbox tích hợp (lệnh <code>/sandbox</code>, hoặc đặt <code>sandbox.enabled</code> trong settings để bật cho mọi dự án) dùng Seatbelt trên macOS và bubblewrap trên Linux/WSL2, cô lập cả filesystem lẫn network với allowlist domain, đúng cái sandbox sinh ra con số "giảm 84% permission prompt" đã trích ở Bài 4.1. Cái đáng học là <strong>hai dial</strong>: agent <em>có thể</em> làm gì, và <em>khi nào phải hỏi</em>. Chọn chế độ theo rủi ro (chỉ-đọc, ghi-trong-workspace, hay full-access) thay vì tin agent "sẽ ngoan". Đây là nguyên tắc <em>authorization thuộc harness</em> (Chương 4) được đóng gói sẵn: harness quyết định agent chạm được gì, không phải phán đoán của model.</p>
+          <p><strong>Sandbox không còn là đặc sản của riêng một công cụ.</strong> Cả hai bên đều có sandbox ở tầng hệ điều hành: Codex có thể chạy lệnh local trong OS sandbox với quyền khai báo; Claude Code có Bash sandbox tích hợp (lệnh <code>/sandbox</code>, hoặc đặt <code>sandbox.enabled</code> trong settings để bật cho mọi dự án) dùng Seatbelt trên macOS và bubblewrap trên Linux/WSL2, cô lập cả filesystem lẫn network với allowlist domain, đúng cái sandbox sinh ra con số "giảm 84% permission prompt" đã trích ở Bài 4.1. Cái đáng học là <strong>hai dial</strong>: agent <em>có thể</em> làm gì, và <em>khi nào phải hỏi</em>. Chọn chế độ theo rủi ro (chỉ-đọc, ghi-trong-workspace, hay full-access) thay vì tin agent "sẽ ngoan". Đây là nguyên tắc <em>authorization thuộc harness</em> (Chương 4) được đóng gói sẵn: harness quyết định agent chạm được gì, không phải phán đoán của model.</p>
           <p>Chỗ hay nhầm: đây thực ra là <strong>hai dial độc lập</strong>, không phải một thanh trượt "an toàn ↔ tự do". Một dial nói agent <em>có thể</em> làm gì (chỉ đọc / ghi trong workspace / toàn quyền); dial kia nói <em>khi nào phải hỏi</em> bạn (hỏi khi cần / không bao giờ hỏi, hoặc dạng <code>granular</code> mở từng nhóm prompt một). Chúng cắt nhau thành một lưới, và ô bạn đang đứng mới là cấu hình thật của phiên.</p>
           <figure class="figure">
-            <svg viewBox="0 0 700 226" role="img" aria-label="Lưới hai trục cấu hình Codex: trục ngang là sandbox mode gồm chỉ đọc, ghi trong workspace, toàn quyền; trục dọc là chính sách duyệt gồm hỏi khi cần và không bao giờ hỏi; ba ô được đánh dấu là preset Auto, đọc hiểu repo, và ô toàn quyền không hỏi là ô không còn hàng rào nào">
+            <div class="diagram-viewport" role="region" tabindex="0" aria-label="Sơ đồ; cuộn ngang để đọc đầy đủ nhãn" style="--diagram-width:700px"><svg viewBox="0 0 700 226" role="img" aria-label="Lưới hai trục cấu hình Codex: trục ngang là sandbox mode gồm chỉ đọc, ghi trong workspace, toàn quyền; trục dọc là chính sách duyệt gồm hỏi khi cần và không bao giờ hỏi; ba ô được đánh dấu là preset Auto, đọc hiểu repo, và ô toàn quyền không hỏi là ô không còn hàng rào nào">
               <text class="dgm-ink" x="16" y="20" font-size="12.5" font-weight="700">Codex · hai dial độc lập, không phải một thanh trượt</text>
               <text class="dgm-ink2" x="16" y="38" font-size="10" font-family="IBM Plex Mono">ngang: agent CÓ THỂ làm gì · dọc: khi nào phải HỎI</text>
               <text class="dgm-ink2" x="230" y="66" text-anchor="middle" font-size="10" font-family="IBM Plex Mono">read-only</text>
@@ -1653,7 +1673,7 @@ description: Dùng khi cần xuất báo cáo tuần cho khách từ dashboard n
               <rect class="dgm-warn" x="500" y="142" width="180" height="62" rx="8" stroke-width="2"/>
               <text class="dgm-ink" x="590" y="170" text-anchor="middle" font-size="10.5" font-weight="700">không còn hàng rào</text>
               <text class="dgm-ink2" x="590" y="188" text-anchor="middle" font-size="9.5">toàn quyền + không bao giờ hỏi</text>
-            </svg>
+            </svg></div>
             <figcaption><b>Hình 6.2</b> — Cùng một mức "được phép làm" có thể an toàn hay nguy hiểm tuỳ dial còn lại (chính sách duyệt gồm <code>on-request</code>, <code>never</code>; tên cũ <code>untrusted</code> nay đã rút khỏi <code>approval_policy</code>). Ô góc dưới-phải là ô duy nhất không còn bất kỳ hàng rào nào — nếu bạn chọn nó, hàng rào phải nằm ở chỗ khác (VM tách rời, repo dùng-một-lần, hoặc cổng review trước khi merge).</figcaption>
           </figure>
           <div class="code-card">
@@ -1669,7 +1689,12 @@ network_access = false   # mặc định; bật lên thì lệnh mới có mạn
 # enabled = true
 # domains = { "registry.npmjs.org" = "allow", "example.com" = "deny" }</pre>
           </div>
-          <p>Hai cờ, hai tập giá trị <em>khác nhau</em>, đừng ghép chung. <code>--sandbox</code> nhận <code>read-only</code> / <code>workspace-write</code> / <code>danger-full-access</code>. <code>--ask-for-approval</code> nhận <code>on-request</code> hoặc <code>never</code>. Trong <code>config.toml</code>, <code>approval_policy</code> có thêm dạng thứ ba là <code>{ granular = { … } }</code> để giữ tương tác cho vài nhóm prompt và tự chối các nhóm còn lại; giá trị <code>untrusted</code> đã bị rút khỏi <code>approval_policy</code> (muốn giữ luật duyệt chặt thì khai <code>trust_level = "untrusted"</code> cho project trong <code>~/.codex/config.toml</code>), còn <code>on-failure</code> là deprecated.</p>
+          <p>Hai cờ, hai tập giá trị <em>khác nhau</em>, đừng ghép chung. <code>--sandbox</code> nhận <code>read-only</code> / <code>workspace-write</code> / <code>danger-full-access</code>. <code>--ask-for-approval</code> nhận <code>on-request</code> hoặc <code>never</code>. Trong <code>config.toml</code>, <code>approval_policy</code> có thêm dạng thứ ba là <code>{ granular = { … } }</code> để giữ tương tác cho vài nhóm prompt và tự chối các nhóm còn lại; giá trị <code>untrusted</code> đã bị rút khỏi <code>approval_policy</code> (xem công thức trust chặt riêng bên dưới), còn <code>on-failure</code> là deprecated.</p>
+          <p>Muốn dùng luật duyệt lệnh chặt suy ra từ project, <strong>bỏ khai báo <code>approval_policy</code> tường minh</strong> (và override approval qua CLI): <code>on-request</code> ghi đè policy suy ra từ project trust. Dùng cấu hình riêng này thay cho ví dụ Auto; managed policy có thể giới hạn khả năng dùng.</p>
+          <div class="code-card"><div class="prompt-head"><span>~/.codex/config.toml · ví dụ trust chặt riêng</span></div>
+<pre># Không đặt approval_policy = "on-request" tường minh ở cấu hình này
+[projects."/absolute/path/to/repo"]
+trust_level = "untrusted"</pre></div>
           <p>Cặp <code>workspace-write</code> + <code>on-request</code> ở trên nên gọi là <strong>preset Auto</strong>, đừng gọi là "mặc định": tài liệu Codex không thống nhất. Config mẫu ghi <code>sandbox_mode = "read-only"</code> là default; trang approvals thì khuyến nghị Auto cho thư mục có version control, read-only cho thư mục không có, và tuỳ cấu hình vẫn có thể khởi động ở read-only cho tới khi bạn tin thư mục làm việc.</p>
           <div class="callout info">
             <div class="callout-title">Trạng thái sản phẩm</div>
@@ -1700,7 +1725,7 @@ network_access = false   # mặc định; bật lên thì lệnh mới có mạn
             <button class="quiz-opt" onclick="quizPick(this,1)"><span class="quiz-letter">B</span><span>Dùng Codex Cloud cho cả hai — cloud nhanh hơn.</span></button>
             <button class="quiz-opt" onclick="quizPick(this,2)"><span class="quiz-letter">C</span><span>Codex CLI (hoặc App) cho tính năng mới — sync, trong-vòng-lặp, bạn muốn steer. Codex Cloud cho đám typo/doc — việc nhỏ well-scoped, fire-and-forget, gom thành PR để review sau.</span></button>
             <button class="quiz-opt" onclick="quizPick(this,3)"><span class="quiz-letter">D</span><span>Dùng IDE extension cho mọi thứ để ở trong flow.</span></button>
-            <div class="quiz-feedback" data-explain="Trục quyết định là sync-vs-async. Thiết kế tính năng cần bạn steer từng bước, phản hồi liên tục → môi trường đồng bộ (CLI/App). 12 typo là việc nhỏ, well-scoped, rủi ro thấp — phù hợp để giao Cloud chạy nền rồi review kết quả. Ép cả hai vào một môi trường là bỏ phí thế mạnh của Codex."></div>
+            <div class="quiz-feedback" role="status" aria-live="polite" aria-atomic="true" data-explain="Trục quyết định là sync-vs-async. Thiết kế tính năng cần bạn steer từng bước, phản hồi liên tục → môi trường đồng bộ (CLI/App). 12 typo là việc nhỏ, well-scoped, rủi ro thấp — phù hợp để giao Cloud chạy nền rồi review kết quả. Ép cả hai vào một môi trường là bỏ phí thế mạnh của Codex."></div>
           </div>
         </div>
         <div class="lesson-nav" data-navfor="m6-l1"></div>
@@ -1728,10 +1753,10 @@ network_access = false   # mặc định; bật lên thì lệnh mới có mạn
               <li>Cân bằng lợi ích song song với thực tế chi phí &amp; rủi ro merge.</li>
             </ul>
           </div>
-          <p>Bạn nhờ một agent thiết kế endpoint auth, rồi ngay trong phiên đó nhờ chính nó review bảo mật. Nó đọc lại code của mình và báo "không có vấn đề". Cùng một model chạy hai lần trên cùng ngữ cảnh cho ra hai câu trả lời tương quan cao, và lỗi cũng tương quan theo. Góc nhìn độc lập chỉ đến từ một agent <em>khác</em>: công cụ khác, system prompt khác, không thấy lý lẽ thiết kế gốc.</p>
+          <p>Bạn nhờ agent xây endpoint auth rồi review ngay trong cùng phiên. Nó báo không có issue. Review đó có thể thừa hưởng giả định đã sinh ra code. Cho reviewer ở context mới nhận tiêu chí, diff và bằng chứng gốc, rồi chạy phép kiểm riêng. Context mới có thể giảm neo vào lý lẽ cũ; chỉ đổi công cụ hoặc model không bảo đảm lỗi độc lập.</p>
 
           <figure class="figure">
-            <svg viewBox="0 0 660 250" role="img" aria-label="Cây quyết định: việc cần steer từng bước thì dùng công cụ đồng bộ; việc well-scoped fire-and-forget thì async cloud; luôn review bằng công cụ thứ hai">
+            <div class="diagram-viewport" role="region" tabindex="0" aria-label="Sơ đồ; cuộn ngang để đọc đầy đủ nhãn" style="--diagram-width:660px"><svg viewBox="0 0 660 250" role="img" aria-label="Cây quyết định: việc cần steer từng bước thì dùng công cụ đồng bộ; việc well-scoped fire-and-forget thì async cloud; review ở context riêng">
               <rect class="dgm-accent" x="240" y="14" width="180" height="40" rx="9" stroke-width="2"/>
               <text class="dgm-ink" x="330" y="39" text-anchor="middle" font-size="12.5" font-weight="700">Việc mới cần làm</text>
               <path class="dgm-flow" d="M330 54 V84" stroke-width="2" marker-end="url(#a7)"/>
@@ -1750,10 +1775,10 @@ network_access = false   # mặc định; bật lên thì lệnh mới có mạn
               <path class="dgm-flow" d="M120 178 V206 H330 V222" stroke-width="2"/>
               <path class="dgm-flow" d="M540 178 V206 H330" stroke-width="2"/>
               <rect class="dgm-accent" x="215" y="212" width="230" height="34" rx="9" stroke-width="2" style="fill:color-mix(in srgb,var(--brand-gold) 18%,var(--surface))"/>
-              <text class="dgm-ink" x="330" y="234" text-anchor="middle" font-size="12" font-weight="700">Review bằng công cụ THỨ HAI</text>
+              <text class="dgm-ink" x="330" y="234" text-anchor="middle" font-size="12" font-weight="700">Review ở CONTEXT RIÊNG</text>
               <defs><marker id="a7" markerWidth="9" markerHeight="9" refX="7" refY="4.5" orient="auto"><path d="M0 0 L9 4.5 L0 9 z" fill="var(--accent-2)"/></marker></defs>
-            </svg>
-            <figcaption><b>Hình 7.1</b> — Trục sync/async chọn công cụ <em>xây</em>; nhưng dù nhánh nào, hãy <em>review bằng agent thứ hai</em>. Đó là nơi phối hợp mang lại lợi ích lớn nhất.</figcaption>
+            </svg></div>
+            <figcaption><b>Hình 7.1</b> — Trục sync/async chọn công cụ <em>xây</em>; nhưng dù nhánh nào, hãy <em>review bằng agent thứ hai</em>. Xác minh phát hiện trước khi chấp nhận thay đổi.</figcaption>
           </figure>
 
           <h4>Các pattern phối hợp</h4>
@@ -1789,7 +1814,7 @@ network_access = false   # mặc định; bật lên thì lệnh mới có mạn
             <button class="quiz-opt" onclick="quizPick(this,1)"><span class="quiz-letter">B</span><span>Reviewer đang dùng chung giả định và phần tự-biện hộ của builder. Tạo một phiên/context review mới, chỉ đưa acceptance criteria, diff và bằng chứng; yêu cầu chạy verifier bảo mật riêng. Có thể dùng cùng model, subagent hoặc công cụ khác.</span></button>
             <button class="quiz-opt" onclick="quizPick(this,2)"><span class="quiz-letter">C</span><span>Cần một model thông minh hơn.</span></button>
             <button class="quiz-opt" onclick="quizPick(this,3)"><span class="quiz-letter">D</span><span>Nên review bảo mật sau, khi đã implement xong.</span></button>
-            <div class="quiz-feedback" data-explain="Reviewer dùng nguyên context của builder có thể thừa hưởng cùng giả định và bị neo vào lý lẽ trước đó. Hãy tách context review, đưa acceptance criteria + diff + bằng chứng, rồi chạy verifier bảo mật riêng. Đổi logo công cụ không tự tạo độc lập; thiết kế context và phép kiểm mới tạo ra nó."></div>
+            <div class="quiz-feedback" role="status" aria-live="polite" aria-atomic="true" data-explain="Reviewer dùng nguyên context của builder có thể thừa hưởng cùng giả định và bị neo vào lý lẽ trước đó. Hãy tách context review, đưa acceptance criteria + diff + bằng chứng, rồi chạy verifier bảo mật riêng. Đổi logo công cụ không tự tạo độc lập; thiết kế context và phép kiểm mới tạo ra nó."></div>
           </div>
         </div>
         <div class="lesson-nav" data-navfor="m7-l1"></div>
@@ -1823,10 +1848,10 @@ network_access = false   # mặc định; bật lên thì lệnh mới có mạn
             <div class="compare-col bad"><span class="eyebrow">Failure mode 1 · spec quá sơ sài</span><ul><li>"Viết cho tôi cái dashboard" → agent đoán mò, ra thứ trông đúng nhưng sai yêu cầu ngầm.</li><li>Càng nhanh càng nhiều code sai để dọn.</li></ul></div>
             <div class="compare-col bad"><span class="eyebrow">Failure mode 2 · spec quá chi tiết đến tê liệt</span><ul><li>Viết spec 40 trang trước khi kiểm chứng giả định nào.</li><li>Khóa cứng quyết định sai từ sớm; lãng phí trước khi học được gì.</li></ul></div>
           </div>
-          <div class="callout danger"><div class="callout-title">Lỗi gốc: gộp pha spec và pha code vào một phiên</div><p>Khi spec và code ở chung một ngữ cảnh, agent bắt đầu code trước khi spec chín, và spec bị uốn theo code đã lỡ viết. <strong>Tách pha:</strong> brainstorm phương án → soạn PRD có review đa góc nhìn → <em>rồi mới</em> implement theo spec đã chốt. Mỗi pha ngữ cảnh riêng, tiêu chuẩn riêng.</p></div>
+          <div class="callout danger"><div class="callout-title">Kiểm giả thuyết trước khi sửa quy trình</div><p>Edge case bị bỏ sót có thể đến từ acceptance criteria thiếu, implementation hoặc tool. Kiểm spec và bằng chứng thực thi trước khi chọn cách sửa. Review spec ở context riêng hữu ích khi yêu cầu chưa rõ; nó không bảo đảm code đúng.</p></div>
 
           <figure class="figure">
-            <svg viewBox="0 0 640 250" role="img" aria-label="Sơ đồ tách pha: hộp PHA SPEC gồm brainstorm, scout, PRD đa góc nhìn dẫn qua cổng PRD chốt sang hộp PHA CODE implement theo spec, có mũi tên vòng ngược cập nhật PRD khi học được điều mới">
+            <div class="diagram-viewport" role="region" tabindex="0" aria-label="Sơ đồ; cuộn ngang để đọc đầy đủ nhãn" style="--diagram-width:640px"><svg viewBox="0 0 640 250" role="img" aria-label="Sơ đồ tách pha: hộp PHA SPEC gồm brainstorm, scout, PRD đa góc nhìn dẫn qua cổng PRD chốt sang hộp PHA CODE implement theo spec, có mũi tên vòng ngược cập nhật PRD khi học được điều mới">
               <defs><marker id="a8" markerWidth="9" markerHeight="9" refX="7" refY="4.5" orient="auto"><path d="M0 0 L9 4.5 L0 9 z" fill="var(--accent-2)"/></marker></defs>
               <rect class="dgm-accent" x="16" y="46" width="230" height="120" rx="10" stroke-width="2"/>
               <text class="dgm-ink" x="131" y="70" text-anchor="middle" font-size="13" font-weight="700">PHA SPEC</text>
@@ -1846,7 +1871,7 @@ network_access = false   # mặc định; bật lên thì lệnh mới có mạn
               <text class="dgm-ink2" x="513" y="140" text-anchor="middle" font-size="10.5" font-family="IBM Plex Mono">(ngữ cảnh riêng)</text>
               <path class="dgm-line" d="M513 166 V196 H131 V166" stroke-width="1.5" stroke-dasharray="5 4" marker-end="url(#a8)"/>
               <text class="dgm-ink2" x="322" y="214" text-anchor="middle" font-size="10.5" font-family="IBM Plex Mono">học được điều mới → cập nhật PRD</text>
-            </svg>
+            </svg></div>
             <figcaption><b>Hình 8.1</b> — Hai pha, hai ngữ cảnh, một cổng. PRD chốt là ranh giới cứng giữa "còn đang nghĩ" và "đã bắt đầu code". Đường đứt nét là vòng học: khi code hé lộ điều spec chưa lường, quay lại sửa PRD — chứ không uốn spec theo code đã lỡ viết.</figcaption>
           </figure>
 
@@ -1862,22 +1887,22 @@ network_access = false   # mặc định; bật lên thì lệnh mới có mạn
 
           <div class="exercise">
             <h5>Bài tập · Tách pha trên một tính năng thật</h5>
-            <p>Chọn một tính năng sắp làm. Phiên 1: <em>chỉ</em> brainstorm phương án + soạn PRD, không viết code. Cho một agent thứ hai review PRD theo vai bảo mật + QA. Phiên 2 (mới): implement theo PRD đã chốt. So sánh với thói quen cũ "vừa nghĩ vừa code" — số lần phải làm lại giảm bao nhiêu?</p>
+            <p>Chọn một tính năng sắp làm. Phiên 1: <em>chỉ</em> brainstorm phương án + soạn PRD, không viết code. Cho một agent thứ hai review PRD theo vai bảo mật + QA. Phiên 2 (mới): implement theo PRD đã chốt. So sánh với thói quen cũ "vừa nghĩ vừa code" — công làm lại, chất lượng và thời gian review thay đổi thế nào?</p>
           </div>
 
           <div class="takeaway">
             <span class="eyebrow"><svg aria-hidden="true" focusable="false" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 2v6m0 8v6M4.9 4.9l4.2 4.2m5.8 5.8l4.2 4.2M2 12h6m8 0h6M4.9 19.1l4.2-4.2m5.8-5.8l4.2-4.2"/></svg>Takeaway</span>
-            <p>AI tạo giá trị nhiều nhất <span class="hl">trước dòng code đầu tiên</span>. Đừng gộp spec và code vào một phiên — <span class="hl">tách pha</span>: brainstorm → PRD có review đa góc nhìn → rồi mới implement. Spec là nguồn sự thật; scout trước để spec dựa trên thực tế.</p>
+            <p>Dùng AI kiểm yêu cầu <span class="hl">trước khi code</span> khi còn nhiều bất định. Review acceptance criteria rồi implement và verify. Giữ spec trong artifact và cập nhật khi bằng chứng đổi; đo giá trị quy trình thay vì mặc định một pha SDLC luôn có ROI cao nhất.</p>
           </div>
 
           <div class="quiz" data-correct="2">
             <span class="eyebrow">Kiểm tra nhanh</span>
-            <p class="quiz-q">Bạn prompt một agent "xây tính năng import CSV" và nhận về code chạy được nhưng bỏ sót đủ thứ edge case (encoding, cột thiếu, file khổng lồ). Prompt đã khá chi tiết. Vấn đề gốc là gì?</p>
+            <p class="quiz-q">Agent tạo code import CSV chạy được nhưng thiếu các ca encoding, cột thiếu và file lớn. Prompt đã chi tiết. Bước tiếp theo nên là gì?</p>
             <button class="quiz-opt" onclick="quizPick(this,0)"><span class="quiz-letter">A</span><span>Model chưa đủ giỏi — đổi sang model mạnh hơn.</span></button>
             <button class="quiz-opt" onclick="quizPick(this,1)"><span class="quiz-letter">B</span><span>Prompt nên dài hơn với nhiều yêu cầu cụ thể hơn nữa.</span></button>
-            <button class="quiz-opt" onclick="quizPick(this,2)"><span class="quiz-letter">C</span><span>Spec và code bị gộp vào một phiên. Tách pha: brainstorm edge case → soạn PRD có review đa góc nhìn (QA, bảo mật) → RỒI mới implement theo spec đã chốt. Mỗi pha có ngữ cảnh và tiêu chuẩn chất lượng riêng.</span></button>
+            <button class="quiz-opt" onclick="quizPick(this,2)"><span class="quiz-letter">C</span><span>Kiểm acceptance criteria và trace: encoding, cột thiếu, giới hạn file đã được đặc tả và test chưa? Review riêng phần yêu cầu còn thiếu rồi sửa và verify implementation; triệu chứng chưa xác định lỗi gốc.</span></button>
             <button class="quiz-opt" onclick="quizPick(this,3)"><span class="quiz-letter">D</span><span>Cần review code nhiều hơn — sửa các lỗi sau khi đã xong.</span></button>
-            <div class="quiz-feedback" data-explain="Edge case bị bỏ sót không phải vì model kém hay prompt ngắn — mà vì pha khám phá edge case chưa bao giờ diễn ra tách bạch. Khi bạn nhảy thẳng vào code, agent tối ưu cho 'chạy được' chứ không cho 'đầy đủ'. Tách pha spec: liệt kê edge case trước (một agent QA-persona rất giỏi việc này), chốt PRD, rồi implement. Review sau chỉ vá triệu chứng của một spec thiếu."></div>
+            <div class="quiz-feedback" role="status" aria-live="polite" aria-atomic="true" data-explain="Prompt chi tiết chưa chứng minh yêu cầu đầy đủ hay implementation đúng. Kiểm spec, test và trace tool để phân biệt thiếu tiêu chí với lỗi triển khai. Review riêng có thể tìm lỗ hổng; cần xác minh phát hiện. Code review và giới hạn model/tool vẫn liên quan."></div>
           </div>
         </div>
         <div class="lesson-nav" data-navfor="m8-l1"></div>
@@ -1908,7 +1933,7 @@ network_access = false   # mặc định; bật lên thì lệnh mới có mạn
           <p>Hệ đơn hàng của bạn cần một giao dịch chạm cùng lúc ba bảng: đơn, thanh toán, tồn kho. Bạn hỏi AI "nên dùng DB nào?" và nhận về một đoạn văn cân bằng, đúng cho mọi hệ và vì thế vô dụng cho hệ của bạn. Câu hỏi thật là ràng buộc nào của bạn loại được phương án nào, và ai chịu trách nhiệm cho phần bị loại. AI mở rộng không gian phương án và đóng vai chuyên gia; bạn gánh phần đánh đổi theo bối cảnh thật, rồi ghi lại bằng ADR.</p>
 
           <figure class="figure">
-            <svg viewBox="0 0 720 210" role="img" aria-label="Luồng kiến trúc với AI: AI mở rộng nhiều phương án, ba persona-subagent (SRE, bảo mật, chi phí) phản biện theo ràng buộc, bạn phân xử giữ đánh đổi rồi chốt bằng ADR">
+            <div class="diagram-viewport" role="region" tabindex="0" aria-label="Sơ đồ; cuộn ngang để đọc đầy đủ nhãn" style="--diagram-width:720px"><svg viewBox="0 0 720 210" role="img" aria-label="Luồng kiến trúc với AI: AI mở rộng nhiều phương án, ba persona-subagent (SRE, bảo mật, chi phí) phản biện theo ràng buộc, bạn phân xử giữ đánh đổi rồi chốt bằng ADR">
               <rect class="dgm-accent" x="14" y="64" width="150" height="82" rx="10" stroke-width="2"/>
               <text class="dgm-ink" x="89" y="98" text-anchor="middle" font-size="12" font-weight="700">AI mở rộng</text>
               <text class="dgm-ink2" x="89" y="118" text-anchor="middle" font-size="10" font-family="IBM Plex Mono">nhiều phương án</text>
@@ -1929,7 +1954,7 @@ network_access = false   # mặc định; bật lên thì lệnh mới có mạn
               <text class="dgm-ink" x="656" y="100" text-anchor="middle" font-size="13" font-weight="700">ADR</text>
               <text class="dgm-ink2" x="656" y="119" text-anchor="middle" font-size="9" font-family="IBM Plex Mono">quyết định được ghi</text>
               <defs><marker id="m9l1-ah" markerWidth="9" markerHeight="9" refX="7" refY="4.5" orient="auto"><path d="M0 0 L9 4.5 L0 9 z" fill="var(--accent-2)"/></marker></defs>
-            </svg>
+            </svg></div>
             <figcaption><b>Hình 9.1</b> — Kiến trúc = tìm kiếm có ràng buộc: AI mở rộng phương án, mỗi persona-subagent phản biện theo một ràng buộc, bạn phân xử đánh đổi rồi chốt bằng ADR.</figcaption>
           </figure>
 
@@ -1947,7 +1972,7 @@ network_access = false   # mặc định; bật lên thì lệnh mới có mạn
 
           <div class="callout insight"><div class="callout-title">Cuộc họp review kiến trúc · với AI trong phòng</div><p>Cho mỗi subagent-persona phản biện thiết kế <em>trước</em> cuộc họp người. Vào họp với danh sách rủi ro &amp; câu hỏi đã được AI khai quật — người tập trung vào đánh đổi, không phải vào việc phát hiện lỗ hổng cơ bản. Nhớ Chương 7: reviewer phải là agent <em>khác</em> với builder.</p></div>
 
-          <div class="callout info"><div class="callout-title">Ví dụ 30 giây · một ADR rút gọn 5 dòng</div><p><strong>Bối cảnh:</strong> hệ đơn hàng cần giao dịch nhiều bảng (đơn, thanh toán, tồn kho) với ràng buộc nhất quán mạnh. <strong>Quyết định:</strong> dùng Postgres làm store chính. <strong>Phương án loại:</strong> MongoDB, loại vì không có giao dịch đa-document dễ dùng và schema đơn hàng vốn quan hệ. <strong>Hệ quả:</strong> được ACID + JOIN + ràng buộc khóa ngoại; đổi lại phải quản lý migration schema và chấp nhận scale ngang khó hơn. Năm dòng này là toàn bộ một ADR — AI phác nhanh, bạn quyết đánh đổi cuối.</p></div>
+          <div class="callout info"><div class="callout-title">Ví dụ 30 giây · một ADR rút gọn 5 dòng</div><p><strong>Bối cảnh:</strong> hệ đơn hàng cần giao dịch nhiều bảng (đơn, thanh toán, tồn kho) với ràng buộc nhất quán mạnh. <strong>Quyết định:</strong> dùng Postgres làm store chính. <strong>Phương án loại:</strong> MongoDB có giao dịch ACID đa-document; trong ví dụ giả lập này, đội chọn Postgres vì ràng buộc quan hệ và kinh nghiệm SQL sẵn có, không phải vì MongoDB thiếu transaction. <strong>Hệ quả:</strong> được ACID + JOIN + ràng buộc khóa ngoại; đổi lại phải quản lý migration schema và chấp nhận scale ngang khó hơn. Năm dòng này là toàn bộ một ADR — AI phác nhanh, bạn quyết đánh đổi cuối.</p></div>
 
           <div class="exercise">
             <h5>Bài tập · Panel chuyên gia cho một quyết định thật</h5>
@@ -1966,7 +1991,7 @@ network_access = false   # mặc định; bật lên thì lệnh mới có mạn
             <button class="quiz-opt" onclick="quizPick(this,1)"><span class="quiz-letter">B</span><span>Hỏi "kiến trúc nào tốt nhất?" và làm theo câu trả lời.</span></button>
             <button class="quiz-opt" onclick="quizPick(this,2)"><span class="quiz-letter">C</span><span>Để AI tự chọn rồi implement luôn cho nhanh.</span></button>
             <button class="quiz-opt" onclick="quizPick(this,3)"><span class="quiz-letter">D</span><span>Chọn kiến trúc bạn quen nhất, bỏ qua AI ở bước này.</span></button>
-            <div class="quiz-feedback" data-explain="AI mạnh ở mở rộng không gian tìm kiếm và đóng vai chuyên gia đa góc nhìn, yếu ở việc gánh đánh đổi theo bối cảnh thật của bạn. 'Kiến trúc nào tốt nhất?' cho câu trả lời trung bình vô bối cảnh. Panel persona phản biện từng phương án theo ràng buộc cụ thể (vận hành, bảo mật, chi phí) khai quật rủi ro thật; bạn — người biết bối cảnh — phân xử và quyết định, ghi lại bằng ADR."></div>
+            <div class="quiz-feedback" role="status" aria-live="polite" aria-atomic="true" data-explain="AI mạnh ở mở rộng không gian tìm kiếm và đóng vai chuyên gia đa góc nhìn, yếu ở việc gánh đánh đổi theo bối cảnh thật của bạn. 'Kiến trúc nào tốt nhất?' cho câu trả lời trung bình vô bối cảnh. Panel persona phản biện từng phương án theo ràng buộc cụ thể (vận hành, bảo mật, chi phí) khai quật rủi ro thật; bạn — người biết bối cảnh — phân xử và quyết định, ghi lại bằng ADR."></div>
           </div>
         </div>
         <div class="lesson-nav" data-navfor="m9-l1"></div>
@@ -2015,7 +2040,7 @@ network_access = false   # mặc định; bật lên thì lệnh mới có mạn
           </ol>
 
           <figure class="figure">
-            <svg viewBox="0 0 620 300" role="img" aria-label="Vòng lặp Red–Green–Refactor: viết test đỏ, để agent làm test xanh, refactor trên lưới an toàn, rồi lặp lại — đây là vòng lặp bạn steer thay vì tự gõ code">
+            <div class="diagram-viewport" role="region" tabindex="0" aria-label="Sơ đồ; cuộn ngang để đọc đầy đủ nhãn" style="--diagram-width:620px"><svg viewBox="0 0 620 300" role="img" aria-label="Vòng lặp Red–Green–Refactor: viết test đỏ, để agent làm test xanh, refactor trên lưới an toàn, rồi lặp lại — đây là vòng lặp bạn steer thay vì tự gõ code">
               <path class="dgm-flow" d="M204 82 C 280 48, 340 48, 416 82" stroke-width="2.5" marker-end="url(#m10l1-ah)"/>
               <path class="dgm-flow" d="M436 132 C 424 176, 396 190, 360 197" stroke-width="2.5" marker-end="url(#m10l1-ah)"/>
               <path class="dgm-flow" d="M260 197 C 224 190, 196 176, 184 132" stroke-width="2.5" marker-end="url(#m10l1-ah)"/>
@@ -2030,7 +2055,7 @@ network_access = false   # mặc định; bật lên thì lệnh mới có mạn
               <text class="dgm-ink2" x="310" y="248" text-anchor="middle" font-size="9.5" font-family="IBM Plex Mono">dọn · lưới an toàn</text>
               <text class="dgm-ink2" x="310" y="142" text-anchor="middle" font-size="10.5" font-family="IBM Plex Mono">vòng lặp bạn steer</text>
               <defs><marker id="m10l1-ah" markerWidth="9" markerHeight="9" refX="7" refY="4.5" orient="auto"><path d="M0 0 L9 4.5 L0 9 z" fill="var(--accent-2)"/></marker></defs>
-            </svg>
+            </svg></div>
             <figcaption><b>Hình 10.1</b> — Với agent bạn không gõ code mà steer một vòng lặp: test đỏ định nghĩa "chưa xong", agent làm test xanh (tự chạy qua hook), rồi refactor trên lưới an toàn — lặp lại.</figcaption>
           </figure>
 
@@ -2055,7 +2080,7 @@ network_access = false   # mặc định; bật lên thì lệnh mới có mạn
             <button class="quiz-opt" onclick="quizPick(this,1)"><span class="quiz-letter">B</span><span>Không plan, không vòng test, ngữ cảnh tích lũy. Dùng plan mode để khóa chiến lược trước; cho agent chạy test sau mỗi file (hoặc dùng hook); cân nhắc worktree cho các file thật sự độc lập; compact định kỳ để tránh suy giảm.</span></button>
             <button class="quiz-opt" onclick="quizPick(this,2)"><span class="quiz-letter">C</span><span>Refactor không hợp làm với AI — làm tay.</span></button>
             <button class="quiz-opt" onclick="quizPick(this,3)"><span class="quiz-letter">D</span><span>Tăng max iteration cho agent.</span></button>
-            <div class="quiz-feedback" data-explain="Trôi dạt trong task lớn là triệu chứng của thiếu vòng phản hồi + ngữ cảnh phình, không phải model kém. Plan mode khóa chiến lược trước khi chạm code (tránh thử-sai lung tung). Test sau mỗi file cho tín hiệu đúng/sai khách quan (hook tự động hóa). Worktree cô lập các phần độc lập. Compact chống context rot của phiên dài. Đổi model hay tăng iteration không chạm vào nguyên nhân gốc."></div>
+            <div class="quiz-feedback" role="status" aria-live="polite" aria-atomic="true" data-explain="Trôi dạt có thể đến từ plan chưa rõ, thiếu phản hồi hoặc context phình. Kiểm trace để thử các giả thuyết này; triệu chứng không tự loại trừ giới hạn model. Plan mode khóa chiến lược trước khi chạm code (tránh thử-sai lung tung). Test sau mỗi file cho tín hiệu đúng/sai khách quan (hook tự động hóa). Worktree cô lập các phần độc lập. Compact chống context rot của phiên dài. Chỉ đổi model hoặc ngân sách vòng khi trace/eval ủng hộ giả thuyết đó."></div>
           </div>
         </div>
         <div class="lesson-nav" data-navfor="m10-l1"></div>
@@ -2082,7 +2107,7 @@ network_access = false   # mặc định; bật lên thì lệnh mới có mạn
               <li>Biết AI giỏi gì / dở gì khi sinh test, và dùng eval như test hồi quy cho tính năng AI.</li>
             </ul>
           </div>
-          <p>Nhóm bạn muốn thêm "AI review" vào quy trình, và ai đó đề xuất cách rẻ nhất: để chính agent vừa viết code tự review lại rồi mới mở PR. Nghe hợp lý, vì AI reviewer có một lợi thế cấu trúc thật: nó <em>không mỏi và không nể nang</em>, dòng thứ 800 vẫn được đọc với đúng thái độ như dòng đầu, không có "quá dài để đọc kỹ", không ngại làm phật lòng tác giả. Nhưng lợi thế đó bốc hơi khi reviewer chính là agent đã viết code: nó thừa hưởng đúng điểm mù đã tạo ra lỗi (Chương 7). Nó cũng vẫn chịu ràng buộc attention budget của Chương 2, nên hãy <strong>cắt diff lớn thành từng cụm thay đổi và review từng cụm</strong> thay vì thả cả 3.000 dòng vào một lượt.</p>
+          <p>Đội nhờ chính agent xây code tự review PR. Tự-review có thể bắt lỗi, nhưng cũng có thể giữ nguyên giả định đã gây lỗi. Reviewer riêng có thể chạy checklist tập trung; nó vẫn có thể bỏ sót bug hoặc bịa phát hiện. Chia diff lớn thành các thay đổi mạch lạc, xác minh từng phát hiện và đo lỗi bỏ sót thay vì giả định dòng 800 được chú ý như dòng đầu.</p>
 
           <div class="table-wrap">
             <table>
@@ -2101,7 +2126,7 @@ network_access = false   # mặc định; bật lên thì lệnh mới có mạn
           </div>
 
           <figure class="figure">
-            <svg viewBox="0 0 640 260" role="img" aria-label="Sơ đồ chuỗi builder-validator: agent xây tạo ra artifact hoặc diff, ba lens song song đúng đắn bảo mật hiệu năng cùng soi, rồi gộp phát hiện; chú thích validator không thấy lý lẽ thiết kế">
+            <div class="diagram-viewport" role="region" tabindex="0" aria-label="Sơ đồ; cuộn ngang để đọc đầy đủ nhãn" style="--diagram-width:640px"><svg viewBox="0 0 640 260" role="img" aria-label="Sơ đồ chuỗi builder-validator: agent xây tạo ra artifact hoặc diff, ba lens song song đúng đắn bảo mật hiệu năng cùng soi, rồi gộp phát hiện; chú thích validator không thấy lý lẽ thiết kế">
               <defs><marker id="a11" markerWidth="9" markerHeight="9" refX="7" refY="4.5" orient="auto"><path d="M0 0 L9 4.5 L0 9 z" fill="var(--accent-2)"/></marker></defs>
               <rect class="dgm-accent" x="16" y="104" width="104" height="52" rx="9" stroke-width="2"/>
               <text class="dgm-ink" x="68" y="126" text-anchor="middle" font-size="12" font-weight="700">AGENT XÂY</text>
@@ -2126,8 +2151,8 @@ network_access = false   # mặc định; bật lên thì lệnh mới có mạn
               <text class="dgm-ink" x="598" y="124" text-anchor="middle" font-size="10.5" font-weight="700">GỘP</text>
               <text class="dgm-ink" x="598" y="140" text-anchor="middle" font-size="9" font-weight="700">PHÁT HIỆN</text>
               <text class="dgm-ink2" x="419" y="250" text-anchor="middle" font-size="10.5" font-family="IBM Plex Mono">3 lens là agent khác builder · không thấy lý lẽ thiết kế</text>
-            </svg>
-            <figcaption><b>Hình 11.1</b> — Builder giao artifact cho các validator <em>độc lập</em>. Ba lens chạy song song, mỗi lens một trọng tâm, rồi gộp phát hiện. Điểm cốt lõi: validator không thấy lý lẽ thiết kế của builder — nên nó không thừa hưởng điểm mù đã sinh ra lỗi.</figcaption>
+            </svg></div>
+            <figcaption><b>Hình 11.1</b> — Builder giao artifact cho các validator <em>độc lập</em>. Ba lens chạy song song, mỗi lens một trọng tâm, rồi gộp phát hiện. Điểm cốt lõi: validator không thấy lý lẽ thiết kế của builder — có thể giảm neo vào lý lẽ cũ; các validator vẫn có thể chung điểm mù từ huấn luyện.</figcaption>
           </figure>
 
           <h4>Sinh test — AI giỏi gì, dở gì</h4>
@@ -2137,6 +2162,7 @@ network_access = false   # mặc định; bật lên thì lệnh mới có mạn
           </div>
           <div class="callout insight"><div class="callout-title">Eval-driven development cho tính năng AI</div><p>Với tính năng dùng LLM, "test" là <strong>eval</strong>: một tập ví dụ vào/ra kỳ vọng chạy như test hồi quy. Bắt đầu bằng các ca đại diện cho đường chính, ca khó và lỗi tốn kém; mở rộng theo độ đa dạng và rủi ro quan sát được. Chạy lại mỗi khi đổi prompt, model hoặc context.</p></div>
 
+          <p>Checker tất định trả cùng điểm khi input và fixture giữ nguyên, nhưng model, tool, tập task và số đo latency có thể đổi giữa các run. Fixture sai có thể chấp nhận kết quả sai một cách tất định. Cố định và review đáp án chuẩn, chạy lặp task đại diện, so kết quả theo cặp; một cặp run trước/sau không xác định được nguyên nhân duy nhất.</p>
           <div class="exercise">
             <h5>Bài tập · Bộ eval tối thiểu</h5>
             <p>Cho một tính năng AI đang có: thu 20 input thật (gồm vài ca đã từng sai). Ghi output kỳ vọng. Viết một script chấm điểm đơn giản. Giờ đổi một thứ trong prompt và chạy lại — bạn thấy ngay nó cải thiện hay làm hồi quy, thay vì đoán.</p>
@@ -2151,10 +2177,10 @@ network_access = false   # mặc định; bật lên thì lệnh mới có mạn
             <span class="eyebrow">Kiểm tra nhanh</span>
             <p class="quiz-q">Nhóm bạn muốn thêm "AI review" vào quy trình. Ai đó đề xuất: để chính agent viết code tự review lại rồi mới mở PR. Vấn đề gì, và cách tốt hơn?</p>
             <button class="quiz-opt" onclick="quizPick(this,0)"><span class="quiz-letter">A</span><span>Không vấn đề gì — tự review là đủ và tiết kiệm.</span></button>
-            <button class="quiz-opt" onclick="quizPick(this,1)"><span class="quiz-letter">B</span><span>Reviewer chung ngữ cảnh với builder thừa hưởng đúng điểm mù đã tạo ra lỗi. Dùng một agent/công cụ độc lập với system prompt review-chuyên-biệt, không thấy lý lẽ thiết kế; tốt hơn nữa là nhiều lens (đúng đắn, bảo mật, hiệu năng) mỗi lens một agent.</span></button>
+            <button class="quiz-opt" onclick="quizPick(this,1)"><span class="quiz-letter">B</span><span>Tự review có thể giữ nguyên giả định của builder. Thêm context review riêng với checklist tập trung; dùng nhiều lens khi rủi ro đáng chi phí, rồi tái hiện và xác minh từng phát hiện.</span></button>
             <button class="quiz-opt" onclick="quizPick(this,2)"><span class="quiz-letter">C</span><span>AI không nên review — chỉ người review.</span></button>
             <button class="quiz-opt" onclick="quizPick(this,3)"><span class="quiz-letter">D</span><span>Review một lần là đủ, đa góc nhìn là phí.</span></button>
-            <div class="quiz-feedback" data-explain="Tự-review chia sẻ ngữ cảnh nên thừa hưởng cùng giả định đã tạo ra lỗi — và model có xu hướng hợp lý hóa code của chính nó. Lợi thế cấu trúc của AI reviewer chỉ xuất hiện khi nó ĐỘC LẬP: agent/công cụ khác, prompt review-chuyên-biệt, không thấy lý lẽ thiết kế. Đa lens (đúng đắn/bảo mật/hiệu năng, mỗi lens một agent) bắt được nhiều loại lỗi hơn một review đơn."></div>
+            <div class="quiz-feedback" role="status" aria-live="polite" aria-atomic="true" data-explain="Context riêng có thể giảm neo vào lý lẽ builder, nhưng không bảo đảm độc lập thống kê hay tìm nhiều bug hơn. Tự review vẫn có thể hữu ích. Đo bug bỏ sót và false positive; chỉ nhận phát hiện có bằng chứng."></div>
           </div>
         </div>
         <div class="lesson-nav" data-navfor="m11-l1"></div>
@@ -2184,7 +2210,7 @@ network_access = false   # mặc định; bật lên thì lệnh mới có mạn
           <p>2 giờ sáng, độ sâu hàng đợi tăng dốc và tuổi message cũ nhất bò lên. Bạn dán log lỗi cùng đồ thị throughput vào/ra cho agent; nó dựng lại một khung bốn bước để bám theo: xác nhận triệu chứng, khoanh nguyên nhân, giảm áp, xác minh. Nó làm được việc đó vì mọi thứ nó cần đều là <em>tín hiệu khách quan</em> (log, số đo, diff); ở đầu kia của trục, những việc mơ hồ và thiếu vòng phản hồi, nó chông chênh. Quyết định scale consumer hay điều tiết producer thì vẫn là của người trực.</p>
 
           <figure class="figure">
-            <svg viewBox="0 0 640 210" role="img" aria-label="Bản đồ tín hiệu: trục ngang từ tín hiệu mù mờ bên trái đến tín hiệu rõ diff log test bên phải; các điểm đặt AI review PR runbook incident triage nằm phía tín hiệu rõ; vùng người giữ quyết định đánh dấu ở các hành động rủi ro rollback merge on-call">
+            <div class="diagram-viewport" role="region" tabindex="0" aria-label="Sơ đồ; cuộn ngang để đọc đầy đủ nhãn" style="--diagram-width:640px"><svg viewBox="0 0 640 210" role="img" aria-label="Bản đồ tín hiệu: trục ngang từ tín hiệu mù mờ bên trái đến tín hiệu rõ diff log test bên phải; các điểm đặt AI review PR runbook incident triage nằm phía tín hiệu rõ; vùng người giữ quyết định đánh dấu ở các hành động rủi ro rollback merge on-call">
               <defs><marker id="a12" markerWidth="9" markerHeight="9" refX="7" refY="4.5" orient="auto"><path d="M0 0 L9 4.5 L0 9 z" fill="var(--accent-2)"/></marker></defs>
               <line class="dgm-line" x1="40" y1="120" x2="600" y2="120" stroke-width="1.5" marker-end="url(#a12)"/>
               <text class="dgm-ink2" x="40" y="146" font-size="11" font-family="IBM Plex Mono">tín hiệu mù mờ</text>
@@ -2199,7 +2225,7 @@ network_access = false   # mặc định; bật lên thì lệnh mới có mạn
               <text class="dgm-ink" x="200" y="186" text-anchor="middle" font-size="11" font-weight="700">người giữ quyết định · rollback / merge / on-call</text>
               <path class="dgm-line" d="M120 164 V132" stroke-width="1.3" stroke-dasharray="4 3"/>
               <text class="dgm-ink2" x="120" y="120" text-anchor="middle" font-size="10" font-family="IBM Plex Mono">hành động rủi ro</text>
-            </svg>
+            </svg></div>
             <figcaption><b>Hình 12.1</b> — Đặt AI ở phía tín-hiệu-rõ của trục: review PR, runbook, incident triage đều có diff/log/test để bám. Vùng cam là các hành động rủi ro (rollback, merge, on-call) — ở đó model chỉ đề xuất, con người giữ quyết định.</figcaption>
           </figure>
 
@@ -2236,7 +2262,7 @@ network_access = false   # mặc định; bật lên thì lệnh mới có mạn
             <button class="quiz-opt" onclick="quizPick(this,1)"><span class="quiz-letter">B</span><span>Để agent tự merge PR nếu review AI báo "ổn".</span></button>
             <button class="quiz-opt" onclick="quizPick(this,2)"><span class="quiz-letter">C</span><span>Sinh runbook từ kiến thức tản mát &amp; postmortem, và review PR tự động gắn nhãn rủi ro (gợi ý, không tự merge) — việc có tín hiệu rõ, con người vẫn giữ quyết định cuối.</span></button>
             <button class="quiz-opt" onclick="quizPick(this,3)"><span class="quiz-letter">D</span><span>Giao agent toàn quyền on-call thay người.</span></button>
-            <div class="quiz-feedback" data-explain="Điểm khởi đầu tốt là việc có tín hiệu khách quan rõ VÀ giữ con người ở vòng quyết định rủi ro cao. Sinh runbook và review-PR-gắn-nhãn đúng cả hai tiêu chí: giá trị cao, rủi ro thấp, không trao quyền hành động nguy hiểm cho phán đoán của model. Tự-rollback, tự-merge, hay thay người on-call đều trao quyền rủi ro cao cho model — vi phạm nguyên tắc 'authorization thuộc harness/người, không phải model' (Chương 4)."></div>
+            <div class="quiz-feedback" role="status" aria-live="polite" aria-atomic="true" data-explain="Điểm khởi đầu tốt là việc có tín hiệu khách quan rõ VÀ giữ con người ở vòng quyết định rủi ro cao. Sinh runbook và review-PR-gắn-nhãn đúng cả hai tiêu chí: giá trị cao, rủi ro thấp, không trao quyền hành động nguy hiểm cho phán đoán của model. Tự-rollback, tự-merge, hay thay người on-call đều trao quyền rủi ro cao cho model — vi phạm nguyên tắc 'authorization thuộc harness/người, không phải model' (Chương 4)."></div>
           </div>
         </div>
         <div class="lesson-nav" data-navfor="m12-l1"></div>
@@ -2265,11 +2291,11 @@ network_access = false   # mặc định; bật lên thì lệnh mới có mạn
           </div>
           <p>Đội bạn mở license cho cả team, chạy một buổi training bằng slide, rồi treo "số dòng code AI sinh mỗi tuần" lên dashboard. Vài tuần sau, mỗi người một kiểu prompt và không ai tái dùng được của ai; số dòng thì tăng, thời gian review cũng tăng theo. Không ai làm sai điều gì cụ thể: cái thiếu là chuẩn chung, một pilot học-bằng-làm, và một chỉ số đo đúng thứ cần đo. Adoption thất bại có khuôn mẫu rõ, nên tránh được.</p>
 
-          <div class="callout danger"><div class="callout-title">Vì sao adoption thất bại</div><p>Không phải vì công cụ dở. Mà vì: <strong>(1)</strong> không có chuẩn chung (mỗi người một kiểu, không tái dùng được); <strong>(2)</strong> đào tạo bằng slide thay vì học-bằng-làm; <strong>(3)</strong> đo sai thành công (dòng code/ngày thay vì kết quả); <strong>(4)</strong> bỏ quên "khi nào KHÔNG dùng AI".</p></div>
+          <div class="callout danger"><div class="callout-title">Vì sao adoption thất bại</div><p>Kiểm độ phù hợp công cụ cùng những rủi ro quy trình sau: <strong>(1)</strong> không có chuẩn chung (mỗi người một kiểu, không tái dùng được); <strong>(2)</strong> đào tạo bằng slide thay vì học-bằng-làm; <strong>(3)</strong> đo sai thành công (dòng code/ngày thay vì kết quả); <strong>(4)</strong> bỏ quên "khi nào KHÔNG dùng AI".</p></div>
 
           <h4>Ba pha triển khai</h4>
           <figure class="figure">
-            <svg viewBox="0 0 640 180" role="img" aria-label="Timeline ba pha adoption theo chiều ngang: Pha 1 Chuẩn tuần 1-2, Pha 2 Pilot tuần 3-6, Pha 3 Mở rộng kèm cặp tuần 7 trở đi, mỗi pha một hộp và một dòng mô tả mono">
+            <div class="diagram-viewport" role="region" tabindex="0" aria-label="Sơ đồ; cuộn ngang để đọc đầy đủ nhãn" style="--diagram-width:640px"><svg viewBox="0 0 640 180" role="img" aria-label="Timeline ba pha adoption theo chiều ngang: Pha 1 Chuẩn tuần 1-2, Pha 2 Pilot tuần 3-6, Pha 3 Mở rộng kèm cặp tuần 7 trở đi, mỗi pha một hộp và một dòng mô tả mono">
               <defs><marker id="a13" markerWidth="9" markerHeight="9" refX="7" refY="4.5" orient="auto"><path d="M0 0 L9 4.5 L0 9 z" fill="var(--accent-2)"/></marker></defs>
               <line class="dgm-line" x1="24" y1="150" x2="616" y2="150" stroke-width="1.5" marker-end="url(#a13)"/>
               <rect class="dgm-accent" x="24" y="40" width="176" height="66" rx="10" stroke-width="2"/>
@@ -2287,7 +2313,7 @@ network_access = false   # mặc định; bật lên thì lệnh mới có mạn
               <text class="dgm-ink2" x="528" y="86" text-anchor="middle" font-size="10.5" font-family="IBM Plex Mono">tuần 7+</text>
               <text class="dgm-ink2" x="528" y="126" text-anchor="middle" font-size="10" font-family="IBM Plex Mono">kèm cặp theo cặp · lan qua làm cùng</text>
               <path class="dgm-line" d="M528 106 V150" stroke-width="1.3" stroke-dasharray="4 3"/>
-            </svg>
+            </svg></div>
             <figcaption><b>Hình 13.1</b> — Adoption là một chuỗi thời gian, không phải một sự kiện. Mỗi pha đặt nền cho pha sau: không có chuẩn (Pha 1) thì pilot không tái dùng được; không có pilot học-bằng-làm (Pha 2) thì mở rộng chỉ là phát tài liệu.</figcaption>
           </figure>
           <ol class="steps">
@@ -2311,7 +2337,7 @@ network_access = false   # mặc định; bật lên thì lệnh mới có mạn
             </table>
           </div>
 
-          <div class="callout insight"><div class="callout-title">Nguyên tắc kết</div><p>AI không thay kỹ sư giỏi — nó <em>khuếch đại</em> họ. Một đội có chuẩn tốt, kỷ luật context &amp; harness, và biết khi nào dừng lại, sẽ bỏ xa một đội "dùng nhiều AI" mà thiếu ba điều đó. Công cụ chỉ khuếch đại; kỷ luật quyết định khuếch đại thứ gì.</p></div>
+          <div class="callout insight"><div class="callout-title">Nguyên tắc kết</div><p>Đo kết quả được chấp nhận, công review và lỗi lọt ra ngoài; lượng dùng tool chưa chứng minh đội cải thiện. Giữ chuẩn nào cải thiện kết quả đo được và điều chỉnh phần còn lại.</p></div>
 
           <div class="exercise">
             <h5>Bài tập · Bản chuẩn tối thiểu cho đội bạn</h5>
@@ -2330,7 +2356,7 @@ network_access = false   # mặc định; bật lên thì lệnh mới có mạn
             <button class="quiz-opt" onclick="quizPick(this,1)"><span class="quiz-letter">B</span><span>Chỉ cần đo tổng hóa đơn API là đủ.</span></button>
             <button class="quiz-opt" onclick="quizPick(this,2)"><span class="quiz-letter">C</span><span>Đo số giờ tiết kiệm do agent tự báo.</span></button>
             <button class="quiz-opt" onclick="quizPick(this,3)"><span class="quiz-letter">D</span><span>Dòng code là chỉ số phản tác dụng (khuyến khích code phình, khó bảo trì). Đo kết quả cấp đội: lead time, tỷ lệ lỗi thoát ra prod, sức khỏe review, chi phí/kết-quả (mỗi PR merge, mỗi ticket đóng) — và theo dõi suy giảm kỹ năng.</span></button>
-            <div class="quiz-feedback" data-explain="Dòng code/tuần thưởng cho đúng thứ ta không muốn: code nhiều hơn, phình hơn, khó bảo trì hơn — AI lại rất dễ tạo ra khối lượng. Chỉ số tốt gắn với KẾT QUẢ ở cấp đội: lead time ngắn hơn, ít lỗi thoát ra prod, review khỏe mạnh, và chi phí trên mỗi đơn vị giá trị (PR merge/ticket đóng). Đồng thời theo dõi suy giảm kỹ năng để 'năng suất' hôm nay không thành nợ kỹ thuật &amp; nhận thức ngày mai."></div>
+            <div class="quiz-feedback" role="status" aria-live="polite" aria-atomic="true" data-explain="Dòng code/tuần thưởng cho đúng thứ ta không muốn: code nhiều hơn, phình hơn, khó bảo trì hơn — AI lại rất dễ tạo ra khối lượng. Chỉ số tốt gắn với KẾT QUẢ ở cấp đội: lead time ngắn hơn, ít lỗi thoát ra prod, review khỏe mạnh, và chi phí trên mỗi đơn vị giá trị (PR merge/ticket đóng). Đồng thời theo dõi suy giảm kỹ năng để 'năng suất' hôm nay không thành nợ kỹ thuật &amp; nhận thức ngày mai."></div>
           </div>
         </div>
         <div class="lesson-nav" data-navfor="m13-l1"></div>
@@ -2372,10 +2398,10 @@ network_access = false   # mặc định; bật lên thì lệnh mới có mạn
                 <tr><td><strong>5 · Claude Code</strong></td><td>Một programmable harness. Dùng progressive disclosure qua CLAUDE.md/Skill/subagent; model upgrade là lúc audit scaffold. Cắt micromanagement thủ tục, giữ success criteria rõ, và đừng bao giờ kéo safety boundary ngược lên thành text trong prompt.</td></tr>
                 <tr><td><strong>6 · Codex</strong></td><td>Chọn sync hay async theo mức cần steer; giữ tri thức repo thành system of record discover được, không phải một instruction blob. Managed harness giờ expose compaction, tool search, programmatic call, subagent và sandbox thành platform primitive.</td></tr>
                 <tr><td><strong>7 · Kết hợp hai agent</strong></td><td>Tách context builder/reviewer; reviewer nhận criteria, diff và bằng chứng rồi chạy verifier riêng. Scout trước việc lớn; chọn sync/async theo nhu cầu steer.</td></tr>
-                <tr><td><strong>8 · Khám phá &amp; Đặc tả</strong></td><td>AI tạo giá trị nhiều nhất trước dòng code đầu tiên. Tách pha: brainstorm → PRD có review đa góc nhìn → rồi mới implement.</td></tr>
+                <tr><td><strong>8 · Khám phá &amp; Đặc tả</strong></td><td>Dùng AI làm lộ giả định trước khi code. Tách pha: brainstorm → PRD có review đa góc nhìn → rồi mới implement.</td></tr>
                 <tr><td><strong>9 · Kiến trúc</strong></td><td>Kiến trúc là tìm kiếm có ràng buộc. Để AI mở rộng phương án và đóng nhiều persona chuyên gia; bạn giữ quyết định &amp; đánh đổi, ghi lại bằng ADR.</td></tr>
                 <tr><td><strong>10 · Triển khai</strong></td><td>Với agent bạn không viết code — bạn steer một vòng lặp. Test là spec thực thi được; plan mode khóa chiến lược; worktree cho refactor song song.</td></tr>
-                <tr><td><strong>11 · Review &amp; Test</strong></td><td>AI reviewer có lợi thế cấu trúc chỉ khi độc lập với builder. Review đa góc nhìn, mỗi lens một agent; tính năng AI cần eval như test hồi quy.</td></tr>
+                <tr><td><strong>11 · Review &amp; Test</strong></td><td>Cho reviewer context riêng và xác minh phát hiện của nó. Chọn lens review theo rủi ro và kiểm phát hiện; tính năng AI cần eval hồi quy.</td></tr>
                 <tr><td><strong>12 · Vận hành</strong></td><td>AI dễ kiểm hơn ở nơi có tín hiệu rõ (diff/log/incident). Giữ người ở vòng quyết định rủi ro cao; tính năng AI cũng cần observability + trần chi phí cứng.</td></tr>
                 <tr><td><strong>13 · Adoption đội nhóm</strong></td><td>Chuẩn hóa một map gọn + system of record được bảo trì, pilot trên việc thật rồi mentor rollout. Đo outcome cấp đội và garden docs/rule liên tục để agent throughput cao không làm entropy tích lũy.</td></tr>
               </tbody>
@@ -2412,9 +2438,9 @@ network_access = false   # mặc định; bật lên thì lệnh mới có mạn
             <p class="quiz-q">Một tính năng AI đang chạy ở prod bỗng trả kết quả sai lệch sau khi bạn "chỉ thêm vài tài liệu vào context để cho chắc". Đâu là trình tự chẩn đoán &amp; xử lý đúng, phối hợp những gì đã học?</p>
             <button class="quiz-opt" onclick="quizPick(this,0)"><span class="quiz-letter">A</span><span>Viết lại system prompt cho chặt hơn và đổi sang model mạnh hơn, rồi deploy lại ngay.</span></button>
             <button class="quiz-opt" onclick="quizPick(this,1)"><span class="quiz-letter">B</span><span>Thêm nhiều tài liệu hơn nữa để model có đủ ngữ cảnh, và tăng max_tokens để nó suy nghĩ kỹ.</span></button>
-            <button class="quiz-opt" onclick="quizPick(this,2)"><span class="quiz-letter">C</span><span>Chẩn đoán từ dưới lên: soi <em>context thực sự</em> (Ch.1–2) — "vài tài liệu" vừa thêm gần như chắc gây context rot/lost-in-the-middle; log cái đang được nạp, cắt bớt, đặt phần then chốt ở đầu/cuối; dựng một <em>eval</em> (Ch.11) để đo hồi quy; và cho một công cụ <em>độc lập</em> (Ch.7,11) review thay đổi trước khi ra prod.</span></button>
+            <button class="quiz-opt" onclick="quizPick(this,2)"><span class="quiz-letter">C</span><span>Chẩn đoán từ dưới lên: soi <em>context thực sự</em> (Ch.1–2) — tài liệu mới có thể chứa fact cũ, chỉ dẫn mâu thuẫn hoặc nhiễu vị trí; so với payload trước đó; log cái đang được nạp, cắt bớt, đặt phần then chốt ở đầu/cuối; dựng một <em>eval</em> (Ch.11) để đo hồi quy; và cho một công cụ <em>độc lập</em> (Ch.7,11) review thay đổi trước khi ra prod.</span></button>
             <button class="quiz-opt" onclick="quizPick(this,3)"><span class="quiz-letter">D</span><span>Rollback là đủ — vấn đề sẽ tự hết khi bỏ các tài liệu vừa thêm, không cần đo hay xác minh gì thêm.</span></button>
-            <div class="quiz-feedback" data-explain="Đây là bài kiểm tra phối hợp: 'thêm tài liệu cho chắc' là chính phản xạ mà Chương 2 cảnh báo — nhồi context làm loãng chú ý và đẩy tín hiệu vào vùng chết giữa cửa sổ. Đúng trình tự là chẩn đoán từ dưới lên (Ch.1): xem context thực sự đang chứa gì trước khi động vào prompt hay model. Rồi biến việc sửa thành đo được bằng eval (Ch.11) để biết chắc đã cải thiện chứ không hồi quy, và cho một công cụ độc lập review thay đổi (Ch.7,11) trước khi ra prod. Rollback đơn thuần khôi phục trạng thái nhưng không cho bạn hiểu — và bạn sẽ lặp lại lỗi."></div>
+            <div class="quiz-feedback" role="status" aria-live="polite" aria-atomic="true" data-explain="Đây là bài kiểm tra phối hợp: 'thêm tài liệu cho chắc' là chính phản xạ mà Chương 2 cảnh báo — context thêm có thể gây fact cũ, xung đột hoặc lỗi nhạy với vị trí; triệu chứng chưa xác định nguyên nhân nào đang xảy ra. Đúng trình tự là chẩn đoán từ dưới lên (Ch.1): xem context thực sự đang chứa gì trước khi động vào prompt hay model. Rồi biến việc sửa thành đo được bằng eval (Ch.11) để biết chắc đã cải thiện chứ không hồi quy, và cho một công cụ độc lập review thay đổi (Ch.7,11) trước khi ra prod. Rollback đơn thuần khôi phục trạng thái nhưng không cho bạn hiểu — và bạn sẽ lặp lại lỗi."></div>
           </div>
         </div>
         <div class="lesson-nav" data-navfor="m14-l1"></div>
@@ -2441,7 +2467,7 @@ const STORAGE_PREFIX='ai-course:';
 /* Color mode — light mặc định, dark qua toggle, persisted (chuẩn nhà) */
 (function(){
   const KEY=STORAGE_PREFIX+COURSE_SLUG+':mode', root=document.documentElement, btn=document.getElementById('modeToggle');
-  function apply(m){ if(m==='dark'){root.setAttribute('data-mode','dark'); if(btn) btn.textContent='☀️';} else {root.removeAttribute('data-mode'); if(btn) btn.textContent='🌙';} }
+  function apply(m){ if(btn){btn.setAttribute('aria-pressed',String(m==='dark'));btn.setAttribute('aria-label',m==='dark'?'Chuyển sang giao diện sáng':'Chuyển sang giao diện tối');} if(m==='dark'){root.setAttribute('data-mode','dark'); if(btn) btn.textContent='☀️';} else {root.removeAttribute('data-mode'); if(btn) btn.textContent='🌙';} }
   let saved=null; try{saved=localStorage.getItem(KEY);}catch(e){}
   apply(saved==='dark'?'dark':'light');
   if(btn) btn.addEventListener('click',()=>{ const next=root.getAttribute('data-mode')==='dark'?'light':'dark'; apply(next); try{localStorage.setItem(KEY,next);}catch(e){} });
@@ -2505,6 +2531,7 @@ async function refreshProgress(){
   let done=0;for(const l of LESSONS){if(await sGet(DONE_KEY(l.id))==='done')done++}
   const pct=LESSONS.length?Math.round(done/LESSONS.length*100):0;
   document.getElementById('pg-fill').style.width=pct+'%';document.getElementById('tb-fill').style.width=pct+'%';
+  document.querySelector('.progress-track').setAttribute('aria-valuenow',String(pct));
   document.getElementById('pg-done').textContent=done;document.getElementById('pg-total').textContent=LESSONS.length;document.getElementById('pg-pct').textContent=pct;
   try{window.parent.postMessage({type:'lms:progress',course:COURSE_SLUG,percent:pct,done,total:LESSONS.length},'*')}catch(e){}
 }
@@ -2522,11 +2549,12 @@ function show(id){
   if(!PANES.includes(id)){const mod=id.split('-')[0].slice(1);const mh=document.querySelector(`.module-header[data-module="${mod}"]`);if(mh)mh.classList.add('active');const l=LESSONS.find(x=>x.id===id);if(l)crumb=l.title}
   else if(id==='overview')crumb='Tổng quan';else if(id==='complete')crumb='Hoàn thành';
   document.getElementById('tb-crumb').textContent=crumb;
-  document.querySelectorAll('.nav-link').forEach(a=>a.classList.toggle('active',a.dataset.lesson===id));
+  document.querySelectorAll('.nav-link').forEach(a=>{const active=a.dataset.lesson===id;a.classList.toggle('active',active);if(active)a.setAttribute('aria-current','page');else a.removeAttribute('aria-current')});
   const an=document.querySelector('.nav-link.active'),ns=document.querySelector('.nav-scroll');
   if(an&&ns){ns.scrollTo({top:Math.max(0,an.offsetTop-ns.clientHeight/2),behavior:'auto'})}
   sSet(LAST_KEY,id);
   if(window.innerWidth<1024){document.getElementById('sidebar').classList.remove('open');document.getElementById('backdrop').classList.remove('show')}
+  document.getElementById('main').focus({preventScroll:true});
   window.scrollTo({top:0,behavior:'instant'});
   try{window.parent.postMessage({type:'lms:lesson-change',course:COURSE_SLUG,lessonId:id},'*')}catch(e){}
 }
@@ -2570,7 +2598,7 @@ document.addEventListener('DOMContentLoaded',async()=>{
 });
 let _st;window.addEventListener('scroll',()=>{clearTimeout(_st);_st=setTimeout(()=>{const id=document.querySelector('.nav-link.active')?.dataset.lesson||'overview',y=Math.round(window.scrollY);if(y<64)sDel(SCROLL_KEY+id);else sSet(SCROLL_KEY+id,String(y))},400)},{passive:true});
 document.addEventListener('keydown',e=>{
-  if(e.target.closest?.('input,textarea,select')||e.metaKey||e.ctrlKey||e.altKey)return;
+  if(e.defaultPrevented||e.target.closest?.('input,textarea,select,[contenteditable],.figure,.table-wrap,pre')||e.metaKey||e.ctrlKey||e.altKey)return;
   if(e.key!=='ArrowLeft'&&e.key!=='ArrowRight')return;
   const cur=document.querySelector('.nav-link.active')?.dataset.lesson;
   const i=LESSONS.findIndex(l=>l.id===cur);

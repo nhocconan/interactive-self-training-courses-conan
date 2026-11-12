@@ -66,3 +66,14 @@ Strong success criteria let you loop independently. Weak criteria ("make it work
 ---
 
 **These guidelines are working if:** fewer unnecessary changes in diffs, fewer rewrites due to overcomplication, and clarifying questions come before implementation rather than after mistakes.
+
+## 5. Course diagram audit
+
+Preserve SVG label scale at 375px and 1440px. The local regression floor is
+8 rendered CSS px, with subpixel measurement tolerance; it is not a WCAG
+certification. Use a labelled, focusable local scroll region for dense figures
+and keep captions at page width. Inspect labels and arrow meaning in a browser.
+
+| Concern | Rule | Audit | Gate |
+|---|---|---|---|
+| SVG clipping and text below 8 rendered CSS px at 375/1440px | §5 | `scripts/audit-svg-clip.mjs` | `scripts/verify.sh`, `.githooks/pre-push` |
