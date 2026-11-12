@@ -28,7 +28,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>LLM Fine-tuning & Model Customization · Tuỳ biến model trên dữ liệu riêng</title>
-<meta name="description" content="Khoá học tương tác tiếng Việt cho kỹ sư AI: khi nào fine-tune (vs RAG vs prompting) theo khung hai trục, LoRA/QLoRA với số thật từ paper gốc, DPO/GRPO và quan hệ với RLHF, data curation theo LIMA, chat template và ba cách điểm số nói dối, toolchain 2026 đúng trạng thái thật (OpenAI wind-down, torchtune ngừng phát triển, Anthropic không có public FT API), license open-weight, quantization GGUF/AWQ/GPTQ và multi-LoRA serving.">
+<meta name="description" content="Khoá học tương tác tiếng Việt cho kỹ sư AI: khi nào fine-tune (vs RAG vs prompting) theo khung hai trục, LoRA/QLoRA theo thí nghiệm trong paper gốc, DPO/GRPO và quan hệ với RLHF, data curation theo LIMA, chat template, contamination, shortcut learning và forgetting, toolchain và vòng đời nền tảng (OpenAI wind-down, torchtune ngừng phát triển, Anthropic không có public FT API), license open-weight, quantization GGUF/AWQ/GPTQ và multi-LoRA serving.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
@@ -449,8 +449,6 @@ footer.site{border-top:1px solid var(--border);padding:26px 24px;text-align:cent
 }
 </style>
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E📚%3C/text%3E%3C/svg%3E">
-<meta name="course-knowledge-cutoff" content="2026-11-12">
-<meta name="course-reviewed" content="2026-11-13">
 </head>
 <body data-theme="indigo">
 <a href="#main" class="skip-link">Bỏ qua, tới nội dung chính</a>
@@ -465,7 +463,7 @@ footer.site{border-top:1px solid var(--border);padding:26px 24px;text-align:cent
   <aside class="sidebar" id="sidebar" aria-label="Điều hướng khoá học">
     <div class="sidebar-brand">
       <div class="sidebar-brand-title">LLM <em>Fine-tuning</em></div>
-      <div class="sidebar-brand-sub">17 bài · phiên bản 2026</div>
+      <div class="sidebar-brand-sub">17 bài</div>
     </div>
     <div class="progress-wrap">
       <div class="progress-meta"><span>Tiến độ</span><span><b id="pg-done">0</b>/<span id="pg-total">0</span> · <span id="pg-pct">0</span>%</span></div>
@@ -491,7 +489,7 @@ footer.site{border-top:1px solid var(--border);padding:26px 24px;text-align:cent
       <div class="hero">
         <div class="hero-inner">
           <h1><span class="grad-text">LLM Fine-tuning</span> — tuỳ biến model trên dữ liệu riêng</h1>
-          <p class="hero-sub">Cho kỹ sư đã dùng thành thạo LLM API và giờ cần quyết định fine-tune cho đúng: khung hai trục <strong>context vs hành vi</strong>, LoRA/QLoRA (65B trên một GPU 48GB), DPO/GRPO và quan hệ với RLHF, data curation có kiểm chất lượng/độ phủ và scope kết quả LIMA, eval ba lớp chống điểm số nói dối, toolchain và managed platform 2026 đúng trạng thái thật (kể cả những cái đang bị khai tử), license open-weight, và serving multi-LoRA. Mốc nội dung 12/11/2026; kiểm chứng 13/11/2026.</p>
+          <p class="hero-sub">Cho kỹ sư đã dùng thành thạo LLM API và giờ cần quyết định fine-tune cho đúng: khung hai trục <strong>context vs hành vi</strong>, LoRA/QLoRA (65B trên một GPU 48GB), DPO/GRPO và quan hệ với RLHF, data curation có kiểm chất lượng/độ phủ và scope kết quả LIMA, eval ba lớp với dữ liệu và mẫu số rõ, toolchain, vòng đời managed platform, license open-weight, và serving multi-LoRA.</p>
           <div style="margin-top:28px;display:flex;gap:12px;flex-wrap:wrap">
             <a class="btn btn-primary" id="start-btn">Bắt đầu học →</a>
             <a class="btn btn-ghost" href="#curriculum">Xem chương trình</a>
@@ -527,7 +525,7 @@ footer.site{border-top:1px solid var(--border);padding:26px 24px;text-align:cent
             <tr><td><b>Chat template</b></td><td>Khuôn token hoá hội thoại (control token như <|user|>) mà model đã học; format dữ liệu train lệch template gốc → hiệu năng suy giảm.</td></tr>
             <tr><td><b>Holdout / early stopping</b></td><td>Tập giữ riêng khỏi training để đo trước/sau; dừng train tại điểm validation loss bắt đầu tăng trong khi training loss vẫn giảm.</td></tr>
             <tr><td><b>Benchmark contamination</b></td><td>Dữ liệu eval/benchmark lọt vào training data → điểm số thổi phồng, không phản ánh năng lực thật.</td></tr>
-            <tr><td><b>Shortcut learning</b></td><td>Model bám vào tương quan giả trong dữ liệu, cho điểm eval đẹp mà không tổng quát hoá; một trong ba cách điểm số nói dối ở bài 4.3.</td></tr>
+            <tr><td><b>Shortcut learning</b></td><td>Model bám vào tương quan giả trong dữ liệu, cho điểm eval đẹp mà không tổng quát hoá; một trong ba nguồn sai lệch khi đánh giá ở bài 4.3.</td></tr>
             <tr><td><b>Catastrophic forgetting</b></td><td>Model quên năng lực cũ khi fine-tune tiếp cho task mới — quan sát nặng hơn khi model lớn hơn trong dải 1B–7B.</td></tr>
             <tr><td><b>GGUF / GPTQ / AWQ</b></td><td>GGUF là container có thể chứa FP32, FP16 hoặc tensor lượng tử hoá; CPU/GPU tuỳ engine và backend. GPTQ/AWQ là thuật toán post-training quantization; hỗ trợ phục vụ cũng tuỳ engine.</td></tr>
             <tr><td><b>Multi-LoRA serving</b></td><td>Shared base giảm lặp weights; adapter, KV cache, concurrency và latency quyết định GPU capacity. Server cấp quyền adapter theo caller.</td></tr>
@@ -656,7 +654,7 @@ footer.site{border-top:1px solid var(--border);padding:26px 24px;text-align:cent
       </ul>
     </div>
 
-    <p>Sprint planning. Một kỹ sư đề xuất: "quý này ta fine-tune model cho đội support." Cả phòng gật gù, story point được ước lượng, task lên board. Rồi một câu hỏi làm cả phòng im lặng: <em>"Fine-tune xong, ta biết nó tốt hơn nhờ đo cái gì?"</em> Không ai trả lời được. Không có tập đo, "tốt hơn" chỉ là cảm giác, và bạn sắp đốt vài tuần GPU cho một thứ không chứng minh được.</p>
+    <p>Sprint planning. Một kỹ sư đề xuất: "quý này ta fine-tune model cho đội support." Trước khi ước lượng công việc, nhóm cần trả lời: <em>"Fine-tune xong, ta biết nó tốt hơn nhờ đo cái gì?"</em> Không có tập đo, nhóm chưa thể chứng minh cải thiện sau khi train.</p>
 
     <div class="concept">
       <span class="eyebrow">Khái niệm</span>
@@ -728,15 +726,15 @@ footer.site{border-top:1px solid var(--border);padding:26px 24px;text-align:cent
     </div>
 
     <div class="callout success">
-      <div class="callout-title">Khi nào fine-tune thật sự thắng: hai ví dụ của Hamel</div>
+      <div class="callout-title">Fine-tune cho tác vụ chuyên biệt</div>
       <p>Fine-tune là ứng viên khi model cần học cú pháp DSL, format đặc thù hoặc hành vi lặp lại. Đặt một baseline prompt/schema cho cùng tác vụ, rồi đo cải thiện, regression và chi phí. Ví dụ miền hẹp không chứng minh training luôn tốt hơn bổ sung context.</p>
     </div>
 
     <div class="callout insight">
       <div class="callout-title">Nhánh thứ ba của cây: chất lượng đã đủ, nhưng đắt hoặc chậm → distillation</div>
       <p>Cây trên có hai nhánh vì nó phân loại theo <em>lỗi chất lượng</em>. Nhưng có một lý do chính đáng để fine-tune khi <strong>không</strong> có lỗi chất lượng nào cả: model frontier trả lời đúng, chỉ là quá đắt hoặc quá chậm cho lưu lượng của bạn. Lối ra là <strong>distillation</strong>: dùng model lớn ("teacher") sinh nhãn cho chính traffic của bạn, rồi fine-tune một model nhỏ 4–8B ("student") trên tập nhãn đó, và chỉ đổi sang student khi nó qua được một cổng đặt trước, ví dụ <em>student ≥ ~95% điểm teacher trên holdout</em> (ngưỡng bạn tự chọn theo mức rủi ro, rồi giữ đúng nó).</p>
-      <p><strong>Tính điểm hoà vốn trước khi làm</strong>, bằng ký hiệu chứ đừng bằng con số ai đó nhớ mang máng. Gọi <span class="mono">P</span> = giá $/1M output token của model frontier, <span class="mono">V</span> = số triệu output token mỗi tháng, <span class="mono">T</span> = chi phí một lần cho sinh nhãn + train, <span class="mono">S</span> = chi phí serve student mỗi tháng. Bạn đang trả <span class="mono">P × V</span> mỗi tháng; sau khi distill bạn trả <span class="mono">S</span> mỗi tháng cộng <span class="mono">T</span> trả một lần. Thời gian hoàn vốn là <span class="mono">T / (P × V − S)</span> tháng. Nếu mẫu số ≤ 0 thì dự án không bao giờ hoà vốn. Hệ quả cần nói thẳng: <strong>dưới một mức lưu lượng nào đó, việc đúng đắn là không fine-tune gì cả</strong>. Cắm giá hiện hành của nhà cung cấp bạn đang dùng vào công thức trước khi mở một dự án distillation, đừng cắm giá trong một bài blog.</p>
-      <p><strong>Đọc bằng con số (số minh hoạ, tự thay giá của bạn):</strong> P = 10 $/1M output token, V = 20 triệu token/tháng → bạn đang trả P × V = <strong>200 $/tháng</strong>. Student serve hết S = 40 $/tháng; sinh nhãn + train tốn T = 1.200 $ một lần. Hoàn vốn = 1.200 / (200 − 40) = <strong>7,5 tháng</strong>. Hạ V xuống 5 triệu token/tháng thì mẫu số chỉ còn 50 − 40 = 10 $ và thời gian hoàn vốn nhảy lên <strong>120 tháng</strong> — tức là đừng làm.</p>
+      <p><strong>Tính điểm hoà vốn trước khi làm</strong>, với giá và lưu lượng của dự án. Gọi <span class="mono">P</span> = giá $/1M output token của model frontier, <span class="mono">V</span> = số triệu output token mỗi tháng, <span class="mono">T</span> = chi phí một lần cho sinh nhãn + train, <span class="mono">S</span> = chi phí serve student mỗi tháng. Bạn đang trả <span class="mono">P × V</span> mỗi tháng; sau khi distill bạn trả <span class="mono">S</span> mỗi tháng cộng <span class="mono">T</span> trả một lần. Thời gian hoàn vốn là <span class="mono">T / (P × V − S)</span> tháng. Nếu mẫu số ≤ 0 thì dự án không bao giờ hoà vốn. Hệ quả cần nói thẳng: <strong>dưới một mức lưu lượng nào đó, việc đúng đắn là không fine-tune gì cả</strong>. Cắm giá hiện hành của nhà cung cấp bạn đang dùng vào công thức trước khi mở một dự án distillation, đừng cắm giá trong một bài blog.</p>
+      <p><strong>Đọc bằng con số (số minh hoạ, tự thay giá của bạn):</strong> P = 10 $/1M output token, V = 20 triệu token/tháng → bạn đang trả P × V = <strong>200 $/tháng</strong>. Student serve hết S = 40 $/tháng; sinh nhãn + train tốn T = 1.200 $ một lần. Hoàn vốn = 1.200 / (200 − 40) = <strong>7,5 tháng</strong>. Hạ V xuống 5 triệu token/tháng thì mẫu số chỉ còn 50 − 40 = 10 $ và thời gian hoàn vốn nhảy lên <strong>120 tháng</strong>; cần cân nhắc với vòng đời dự án.</p>
     </div>
 
     <div class="callout info">
@@ -950,8 +948,8 @@ footer.site{border-top:1px solid var(--border);padding:26px 24px;text-align:cent
 
     <div class="callout danger">
       <div class="callout-title">Rủi ro thứ hai: catastrophic forgetting</div>
-      <p>Full fine-tune một model liên tiếp cho nhiều task (support → tóm tắt hợp đồng → phân loại ticket) thì nó <strong>quên task trước</strong>. Nghiên cứu thực nghiệm trên LLM 1B–7B (arXiv:2308.08747, 2023) cho thấy hiện tượng này "generally observed", và trớ trêu là <strong>quên nặng hơn khi model lớn hơn</strong> trong dải đó, không nhẹ đi. Một bước instruction tuning tổng quát trước khi fine-tune chuyên biệt giúp giảm nhẹ.</p>
-      <p><strong>Ba cần gạt thật sự làm được gì đó</strong>, thay vì chỉ hy vọng: (1) <strong>replay</strong>: trộn vào tập train một lát dữ liệu instruction tổng quát, để model vẫn còn thấy loại việc cũ trong lúc học việc mới; (2) <strong>giữ base đóng băng</strong>: LoRA/PEFT khi phải tune nối tiếp nhiều task, vì trọng số gốc không bị ghi đè và mỗi task là một adapter tháo được, thay vì chồng lên nhau trên cùng một bộ weight; (3) <strong>ghim một regression suite</strong> gồm các năng lực cũ bạn không được phép mất; dựng nó <em>trước</em> khi train, chấm nó sau mỗi lần train, và coi nó là <em>cổng chặn ship</em> chứ không phải một số để tham khảo (checklist bài 7.1). Không có (3) thì bạn không biết mình đã quên gì, chỉ biết điểm task mới đẹp.</p>
+      <p>Full fine-tune một model liên tiếp cho nhiều task (support → tóm tắt hợp đồng → phân loại ticket) thì nó <strong>quên task trước</strong>. Nghiên cứu thực nghiệm trên LLM 1B–7B (arXiv:2308.08747, 2023) cho thấy hiện tượng này "generally observed", và <strong>quên nặng hơn khi model lớn hơn</strong> trong dải đó, không nhẹ đi. Một bước instruction tuning tổng quát trước khi fine-tune chuyên biệt giúp giảm nhẹ.</p>
+      <p><strong>Ba biện pháp cần kiểm</strong>: (1) <strong>replay</strong>: trộn vào tập train một lát dữ liệu instruction tổng quát, để model vẫn còn thấy loại việc cũ trong lúc học việc mới; (2) <strong>giữ base đóng băng</strong>: LoRA/PEFT khi phải tune nối tiếp nhiều task, vì trọng số gốc không bị ghi đè và mỗi task là một adapter tháo được, thay vì chồng lên nhau trên cùng một bộ weight; (3) <strong>ghim một regression suite</strong> gồm các năng lực cũ bạn không được phép mất; dựng nó <em>trước</em> khi train, chấm nó sau mỗi lần train, và coi nó là <em>cổng chặn ship</em> chứ không phải một số để tham khảo (checklist bài 7.1). Không có (3) thì bạn không biết mình đã quên gì, chỉ biết điểm task mới đẹp.</p>
     </div>
 
     <div class="callout insight">
@@ -1009,7 +1007,7 @@ footer.site{border-top:1px solid var(--border);padding:26px 24px;text-align:cent
       </ul>
     </div>
 
-    <p>Product muốn <strong>5 phiên bản model</strong> cho 5 phòng ban, mỗi phòng một giọng, một format riêng. Với full fine-tuning (bài 2.1), đó là <strong>5 bản copy full-size</strong>: 5 × 14GB trọng số phải lưu và serve riêng, mỗi bản kéo theo cả pipeline train 16 byte/param. Bạn nhìn hoá đơn GPU và storage rồi tự hỏi: chẳng lẽ để đổi <em>giọng</em>, phải nhân bản cả model?</p>
+    <p>Product muốn <strong>5 phiên bản model</strong> cho 5 phòng ban, mỗi phòng một giọng, một format riêng. Với full fine-tuning (bài 2.1), đó là <strong>5 bản copy full-size</strong>: 5 × 14GB trọng số phải lưu và serve riêng, mỗi bản kéo theo cả pipeline train 16 byte/param. LoRA cho phép dùng chung base và lưu adapter riêng cho từng <em>giọng</em>.</p>
 
     <div class="concept">
       <span class="eyebrow">Đặt tên khái niệm</span>
@@ -1076,7 +1074,7 @@ cfg = LoraConfig(
       <p><strong>Hyperparameter phải kiểm định theo cấu hình.</strong> Nghiên cứu LoRA của Thinking Machines tìm thấy learning rate và batch size tốt khác full FT trong các thiết lập họ thử. Dùng kết quả đó để đặt sweep, không áp LR×10 cho mọi model/dataset. So target modules, rank, learning rate và batch trên validation; DoRA là một lựa chọn thử, không phải nấc bắt buộc.</p>
     </div>
 
-    <p class="muted">Nguồn kiểm tra ngày 12/11/2026: <a href="https://arxiv.org/abs/2106.09685" target="_blank" rel="noreferrer">LoRA</a>. <a href="https://thinkingmachines.ai/blog/lora/" target="_blank" rel="noreferrer">LoRA Without Regret</a>.</p><div class="takeaway">
+    <p class="muted">Nguồn: <a href="https://arxiv.org/abs/2106.09685" target="_blank" rel="noreferrer">LoRA</a>. <a href="https://thinkingmachines.ai/blog/lora/" target="_blank" rel="noreferrer">LoRA Without Regret</a>.</p><div class="takeaway">
       <span class="eyebrow">
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true" focusable="false"><path d="M12 2v6m0 8v6M4.9 4.9l4.2 4.2m5.8 5.8l4.2 4.2M2 12h6m8 0h6M4.9 19.1l4.2-4.2m5.8-5.8l4.2-4.2"/></svg>
         Takeaway
@@ -1109,7 +1107,7 @@ cfg = LoraConfig(
       </ul>
     </div>
 
-    <p>Bạn chỉ có <strong>một GPU 24GB</strong> (RTX 4090). Sếp hỏi thử fine-tune một model 14B cho đúng format nội bộ. Nhẩm nhanh theo bài 2.1 (16 byte/param × 14B ≈ 224GB), bạn định trả lời "hết cửa, phải thuê cluster". Khoan: đó là con số của <em>full</em> fine-tuning. Có một đường khác đưa cả model 65B vào <em>một</em> GPU 48GB, số đo lấy thẳng từ paper.</p>
+    <p>Bạn chỉ có <strong>một GPU 24GB</strong> (RTX 4090). Sếp hỏi thử fine-tune một model 14B cho đúng format nội bộ. Ước lượng theo bài 2.1 (16 byte/param × 14B ≈ 224GB) áp dụng cho <em>full</em> fine-tuning. Có một đường khác đưa cả model 65B vào <em>một</em> GPU 48GB, số đo lấy thẳng từ paper.</p>
 
     <div class="concept">
       <span class="eyebrow">Đặt tên khái niệm</span>
@@ -1166,29 +1164,29 @@ cfg = LoraConfig(
         </tbody>
       </table>
     </div>
-    <p style="font-size:12.5px;color:var(--ink-3)" class="mono">Nguồn: Unsloth requirements docs, truy cập 05/09/2026; claim của vendor, chưa đo độc lập.</p>
+    <p style="font-size:12.5px;color:var(--ink-3)" class="mono">Nguồn: Unsloth requirements docs; claim của vendor, chưa đo độc lập.</p>
 
     <div class="callout insight">
       <div class="callout-title">Nối lại: QLoRA = LoRA đặt lên nền đã nén</div>
-      <p>Bài 2.1 cho thấy full FT ngốn 16 byte/param; bài 2.2 cho thấy LoRA chỉ train adapter nhẹ. QLoRA ghép hai ý: giữ cơ chế adapter của LoRA, nhưng ép cả <em>base</em> xuống 4-bit đóng băng. Nhờ đó cái model 14B tưởng "hết cửa" ở 224GB (full FT) nay chỉ cần ~8,5GB (QLoRA, claim Unsloth), lọt thỏm trong 24GB.</p>
+      <p>Bài 2.1 cho thấy full FT ngốn 16 byte/param; bài 2.2 cho thấy LoRA chỉ train adapter nhẹ. QLoRA ghép hai ý: giữ cơ chế adapter của LoRA, nhưng ép cả <em>base</em> xuống 4-bit đóng băng. Model 14B ước lượng 224GB khi full FT nay chỉ cần ~8,5GB (QLoRA, claim Unsloth), dưới dung lượng 24GB trong ước lượng này.</p>
     </div>
 
     <div>
       <span class="eyebrow" style="display:block;margin-bottom:10px">Áp dụng</span>
       <details class="accordion"><summary><span class="chev">▶</span><span class="accordion-tag">1 GPU 24GB chạy được tới đâu</span><span>QLoRA tới ~14–27B; LoRA 16-bit chỉ ~8B</span></summary>
-        <div class="accordion-body">Theo bảng Unsloth (claim vendor): trên một GPU 24GB (RTX 4090), QLoRA 4-bit chạy được tới cỡ ~14B (8.5GB) và còn dư cho tới quãng ~27B; nhưng LoRA 16-bit chỉ tới ~8B (22GB). Chính khoảng cách này là lý do QLoRA thành lựa chọn mặc định cho team không có cluster đa-GPU. Vẫn phải tự benchmark theo độ dài context và batch thật.</div>
+        <div class="accordion-body">Theo bảng Unsloth (claim vendor): trên một GPU 24GB (RTX 4090), QLoRA 4-bit chạy được tới cỡ ~14B (8.5GB) và còn dư cho tới quãng ~27B; nhưng LoRA 16-bit chỉ tới ~8B (22GB). Khoảng cách này cho thấy lợi ích bộ nhớ trong setup được công bố. Vẫn phải tự benchmark theo độ dài context và batch thật.</div>
       </details>
       <details class="accordion"><summary><span class="chev">▶</span><span class="accordion-tag">Đánh đổi cần biết</span><span>Rẻ bộ nhớ, nhưng có cái giá</span></summary>
-        <div class="accordion-body">QLoRA đánh đổi: nén 4-bit và paged optimizers có thể làm train chậm hơn và thêm một chút phức tạp; base bị đóng băng ở 4-bit nên nếu task đòi thay đổi sâu ở chính trọng số nền, QLoRA không phải công cụ cho việc đó. Với đại đa số nhu cầu đổi format/giọng/tuân chỉ dẫn, đánh đổi này rất đáng, nhưng hãy đo, đừng tin con số vendor một cách mặc định. Và đặt câu hỏi cho <em>năm 2026</em>, không cho năm 2023: câu hỏi không còn là "có nhét vừa cái GPU trên bàn không" mà là <strong>"phương pháp nào tốt nhất cho số GPU-giờ mình thật sự thuê được"</strong>. Thuê một card lớn theo giờ rồi chạy LoRA bf16 thường thắng QLoRA trên card để bàn ở cả throughput lẫn chất lượng, và tổng hoá đơn có khi còn rẻ hơn vì job xong sớm hơn nhiều. QLoRA vẫn đúng khi phần cứng là ràng buộc cứng: on-prem, dữ liệu không được rời máy, hoặc đơn giản là không có ngân sách cloud.</div>
+        <div class="accordion-body">QLoRA đánh đổi: nén 4-bit và paged optimizers có thể làm train chậm hơn và thêm một chút phức tạp; base bị đóng băng ở 4-bit nên nếu task đòi thay đổi sâu ở chính trọng số nền, QLoRA không phải công cụ cho việc đó. Đánh giá chất lượng và chi phí trên tác vụ của bạn trước khi chọn. Khi cân nhắc <em>phần cứng</em>, hỏi <strong>"phương pháp nào tốt nhất cho số GPU-giờ mình thật sự thuê được"</strong>. So LoRA bf16 và QLoRA bằng GPU-giờ, chất lượng, throughput và tổng chi phí đo được trên phần cứng dự định dùng. QLoRA vẫn đúng khi phần cứng là ràng buộc cứng: on-prem, dữ liệu không được rời máy, hoặc đơn giản là không có ngân sách cloud.</div>
       </details>
     </div>
 
-    <p class="muted">Nguồn kiểm tra ngày 12/11/2026: <a href="https://arxiv.org/abs/2305.14314" target="_blank" rel="noreferrer">QLoRA</a>. <a href="https://unsloth.ai/docs/get-started/fine-tuning-for-beginners/unsloth-requirements.md" target="_blank" rel="noreferrer">Unsloth requirements: ước lượng theo cấu hình</a>.</p><div class="takeaway">
+    <p class="muted">Nguồn: <a href="https://arxiv.org/abs/2305.14314" target="_blank" rel="noreferrer">QLoRA</a>. <a href="https://unsloth.ai/docs/get-started/fine-tuning-for-beginners/unsloth-requirements.md" target="_blank" rel="noreferrer">Unsloth requirements: ước lượng theo cấu hình</a>.</p><div class="takeaway">
       <span class="eyebrow">
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true" focusable="false"><path d="M12 2v6m0 8v6M4.9 4.9l4.2 4.2m5.8 5.8l4.2 4.2M2 12h6m8 0h6M4.9 19.1l4.2-4.2m5.8-5.8l4.2-4.2"/></svg>
         Takeaway
       </span>
-      <p>QLoRA = <span class="hl">base 4-bit NF4 đóng băng + adapter LoRA 16-bit + double quantization + paged optimizers</span>, đưa 65B vào một GPU 48GB "preserving full 16-bit finetuning task performance" (Guanaco đạt <span class="hl">99,3% mức ChatGPT sau 24h/1 GPU</span>, đo trên LLaMA-65B năm 2023: mốc lịch sử, không phải hằng số 2026). Bảng VRAM Unsloth là claim của vendor, phải tự benchmark; và câu hỏi 2026 là <span class="hl">khớp phương pháp với số GPU-giờ bạn thuê được</span>, không phải với cái card đang có trên bàn.</p>
+      <p>QLoRA = <span class="hl">base 4-bit NF4 đóng băng + adapter LoRA 16-bit + double quantization + paged optimizers</span>, đưa 65B vào một GPU 48GB "preserving full 16-bit finetuning task performance" (Guanaco đạt <span class="hl">99,3% mức ChatGPT sau 24h/1 GPU</span>, đo trên LLaMA-65B năm 2023: kết quả của thí nghiệm lịch sử). Bảng VRAM Unsloth là claim của vendor, phải tự benchmark; và cần <span class="hl">khớp phương pháp với phần cứng và ngân sách GPU-giờ</span>, và điều kiện dữ liệu của dự án.</p>
     </div>
 
     <div class="quiz" data-correct="1">
@@ -1231,7 +1229,7 @@ cfg = LoraConfig(
       </ul>
     </div>
 
-    <p>Nhóm bạn muốn con chatbot hỗ trợ trả lời <strong>đúng giọng thương hiệu</strong>: lịch sự, ngắn gọn, không hứa quá tay. Một người trong họp nói: "ChatGPT hay thế là nhờ RLHF, mình cũng phải RLHF." Bạn mở bài blog RLHF của Hugging Face ra đọc, và tới giữa chừng thì khựng lại: để chạy được một vòng, bạn cần cùng lúc một model <em>policy</em> đang học, một <em>reward model</em> riêng chấm điểm, một vòng lặp sinh mẫu rồi cập nhật trọng số, cộng thêm một thứ tên là "KL penalty" nghe như thần chú. Chưa kịp sửa được một câu cho đúng giọng, bạn đã phải dựng cả một dàn hạ tầng học tăng cường.</p>
+    <p>Nhóm bạn muốn con chatbot hỗ trợ trả lời <strong>đúng giọng thương hiệu</strong>: lịch sự, ngắn gọn, không hứa quá tay. Một người trong họp nói: "ChatGPT hay thế là nhờ RLHF, mình cũng phải RLHF." Trong ví dụ RLHF/PPO của Hugging Face, để chạy được một vòng, bạn cần cùng lúc một model <em>policy</em> đang học, một <em>reward model</em> riêng chấm điểm, một vòng lặp sinh mẫu rồi cập nhật trọng số, cộng thêm một thứ tên là "KL penalty" để ràng buộc policy. Cần tính chi phí vận hành vòng RL bên cạnh mục tiêu điều chỉnh giọng.</p>
 
     <div class="concept">
       <span class="eyebrow">Khái niệm</span>
@@ -1273,7 +1271,7 @@ cfg = LoraConfig(
 
     <div class="callout insight">
       <div class="callout-title">Mô hình tư duy</div>
-      <p>RLHF giống thuê một <em>hội đồng chấm thi</em> (reward model) rồi để thí sinh (policy) luyện đi luyện lại theo phản hồi hội đồng, với một giám thị (KL penalty) giữ thí sinh không "học tủ" đến mức viết nhảm chỉ để lấy điểm. Chỗ analogy gãy: hội đồng người có thể tự nhận ra một bài "kêu to mà rỗng", còn reward model là một hàm số tĩnh; nó bị lừa được bằng đúng pattern, một cách hệ thống, mà con người không bị theo kiểu đó. Đó là vì sao cần KL penalty ràng lại.</p>
+      <p>RLHF giống thuê một <em>hội đồng chấm thi</em> (reward model) rồi để thí sinh (policy) luyện đi luyện lại theo phản hồi hội đồng, với một giám thị (KL penalty) giữ thí sinh không "học tủ" đến mức viết nhảm chỉ để lấy điểm. Chỗ analogy gãy: reward model có thể cho điểm cao với output không đạt mục tiêu thực. KL penalty ràng buộc độ lệch khỏi reference, nhưng không bảo đảm reward phản ánh đúng chất lượng.</p>
     </div>
 
     <div class="callout info">
@@ -1407,7 +1405,7 @@ cfg = LoraConfig(
         <text class="dgm-ink" x="600" y="192" font-size="11" font-weight="700" text-anchor="end">advantage: reward chuẩn hoá nhóm</text>
         <defs><marker id="m3l2b-ah" markerWidth="9" markerHeight="9" refX="7" refY="4.5" orient="auto"><path d="M0 0 L9 4.5 L0 9 z" fill="var(--accent-2)"/></marker></defs>
       </svg></div>
-      <figcaption><b>Hình 3.3</b>. So cơ chế baseline: GRPO bỏ value/critic riêng, giữ RL và group reward. Reference/reward/rollout được lược khỏi hình, không phải bị loại khỏi thuật toán. <a href="https://arxiv.org/html/2402.03300v2" target="_blank" rel="noreferrer">DeepSeekMath v2§4.1,Algorithm1</a> (đọc13/11/2026).</figcaption>
+      <figcaption><b>Hình 3.3</b>. So cơ chế baseline: GRPO bỏ value/critic riêng, giữ RL và group reward. Reference/reward/rollout được lược khỏi hình, không phải bị loại khỏi thuật toán. <a href="https://arxiv.org/html/2402.03300v2" target="_blank" rel="noreferrer">DeepSeekMath v2§4.1,Algorithm1</a>.</figcaption>
     </figure>
 
     <div class="callout warn">
@@ -1418,12 +1416,12 @@ cfg = LoraConfig(
 
     <div class="callout insight">
       <div class="callout-title">GSPO: lựa chọn RL để kiểm định trong setup cụ thể</div>
-      <p><a href="https://arxiv.org/abs/2507.18071v2" target="_blank" rel="noreferrer">GSPO v2(2025)</a> định nghĩa importance ratio bằng likelihood chuỗi và clipping ở mức chuỗi, thay vì token-level như GRPO trong so sánh của paper. Nhóm tác giả báo cáo hiệu quả và ổn định MoE tốt hơn trong các run của họ. Đây là kết quả có scope để đặt thí nghiệm, không phải chẩn đoán mọi lần training sụp. Nguồn đọc13/11/2026.</p>
+      <p><a href="https://arxiv.org/abs/2507.18071v2" target="_blank" rel="noreferrer">GSPO v2(2025)</a> định nghĩa importance ratio bằng likelihood chuỗi và clipping ở mức chuỗi, thay vì token-level như GRPO trong so sánh của paper. Nhóm tác giả báo cáo hiệu quả và ổn định MoE tốt hơn trong các run của họ. Đây là kết quả có scope để đặt thí nghiệm, không phải chẩn đoán mọi lần training sụp.</p>
     </div>
 
     <div class="callout insight">
       <div class="callout-title">Mô hình tư duy</div>
-      <p>DPO giống dạy model bằng cách đưa thẳng cặp "câu hay / câu dở" cho nó học phân biệt, thay vì thuê một hội đồng (reward model) rồi cho thí sinh thi lại nhiều vòng. GRPO giống bỏ vị giám khảo chấm điểm tuyệt đối, thay bằng cho cả nhóm cùng làm một đề rồi <em>xếp hạng tương đối</em> trong nhóm. Chỗ cả hai analogy gãy: chúng chỉ chạy được khi bạn <em>có sẵn tín hiệu preference</em>: cặp preferred/rejected cho DPO, hàm reward chấm được đúng/sai cho GRPO. Không có tín hiệu đó thì cả hai đều vô dụng, dù toán có đẹp đến đâu.</p>
+      <p>DPO giống dạy model bằng cách đưa thẳng cặp "câu hay / câu dở" cho nó học phân biệt, thay vì thuê một hội đồng (reward model) rồi cho thí sinh thi lại nhiều vòng. GRPO giống bỏ vị giám khảo chấm điểm tuyệt đối, thay bằng cho cả nhóm cùng làm một đề rồi <em>xếp hạng tương đối</em> trong nhóm. Chỗ cả hai analogy gãy: chúng chỉ chạy được khi bạn <em>có sẵn tín hiệu preference</em>: cặp preferred/rejected cho DPO, hàm reward chấm được đúng/sai cho GRPO. Cả hai cần tín hiệu phù hợp để tối ưu.</p>
     </div>
 
     <div>
@@ -1457,7 +1455,7 @@ cfg = LoraConfig(
       <header class="module-header" data-module="4">
         <span class="eyebrow">Module 04 · Phần IV</span>
         <h2>Dữ liệu & eval</h2>
-        <p>Fine-tune sống hay chết ở dữ liệu và cách đo. Ba bài: curate theo tinh thần LIMA (đa dạng + chất lượng thắng số lượng), format đúng chat template (bẫy mismatch làm model tệ đi ngay cả khi train tiếp), và eval ba lớp cùng ba cách điểm số nói dối: contamination, shortcut learning, catastrophic forgetting.</p>
+        <p>Dữ liệu và cách đo quyết định khả năng đánh giá fine-tune. Ba bài: curate theo tinh thần LIMA (đa dạng + chất lượng thắng số lượng), format đúng chat template (bẫy mismatch làm model tệ đi ngay cả khi train tiếp), và eval ba lớp để phát hiện: contamination, shortcut learning, catastrophic forgetting.</p>
       </header>
 <article class="lesson" id="m4-l1" data-lesson>
   <div class="lesson-head">
@@ -1528,7 +1526,7 @@ cfg = LoraConfig(
         <text class="dgm-ink2" x="640" y="220" text-anchor="middle" font-size="10" font-family="IBM Plex Mono">×16</text>
         <text class="dgm-ink2" x="565" y="238" text-anchor="middle" font-size="10">nhân đôi data → không lên</text>
       </svg></div>
-      <figcaption><b>Hình 4.1</b>. Ba ablation của LIMA. Đa dạng (Stack Exchange) vượt đồng nhất (wikiHow) cùng cỡ dữ liệu; lọc chất lượng cho <b>"a significant 0.5 point difference"</b> trên thang ChatGPT; còn nhân đôi số lượng thô tới <b>×16</b> thì điểm <b>"plateaus"</b>, tức đi ngang. Cái hình cho thấy điều một câu không nói được: hai trục trái tạo ra chênh lệch thật, trục phải thì không.</figcaption>
+      <figcaption><b>Hình 4.1</b>. Ba ablation của LIMA. Đa dạng (Stack Exchange) vượt đồng nhất (wikiHow) cùng cỡ dữ liệu; lọc chất lượng cho <b>"a significant 0.5 point difference"</b> trên thang ChatGPT; còn nhân đôi số lượng thô tới <b>×16</b> thì điểm <b>"plateaus"</b>, tức đi ngang. Các kết quả thuộc ba ablation này.</figcaption>
     </figure>
 
     <div class="compare">
@@ -1556,7 +1554,7 @@ cfg = LoraConfig(
       <ul>
         <li><strong>Khử trùng lặp</strong> cả trùng khít lẫn gần-trùng (paraphrase chỉ đổi vài từ). Đây là chặng quan trọng nhất, vì model sinh dữ liệu có xu hướng lặp lại chính nó.</li>
         <li><strong>Lọc bằng judge</strong> để bỏ cặp sai/lạc format, nhưng chỉ tin judge sau khi đã đo nó (xem bài 4.3).</li>
-        <li><strong>Người đọc một mẫu</strong> vài chục cặp lấy ngẫu nhiên. Không thay được, và luôn phát hiện ra thứ không lọc tự động nào bắt được.</li>
+        <li><strong>Người đọc một mẫu</strong> vài chục cặp lấy ngẫu nhiên. Đối chiếu các lỗi và điểm mơ hồ mà bộ lọc tự động có thể bỏ sót.</li>
         <li><strong>Đo độ đa dạng theo một bảng phân loại kiểu prompt viết ra giấy</strong> (loại câu hỏi, độ dài, độ khó, ngôn ngữ, kênh…), rồi đếm số ví dụ mỗi ô. "Cảm giác đa dạng" không phải phép đo; một tập phủ 3/12 ô là một tập hẹp dù có bao nhiêu dòng.</li>
       </ul>
       <p>Một tập tổng hợp lớn nhưng lặp có thể thiếu độ phủ; một tập thật nhỏ cũng có thể bỏ sót ca quan trọng. Không có kết quả1.000-vs300 của dự án này. So nguồn dữ liệu trên held-out và kiểm điều khoản teacher về cách dùng output trước khi sinh dữ liệu training.</p>
@@ -1603,7 +1601,7 @@ cfg = LoraConfig(
       </ul>
     </div>
 
-    <p>Bạn đã curate xong 1.000 ví dụ vàng ở bài 4.1. Giờ đem fine-tune một model Llama, và để nhanh, bạn tự chế format quen mắt: <code>### User: … ### Assistant: …</code>. Train ba epoch. Nhưng mỗi epoch model lại tệ hơn ở việc <em>dừng đúng chỗ</em>: nó lảm nhảm quá lượt, chèn token lạ, quên cách kết thúc câu. Nghịch lý y hệt bài trước, khác nguyên nhân: dữ liệu vàng nhưng <strong>đóng gói sai</strong>.</p>
+    <p>Bạn đã curate xong 1.000 ví dụ vàng ở bài 4.1. Giờ đem fine-tune một model Llama, và để nhanh, bạn tự chế format quen mắt: <code>### User: … ### Assistant: …</code>. Train ba epoch. Nhưng mỗi epoch model lại tệ hơn ở việc <em>dừng đúng chỗ</em>: nó lảm nhảm quá lượt, chèn token lạ, quên cách kết thúc câu. Trong ví dụ này, dữ liệu đã curate nhưng <strong>đóng gói sai</strong>.</p>
 
     <div class="concept">
       <span class="eyebrow">Khái niệm</span>
@@ -1674,7 +1672,7 @@ cfg = LoraConfig(
 tokens = tokenizer.apply_chat_template(
     messages, tokenize=True, add_generation_prompt=False
 )
-# Đã tokenize; không thêm special token một lần nữa.</pre></div><p class="muted">Nguồn kiểm tra ngày 12/11/2026: <a href="https://jsonlines.org/" target="_blank" rel="noreferrer">JSON Lines</a>. <a href="https://huggingface.co/docs/transformers/main/en/chat_templating" target="_blank" rel="noreferrer">Transformers chat templating</a>.</p><div class="takeaway">
+# Đã tokenize; không thêm special token một lần nữa.</pre></div><p class="muted">Nguồn: <a href="https://jsonlines.org/" target="_blank" rel="noreferrer">JSON Lines</a>. <a href="https://huggingface.co/docs/transformers/main/en/chat_templating" target="_blank" rel="noreferrer">Transformers chat templating</a>.</p><div class="takeaway">
       <span class="eyebrow">
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true" focusable="false"><path d="M12 2v6m0 8v6M4.9 4.9l4.2 4.2m5.8 5.8l4.2 4.2M2 12h6m8 0h6M4.9 19.1l4.2-4.2m5.8-5.8l4.2-4.2"/></svg>
         Takeaway
@@ -1699,7 +1697,7 @@ tokens = tokenizer.apply_chat_template(
     <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px">
       <div>
         <span class="eyebrow">Bài 4.3</span>
-        <h3>Eval sau fine-tune: ba lớp kiểm tra và những cách điểm số nói dối</h3>
+        <h3>Eval sau fine-tune: ba lớp kiểm tra và nguồn sai lệch</h3>
       </div>
     </div>
   </div>
@@ -1714,7 +1712,7 @@ tokens = tokenizer.apply_chat_template(
       </ul>
     </div>
 
-    <p>Sau fine-tune, dashboard eval nội bộ nhảy từ 72% lên <strong>94%</strong>. Team ăn mừng, đem demo cho sếp. Đến câu hỏi thứ ba, model trả lời lệch format hoàn toàn, và "quên" một loại câu nó vốn xử tốt <em>trước</em> khi fine-tune. Con số 94% đã nói dối, và bạn chỉ biết được vì có người ngồi test tay. Đây là lý do vì sao Hamel nói (bài 1.2): <em>"Good evals first!"</em> Không có eval thật thì không biết fine-tune giúp hay hại.</p>
+    <p>Sau fine-tune, dashboard eval nội bộ nhảy từ 72% lên <strong>94%</strong>. Nhóm đem model đi demo. Đến câu hỏi thứ ba, model trả lời lệch format hoàn toàn, và "quên" một loại câu nó vốn xử tốt <em>trước</em> khi fine-tune. Điểm tổng hợp 94% đã che mất lỗi trên các nhóm câu hỏi. Đây là lý do vì sao Hamel nói (bài 1.2): <em>"Good evals first!"</em> Không có eval thật thì không biết fine-tune giúp hay hại.</p>
 
     <div class="concept">
       <span class="eyebrow">Khái niệm</span>
@@ -1784,7 +1782,7 @@ tokens = tokenizer.apply_chat_template(
     </div>
 
     <div class="callout insight">
-      <div class="callout-title">Bốn nguyên tắc làm eval: chỗ phần lớn team làm sai</div>
+      <div class="callout-title">Bốn nguyên tắc làm eval</div>
       <p><strong>1 · Holdout phải đủ lớn để phân biệt được cái bạn cần phân biệt.</strong> Trực giác cỡ mẫu: sai số của một tỉ lệ co lại theo <em>căn bậc hai</em> của số ví dụ, nên muốn chia đôi độ rộng khoảng tin cậy bạn phải nhân bốn cỡ holdout. Hệ quả rất thực tế: vài chục ví dụ chỉ đủ thấy chênh lệch <em>rất lớn</em>; muốn tự tin về mức chênh vài điểm phần trăm, bạn cần hàng trăm ví dụ trở lên. Nếu holdout nhỏ, hãy thừa nhận nó chỉ bắt được lỗi to.</p>
       <p><strong>2 · So cùng câu hỏi thì dùng sai khác theo cặp.</strong>72%→94% là+22 điểm phần trăm. Hai tỷ lệ biên chưa đủ tính khoảng paired: cần biết ca nào đổi từ trượt sang đạt và ngược lại.</p>
       <p><strong>Fixture giả lập 150 câu độc lập:</strong> cả hai đạt 108; chỉ tuned đạt 33; chỉ baseline đạt 0; cả hai trượt 9. Baseline 108/150=0,72; tuned 141/150=0,94. Đặt dᵢ=score_tuned−score_base: d̄=0,22; SE(d̄)=√[(0,22−0,22²)/(150−1)]=0,03394. Khoảng normal95% xấp xỉ:0,22±1,96×0,03394=[0,1535;0,2865], tức+15,3 đến+28,7 điểm. Đây là xấp xỉ dưới giả định đơn vị độc lập, không phải bảo đảm với mọi150 dòng. Paired bootstrap phải lấy lại nguyên cặp; nếu các câu cùng thread/user thì resample cluster độc lập. Công thức hai nhóm độc lập không dùng cho cùng bộ câu hỏi này.</p>
@@ -1792,7 +1790,7 @@ tokens = tokenizer.apply_chat_template(
       <p><strong>4 · LLM-judge chỉ dùng sau khi đã đo chính judge đó.</strong> Trước khi để một model chấm hàng nghìn output, hãy nhãn tay một tập con rồi đo mức <em>đồng thuận judge ↔ người</em> trên chính tập con đó. Đồng thuận thấp thì con số judge sinh ra không phải phép đo, nó là ý kiến của một model khác, và bạn vừa thay eval bằng một model chưa được eval. Cuối cùng, khép vòng: mỗi lần eval, đọc các ca <em>trượt</em>, gom chúng thành lô curate tiếp theo. Đó là cách error analysis biến eval từ một cái cổng thành một cỗ máy sinh dữ liệu (bài 4.1).</p>
     </div>
 
-    <p class="muted">Nguồn kiểm tra ngày 12/11/2026: <a href="https://arxiv.org/html/2411.00640v1" target="_blank" rel="noreferrer">Adding Error Bars to Evals: paired differences /clusters</a>.</p><div class="takeaway">
+    <p class="muted">Nguồn: <a href="https://arxiv.org/html/2411.00640v1" target="_blank" rel="noreferrer">Adding Error Bars to Evals: paired differences /clusters</a>.</p><div class="takeaway">
       <span class="eyebrow">
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true" focusable="false"><path d="M12 2v6m0 8v6M4.9 4.9l4.2 4.2m5.8 5.8l4.2 4.2M2 12h6m8 0h6M4.9 19.1l4.2-4.2m5.8-5.8l4.2-4.2"/></svg>
         Takeaway
@@ -1810,8 +1808,8 @@ tokens = tokenizer.apply_chat_template(
     <div class="container">
       <header class="module-header" data-module="5">
         <span class="eyebrow">Module 05 · Phần V</span>
-        <h2>Toolchain & hạ tầng 2026</h2>
-        <p>Chọn công cụ năm 2026 cần đọc trạng thái thật, không đọc bài blog cũ: torchtune đã ngừng phát triển, OpenAI đang khai tử fine-tuning platform, Anthropic không có public FT API. Ba bài này vẽ bản đồ toolchain tự host, managed platform còn sống, và license open-weight, thứ phải đọc trước khi chạy benchmark.</p>
+        <h2>Toolchain & hạ tầng</h2>
+        <p>Chọn công cụ cần xem vòng đời và khả năng hỗ trợ: torchtune đã ngừng phát triển, OpenAI đang kết thúc fine-tuning platform, Anthropic không có public FT API. Ba bài này trình bày toolchain tự host, vòng đời managed platform và license open-weight để chọn cấu hình trước benchmark.</p>
       </header>
 <article class="lesson" id="m5-l1" data-lesson>
   <div class="lesson-head">
@@ -1833,7 +1831,7 @@ tokens = tokenizer.apply_chat_template(
       </ul>
     </div>
 
-    <p>Tháng Ba, bạn chọn framework fine-tuning theo một bài blog xếp hạng "top tools 2024". Ba tháng sau, đang giữa sprint, bạn mở repo để tra một tính năng và thấy dòng chữ đầu trang README: dự án <em>đã ngừng phát triển</em>. Không có tính năng mới, không rõ ai vá lỗ hổng tiếp theo. Bạn đã cưới một công cụ đang hấp hối, và nó do một hãng lớn chống lưng nên bạn đâu ngờ.</p>
+    <p>Tháng Ba, bạn chọn framework fine-tuning theo một bài blog xếp hạng "top tools 2024". Ba tháng sau, đang giữa sprint, bạn mở repo để tra một tính năng và thấy dòng chữ đầu trang README: dự án <em>đã ngừng phát triển</em>. Không có tính năng mới, không rõ ai vá lỗ hổng tiếp theo. Tên nhà cung cấp không thay thế việc kiểm maintenance của repo.</p>
 
     <div class="concept">
       <span class="eyebrow">Khái niệm</span>
@@ -1865,18 +1863,18 @@ tokens = tokenizer.apply_chat_template(
         <text class="dgm-ink2" x="616" y="230" text-anchor="end" font-size="10" font-family="IBM Plex Mono">config YAML · đơn giản hơn</text>
 
         <rect class="dgm-warn" x="40" y="250" width="580" height="40" rx="8" stroke-width="2" style="opacity:.7"/>
-        <text class="dgm-ink" x="56" y="268" font-size="11" font-weight="700">🪦 torchtune</text>
+        <text class="dgm-ink" x="56" y="268" font-size="11" font-weight="700">torchtune</text>
         <text class="dgm-ink2" x="150" y="268" font-size="10" font-family="IBM Plex Mono">torchtune: ngừng phát triển năm2025</text>
         <text class="dgm-ink2" x="150" y="282" font-size="10" font-family="IBM Plex Mono">TorchForge: development paused</text>
         <defs><marker id="m5l1-ah" markerWidth="9" markerHeight="9" refX="7" refY="4.5" orient="auto"><path d="M0 0 L9 4.5 L0 9 z" fill="var(--accent-2)"/></marker></defs>
       </svg></div>
-      <figcaption><b>Hình 5.1</b>. TRL/PEFT cung cấp trainer/phương pháp; Axolotl cấu hình pipeline; Unsloth tối ưu setup hỗ trợ. Theo README đã kiểm12/11/2026, torchtune ngừng phát triển2025 và TorchForge tạm dừng. Đánh giá maintenance, model/hardware support và workload, không suy từ nhãn hãng.</figcaption>
+      <figcaption><b>Hình 5.1</b>. TRL/PEFT cung cấp trainer/phương pháp; Axolotl cấu hình pipeline; Unsloth tối ưu setup hỗ trợ. Theo README, torchtune ngừng phát triển2025 và TorchForge tạm dừng. Đánh giá maintenance, model/hardware support và workload, không suy từ nhãn hãng.</figcaption>
     </figure>
 
     <div class="callout warn">
       <div class="callout-title">torchtune: bài học sống về vòng đời tool</div>
       <p>README torchtune ghi hoạt động phát triển đã kết thúc trong2025. Đây là thông tin vòng đời cần ghi khi chọn dependency và khi duy trì dự án cũ; không suy hỗ trợ lâu dài từ tên tổ chức.</p>
-      <p>README TorchForge ghi phát triển đã tạm dừng và LLM training PyTorch đang được gom về torchtitan. Kiểm trạng thái từng repo/version, tính năng và kế hoạch migration; kế nhiệm không tự bảo đảm phù hợp hơn. Các nguồn primary được liên kết dưới đây, đã đọc trong audit12/11/2026.</p>
+      <p>README TorchForge ghi phát triển đã tạm dừng và LLM training PyTorch đang được gom về torchtitan. Kiểm trạng thái từng repo/version, tính năng và kế hoạch migration; kế nhiệm không tự bảo đảm phù hợp hơn. Các nguồn được liên kết dưới đây.</p>
     </div>
 
     <div class="callout info">
@@ -1893,19 +1891,19 @@ tokens = tokenizer.apply_chat_template(
         <div class="accordion-body">Axolotl (config YAML) nếu team ít kỹ sư ML chuyên sâu: giảm boilerplate, một file cấu hình chạy được nhiều biến thể. TRL trực tiếp nếu team đã quen viết training loop Python và cần kiểm soát từng bước.</div>
       </details>
       <details class="accordion"><summary><span class="chev">▶</span><span class="accordion-tag">Đang dùng torchtune</span><span>Dự án cũ chạy trên torchtune</span></summary>
-        <div class="accordion-body">Lên kế hoạch migrate. Repo không còn tính năng mới; đừng khởi động dự án <em>mới</em> trên nó. Và đừng migrate sang TorchForge chỉ vì nó là hậu duệ: chính TorchForge cũng đã tạm dừng phát triển, PyTorch đang gom LLM training về torchtitan. Chuyển sang TRL/Axolotl là đường an toàn hơn cho một dự án phải chạy năm nay.</div>
+        <div class="accordion-body">Lên kế hoạch migrate. Repo không còn tính năng mới; đừng khởi động dự án <em>mới</em> trên nó. Và đừng migrate sang TorchForge chỉ vì nó là hậu duệ: chính TorchForge cũng đã tạm dừng phát triển, PyTorch đang gom LLM training về torchtitan. Đánh giá TRL/Axolotl theo model, tính năng và khả năng vận hành cần thiết.</div>
       </details>
       <details class="accordion"><summary><span class="chev">▶</span><span class="accordion-tag">Vượt quá một GPU</span><span>Chạy RL phân tán ở quy mô cluster</span></summary>
         <div class="accordion-body">Các tool không chỉ hỗ trợ single-node; Axolotl có FSDP/DeepSpeed và các thư viện có đường distributed riêng. Pin version/model/hardware, đo khả năng vận hành cần thiết thay vì chọn theo danh sách tên framework. Các chi tiết cluster/RL chuyên sâu là phần tham khảo theo tài liệu đúng phiên bản.</div>
       </details>
     </div>
 
-    <p class="muted">Nguồn kiểm tra ngày 12/11/2026: <a href="https://huggingface.co/docs/trl/en/sft_trainer" target="_blank" rel="noreferrer">SFTTrainer</a>. <a href="https://github.com/meta-pytorch/torchtune" target="_blank" rel="noreferrer">torchtune: wound down</a>. <a href="https://github.com/meta-pytorch/torchforge" target="_blank" rel="noreferrer">TorchForge: paused</a>.</p><div class="takeaway">
+    <p class="muted">Nguồn: <a href="https://huggingface.co/docs/trl/en/sft_trainer" target="_blank" rel="noreferrer">SFTTrainer</a>. <a href="https://github.com/meta-pytorch/torchtune" target="_blank" rel="noreferrer">torchtune: wound down</a>. <a href="https://github.com/meta-pytorch/torchforge" target="_blank" rel="noreferrer">TorchForge: paused</a>.</p><div class="takeaway">
       <span class="eyebrow">
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true" focusable="false"><path d="M12 2v6m0 8v6M4.9 4.9l4.2 4.2m5.8 5.8l4.2 4.2M2 12h6m8 0h6M4.9 19.1l4.2-4.2m5.8-5.8l4.2-4.2"/></svg>
         Takeaway
       </span>
-      <p><span class="hl">Chọn theo trainer/model/hardware và khả năng vận hành, rồi benchmark workload.</span> Ghi version và maintenance của dependency; torchtune ngừng phát triển2025, TorchForge tạm dừng theo README đã kiểm.</p>
+      <p><span class="hl">Chọn theo trainer/model/hardware và khả năng vận hành, rồi benchmark workload.</span> Ghi version và maintenance của dependency; torchtune ngừng phát triển2025, TorchForge tạm dừng theo README.</p>
     </div>
 
     <div class="quiz" data-correct="1">
@@ -1925,7 +1923,7 @@ tokens = tokenizer.apply_chat_template(
     <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px">
       <div>
         <span class="eyebrow">Bài 5.2</span>
-        <h3>Managed fine-tuning 2026: ai còn, ai đang khai tử</h3>
+        <h3>Managed fine-tuning: vòng đời training và inference</h3>
       </div>
     </div>
   </div>
@@ -1940,7 +1938,7 @@ tokens = tokenizer.apply_chat_template(
       </ul>
     </div>
 
-    <p>Sản phẩm của bạn được xây quanh một model GPT đã fine-tune; nó là lõi tính năng, chạy ổn hai năm. Một sáng, bạn đọc thông báo: nền tảng fine-tuning bạn phụ thuộc <em>đang đóng cửa nhận job mới</em>. Model cũ vẫn chạy, nhưng cánh cửa train lại đang khép dần theo một cái đồng hồ đếm ngược có hạn chót. Câu hỏi không còn là "fine-tune thế nào" mà là "còn bao lâu nữa".</p>
+    <p>Sản phẩm của bạn được xây quanh một model GPT đã fine-tune; nó là lõi tính năng, chạy ổn hai năm. Một sáng, bạn đọc thông báo: nền tảng fine-tuning bạn phụ thuộc <em>đang đóng cửa nhận job mới</em>. Cần tách hạn tạo job training khỏi hạn inference của model cũ để lập kế hoạch migration.</p>
 
     <div class="concept">
       <span class="eyebrow">Khái niệm</span>
@@ -1977,7 +1975,7 @@ tokens = tokenizer.apply_chat_template(
         <text class="dgm-ink" x="66" y="217" font-size="10" font-family="IBM Plex Mono">Job mới và inference: hai lịch riêng</text>
         <defs><marker id="m5l2-ah" markerWidth="9" markerHeight="9" refX="7" refY="4.5" orient="auto"><path d="M0 0 L9 4.5 L0 9 z" fill="var(--accent-2)"/></marker></defs>
       </svg></div>
-      <figcaption><b>Hình 5.2</b>. Các mốc training-job creation của OpenAI tách khỏi inference. Inference kết thúc theo đúng model/endpoint và lịch deprecation; không có bảo đảm vô hạn. Xem nguồn deprecations đã liên kết và ghi ngày kiểm khi ra quyết định.</figcaption>
+      <figcaption><b>Hình 5.2</b>. Các mốc training-job creation của OpenAI tách khỏi inference. Inference kết thúc theo đúng model/endpoint và lịch deprecation; không có bảo đảm vô hạn. Xem nguồn deprecations đã liên kết và đối chiếu model/endpoint khi ra quyết định.</figcaption>
     </figure>
 
     <div class="callout danger">
@@ -1985,13 +1983,13 @@ tokens = tokenizer.apply_chat_template(
       <p>Claude API hiện không có public fine-tuning. Amazon Bedrock là nền tảng riêng và phải kiểm exact model+region+account. Ví dụ lịch sử Claude3Haiku tại us-east-1 có Legacy10/03/2026 và EOL10/09/2026; region khác trong bảng AWS có ngày 13/11 hoặc27/11. Không suy một ngày thành EOL toàn cầu. Legacy có hạn chế tạo customization mới; model inference còn active không tự chứng minh có quyền fine-tune.</p>
     </div>
 
-    <p>Kiểm tra ngày 12/11/2026: OpenAI đang kết thúc platform FT; Claude API chưa có public FT; Together, Google và AWS có các đường managed customization với model/region/eligibility riêng. So đơn vị tính training, inference/hosting, export và điều kiện dữ liệu thay vì chốt bằng bảng giá dễ cũ.</p>
+    <p>Tình trạng nền tảng: OpenAI đang kết thúc platform FT; Claude API chưa có public FT; Together, Google và AWS có các đường managed customization với model/region/eligibility riêng. So đơn vị tính training, inference/hosting, export và điều kiện dữ liệu thay vì chốt bằng bảng giá dễ cũ.</p>
 
     <div class="table-wrap"><table><thead><tr><th>Nền tảng</th><th>Điều phải kiểm</th></tr></thead><tbody><tr><td>OpenAI</td><td>May7/2026 công bố; July2 hạn khách không active; Jan6/2027 ngừng job mới cho khách hiện hữu. Inference theo exact base-model lifecycle.</td></tr><tr><td>Claude API /Bedrock</td><td>Claude API không public FT; Bedrock kiểm model, region và lifecycle riêng.</td></tr><tr><td>Google /Together /AWS</td><td>Model, region/account, trainer, đơn vị tính training/hosting và khả năng export.</td></tr></tbody></table></div>
 
     <div class="callout info">
       <div class="callout-title">Nhắc lại bài 5.1</div>
-      <p>torchtune ở bài 5.1 cho thấy: một tool tự host có thể bị bỏ rơi. Bài này là cùng bài học ở tầng cao hơn: <em>một managed platform cũng có thể bị khai tử</em>, và OpenAI vừa chứng minh điều đó. Dù tự host hay managed, "vòng đời của nhà cung cấp" là một rủi ro phải quản lý, không phải afterthought.</p>
+      <p>torchtune ở bài 5.1 cho thấy: một tool tự host có thể bị bỏ rơi. Bài này là cùng bài học ở tầng cao hơn: <em>một managed platform cũng có thể bị khai tử</em>. Dù tự host hay managed, "vòng đời của nhà cung cấp" là một rủi ro phải quản lý, không phải afterthought.</p>
     </div>
 
     <p>Thông báo OpenAI ngày 14/10/2026 còn lên lịch shutdown một số GPT-4.1/4.1mini/4o-family model, kể cả fine-tuned versions, vào 14/01/2027. Kiểm exact model ID; không coi “inference đến base deprecation” là thời hạn vô hạn. <a href="https://developers.openai.com/api/docs/deprecations" target="_blank" rel="noreferrer">OpenAI deprecations</a>. <a href="https://docs.aws.amazon.com/bedrock/latest/userguide/model-lifecycle-legacy.html" target="_blank" rel="noreferrer">Bedrock lifecycle theo region</a>. <a href="https://platform.claude.com/docs/en/about-claude/glossary" target="_blank" rel="noreferrer">Claude glossary</a>.</p><div class="takeaway">
@@ -2008,7 +2006,7 @@ tokens = tokenizer.apply_chat_template(
       <button class="quiz-opt" onclick="quizPick(this,0)"><span class="quiz-letter">A</span><span>Không cần làm gì — docs ghi "All fine-tuned models will remain available for inference", nên model cứ chạy mãi, không có rủi ro.</span></button>
       <button class="quiz-opt" onclick="quizPick(this,1)"><span class="quiz-letter">B</span><span>Chuyển ngay sang fine-tune Claude qua Claude API vì Anthropic ổn định hơn OpenAI.</span></button>
       <button class="quiz-opt" onclick="quizPick(this,2)"><span class="quiz-letter">C</span><span>Kiểm hai lịch: job mới chốt06/01/2027; inference theo exact model/endpoint. Lập phương án chuyển đổi và kiểm eligibility trước hạn.</span></button>
-      <div class="quiz-feedback" role="status" data-explain="C đúng: ngừng tạo job và ngừng inference là hai lịch khác nhau. Kiểm exact model/endpoint, account và model/region trên nền tảng thay thế. Claude public API không có đường fine-tune public theo nguồn đã kiểm; không suy Bedrock eligibility từ inference lifecycle."></div>
+      <div class="quiz-feedback" role="status" data-explain="C đúng: ngừng tạo job và ngừng inference là hai lịch khác nhau. Kiểm exact model/endpoint, account và model/region trên nền tảng thay thế. Claude public API không có đường fine-tune public theo tài liệu nền tảng; không suy Bedrock eligibility từ inference lifecycle."></div>
     </div>
   </div>
   <div class="lesson-nav" data-navfor="m5-l2"></div>
@@ -2081,7 +2079,7 @@ tokens = tokenizer.apply_chat_template(
 
     <div class="callout insight">
       <div class="callout-title">Đừng chuyển từ "đọc theo version" sang "đọc theo vendor"</div>
-      <p>Hai checkpoint đã kiểm trong lần đọc này: Gemma 4 model card ghi Apache 2.0, Qwen3-32B có file Apache 2.0. Điều đó không tự nói gì về mọi model Gemma/Qwen hoặc checkpoint tương lai.</p>
+      <p>Theo tài liệu của từng checkpoint: Gemma 4 model card ghi Apache 2.0, Qwen3-32B có file Apache 2.0. Điều đó không tự nói gì về mọi model Gemma/Qwen hoặc checkpoint tương lai.</p>
       <p>Lưu model ID, revision và bản LICENSE đã đọc trong đề xuất. Nếu điều kiện không rõ hoặc không phù hợp cách phân phối dự kiến, giải quyết trước khi train.</p>
     </div>
 
@@ -2090,12 +2088,12 @@ tokens = tokenizer.apply_chat_template(
       <p>Ở bài 2.3 bạn chọn model để QLoRA theo <em>ngân sách GPU</em> (bảng VRAM chỉ là ước lượng vendor, cần đo theo workload). Bài này thêm một bộ lọc đứng <em>trước</em> ngân sách GPU: license. Một model 235B mà bạn không đủ GPU thì loại; nhưng một model <em>vừa</em> GPU mà license cấm phân phối phái sinh ở quy mô của bạn thì cũng loại, và cái loại thứ hai chỉ lộ ra ở vòng review license, muộn hơn nhiều.</p>
     </div>
 
-    <p class="muted">Nguồn kiểm tra ngày 12/11/2026: <a href="https://huggingface.co/meta-llama/Llama-4-Scout-17B-16E-Instruct/blob/main/LICENSE" target="_blank" rel="noreferrer">Llama 4 license</a>. <a href="https://ai.google.dev/gemma/docs/core/model_card_4" target="_blank" rel="noreferrer">Gemma 4</a>. <a href="https://huggingface.co/Qwen/Qwen3-32B/blob/main/LICENSE" target="_blank" rel="noreferrer">Qwen3-32B license</a>.</p><div class="takeaway">
+    <p class="muted">Nguồn: <a href="https://huggingface.co/meta-llama/Llama-4-Scout-17B-16E-Instruct/blob/main/LICENSE" target="_blank" rel="noreferrer">Llama 4 license</a>. <a href="https://ai.google.dev/gemma/docs/core/model_card_4" target="_blank" rel="noreferrer">Gemma 4</a>. <a href="https://huggingface.co/Qwen/Qwen3-32B/blob/main/LICENSE" target="_blank" rel="noreferrer">Qwen3-32B license</a>.</p><div class="takeaway">
       <span class="eyebrow">
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true" focusable="false"><path d="M12 2v6m0 8v6M4.9 4.9l4.2 4.2m5.8 5.8l4.2 4.2M2 12h6m8 0h6M4.9 19.1l4.2-4.2m5.8-5.8l4.2-4.2"/></svg>
         Takeaway
       </span>
-      <p><span class="hl">License đọc theo đúng checkpoint/revision và dự định dùng/phân phối. Gemma 4 và Qwen3-32B là hai bản Apache 2.0 đã kiểm; không suy thành mọi model cùng họ. Llama 4 có điều kiện MAU theo release date và naming/distribution cụ thể trong văn bản.</span></p>
+      <p><span class="hl">License đọc theo đúng checkpoint/revision và dự định dùng/phân phối. Gemma 4 và Qwen3-32B là hai checkpoint dùng Apache 2.0; không suy thành mọi model cùng họ. Llama 4 có điều kiện MAU theo release date và naming/distribution cụ thể trong văn bản.</span></p>
     </div>
 
     <div class="quiz" data-correct="1"><span class="eyebrow">Kiểm tra nhanh</span><p class="quiz-q">Team sẽ phân phối một model đã tune. Bằng chứng license cần dùng là gì?</p><button class="quiz-opt" onclick="quizPick(this,0)"><span class="quiz-letter">A</span><span>Tên hãng và bài tổng hợp leaderboard.</span></button><button class="quiz-opt" onclick="quizPick(this,1)"><span class="quiz-letter">B</span><span>LICENSE/model card đúng checkpoint/revision và điều kiện dùng/phân phối tương ứng.</span></button><button class="quiz-opt" onclick="quizPick(this,2)"><span class="quiz-letter">C</span><span>Chỉ xem model có tải được weights không.</span></button><div class="quiz-feedback" role="status" data-explain="Open-weight không có nghĩa điều khoản mọi version giống nhau. Llama 4 có điều kiện release-date MAU và naming cụ thể; Apache 2.0 vẫn có nghĩa vụ."></div></div>
@@ -2137,7 +2135,7 @@ tokens = tokenizer.apply_chat_template(
       <span class="eyebrow">Khái niệm</span>
       <h4>GGUF là format còn GPTQ/AWQ là thuật toán, đừng xếp ngang hàng</h4>
       <p>GGUF là định dạng đóng gói weights/tokenizer/metadata, có nhiều kiểu dữ liệu, không định nghĩa chỉ 2–8bit hay CPU-only. GPTQ/AWQ là thuật toán lượng tử hoá. Chọn engine/hardware và định dạng được exact version hỗ trợ; kiểm chất lượng sau nén.</p>
-      <p>Công cụ chạy quantization thay đổi nhanh. Pin engine, model và cấu hình được hỗ trợ thay vì suy từ tên thuật toán. Current vLLM mô tả GGUF qua plugin riêng, còn experimental và có đường GPU/tensor parallel; không coi một lệnh CLI minh hoạ là recipe production đã benchmark.</p>
+      <p>Công cụ chạy quantization thay đổi nhanh. Pin engine, model và cấu hình được hỗ trợ thay vì suy từ tên thuật toán. Tài liệu vLLM mô tả GGUF qua plugin riêng, còn experimental và có đường GPU/tensor parallel; không coi một lệnh CLI minh hoạ là recipe production đã benchmark.</p>
     </div>
 
     <figure class="figure">
@@ -2172,7 +2170,7 @@ tokens = tokenizer.apply_chat_template(
         <text class="dgm-ink2" x="320" y="222" text-anchor="middle" font-size="11" font-weight="600">Chọn artifact được engine hỗ trợ; benchmark trên hardware/workload đích</text>
         <path class="dgm-line" d="M114 192 V214 H526 V192" stroke-width="1.3" fill="none"/>
       </svg></div>
-      <figcaption><b>Hình 6.1</b>. GGUF là container, GPTQ/AWQ là thuật toán. <a href="https://raw.githubusercontent.com/ggml-org/ggml/master/docs/gguf.md" target="_blank" rel="noreferrer">Spec GGUF</a> có ALL_F32/MOSTLY_F16. <a href="https://arxiv.org/abs/2210.17323v2" target="_blank" rel="noreferrer">GPTQ v2(2023)</a> báo số GPU-hour/speedup ở setup paper; <a href="https://arxiv.org/abs/2306.00978v6" target="_blank" rel="noreferrer">AWQ v6</a> mô tả bảo vệ salient channel theo activation và TinyChat so HF FP16. Đây là kết quả có scope, không phải cam kết serving hiện tại. Các nguồn đọc13/11/2026.</figcaption>
+      <figcaption><b>Hình 6.1</b>. GGUF là container, GPTQ/AWQ là thuật toán. <a href="https://raw.githubusercontent.com/ggml-org/ggml/master/docs/gguf.md" target="_blank" rel="noreferrer">Spec GGUF</a> có ALL_F32/MOSTLY_F16. <a href="https://arxiv.org/abs/2210.17323v2" target="_blank" rel="noreferrer">GPTQ v2(2023)</a> báo số GPU-hour/speedup ở setup paper; <a href="https://arxiv.org/abs/2306.00978v6" target="_blank" rel="noreferrer">AWQ v6</a> mô tả bảo vệ salient channel theo activation và TinyChat so HF FP16. Đây là kết quả có scope, không phải cam kết serving hiện tại.</figcaption>
     </figure>
 
     <div class="concept">
@@ -2221,7 +2219,7 @@ tokens = tokenizer.apply_chat_template(
       <p>Lựa chọn engine/format theo hardware, model support và benchmark chất lượng/throughput. GGUF dùng được ở CPU và một số đường GPU; GPTQ/AWQ cần engine hỗ trợ đúng artifact. Không có bảng tên phương pháp nào thay thế được phép đo workload.</p>
     </div>
 
-    <p class="muted">Nguồn kiểm tra ngày 12/11/2026: <a href="https://docs.vllm.ai/en/latest/features/lora/" target="_blank" rel="noreferrer">vLLM LoRA security /serving</a>. <a href="https://docs.vllm.ai/en/latest/features/quantization/gguf/" target="_blank" rel="noreferrer">vLLM GGUF</a>.</p><div class="takeaway">
+    <p class="muted">Nguồn: <a href="https://docs.vllm.ai/en/latest/features/lora/" target="_blank" rel="noreferrer">vLLM LoRA security /serving</a>. <a href="https://docs.vllm.ai/en/latest/features/quantization/gguf/" target="_blank" rel="noreferrer">vLLM GGUF</a>.</p><div class="takeaway">
       <span class="eyebrow">
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true" focusable="false"><path d="M12 2v6m0 8v6M4.9 4.9l4.2 4.2m5.8 5.8l4.2 4.2M2 12h6m8 0h6M4.9 19.1l4.2-4.2m5.8-5.8l4.2-4.2"/></svg>
         Takeaway
@@ -2254,7 +2252,7 @@ tokens = tokenizer.apply_chat_template(
       </ul>
     </div>
 
-    <p>Bạn đã học từng mảnh rời: hai trục context/hành vi, LoRA/QLoRA, DPO/GRPO, LIMA, chat template, eval ba lớp, license, quantization, serving. Giờ sếp giao "viết một đề xuất fine-tune hoàn chỉnh" và bạn đứng hình: xâu chúng lại theo thứ tự nào? Bài này ghép tất cả trên <strong>một dự án ví dụ</strong> (một bot hỗ trợ hay trả lời sai định dạng và lệch giọng) để thấy hình dạng cả pipeline.</p>
+    <p>Bạn đã học từng mảnh rời: hai trục context/hành vi, LoRA/QLoRA, DPO/GRPO, LIMA, chat template, eval ba lớp, license, quantization, serving. Khi cần viết một đề xuất fine-tune hoàn chỉnh, hãy xếp các bước theo thứ tự ra quyết định. Bài này ghép tất cả trên <strong>một dự án ví dụ</strong> (một bot hỗ trợ hay trả lời sai định dạng và lệch giọng) để thấy hình dạng cả pipeline.</p>
 
     <div class="callout info">
       <div class="callout-title">Đây là một dự án ví dụ</div>
@@ -2303,7 +2301,7 @@ tokens = tokenizer.apply_chat_template(
         <text class="dgm-ink" x="76" y="341" font-size="11.5" font-weight="700">8 · Quantize/serve: kiểm capacity và ACL</text>
         <text class="dgm-ink2" x="560" y="341" font-size="10" font-family="IBM Plex Mono" text-anchor="end">bài 6.1</text>
       </svg></div>
-      <figcaption><b>Hình 6.3</b>. Toàn khoá là <em>một</em> pipeline quyết định, không phải mười sáu chủ đề rời. Fine-tune (bước 5) đứng sau eval (1) và phân loại trục lỗi (2) — bạn chỉ chạm GPU khi đã biết đo cải thiện bằng gì và chắc lỗi thuộc trục hành vi. Mỗi ô trỏ về đúng bài trình bày nó.</figcaption>
+      <figcaption><b>Hình 6.3</b>. Hình ghép các bước thành <em>một</em> pipeline quyết định. Fine-tune (bước 5) đứng sau eval (1) và phân loại trục lỗi (2) — bạn chỉ chạm GPU khi đã biết đo cải thiện bằng gì và chắc lỗi thuộc trục hành vi. Mỗi ô trỏ về đúng bài trình bày nó.</figcaption>
     </figure>
 
     <div class="concept">
@@ -2329,13 +2327,13 @@ tokens = tokenizer.apply_chat_template(
 
     <div class="callout warn">
       <div class="callout-title">Đường thoát: pipeline này cần một điều kiện dừng, viết ra từ bước 1</div>
-      <p>Tám bước trên nói cho bạn cách <em>đi tiếp</em>. Thứ chúng không tự có là quyền <em>dừng lại</em>. Một dự án fine-tune không có điều kiện dừng thì sẽ tự gia hạn mãi, vì lúc nào cũng còn một epoch nữa, một batch dữ liệu nữa để thử.</p>
+      <p>Tám bước trên nói cho bạn cách <em>đi tiếp</em>. Thứ chúng không tự có là quyền <em>dừng lại</em>. Đặt ngân sách và số vòng tối đa trước khi train để quyết định khi nào dừng thử nghiệm.</p>
       <p><strong>Ở bước 1, cùng lúc với việc dựng eval, hãy đăng ký trước ngưỡng thành công</strong>, bằng số, viết vào đề xuất, trước khi thấy bất kỳ kết quả nào: <em>chỉ ship nếu holdout cải thiện ≥ N điểm <strong>VÀ</strong> regression suite của các năng lực cũ không tụt</em>. Hai vế, nối bằng VÀ. Chọn N trước khi đo cùng final test chưa dùng và eval versioned giúp ngăn việc N lặng lẽ hạ xuống cho vừa con số bạn nhận được.</p>
-      <p><strong>Rồi ở bước 7 (eval), quyết định ba đường, có tên, không mập mờ:</strong> <strong>ship</strong> nếu qua cả hai vế; <strong>lặp một vòng nữa</strong> nếu suýt đạt và bạn biết cụ thể sẽ sửa gì (thường là dữ liệu, xem error analysis ở bài 4.3), với một số vòng tối đa đã ấn định trước; hoặc <strong>bỏ và quay về prompt + RAG</strong> nếu không. Đường thứ ba là một kết quả hợp lệ, không phải một thất bại: bạn vừa mua được câu trả lời "fine-tune không giải bài này" với giá một dự án nhỏ, và tránh trả giá một hệ production phải nuôi mãi. Ghi trước rằng nó tồn tại, để lúc cần rẽ vào không ai phải bảo vệ danh dự của mình.</p>
+      <p><strong>Rồi ở bước 7 (eval), quyết định ba đường, có tên, không mập mờ:</strong> <strong>ship</strong> nếu qua cả hai vế; <strong>lặp một vòng nữa</strong> nếu suýt đạt và bạn biết cụ thể sẽ sửa gì (thường là dữ liệu, xem error analysis ở bài 4.3), với một số vòng tối đa đã ấn định trước; hoặc <strong>bỏ và quay về prompt + RAG</strong> nếu không. Phương án quay về baseline phù hợp khi thử nghiệm chưa chứng minh lợi ích đủ để vận hành fine-tune. Ghi phương án quay về baseline trong kế hoạch.</p>
     </div>
 
     <div class="callout success">
-      <div class="callout-title">Việc làm trong 24 giờ tới</div>
+      <div class="callout-title">Bài thực hành</div>
       <p>Mở một vấn đề chất lượng model bạn đang gặp thật. Bước 1: xác định lỗi nằm ở dữ kiện/context, hành vi hay cả hai; kiểm trace và baseline. Bước 2: viết một trang đề xuất đi qua đúng tám bước trên, ghi rõ bạn sẽ đo cải thiện bằng eval nào, <em>trước</em> khi đụng tới GPU. Nếu thiếu dữ kiện hay đổi/cần nguồn, thử context trước và dùng eval quyết định có cần training.</p>
     </div>
 
@@ -2380,7 +2378,7 @@ tokens = tokenizer.apply_chat_template(
       </ul>
     </div>
 
-    <p>Bạn vừa đi qua sáu module. Vấn đề của kiến thức rời: đúng lúc cần — khi sếp giao "viết đề xuất fine-tune" và deadline là chiều mai — bạn không có thời gian lật lại mười sáu bài. Trang này nén cả khoá thành thứ dán được cạnh màn hình: mỗi bài một dòng mang đi, một checklist chạy tay trước khi chạm GPU, một bản đồ để định hướng. Không phải để đọc lại lý thuyết — để hành động. Mốc nội dung 12/11/2026, kiểm chứng 13/11/2026; giá và trạng thái các nền tảng managed đổi nhanh, nên kiểm docs chính thức trước khi quyết.</p>
+    <p>Trang này tổng hợp takeaway của từng bài, checklist chuẩn bị fine-tune và bản đồ các bước. Giá và vòng đời nền tảng managed cần đối chiếu với tài liệu chính thức trước khi quyết định.</p>
 
     <figure class="figure">
       <div class="diagram-viewport" role="region" tabindex="0" aria-label="Sơ đồ; cuộn ngang để đọc đầy đủ nhãn" style="--diagram-width:640px"><svg viewBox="0 0 640 340" role="img" aria-label="Ba đường ra ở bước 7 của pipeline: sau khi eval ba lớp xong, một cổng đã đăng ký từ bước 1 (holdout tăng ít nhất N điểm VÀ regression suite không tụt) rẽ thành ba nhánh — ship nếu qua cả hai vế; lặp thêm một vòng nếu suýt đạt và biết cụ thể sẽ sửa gì, với số vòng ấn định trước; hoặc bỏ fine-tune và quay về prompt cộng RAG nếu không đạt">
@@ -2441,7 +2439,7 @@ tokens = tokenizer.apply_chat_template(
           <tr><td><strong>4.1</strong></td><td>LIMA 1.000 ví dụ là thí nghiệm có scope; chất lượng/độ phủ cần eval, không suy luôn thắng 50.000 log.</td></tr>
           <tr><td><strong>4.2</strong></td><td>Schema dataset theo trainer/API; JSONL mỗi dòng một JSON; template đúng checkpoint và không thêm special token lặp.</td></tr>
           <tr><td><strong>4.3</strong></td><td>Split theo nhóm/time; validation chọn config; final test chưa dùng, paired CI và regression suite.</td></tr>
-          <tr><td>5.1</td><td>Chọn trainer/method theo model và workload, kiểm version/maintenance; torchtune ngừng phát triển2025, TorchForge tạm dừng theo nguồn đã kiểm.</td></tr>
+          <tr><td>5.1</td><td>Chọn trainer/method theo model và workload, kiểm version/maintenance; torchtune ngừng phát triển2025, TorchForge tạm dừng theo tài liệu nền tảng.</td></tr>
           <tr><td><strong>5.2</strong></td><td>OpenAI ngừng job mới06/01/2027; inference theo exact model lifecycle. Claude API/Bedrock phải tách scope region/model.</td></tr>
           <tr><td><strong>5.3</strong></td><td>Đọc LICENSE đúng checkpoint/revision; không suy từ vendor. Llama 4 có điều kiện MAU theo release date và naming/distribution cụ thể.</td></tr>
           <tr><td><strong>6.1</strong></td><td>GGUF là format; GPTQ/AWQ là thuật toán. Shared base tiết kiệm bộ nhớ nhưng capacity và adapter ACL phải kiểm.</td></tr>
@@ -2469,7 +2467,7 @@ tokens = tokenizer.apply_chat_template(
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true" focusable="false"><path d="M12 2v6m0 8v6M4.9 4.9l4.2 4.2m5.8 5.8l4.2 4.2M2 12h6m8 0h6M4.9 19.1l4.2-4.2m5.8-5.8l4.2-4.2"/></svg>
         Takeaway
       </span>
-      <p>Một trang mang đi không phải để đọc lại — để hành động: mười sáu dòng distill, một checklist chạy tay, một pipeline tám bước. Dán nó cạnh màn hình và nhớ điều nén cả khoá: <span class="hl">fine-tune là mắt xích gần cuối, không phải bước đầu — eval và phân loại trục lỗi đi trước, GPU đi sau</span>.</p>
+      <p>Trang tra cứu gồm mười sáu dòng distill, một checklist chạy tay, một pipeline tám bước. Thứ tự cần giữ: <span class="hl">fine-tune là mắt xích gần cuối, không phải bước đầu — eval và phân loại trục lỗi đi trước, GPU đi sau</span>.</p>
     </div>
 
     <div class="quiz" data-correct="0"><span class="eyebrow">Kiểm tra nhanh</span><p class="quiz-q">Hai model chấm cùng150 câu, điểm72%→94%, và một số câu cùng thread. Kế hoạch xác nhận nào đúng?</p><button class="quiz-opt" onclick="quizPick(this,0)"><span class="quiz-letter">A</span><span>Lưu paired outcomes, kiểm leakage/split theo thread/time, chọn config trên validation; final test+cluster-aware CI và regression trước deploy.</span></button><button class="quiz-opt" onclick="quizPick(this,1)"><span class="quiz-letter">B</span><span>Tính SE như hai mẫu độc lập rồi ship.</span></button><button class="quiz-opt" onclick="quizPick(this,2)"><span class="quiz-letter">C</span><span>Điểm tăng chứng minh dataset tốt; có thể tune tiếp trên final test.</span></button><div class="quiz-feedback" role="status" data-explain="Giữ đơn vị độc lập đúng với câu hỏi triển khai. Paired marginal rates chưa đủ xác định CI; thread liên quan cần phân tích theo nhóm. Kết quả tốt vẫn phải qua budget và regression."></div></div>
@@ -2483,12 +2481,12 @@ tokens = tokenizer.apply_chat_template(
       <div class="complete">
         <div class="complete-badge">✓</div>
         <h2>Hoàn thành khoá học</h2>
-        <p>Bạn đã đi từ «fine-tune có thể học dữ kiện và hành vi, cần chọn đúng cơ chế cập nhật» → khung quyết định eval-trước → bốn giai đoạn huấn luyện → cái giá 16 bytes/param của full fine-tuning → LoRA/QLoRA → RLHF và hai lối tắt DPO/GRPO → data curation kiểu LIMA, chat template, eval ba lớp → toolchain tự host và managed platform 2026 (với những cái đang khai tử) → license open-weight → quantization và multi-LoRA serving, rồi ghép tất cả trên một dự án ví dụ. Việc đáng làm trong 24 giờ tới: lấy MỘT vấn đề chất lượng model bạn đang gặp, phân loại nó theo hai trục context/hành vi, và viết một trang đề xuất đi qua checklist bài tổng kết — trước khi đụng tới GPU. Muốn học retrieval sâu, xem «RAG, Layer by Layer»; đo độ tin cậy agent, xem «Agent Reliability & Evaluation»; nền tảng prompting, xem «AI Practical Playbook».</p>
+        <p>Bạn đã đi từ «fine-tune có thể học dữ kiện và hành vi, cần chọn đúng cơ chế cập nhật» → khung quyết định eval-trước → bốn giai đoạn huấn luyện → cái giá 16 bytes/param của full fine-tuning → LoRA/QLoRA → RLHF và hai lối tắt DPO/GRPO → data curation kiểu LIMA, chat template, eval ba lớp → toolchain tự host và vòng đời managed platform → license open-weight → quantization và multi-LoRA serving, rồi ghép tất cả trên một dự án ví dụ. Bài thực hành: lấy một vấn đề chất lượng model bạn đang gặp, phân loại nó theo hai trục context/hành vi, và viết một trang đề xuất đi qua checklist bài tổng kết — trước khi đụng tới GPU. Muốn học retrieval sâu, xem «RAG, Layer by Layer»; đo độ tin cậy agent, xem «Agent Reliability & Evaluation»; nền tảng prompting, xem «AI Practical Playbook».</p>
         <div style="margin-top:26px"><a class="btn btn-primary" href="#overview">Về trang đầu</a></div>
       </div>
     </section>
 
-    <footer class="site">LLM Fine-tuning &amp; Model Customization · khoá học tương tác · 2026 · mốc nội dung 12/11/2026 · kiểm chứng 13/11/2026</footer>
+    <footer class="site">LLM Fine-tuning &amp; Model Customization · khoá học tương tác</footer>
   </main>
 </div>
 
@@ -2513,10 +2511,10 @@ const LESSONS = [
   {id:'m3-l2', mod:3, part:'Phần III · Preference tuning', title:'DPO và GRPO: khác nhau ở mục tiêu và vòng huấn luyện', desc:'DPO tối ưu preference offline không PPO; GRPO vẫn là RL, thay critic bằng group baseline. Chọn theo reward/data/hạ tầng.'},
   {id:'m4-l1', mod:4, part:'Phần IV · Dữ liệu & eval', title:'LIMA: dữ liệu chọn lọc và phạm vi kết quả', desc:'LIMA1000 cặp là kết quả thí nghiệm có scope; curate/split theo độ phủ và kiểm held-out, không suy số dòng quyết định thắng thua.'},
   {id:'m4-l2', mod:4, part:'Phần IV · Dữ liệu & eval', title:'Format đúng: JSONL, chat template, và cái bẫy mismatch', desc:'Dataset SFT là JSONL chat-schema; open-weight phải áp đúng chat template gốc, kẻo degradation.'},
-  {id:'m4-l3', mod:4, part:'Phần IV · Dữ liệu & eval', title:'Eval sau fine-tune: ba lớp kiểm tra và những cách điểm số nói dối', desc:'Ba lớp: holdout · loss-curve · test tay; cảnh giác contamination, shortcut, forgetting.'},
-  {id:'m5-l1', mod:5, part:'Phần V · Toolchain & hạ tầng 2026', title:'Toolchain tự host: TRL, PEFT, Axolotl, Unsloth — và trạng thái torchtune', desc:'Chọn theo trainer/model/hardware và version/maintenance; benchmark claim tốc độ/VRAM trên workload.'},
-  {id:'m5-l2', mod:5, part:'Phần V · Toolchain & hạ tầng 2026', title:'Managed fine-tuning 2026: ai còn, ai đang khai tử', desc:'Tách lịch tạo job và inference; kiểm exact model/endpoint, region và account trên từng nền tảng.'},
-  {id:'m5-l3', mod:5, part:'Phần V · Toolchain & hạ tầng 2026', title:'Chọn model open-weight: đọc license trước khi đọc benchmark', desc:'License đúng checkpoint/revision và cách dùng/phân phối; Llama4 có điều kiện release-date MAU/naming cụ thể.'},
+  {id:'m4-l3', mod:4, part:'Phần IV · Dữ liệu & eval', title:'Eval sau fine-tune: ba lớp kiểm tra và nguồn sai lệch', desc:'Ba lớp: holdout · loss-curve · test tay; cảnh giác contamination, shortcut, forgetting.'},
+  {id:'m5-l1', mod:5, part:'Phần V · Toolchain & hạ tầng', title:'Toolchain tự host: TRL, PEFT, Axolotl, Unsloth — và trạng thái torchtune', desc:'Chọn theo trainer/model/hardware và version/maintenance; benchmark claim tốc độ/VRAM trên workload.'},
+  {id:'m5-l2', mod:5, part:'Phần V · Toolchain & hạ tầng', title:'Managed fine-tuning: vòng đời training và inference', desc:'Tách lịch tạo job và inference; kiểm exact model/endpoint, region và account trên từng nền tảng.'},
+  {id:'m5-l3', mod:5, part:'Phần V · Toolchain & hạ tầng', title:'Chọn model open-weight: đọc license trước khi đọc benchmark', desc:'License đúng checkpoint/revision và cách dùng/phân phối; Llama4 có điều kiện release-date MAU/naming cụ thể.'},
   {id:'m6-l1', mod:6, part:'Phần VI · Serving & tổng hợp', title:'Sau fine-tune: quantization, GGUF/AWQ/GPTQ, và multi-LoRA serving', desc:'GGUF là format vs GPTQ/AWQ là thuật toán; số từ paper gốc; multi-LoRA serving cho N tenant trên 1 base.'},
   {id:'m6-l2', mod:6, part:'Phần VI · Serving & tổng hợp', title:'Ghép hết: một dự án fine-tune ví dụ từ quyết định tới serving', desc:'Pipeline quyết định tám bước trên một dự án ví dụ; mỗi bước chặn một sai lầm và trỏ về đúng bài đã trình bày nó.'},
   {id:'m7-l1', mod:7, part:'Tổng kết', title:'Tổng kết · Cheat sheet 1 trang', desc:'Nén cả khoá thành một trang mang đi: mười sáu dòng distill, checklist trước khi bấm nút fine-tune, và pipeline quyết định tám bước.'},
