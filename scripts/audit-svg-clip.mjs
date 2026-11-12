@@ -56,8 +56,7 @@ try {
  *  routinely absent from the cache while a newer one sits right next to it. */
 function findBrowser() {
   const cache = join(homedir(), 'Library', 'Caches', 'ms-playwright');
-  if (!existsSync(cache)) return undefined;
-  const builds = readdirSync(cache)
+  const builds = (existsSync(cache) ? readdirSync(cache) : [])
     .filter(d => /^chromium(_headless_shell)?-\d+$/.test(d))
     .sort((a, b) => Number(a.match(/\d+$/)[0]) - Number(b.match(/\d+$/)[0]))
     .reverse();
@@ -73,6 +72,8 @@ function findBrowser() {
       if (existsSync(p) && statSync(p).isFile()) return p;
     }
   }
+  const systemChrome = '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome';
+  if (existsSync(systemChrome)) return systemChrome;
   return undefined;
 }
 
@@ -107,6 +108,23 @@ const PROBE = () => {
           px: Math.round(worst[1] * 10) / 10,
         });
       }
+    });
+  });
+  return out;
+};
+
+// AGENTS §5: measure rendered text, not document overflow or nominal SVG font size.
+const READABILITY_PROBE = () => {
+  const out = [];
+  document.querySelectorAll('figure svg[viewBox] text').forEach(t => {
+    if (!t.textContent.trim() || !t.getBoundingClientRect().width) return;
+    const matrix = t.getScreenCTM();
+    if (!matrix) return;
+    const size = parseFloat(getComputedStyle(t).fontSize) * Math.hypot(matrix.a, matrix.b);
+    if (size < 7.99) out.push({
+      lesson: t.closest('[data-lesson]')?.id || '(overview)',
+      text: t.textContent.trim().slice(0, 60),
+      size: Math.round(size * 100) / 100,
     });
   });
   return out;
@@ -151,14 +169,24 @@ for (const file of files) {
   try {
     await page.goto(`${origin}/${encodeURIComponent(basename(file))}`, { waitUntil: 'networkidle' });
     await page.evaluate(() => document.fonts?.ready);
-    const found = await page.evaluate(PROBE);
-    for (const f of found) {
-      hits++;
-      console.log(
-        `${basename(file)} | ${f.lesson} | ${f.figure}\n` +
-        `    "${f.text}"\n` +
-        `    -> overflows ${f.side} edge of its <svg> by ${f.px}px\n`
-      );
+    for (const width of [1440, 375]) {
+      await page.setViewportSize({ width, height: 900 });
+      const found = await page.evaluate(PROBE);
+      for (const f of found) {
+        hits++;
+        console.log(
+          `${basename(file)} | ${f.lesson} | ${f.figure} | ${width}px\n` +
+          `    "${f.text}"\n` +
+          `    -> overflows ${f.side} edge of its <svg> by ${f.px}px\n`
+        );
+      }
+      const tiny = await page.evaluate(READABILITY_PROBE);
+      for (const f of tiny) {
+        hits++;
+        console.log(`${basename(file)} | ${f.lesson} | AGENTS §5 | ${width}px\n` +
+          `    "${f.text}" renders at ${f.size}px; minimum 8px.\n` +
+          '    Preserve readable diagram scale in a labelled keyboard-scrollable region; keep the caption at page width.\n');
+      }
     }
   } finally {
     await page.close();
