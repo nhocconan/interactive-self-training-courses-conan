@@ -28,7 +28,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Agentic Decision Systems · Quyết định biết học, không tự mất kiểm soát</title>
-<meta name="description" content="Khoá học tương tác tiếng Việt cho kiến trúc sư và tech lead dựng hệ ra quyết định có học: decision contract và decision rights, kiến trúc 4 plane với kernel không thể bypass, rule receipts và logic ba giá trị, Engine ⟂ LLM copilot, đo trước khi tin (credibility, calibration, forecast ≠ lift), chọn công cụ causal, Thompson sampling và OPE có propensity thật, conformal prediction và drift làm gate, evals và trace đủ để audit. Cập nhật 09/2026.">
+<meta name="description" content="Khoá cho kiến trúc sư và tech lead: decision contract, quyền quyết định, kernel thực thi policy, rule receipts, Engine và LLM copilot, calibration, forecast khác causal lift, OPE có propensity, và tách gate dự báo, drift, quyền hành động. Ví dụ có giả định, nguồn và đường abstain/recovery.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
@@ -329,6 +329,9 @@ code{font-family:var(--font-mono);font-size:.86em;background:var(--surface-2);
 .figure figcaption{padding:10px 16px;font-size:12.5px;color:var(--ink-2);
   border-top:1px solid var(--border);background:var(--surface-2)}
 .figure figcaption b{color:var(--ink)}
+.diagram-viewport{overflow-x:auto;max-width:100%}
+.diagram-viewport:focus-visible{outline:2px solid var(--accent-2);outline-offset:-2px}
+.figure .diagram-viewport svg{min-width:var(--diagram-width)}
 /* diagram token helpers for inline SVG (use via class on SVG elements) */
 .dgm-box{fill:var(--surface-2);stroke:var(--border-strong)}
 .dgm-accent{fill:color-mix(in srgb,var(--accent-2) 14%,var(--surface));stroke:var(--accent-2)}
@@ -447,6 +450,9 @@ footer.site{border-top:1px solid var(--border);padding:26px 24px;text-align:cent
   body{background:#fff;color:#000}
 }
 </style>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E📚%3C/text%3E%3C/svg%3E">
+<meta name="course-knowledge-cutoff" content="2026-11-12">
+<meta name="course-reviewed" content="2026-11-13">
 </head>
 <body data-theme="agentic">
 <a href="#main" class="skip-link">Bỏ qua, tới nội dung chính</a>
@@ -512,7 +518,7 @@ footer.site{border-top:1px solid var(--border);padding:26px 24px;text-align:cent
             <tr><td><b>UNKNOWN (Kleene)</b></td><td>Giá trị thứ ba khi dữ liệu thiếu; không phải FALSE; dẫn tới abstain hoặc escalate.</td></tr>
             <tr><td><b>Champion / challenger</b></td><td>Artifact production hiện tại và candidate đang được chứng minh.</td></tr>
             <tr><td><b>Point-in-time</b></td><td>Chỉ dùng dữ liệu thật sự tồn tại tại thời điểm quyết định; chống nhìn thấy tương lai.</td></tr>
-            <tr><td><b>Credibility Z = k/(k+K)</b></td><td>Hệ số co bằng chứng theo số mẫu k; K là hằng số tin cậy.</td></tr>
+            <tr><td><b>Credibility Z = k/(k+K)</b></td><td>Trọng số của trung bình riêng trong mô hình nhóm; K = EPV/VHM. Không phải xác suất đúng.</td></tr>
             <tr><td><b>Forecast ≠ lift</b></td><td>Dự báo 'ai sẽ mua' không nói 'ai mua VÌ lever'; lift cần counterfactual.</td></tr>
             <tr><td><b>Propensity</b></td><td>Xác suất policy cũ đã chọn action đó, ghi tại thời điểm draw.</td></tr>
             <tr><td><b>OPE</b></td><td>Ước lượng policy mới từ log policy cũ; chỉ đáng tin khi có propensity, overlap và ESS đủ.</td></tr>
@@ -574,7 +580,7 @@ footer.site{border-top:1px solid var(--border);padding:26px 24px;text-align:cent
           </div>
 
           <figure class="figure">
-            <svg viewBox="0 0 820 268" role="img" aria-label="Ba mức hệ đặt cạnh nhau: chatbot đo bằng helpfulness và không có side effect; agent workflow đo bằng task success với side effect có biên; decision system đo bằng outcome, chạy vòng evidence tới choice, approval tới action, outcome tới evaluation, promotion và rollback, toàn bộ nằm trong một trust boundary do owner giữ quyền.">
+            <div class="diagram-viewport" role="region" tabindex="0" aria-label="Sơ đồ; cuộn ngang để đọc đầy đủ nhãn" style="--diagram-width:820px"><svg viewBox="0 0 820 268" role="img" aria-label="Ba mức hệ đặt cạnh nhau: chatbot đo bằng helpfulness và không có side effect; agent workflow đo bằng task success với side effect có biên; decision system đo bằng outcome, chạy vòng evidence tới choice, approval tới action, outcome tới evaluation, promotion và rollback, toàn bộ nằm trong một trust boundary do owner giữ quyền.">
               <rect class="dgm-line" x="516" y="36" width="290" height="214" rx="16" stroke-width="1.5" stroke-dasharray="7 5"/>
               <text class="dgm-ink2" x="661" y="56" text-anchor="middle" font-size="12" font-family="IBM Plex Mono">TRUST BOUNDARY · owner giữ quyền</text>
 
@@ -602,7 +608,7 @@ footer.site{border-top:1px solid var(--border);padding:26px 24px;text-align:cent
               <text class="dgm-ink2" x="550" y="204" font-size="12" font-family="IBM Plex Mono">promotion / rollback</text>
 
               <defs><marker id="m1l1-ah" markerWidth="9" markerHeight="9" refX="7" refY="4.5" orient="auto"><path d="M0 0 L9 4.5 L0 9 z" fill="var(--accent-2)"/></marker></defs>
-            </svg>
+            </svg></div>
             <figcaption><b>Hình 1.1.</b> Một decision system phải kể lại được: biết gì, chọn gì, ai duyệt, đã làm gì, và outcome nào được phép dùng để học. Trust boundary bao quanh đúng phần đó.</figcaption>
           </figure>
 
@@ -633,7 +639,7 @@ footer.site{border-top:1px solid var(--border);padding:26px 24px;text-align:cent
             <div class="compare-col good"><span class="eyebrow">Cách đọc đúng</span><ul><li>Task success là một điều kiện; outcome sau cửa sổ quy kết mới là thang đo.</li><li>Feedback là dữ liệu vào ledger; đổi policy cần candidate qua gate.</li><li>Đổi hành vi production là một release, có owner và có rollback.</li></ul></div>
           </div>
 
-          <p>Lớp hệ này đã có tên trên thị trường: Gartner công bố Magic Quadrant đầu tiên cho Decision Intelligence Platforms ngày 26/01/2026. Cái tên có mặt trên slide mua sắm trước khi trust boundary có mặt trong kiến trúc, nên hãy đọc nó như một dấu hiệu thị trường chứ không phải một luận cứ kỹ thuật.</p>
+          <p>Lớp hệ này đã có tên trên thị trường: Gartner công bố Magic Quadrant cho Decision Intelligence Platforms ngày 26/01/2026. Cái tên có mặt trên slide mua sắm trước khi trust boundary có mặt trong kiến trúc, nên hãy đọc nó như một dấu hiệu thị trường chứ không phải một luận cứ kỹ thuật.</p>
 
           <p>Khoá này giả định bạn đã biết agent loop cơ bản và sẽ không dạy lại phần đó: harness và loop nằm ở «Context &amp; Harness Engineering» và «Loop Engineering», eval chi tiết ở «Agent Reliability &amp; Evaluation», retrieval ở «RAG &amp; Information Retrieval», nền data warehouse và DSS ở «DSS · Data Warehouse · IDSS».</p>
 
@@ -703,7 +709,7 @@ footer.site{border-top:1px solid var(--border);padding:26px 24px;text-align:cent
           <p>Hai thang có độ dài khác nhau, và điều đó có nghĩa. Trục L dừng ở L5 vì mức cuối cùng của bằng chứng là dựng lại được quyết định cũ và so được champion với challenger trên cùng dữ liệu. Trục A dừng ở A4 vì mức cuối cùng của tự chủ vẫn là bounded auto-execute: có trần, có allowlist target, có kill switch đã test. Bảng này không có ô «hệ muốn làm gì thì làm», và đó là một lựa chọn thiết kế chứ không phải một chỗ còn bỏ trống.</p>
 
           <figure class="figure">
-            <svg viewBox="0 0 820 356" role="img" aria-label="Lưới hai trục: sáu mức bằng chứng L0 đến L5 theo chiều dọc và năm mức tự chủ A0 đến A4 theo chiều ngang. Ba ô được tô làm ví dụ: L1 với A3 là rule trong biên hẹp, L2 với A3 chỉ khi có approval, và L4 với A4 bị chặn vì thiếu idempotency. Bằng chứng cao không tự cấp quyền auto-execute.">
+            <div class="diagram-viewport" role="region" tabindex="0" aria-label="Sơ đồ; cuộn ngang để đọc đầy đủ nhãn" style="--diagram-width:820px"><svg viewBox="0 0 820 356" role="img" aria-label="Lưới hai trục: sáu mức bằng chứng L0 đến L5 theo chiều dọc và năm mức tự chủ A0 đến A4 theo chiều ngang. Ba ô được tô làm ví dụ: L1 với A3 là rule trong biên hẹp, L2 với A3 chỉ khi có approval, và L4 với A4 bị chặn vì thiếu idempotency. Bằng chứng cao không tự cấp quyền auto-execute.">
               <text class="dgm-ink" x="20" y="26" font-size="13" font-weight="700">BẰNG CHỨNG ↑ (L0–L5)</text>
               <text class="dgm-ink" x="754" y="26" text-anchor="end" font-size="13" font-weight="700">TỰ CHỦ → (A0–A4)</text>
               <rect class="dgm-box" x="104" y="40" width="650" height="276" rx="12"/>
@@ -731,7 +737,7 @@ footer.site{border-top:1px solid var(--border);padding:26px 24px;text-align:cent
               <text class="dgm-ink" x="559" y="206" text-anchor="middle" font-size="11" font-family="IBM Plex Mono">cần approval</text>
               <rect class="dgm-warn" x="629" y="90" width="120" height="38" rx="8" stroke-width="2"/>
               <text class="dgm-ink" x="689" y="114" text-anchor="middle" font-size="11" font-family="IBM Plex Mono">thiếu idempotency</text>
-            </svg>
+            </svg></div>
             <figcaption><b>Hình 1.2.</b> Ô an toàn là giao của hai gate, không phải trung bình của hai thang. Ô L4 × A4 bị chặn bởi một lỗi vận hành (chưa chống gửi trùng), trong khi ô L1 × A3 lại mở được nhờ biên hẹp.</figcaption>
           </figure>
 
@@ -752,7 +758,7 @@ footer.site{border-top:1px solid var(--border);padding:26px 24px;text-align:cent
 
           <div class="callout warn">
             <div class="callout-title">Lịch áp dụng đã đổi, kiểm lại trước khi dựa vào mốc nào</div>
-            <p><a href="https://eur-lex.europa.eu/legal-content/EN/TXT/?uri=OJ:L_202601744">Regulation (EU) 2026/1744</a> ngày 08/07/2026 (Digital Omnibus on AI), đăng Official Journal 24/07/2026 và hiệu lực 27/07/2026, dời ngày áp dụng Chương III mục 1–3 sang 02/12/2027 cho hệ high-risk theo Article 6(2) và Annex III, và sang 02/08/2028 cho hệ high-risk theo Article 6(1) và Annex I. Phạm vi high-risk vẫn đang được sửa, nên đọc văn bản gốc trước khi gắn mốc vào roadmap; bài tổng kết cuối khoá giữ danh sách nguồn.</p>
+            <p><a href="https://eur-lex.europa.eu/legal-content/EN/TXT/?uri=OJ:L_202601744">Regulation (EU) 2026/1744</a> (<a href="https://ai-act-service-desk.ec.europa.eu/en/ai-act/article-113?full=1">lịch áp dụng tại EC Article 113</a>) ngày 08/07/2026 (Digital Omnibus on AI), đăng Official Journal 24/07/2026 và hiệu lực 27/07/2026, dời ngày áp dụng Chương III mục 1–3 sang 02/12/2027 cho hệ high-risk theo Article 6(2) và Annex III, và sang 02/08/2028 cho hệ high-risk theo Article 6(1) và Annex I. Phạm vi high-risk vẫn đang được sửa, nên đọc văn bản gốc trước khi gắn mốc vào roadmap; bài tổng kết cuối khoá giữ danh sách nguồn.</p>
           </div>
 
           <div class="takeaway">
@@ -835,7 +841,7 @@ escalation:    UNKNOWN, vượt trần tiền, hoặc lever ngoài lever_set →
           <p><strong>Decision rights</strong> là cách viết quy tắc đó thành bảng: mỗi lever nhận một trần tự chủ theo ô nó rơi vào trong ma trận blast radius × khả năng đảo ngược. Bảng này viết một lần trong contract và áp cho cả engine lẫn người, nên nó không phải quy trình duyệt của một phòng ban.</p>
 
           <figure class="figure">
-            <svg viewBox="0 0 720 360" role="img" aria-label="Ma trận ba nhân ba. Trục ngang là blast radius nhỏ, vừa, lớn. Trục dọc là khả năng đảo ngược: trong giờ ở dưới, trong ngày ở giữa, không đảo ngược ở trên. Trần tự chủ mỗi ô, từ dưới trái lên trên phải: A4, A4, A3 ở hàng dưới; A4, A3, A3 ở hàng giữa; A3, A2, A2 ở hàng trên. Đổi thumbnail nằm ở ô A4 dưới trái, giảm giá 10% toàn shop nằm ở ô A2 trên phải.">
+            <div class="diagram-viewport" role="region" tabindex="0" aria-label="Sơ đồ; cuộn ngang để đọc đầy đủ nhãn" style="--diagram-width:720px"><svg viewBox="0 0 720 360" role="img" aria-label="Ma trận ba nhân ba. Trục ngang là blast radius nhỏ, vừa, lớn. Trục dọc là khả năng đảo ngược: trong giờ ở dưới, trong ngày ở giữa, không đảo ngược ở trên. Trần tự chủ mỗi ô, từ dưới trái lên trên phải: A4, A4, A3 ở hàng dưới; A4, A3, A3 ở hàng giữa; A3, A2, A2 ở hàng trên. Đổi thumbnail nằm ở ô A4 dưới trái, giảm giá 10% toàn shop nằm ở ô A2 trên phải.">
               <text class="dgm-ink" x="16" y="30" font-size="13" font-weight="700">KHẢ NĂNG ĐẢO NGƯỢC ↑</text>
               <text class="dgm-ink" x="680" y="30" text-anchor="end" font-size="13" font-weight="700">BLAST RADIUS →</text>
 
@@ -872,7 +878,7 @@ escalation:    UNKNOWN, vượt trần tiền, hoặc lever ngoài lever_set →
               <circle class="dgm-ink" cx="538" cy="106" r="5"/>
               <text class="dgm-ink" x="552" y="102" font-size="13" font-family="IBM Plex Mono">giảm giá 10%</text>
               <text class="dgm-ink" x="552" y="120" font-size="13" font-family="IBM Plex Mono">toàn shop</text>
-            </svg>
+            </svg></div>
             <figcaption><b>Hình 1.3.</b> Evidence nâng lever lên trục L; chỉ blast radius và khả năng đảo ngược đẩy nó sang phải trên trục A. Hai lever được vẽ ở đây có thể cùng đứng ở L2 mà trần vẫn cách nhau hai bậc.</figcaption>
           </figure>
 
@@ -963,7 +969,7 @@ escalation:    UNKNOWN, vượt trần tiền, hoặc lever ngoài lever_set →
     </div>
 
     <figure class="figure">
-      <svg viewBox="0 0 760 414" role="img" aria-label="Bốn plane của hệ quyết định: control plane giữ ba registry, online serving plane đi từ point-in-time store qua decision kernel và approval gate tới action worker, episode plane ghi append-only và nhận feedback từ kernel lẫn action worker, learning plane chạy bất đồng bộ rồi quay lại control plane bằng một promotion record">
+      <div class="diagram-viewport" role="region" tabindex="0" aria-label="Sơ đồ; cuộn ngang để đọc đầy đủ nhãn" style="--diagram-width:760px"><svg viewBox="0 0 760 414" role="img" aria-label="Bốn plane của hệ quyết định: control plane giữ ba registry, online serving plane đi từ point-in-time store qua decision kernel và approval gate tới action worker, episode plane ghi append-only và nhận feedback từ kernel lẫn action worker, learning plane chạy bất đồng bộ rồi quay lại control plane bằng một promotion record">
         <defs><marker id="m2l1-ah" markerWidth="9" markerHeight="9" refX="7" refY="4.5" orient="auto"><path d="M0 0 L9 4.5 L0 9 z" fill="var(--accent-2)"/></marker></defs>
 
         <rect class="dgm-line" x="14" y="14" width="732" height="76" rx="12"/>
@@ -1036,7 +1042,7 @@ escalation:    UNKNOWN, vượt trần tiền, hoặc lever ngoài lever_set →
         <path class="dgm-flow" d="M542 364 H566" stroke-width="2" marker-end="url(#m2l1-ah)"/>
         <path class="dgm-line" d="M600 284 V300 H119 V338" stroke-width="1.6" stroke-dasharray="5 4" marker-end="url(#m2l1-ah)"/>
         <path class="dgm-line" d="M716 364 H738 V24 H575 V44" stroke-width="1.6" stroke-dasharray="5 4" marker-end="url(#m2l1-ah)"/>
-      </svg>
+      </svg></div>
       <figcaption><b>Hình 2.1.</b> Hot path không train, cold path không được ghi đè champion. Hai đường chỉ gặp nhau ở ba chỗ: immutable episode, versioned artifact, và promotion record đi ngược lên control plane (đường đứt bên phải).</figcaption>
     </figure>
 
@@ -1059,13 +1065,13 @@ escalation:    UNKNOWN, vượt trần tiền, hoặc lever ngoài lever_set →
     <p>Giữa Decision kernel và Approval gate, phần lớn hệ chạy thật còn một node nữa mà sơ đồ chưa vẽ: <strong>automated reviewer</strong>, một classifier đọc typed proposal rồi quyết định cho đi thẳng hay đẩy sang người. Nó giữ được tốc độ mà không biến approval thành thao tác cơ học. Nhưng reviewer cũng là artifact chứ không phải một lớp bảo vệ miễn phí: có version, có promotion record, và có metric riêng, quan trọng nhất là false-negative rate trên tập hành động overeager có thật. Bài 4.3 đo đúng con số đó.</p>
 
     <h4>Ba tầng dữ liệu, một cửa vào</h4>
-    <p>Dữ liệu chảy vào kernel không đồng hạng. Đơn hàng, tồn kho và receipt là first-party ground truth. Bảng giá ngành hay share panel mua từ bên thứ ba mang rủi ro sampling và rủi ro phương pháp. Mentions, comment và post của creator thì tới theo phút nhưng bursty, hay khuyết, và có thể bị tác động từ bên ngoài. Ba tầng đó phải đi qua một <strong>point-in-time feature store</strong> trước khi chạm kernel, tức một store trả lời đúng câu “lúc 02:00 sáng thứ Hai chúng ta biết gì”. Tài liệu Feast mô tả cơ chế này: với <code>filter_by_created_timestamp=True</code>, “each entity dataframe row only sees feature values whose created timestamp is at or before its own timestamp”, đủ để “reproduce what the online store would have served at each event time” (<a href="https://docs.feast.dev/getting-started/concepts/point-in-time-joins">Feast docs</a>, truy cập 05/09/2026).</p>
+    <p>Dữ liệu chảy vào kernel không đồng hạng. Đơn hàng, tồn kho và receipt là first-party ground truth. Bảng giá ngành hay share panel mua từ bên thứ ba mang rủi ro sampling và rủi ro phương pháp. Mentions, comment và post của creator thì tới theo phút nhưng bursty, hay khuyết, và có thể bị tác động từ bên ngoài. Ba tầng đó phải đi qua một <strong>point-in-time feature store</strong> trước khi chạm kernel, tức một store trả lời đúng câu “lúc 02:00 sáng thứ Hai chúng ta biết gì”. Tài liệu Feast mô tả cơ chế này: với <code>filter_by_created_timestamp=True</code>, mỗi dòng chỉ đọc feature đã được tạo trước mốc tương ứng, nhằm “reproduce what the online store would have served at each event time” (<a href="https://docs.feast.dev/getting-started/concepts/point-in-time-joins">Feast docs</a>, truy cập 05/09/2026). Điều này cần created timestamp phản ánh lúc online biết giá trị, cột không NULL và offline store hỗ trợ flag; kiểm tra backend thực tế.</p>
 
     <figure class="figure">
-      <svg viewBox="0 0 760 270" role="img" aria-label="Ba tầng dữ liệu với trust weight và freshness cùng đổ vào một point-in-time feature store rồi mới tới decision kernel; một đường biên đứt bao quanh store và kernel mang nhãn tenant_id default deny, với một cửa phụ BYPASSRLS table owner nằm trên đường biên">
+      <div class="diagram-viewport" role="region" tabindex="0" aria-label="Sơ đồ; cuộn ngang để đọc đầy đủ nhãn" style="--diagram-width:760px"><svg viewBox="0 0 760 270" role="img" aria-label="Ba tầng dữ liệu với trust weight và freshness cùng đổ vào một point-in-time feature store rồi mới tới decision kernel; một đường biên đứt bao quanh store và kernel mang nhãn tenant_id default deny khi RLS bật, với một cửa phụ BYPASSRLS table owner nằm trên đường biên">
         <defs><marker id="m2l1-ah2" markerWidth="9" markerHeight="9" refX="7" refY="4.5" orient="auto"><path d="M0 0 L9 4.5 L0 9 z" fill="var(--accent-2)"/></marker></defs>
         <rect class="dgm-line" x="290" y="68" width="456" height="170" rx="14" stroke-width="1.6" stroke-dasharray="6 5"/>
-        <text class="dgm-ink2" x="298" y="60" font-size="11" font-family="IBM Plex Mono">tenant_id · default deny</text>
+        <text class="dgm-ink2" x="298" y="60" font-size="11" font-family="IBM Plex Mono">RLS bật · tenant_id · deny mặc định</text>
 
         <rect class="dgm-box" x="24" y="24" width="210" height="62" rx="10"/>
         <text class="dgm-ink" x="129" y="44" text-anchor="middle" font-size="11.5" font-weight="700">Tier 1 · first-party</text>
@@ -1098,11 +1104,11 @@ escalation:    UNKNOWN, vượt trần tiền, hoặc lever ngoài lever_set →
 
         <rect class="dgm-warn" x="420" y="222" width="210" height="30" rx="8"/>
         <text class="dgm-ink" x="525" y="241" text-anchor="middle" font-size="11" font-family="IBM Plex Mono">BYPASSRLS · table owner</text>
-      </svg>
-      <figcaption><b>Hình 2.2.</b> Store trả lời “lúc quyết định chúng ta biết gì”; đường biên tenant là default deny; và job chạy bằng role owner là cái cửa đi vòng qua đường biên đó.</figcaption>
+      </svg></div>
+      <figcaption><b>Hình 2.2.</b> Store trả lời “lúc quyết định chúng ta biết gì”; đường biên tenant chỉ default-deny khi đã bật RLS; và job chạy bằng role owner là cái cửa đi vòng qua đường biên đó.</figcaption>
     </figure>
 
-    <p>Đường biên tenant là invariant của kernel, không phải một bộ lọc viết trong query. PostgreSQL nói rõ tính chất làm nên khác biệt: “If no policy exists for the table, a <strong>default-deny</strong> policy is used, meaning that no rows are visible or can be modified”, và ngay sau đó là cửa thoát phải coi như hiểm hoạ: “Superusers and roles with the <code>BYPASSRLS</code> attribute always bypass the row security system” (PostgreSQL docs, truy cập 29/08/2026). Chủ bảng cũng đi vòng được trừ khi bật <code>FORCE ROW LEVEL SECURITY</code>. Job analytics chạy bằng role owner vì thế là đúng chỗ tenant isolation lặng lẽ ngừng có hiệu lực.</p>
+    <p>Trong thiết kế này, tenant isolation phải được kiểm ở write/read path, không chỉ trông vào một bộ lọc tuỳ chọn. Với PostgreSQL, cần <code>ALTER TABLE … ENABLE ROW LEVEL SECURITY</code>: khi đó truy cập thông thường mà chưa có policy sẽ bị default-deny. Nếu RLS chưa bật, quyền GRANT vẫn có thể cho đọc mọi hàng. Chạy bằng role không phải owner/superuser và không có <code>BYPASSRLS</code>; owner thường bypass trừ khi dùng <code>FORCE ROW LEVEL SECURITY</code>, còn superuser/BYPASSRLS vẫn bypass. Kiểm âm bằng role thực thi của ứng dụng. Nguồn <a href="https://www.postgresql.org/docs/current/ddl-rowsecurity.html">PostgreSQL row security</a>: “When row security is enabled on a table”.</p>
 
     <p>Quy tắc mà ba tầng sinh ra để bảo vệ: <strong>một tầng thấp không bao giờ được là operand duy nhất trong một rule kéo tiền</strong>. Khi tầng đó mất dữ liệu, operand là UNKNOWN chứ không phải 0, và bài 2.2 xử lý đúng tình huống này.</p>
 
@@ -1169,7 +1175,7 @@ outcome  = action_worker.dispatch(command, idempotency_key)</pre>
     </div>
 
     <figure class="figure">
-      <svg viewBox="0 0 760 340" role="img" aria-label="Ba bảng chân trị Kleene cho AND, OR và NOT với ô kết quả UNKNOWN được tô nổi; bên dưới, receipt có combiner AND ra UNKNOWN dẫn sang hộp abstain và escalate, còn đường tới hộp FALSE rule không bắn bị gạch chéo và ghi chú là lỗi im lặng">
+      <div class="diagram-viewport" role="region" tabindex="0" aria-label="Sơ đồ; cuộn ngang để đọc đầy đủ nhãn" style="--diagram-width:760px"><svg viewBox="0 0 760 340" role="img" aria-label="Ba bảng chân trị Kleene cho AND, OR và NOT với ô kết quả UNKNOWN được tô nổi; bên dưới, receipt có combiner AND ra UNKNOWN dẫn sang hộp abstain và escalate, còn đường tới hộp FALSE rule không bắn bị gạch chéo và ghi chú là lỗi im lặng">
         <defs><marker id="m2l2-ah" markerWidth="9" markerHeight="9" refX="7" refY="4.5" orient="auto"><path d="M0 0 L9 4.5 L0 9 z" fill="var(--accent-2)"/></marker></defs>
 
         <text class="dgm-ink" x="60" y="52" font-size="11.5" font-weight="700" font-family="IBM Plex Mono">AND</text>
@@ -1232,8 +1238,8 @@ outcome  = action_worker.dispatch(command, idempotency_key)</pre>
         <path class="dgm-warn" d="M322 292 L338 308" stroke-width="2.6"/>
         <path class="dgm-warn" d="M338 292 L322 308" stroke-width="2.6"/>
         <text class="dgm-ink2" x="430" y="326" text-anchor="middle" font-size="11">lỗi im lặng: engine đọc dòng khuyết thành 0 rồi kết luận FALSE</text>
-      </svg>
-      <figcaption><b>Hình 2.3.</b> Chỉ 5 trong 9 ô của AND và OR cho ra UNKNOWN, và mọi ô đó đều dẫn về một đường duy nhất: abstain kèm escalate. Đường còn lại bị gạch vì nó xoá luôn dấu vết của sự cố.</figcaption>
+      </svg></div>
+      <figcaption><b>Hình 2.3.</b> Mỗi bảng AND và OR có 3 trong 9 ô cho ra UNKNOWN, và mọi ô đó đều dẫn về một đường duy nhất: abstain kèm escalate. Đường còn lại bị gạch vì nó xoá luôn dấu vết của sự cố.</figcaption>
     </figure>
 
     <p>Đọc bảng bằng lời với đúng rule <code>reorder_v7</code> ở đầu bài: toán hạng tồn kho là TRUE, toán hạng social là UNKNOWN, combiner là AND, nên tra ô hàng T cột U được <strong>U</strong>. Nếu tồn kho đã là FALSE thì ô hàng F cột U cho <strong>F</strong>, và lúc đó kết luận “không bắn” là đúng, vì một toán hạng FALSE đủ sức quyết định một mình. Khác biệt giữa hai ô đó chính là khác biệt giữa một quyết định có căn cứ và một sự cố dữ liệu bị nuốt.</p>
@@ -1329,11 +1335,11 @@ outcome  = action_worker.dispatch(command, idempotency_key)</pre>
     <div class="concept">
       <span class="eyebrow">Khái niệm then chốt</span>
       <h4>Belief nằm ở code tất định, LLM chỉ nộp typed proposal</h4>
-      <p>Bài <em>The LLM Proposes, the Executive Disposes</em> (Mohsen Arjmandi, arXiv 2608.04066, nộp 04/08/2026) phát biểu cơ chế trong một câu: “A deterministic Executive owns all belief; a language model may only file typed proposals, and a claim is admitted only when a prediction pre-registered before acting is matched against observation by code.” Ba nước đi lấy được nguyên vẹn. Một, <strong>belief ownership</strong>: mọi state sống trong code tất định, LLM không có chỗ ghi. Hai, <strong>pre-registration</strong>: một claim chỉ được tính khi dự đoán đã đăng ký trước lúc hành động và được code đối chiếu với quan sát sau đó. Ba, <strong>self-invalidating run</strong>: chính bài đó báo “four of the first eight architecture runs were invalidated, each localizing a real defect”, tức run tự huỷ kết quả của mình khi vi phạm ngưỡng nội bộ.</p>
+      <p>Bài <em>The LLM Proposes, the Executive Disposes</em> (Mohsen Arjmandi, arXiv 2608.04066, nộp 04/08/2026) phát biểu cơ chế trong một câu: Executive tất định giữ belief; LLM chỉ nộp typed proposal; code đối chiếu dự đoán đã đăng ký trước với quan sát để tiếp nhận claim. Ba nước đi lấy được nguyên vẹn. Một, <strong>belief ownership</strong>: mọi state sống trong code tất định, LLM không có chỗ ghi. Hai, <strong>pre-registration</strong>: một claim chỉ được tính khi dự đoán đã đăng ký trước lúc hành động và được code đối chiếu với quan sát sau đó. Ba, <strong>self-invalidating run</strong>: chính bài đó báo “four of the first eight architecture runs were invalidated, each localizing a real defect”, tức run tự huỷ kết quả của mình khi vi phạm ngưỡng nội bộ.</p>
     </div>
 
     <figure class="figure">
-      <svg viewBox="0 0 760 350" role="img" aria-label="Hai làn song song: làn LLM copilot gồm retrieve context, hypothesise lever và draft explanation; làn kernel tất định gồm read PIT features, evaluate rules và emit receipt. Chỉ hai mũi tên được phép cắt qua ranh giới, một chiều sang phải mang typed proposal và một chiều sang trái mang receipt id kèm số; mũi tên thứ ba mang một con số không có receipt bị một thanh chắn cản lại">
+      <div class="diagram-viewport" role="region" tabindex="0" aria-label="Sơ đồ; cuộn ngang để đọc đầy đủ nhãn" style="--diagram-width:760px"><svg viewBox="0 0 760 350" role="img" aria-label="Hai làn song song: làn LLM copilot gồm retrieve context, hypothesise lever và draft explanation; làn kernel tất định gồm read PIT features, evaluate rules và emit receipt. Chỉ hai mũi tên được phép cắt qua ranh giới, một chiều sang phải mang typed proposal và một chiều sang trái mang receipt id kèm số; mũi tên thứ ba mang một con số không có receipt bị một thanh chắn cản lại">
         <defs><marker id="m2l3-ah" markerWidth="9" markerHeight="9" refX="7" refY="4.5" orient="auto"><path d="M0 0 L9 4.5 L0 9 z" fill="var(--accent-2)"/></marker></defs>
         <rect class="dgm-line" x="14" y="40" width="260" height="240" rx="14" stroke-width="1.6"/>
         <rect class="dgm-line" x="486" y="40" width="260" height="240" rx="14" stroke-width="1.6"/>
@@ -1367,7 +1373,7 @@ outcome  = action_worker.dispatch(command, idempotency_key)</pre>
         <path class="dgm-line" d="M144 252 V308 H430" stroke-width="1.6" stroke-dasharray="5 4" marker-end="url(#m2l3-ah)"/>
         <rect class="dgm-warn" x="438" y="290" width="8" height="36"/>
         <text class="dgm-ink2" x="580" y="313" text-anchor="middle" font-size="11">số không resolve về receipt id → fixture fail</text>
-      </svg>
+      </svg></div>
       <figcaption><b>Hình 2.4.</b> Hai làn chạy song song và chỉ chạm nhau ở hai điểm: một typed proposal đi sang, một receipt id kèm số đi về. Đường thứ ba, một con số do LLM tự phát, dừng ở thanh chắn.</figcaption>
     </figure>
 
@@ -1385,7 +1391,7 @@ outcome  = action_worker.dispatch(command, idempotency_key)</pre>
 
     <div class="callout info">
       <div class="callout-title">Khi hai agent đề xuất hai thứ khác nhau</div>
-      <p>Arbiter chọn giữa các proposal xung đột là code tất định và có version, nằm trong control plane cùng chỗ với policy registry ở bài 2.1. Bài <em>Reaching Agreement Among Reasoning LLM Agents</em> (Ruan, Wang, Shi, Li, arXiv 2512.20184, 23/12/2025) mô tả đúng cái phải thay: “existing multi-agent orchestration relies on static heuristic workflows such as fixed loop limits and barrier synchronization… risk finalizing transient agreements”, và đề xuất giao thức Aegean với “provable safety and liveness guarantees”, kèm số đo riêng của bài: độ trễ giảm 1,2 tới 20 lần so với các baseline đối chứng, chất lượng câu trả lời lệch trong phạm vi 2,5%. Điều cần lấy là hình dạng: một giao thức có tính chất được phát biểu, thay cho một vòng lặp có giới hạn số lần.</p>
+      <p>Arbiter chọn giữa các proposal xung đột là code tất định và có version, nằm trong control plane cùng chỗ với policy registry ở bài 2.1. Bài <em>Reaching Agreement Among Reasoning LLM Agents</em> (Ruan, Wang, Shi, Li, arXiv 2512.20184, 23/12/2025) mô tả đúng cái phải thay: các heuristic như giới hạn vòng lặp và barrier có thể chốt đồng thuận nhất thời, và đề xuất giao thức Aegean với “provable safety and liveness guarantees”, kèm số đo riêng của bài: trên bốn benchmark toán của bài, độ trễ giảm 1,2 tới 20 lần so với các baseline đối chứng, chất lượng câu trả lời lệch trong phạm vi 2,5%. Bảo đảm có điều kiện theo mô hình và giả định của giao thức, không chứng minh đồng thuận là sự thật trong mọi ứng dụng. Điều cần lấy là hình dạng: một giao thức có tính chất được phát biểu, thay cho một vòng lặp có giới hạn số lần.</p>
     </div>
 
     <div class="takeaway">
@@ -1434,7 +1440,7 @@ outcome  = action_worker.dispatch(command, idempotency_key)</pre>
     <p>Một dòng “decision hiện tại” là <strong>projection</strong>. Flight recorder cần thứ khác: một chuỗi append-only theo đúng thứ tự observation → retrieval → proposal → approval → action attempt → provider receipt → outcome → evaluation. Mỗi mắt xích ghi thêm, không mắt xích nào ghi đè.</p>
 
     <figure class="figure">
-      <svg viewBox="0 0 760 320" role="img" aria-label="Đồ thị provenance theo W3C PROV: entity snapshot được activity evaluate rule dùng, activity gắn với agent kernel v7.2 nằm bên dưới, và sinh ra entity receipt hash bên phải; một đường đứt vòng từ receipt hash trở lại snapshot mang nhãn replay bằng frozen input cộng đúng version cho ra cùng receipt hash">
+      <div class="diagram-viewport" role="region" tabindex="0" aria-label="Sơ đồ; cuộn ngang để đọc đầy đủ nhãn" style="--diagram-width:760px"><svg viewBox="0 0 760 320" role="img" aria-label="Đồ thị provenance theo W3C PROV: entity snapshot được activity evaluate rule dùng, activity gắn với agent kernel v7.2 nằm bên dưới, và sinh ra entity receipt hash bên phải; một đường đứt vòng từ receipt hash trở lại snapshot mang nhãn replay bằng frozen input cộng đúng version cho ra cùng receipt hash">
         <defs><marker id="m2l4-ah" markerWidth="9" markerHeight="9" refX="7" refY="4.5" orient="auto"><path d="M0 0 L9 4.5 L0 9 z" fill="var(--accent-2)"/></marker></defs>
         <circle class="dgm-box" cx="90" cy="80" r="46"/>
         <text class="dgm-ink2" x="90" y="74" text-anchor="middle" font-size="10" font-family="IBM Plex Mono">ENTITY</text>
@@ -1457,7 +1463,7 @@ outcome  = action_worker.dispatch(command, idempotency_key)</pre>
         <path class="dgm-line" d="M630 126 V264 H90 V126" stroke-width="1.6" stroke-dasharray="5 4" marker-end="url(#m2l4-ah)"/>
         <text class="dgm-ink" x="380" y="290" text-anchor="middle" font-size="12" font-weight="700">REPLAY = frozen input + đúng version → cùng receipt hash</text>
         <text class="dgm-ink2" x="380" y="310" text-anchor="middle" font-size="10">“100% quyết định có outcome link” mới là completeness, chưa phải replay</text>
-      </svg>
+      </svg></div>
       <figcaption><b>Hình 2.5.</b> PROV-O cho ta ngữ pháp: dữ liệu và artifact là Entity, bước evaluate hay action là Activity, còn người hoặc service hoặc model là Agent. Vòng đứt phía dưới là replay, và nó chỉ đóng được khi input đã đóng băng.</figcaption>
     </figure>
 
@@ -1486,7 +1492,7 @@ provider_receipt=p_82 · outcome_window=+7d · reward=+₫3,1M</pre>
     </div>
 
     <h4>Ghi theo nhóm thuộc tính, vì mỗi nhóm hỏng theo một kiểu</h4>
-    <p>Decision Event Schema (bài <em>Decision Trace Schema for Governance Evidence in Real-Time Risk Systems</em>, Oleg Solozobov, arXiv 2604.09296, nộp 10/04/2026) đặt tên cho vấn đề mà mọi team gặp: “Regulatory frameworks prescribe what must be recorded without specifying a data model for how to record it”, và gọi đó là Fragmented Trace Problem. Schema có sáu nhóm trường gốc, mỗi nhóm gắn với một kiểu suy thoái riêng. Trong bài, <code>schema_version</code> được nêu với giá trị ví dụ <code>"0.3.0"</code>, tức đây là một đề xuất học thuật 2026 chứ chưa phải chuẩn đã phát hành.</p>
+    <p><a href="https://arxiv.org/pdf/2604.09296">Decision Event Schema</a> (Solozobov, 2026, mục 3–4; đọc 12/11/2026) gọi tình trạng bằng chứng rải qua các lớp là Fragmented Trace Problem. Schema có sáu nhóm trường gốc, mỗi nhóm gắn với một kiểu suy thoái riêng. Trong bài, <code>schema_version</code> được nêu với giá trị ví dụ <code>"0.3.0"</code>, tức đây là một đề xuất học thuật 2026 chứ chưa phải chuẩn đã phát hành.</p>
 
     <div class="table-wrap">
       <table>
@@ -1502,14 +1508,14 @@ provider_receipt=p_82 · outcome_window=+7d · reward=+₫3,1M</pre>
       </table>
     </div>
 
-    <p>Hai quy tắc trong bài đó đáng chép nguyên vào hệ của bạn. Thứ nhất là <strong>sealing</strong>: khi <code>current_hash</code> đã tính xong, bản ghi bị niêm phong, và dữ liệu tới muộn được ghi thành bản ghi liên kết append-only tham chiếu <code>decision_id</code> cũ, không sửa dòng cũ. Thứ hai là <strong>override attribution</strong>: khi <code>override_occurred</code> là true, các trường <code>original_output</code>, <code>overridden_output</code>, <code>override_timestamp</code> trở thành bắt buộc, đúng như bài viết nói, để “prevent anonymous or unjustified overrides from passing validation”. Mười trường bắt buộc ở cấp gốc là mức tối thiểu, còn payload thì chia ba tier theo mức rủi ro: khoảng 200 đến 500 byte cho tier nhẹ, 2 đến 5 KB cho tier lấy mẫu, 5 đến 20 KB cho tier đầy đủ.</p>
+    <p>Hai quy tắc trong bài đó đáng chép nguyên vào hệ của bạn. Thứ nhất là <strong>sealing</strong>: khi <code>current_hash</code> đã tính xong, bản ghi bị niêm phong, và dữ liệu tới muộn được ghi thành bản ghi liên kết append-only tham chiếu <code>decision_id</code> cũ, không sửa dòng cũ. Thứ hai là <strong>override attribution</strong>: khi <code>override_occurred</code> là true, các trường <code>original_output</code>, <code>overridden_output</code>, <code>override_timestamp</code> trở thành bắt buộc. Với override một quyết định thuật toán, schema còn yêu cầu <code>override_actor</code> và <code>override_rationale</code> để ghi người thực hiện và lý do; ba trường đầu ra/thời gian tự chúng chưa cung cấp được hai thông tin này. Mười trường bắt buộc là mức tối thiểu trong schema đề xuất. Bảng 5 của bài <em>ước lượng</em> payload khoảng 200–500 byte, 2–5 KB và 5–20 KB cho ba tier; đây không phải dung lượng đo được hay yêu cầu pháp lý cho mọi hệ.</p>
 
     <div class="callout danger">
       <div class="callout-title">Container fallacy</div>
-      <p>Bài <em>Decision Evidence Maturity Model for Agentic AI</em> (Oleg Solozobov, arXiv 2605.04093, 29/04/2026) đặt tên cho cái bẫy: “an inferential step that treats evidence-container presence as if it implied audit sufficiency, when sufficiency requires per-question per-property checking that container presence does not perform.” Có log không đồng nghĩa với đủ để audit. Bài đó đo completeness trên bộ fixture, thấp nhất ở kiến trúc multi-agent cross-stack với 53,6%, nhưng chính tác giả cảnh báo con số là “implementation behaviour, not external validation”, và trường reasoning trace thì “uniformly opaque across all 140 scenarios”. Dùng để xếp hạng kiến trúc, đừng dùng để nói “ledger của chúng ta đầy đủ 94%”.</p>
+      <p><a href="https://arxiv.org/abs/2605.04093"><em>Decision Evidence Maturity Model for Agentic AI</em></a> (Solozobov, 2026) gọi việc đồng nhất sự có mặt của log với đủ bằng chứng audit là <b>container fallacy</b>. Abstract báo một feasibility exercise trên 140 tình huống tổng hợp và ba incident công khai, completeness 53,6–100%; chính tác giả ghi “implementation behaviour, not external validation”. Đây là kết quả của protocol/adapter trên fixture đó, không phải chứng nhận hay bảng xếp hạng cho kiến trúc của bạn. Hãy hỏi từng câu audit và kiểm từng thuộc tính cần để trả lời.</p>
     </div>
 
-    <p>Nghĩa vụ pháp lý đi cùng hướng. EU AI Act, Article 12(1): “High-risk AI systems shall technically allow for the automatic recording of events (logs) over the lifetime of the system”, với thời hạn lưu tối thiểu sáu tháng theo Article 19. <a href="https://eur-lex.europa.eu/legal-content/EN/TXT/?uri=OJ:L_202601744">Regulation (EU) 2026/1744</a> ngày 08/07/2026 (Digital Omnibus on AI) sửa các quy định liên quan và dời ngày áp dụng: 02/12/2027 cho hệ high-risk theo Article 6(2) và Annex III, 02/08/2028 cho hệ high-risk theo Article 6(1) và Annex I. Bản này đăng Official Journal ngày 24/07/2026 và có hiệu lực 27/07/2026 (kiểm EUR-Lex 05/09/2026).</p>
+    <p><a href="https://ai-act-service-desk.ec.europa.eu/en/ai-act/article-12">AI Act, Article 12(1)</a> yêu cầu hệ high-risk có khả năng ghi log tự động trong vòng đời. <a href="https://ai-act-service-desk.ec.europa.eu/en/ai-act/article-19">Article 19(1)</a> đặt nghĩa vụ giữ log cho <b>provider</b>, còn <a href="https://ai-act-service-desk.ec.europa.eu/en/ai-act/article-26">Article 26(6)</a> cho <b>deployer</b>: chỉ trong phạm vi log họ kiểm soát, thời hạn phù hợp mục đích và ít nhất sáu tháng, trừ khi luật EU/quốc gia áp dụng quy định khác, nhất là luật bảo vệ dữ liệu. Không suy ra mọi nội dung trace phải giữ sáu tháng. <a href="https://ai-act-service-desk.ec.europa.eu/en/ai-act/article-113?full=1">Article 113</a> ghi lịch áp dụng Chương III mục 1–3 (trừ Article 6(5)): 02/12/2027 cho Article 6(2)/Annex III và 02/08/2028 cho Article 6(1)/Annex I. Xác định đúng vai trò, phân loại và luật áp dụng trước khi chốt retention.</p>
 
     <div class="takeaway">
       <span class="eyebrow">
@@ -1593,7 +1599,7 @@ provider_receipt=p_82 · outcome_window=+7d · reward=+₫3,1M</pre>
           <p>Expiry và legal-hold là hai mặt của cùng một trường. Expiry nói bằng chứng phía sau một record đã cũ tới mức phải đo lại trước khi dùng tiếp, nên record hết hạn chuyển sang trạng thái phải xác nhận chứ không im lặng biến mất. Legal-hold thì khoá việc xoá, kể cả khi purpose đã hết, và hai quy tắc này phải cùng nằm trong record vì chúng va nhau đúng lúc bạn cần xoá dữ liệu nhất.</p>
 
           <figure class="figure">
-            <svg viewBox="0 0 720 300" role="img" aria-label="Ba nguồn ghi vào memory: outcome của episode và policy đã duyệt đi qua cổng origin binding vào memory store năm lớp, còn nguồn web ngoài chỉ tạo quarantined candidate rồi phải qua review của owner">
+            <div class="diagram-viewport" role="region" tabindex="0" aria-label="Sơ đồ; cuộn ngang để đọc đầy đủ nhãn" style="--diagram-width:720px"><svg viewBox="0 0 720 300" role="img" aria-label="Ba nguồn ghi vào memory: outcome của episode và policy đã duyệt đi qua cổng origin binding vào memory store năm lớp, còn nguồn web ngoài chỉ tạo quarantined candidate rồi phải qua review của owner">
               <rect class="dgm-box" x="16" y="40" width="170" height="48" rx="10"/>
               <text class="dgm-ink" x="101" y="69" text-anchor="middle" font-size="12" font-family="IBM Plex Mono">outcome của episode</text>
               <rect class="dgm-box" x="16" y="118" width="170" height="48" rx="10"/>
@@ -1627,14 +1633,14 @@ provider_receipt=p_82 · outcome_window=+7d · reward=+₫3,1M</pre>
               <path class="dgm-flow" d="M590 212 V180" stroke-width="2" marker-end="url(#m3l1-ah)"/>
               <text class="dgm-ink2" x="600" y="200" font-size="11" font-family="IBM Plex Mono">chỉ sau khi duyệt</text>
               <defs><marker id="m3l1-ah" markerWidth="9" markerHeight="9" refX="7" refY="4.5" orient="auto"><path d="M0 0 L9 4.5 L0 9 z" fill="var(--accent-2)"/></marker></defs>
-            </svg>
+            </svg></div>
             <figcaption><b>Hình 3.1.</b> Hai nguồn nội bộ đi thẳng qua cổng origin binding; nguồn ngoài chỉ tạo được candidate bị cách ly và phải có owner duyệt mới vào store. Không có mũi tên nào đi từ nguồn ngoài thẳng vào procedural memory.</figcaption>
           </figure>
 
           <p>Trở lại hai bản ghi floor. Bản A nói 25%, valid_from 01/03/2026, chưa có valid_to. Bản B nói 30%, valid_from 01/08/2026, supersedes A. Quyết định chạy ngày 15/08/2026 phải đọc B. Nhưng replay một quyết định của ngày 10/07/2026 vẫn phải đọc A, vì đó là chính sách tồn tại lúc đó. Nếu retrieval luôn trả “bản mới nhất”, mọi episode cũ sẽ bị chấm lại bằng chính sách chưa ra đời. Conflict ở đây được giải bằng valid-time, không phải bằng cách xoá A.</p>
 
           <figure class="figure">
-            <svg viewBox="0 0 720 250" role="img" aria-label="Trục thời gian với hai bản ghi chính sách chồng nhau: bản A hiệu lực từ 01 tháng 3, bản B từ 01 tháng 8; replay ngày 10 tháng 7 đọc bản A còn quyết định ngày 15 tháng 8 đọc bản B">
+            <div class="diagram-viewport" role="region" tabindex="0" aria-label="Sơ đồ; cuộn ngang để đọc đầy đủ nhãn" style="--diagram-width:720px"><svg viewBox="0 0 720 250" role="img" aria-label="Trục thời gian với hai bản ghi chính sách chồng nhau: bản A hiệu lực từ 01 tháng 3, bản B từ 01 tháng 8; replay ngày 10 tháng 7 đọc bản A còn quyết định ngày 15 tháng 8 đọc bản B">
               <rect class="dgm-box" x="90" y="60" width="380" height="38" rx="8"/>
               <text class="dgm-ink" x="106" y="84" font-size="12" font-family="IBM Plex Mono">A · floor 25% · valid_from 01/03/2026</text>
               <rect class="dgm-accent" x="470" y="112" width="200" height="38" rx="8" stroke-width="2"/>
@@ -1652,7 +1658,7 @@ provider_receipt=p_82 · outcome_window=+7d · reward=+₫3,1M</pre>
               <text class="dgm-ink" x="690" y="176" text-anchor="end" font-size="11" font-family="IBM Plex Mono">quyết định hôm nay đọc B</text>
               <text class="dgm-ink2" x="60" y="238" font-size="11" font-family="IBM Plex Mono">A không bị xoá; nó chỉ hết hiệu lực từ 01/08</text>
               <defs><marker id="m3l1b-ah" markerWidth="9" markerHeight="9" refX="7" refY="4.5" orient="auto"><path d="M0 0 L9 4.5 L0 9 z" fill="var(--accent-2)"/></marker></defs>
-            </svg>
+            </svg></div>
             <figcaption><b>Hình 3.2.</b> Hai bản ghi cùng tồn tại và không đè nhau. Ngày đọc quyết định bản nào có hiệu lực, nên một replay của tháng 7 vẫn phải ra cùng kết quả như hồi tháng 7.</figcaption>
           </figure>
 
@@ -1691,7 +1697,7 @@ provider_receipt=p_82 · outcome_window=+7d · reward=+₫3,1M</pre>
           <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px">
             <div>
               <span class="eyebrow">Bài 3.2</span>
-              <h3>Đo trước khi tin: credibility k/(k+K), calibration, forecast ≠ lift</h3>
+              <h3>Đo trước khi tin: shrinkage, calibration, forecast ≠ lift</h3>
             </div>
           </div>
         </div>
@@ -1700,87 +1706,52 @@ provider_receipt=p_82 · outcome_window=+7d · reward=+₫3,1M</pre>
           <div class="objectives">
             <span class="eyebrow">Học xong bạn có thể</span>
             <ul>
-              <li>Co một thống kê ít mẫu bằng credibility Z = k/(k+K) và đọc kết quả bằng lời.</li>
-              <li>Tính điểm hoà giữa một chuỗi ngắn r cao và một chuỗi dài r thấp.</li>
+              <li>Tính một trung bình co về nhóm dưới giả định đã nêu, không đọc trọng số như xác suất đúng.</li>
+              <li>Phân biệt tương quan, trọng số ước lượng và xác suất đã hiệu chuẩn.</li>
               <li>Từ chối cho một con số chưa hiệu chuẩn nhân với tiền, và từ chối đọc forecast accuracy như lift.</li>
             </ul>
           </div>
 
-          <p>Chiều thứ Năm, data lead đặt hai bảng lên cùng một câu hỏi: có chuyển ₫200M từ ads sang creator hay không (số minh hoạ). Bảng một lấy ba tuần dữ liệu, tương quan Pearson giữa social mentions và off-take là r = 0,82. Bảng hai lấy chuỗi 30 tuần của chính SKU đó, r = 0,41. Hai bảng cùng đúng về số học. Owner hỏi tin bảng nào.</p>
+          <p>Chiều thứ Năm, owner hỏi có nên chuyển ₫200M từ ads sang creator. Một bảng báo tương quan r = 0,82 trên ba tuần, bảng khác báo r = 0,41 trên 30 tuần (số tổng hợp minh hoạ, không phải một dataset đi kèm). Không thể chọn bằng cách nhân r với một “độ tin cậy”: tương quan, trọng số ước lượng và xác suất đúng là ba đại lượng khác nhau.</p>
 
           <div class="concept">
             <span class="eyebrow">Khái niệm</span>
-            <h4>Credibility: trọng số cho một con số ít mẫu</h4>
-            <p><b>Credibility</b> (độ tin cậy của bằng chứng riêng một đối tượng) là trọng số Z bạn gán cho số liệu của chính đối tượng đó, phần còn lại lấy từ mức trung bình của cả nhóm. Công thức Bühlmann trong <i>Loss Data Analytics</i> chương 9 (open text, đọc 29/08/2026): <b>Z = k/(k+K)</b> với k là số kỳ quan sát và <b>K = EPV/VHM</b>. EPV là mức nhiễu tuần này qua tuần khác bên trong một đối tượng; VHM là mức khác biệt thật giữa các đối tượng. K là tỉ giá giữa hai thứ đó, và nó phải được ước lượng từ dữ liệu.</p>
+            <h4>Shrinkage: ước lượng trung bình, không cấp xác suất đúng</h4>
+            <p>Mô hình Bühlmann kết hợp trung bình riêng với trung bình nhóm: <b>m̂ = Z × x̄ + (1 − Z) × μ</b>, với <b>Z = k/(k+K)</b>, <b>K = EPV/VHM</b>. EPV là phương sai kỳ vọng bên trong đối tượng; VHM là phương sai giữa các trung bình đối tượng. Giả định: các kỳ có cùng mức phơi nhiễm và độc lập, cùng phân phối khi đã biết đặc tính đối tượng. Chuỗi tuần tự tương quan hoặc mùa vụ cần mô hình khác. Z là trọng số của trung bình riêng, không phải xác suất đề xuất đúng.</p>
           </div>
 
-          <p>Áp vào hai bảng, với μ = 0 (chưa có gì thì chưa tin gì) và K = 3: chuỗi 3 tuần cho Z = 3/(3+3) = 0,50 nên r̂ = 0,50 × 0,82 = <b>0,41</b>. Chuỗi 30 tuần cho Z = 30/33 = 0,909 nên r̂ = 0,909 × 0,41 = <b>0,373</b>. Đọc bằng lời: thêm dữ liệu không làm r đổi, nó làm trọng số của r đổi, và ở K = 3 thì chuỗi ngắn thắng sát nút.</p>
-
-          <p>Giải phương trình 3/(3+K) × 0,82 = 30/(30+K) × 0,41 cho <b>K ≈ 3,75</b> (tính từ công thức, không phải một phát hiện có nguồn). Dưới ngưỡng đó chuỗi ngắn thắng, trên ngưỡng đó chuỗi dài thắng. Ở K = 8, chuỗi 3 tuần chỉ còn 0,224 còn chuỗi 30 tuần được 0,324. “Cứ tin mẫu lớn” là kinh nghiệm dân gian; quy tắc thật là K = EPV/VHM, và K đo được từ dữ liệu bạn đang có.</p>
-
-          <figure class="figure">
-            <svg viewBox="0 0 700 360" role="img" aria-label="Đường cong trọng số credibility Z theo số tuần k, vẽ cho ba giá trị K bằng 1, 3 và 8; các điểm đánh dấu trên đường K bằng 3 tại k bằng 1, 3, 10 và 30 kèm giá trị r đã co ngót">
-              <path class="dgm-line" d="M60 300 H660" stroke-width="1.5"/>
-              <path class="dgm-line" d="M60 300 V56" stroke-width="1.5"/>
-              <path class="dgm-line" d="M60 60 H640" stroke-width="1.5" stroke-dasharray="6 5"/>
-              <text class="dgm-ink2" x="470" y="52" font-size="11" font-family="IBM Plex Mono">Z không bao giờ chạm 1</text>
-
-              <path class="dgm-line" d="M60 300 L78 180 L96 140 L114 120 L151 100 L205 87 L241 82 L314 76 L423 71 L640 67" stroke-width="1.6" stroke-dasharray="5 4"/>
-              <path class="dgm-flow" d="M60 300 L78 240 L96 204 L114 180 L151 150 L205 126 L241 115 L314 102 L423 91 L531 85 L640 81" stroke-width="2.6"/>
-              <path class="dgm-line" d="M60 300 L78 273 L96 252 L114 234 L151 208 L205 180 L241 167 L314 147 L423 129 L531 116 L640 108" stroke-width="1.6" stroke-dasharray="2 4"/>
-
-              <text class="dgm-ink2" x="648" y="67" font-size="12" font-family="IBM Plex Mono">K=1</text>
-              <text class="dgm-ink" x="648" y="84" font-size="12" font-weight="700" font-family="IBM Plex Mono">K=3</text>
-              <text class="dgm-ink2" x="648" y="112" font-size="12" font-family="IBM Plex Mono">K=8</text>
-
-              <circle class="dgm-ink" cx="78" cy="240" r="4"/>
-              <circle class="dgm-ink" cx="114" cy="180" r="4"/>
-              <circle class="dgm-ink" cx="241" cy="115" r="4"/>
-              <circle class="dgm-ink" cx="604" cy="82" r="4"/>
-              <text class="dgm-ink2" x="86" y="234" font-size="11" font-family="IBM Plex Mono">Z 0,25 → r̂ 0,21</text>
-              <text class="dgm-ink2" x="122" y="174" font-size="11" font-family="IBM Plex Mono">Z 0,50 → r̂ 0,41</text>
-              <text class="dgm-ink2" x="249" y="109" font-size="11" font-family="IBM Plex Mono">Z 0,77 → r̂ 0,63</text>
-              <text class="dgm-ink2" x="520" y="74" font-size="11" font-family="IBM Plex Mono">Z 0,91 → r̂ 0,75</text>
-
-              <text class="dgm-ink2" x="60" y="326" font-size="11" font-family="IBM Plex Mono">k = 1</text>
-              <text class="dgm-ink2" x="106" y="326" font-size="11" font-family="IBM Plex Mono">3</text>
-              <text class="dgm-ink2" x="236" y="326" font-size="11" font-family="IBM Plex Mono">10</text>
-              <text class="dgm-ink2" x="596" y="326" font-size="11" font-family="IBM Plex Mono">30</text>
-              <text class="dgm-ink" x="330" y="348" text-anchor="middle" font-size="12" font-family="IBM Plex Mono">k · số tuần quan sát</text>
-              <text class="dgm-ink" x="26" y="180" font-size="12" font-family="IBM Plex Mono" transform="rotate(-90 26 180)">Z</text>
-            </svg>
-            <figcaption><b>Hình 3.3.</b> Cùng r = 0,82, ba giá trị K cho ba mức tin khác nhau; ở K = 8 thì ba tuần dữ liệu chỉ mua được một phần tư trọng số. Đường cong tiến tới 1 mà không chạm, nên bạn không bao giờ tin hoàn toàn vào lịch sử riêng của một đối tượng. Số minh hoạ, công thức theo <i>Loss Data Analytics</i> ch. 9.</figcaption>
-          </figure>
+          <p>Ví dụ tổng hợp: một cửa hàng có 120, 130, 140 đơn trong ba kỳ, nên x̄ = 130. Trung bình nhóm tương đồng μ = 100; giả sử dữ liệu nhóm độc lập đã cho EPV = 300, VHM = 100, nên K = 3. Khi k = 3, Z = 0,5 và m̂ = 0,5 × 130 + 0,5 × 100 = <b>115 đơn/kỳ</b>. Không suy ra “đúng 50%”, cũng không suy ra creator làm tăng đơn.</p>
 
           <div class="table-wrap">
             <table>
-              <thead><tr><th>k (tuần)</th><th>Z = k/(k+3)</th><th>r̂ = Z × 0,82</th><th>Đọc ra sao</th></tr></thead>
+              <thead><tr><th>k (kỳ)</th><th>Z = k/(k+3)</th><th>m̂ khi x̄ = 130, μ = 100</th><th>Ý nghĩa</th></tr></thead>
               <tbody>
-                <tr><td>1</td><td>0,250</td><td><b>0,205</b></td><td>một tuần chưa phải bằng chứng</td></tr>
-                <tr><td>3</td><td>0,500</td><td><b>0,410</b></td><td>một nửa tin vào chính mình</td></tr>
-                <tr><td>10</td><td>0,769</td><td><b>0,631</b></td><td>bắt đầu có sức nặng</td></tr>
-                <tr><td>30</td><td>0,909</td><td><b>0,745</b></td><td>gần như tin hẳn, vẫn chưa hẳn</td></tr>
+                <tr><td>1</td><td>0,250</td><td>107,50 đơn/kỳ</td><td>75% trọng số ở trung bình nhóm</td></tr>
+                <tr><td>3</td><td>0,500</td><td>115,00 đơn/kỳ</td><td>hai nguồn có trọng số ngang nhau</td></tr>
+                <tr><td>10</td><td>0,769</td><td>123,08 đơn/kỳ</td><td>trung bình riêng có thêm trọng số</td></tr>
+                <tr><td>30</td><td>0,909</td><td>127,27 đơn/kỳ</td><td>vẫn giữ một phần thông tin nhóm</td></tr>
               </tbody>
             </table>
           </div>
+          <p class="text-muted">Bảng giữ x̄ cố định để chỉ nhìn tác động của k. K = 3 là giả định minh hoạ; dùng thật cần ước lượng và kiểm tra mô hình nhóm. Nguồn: <a href="https://openacttextdev.github.io/LDA_Ed2/ChapCredibility.html">Loss Data Analytics, bản 2, §12.2</a>, đọc 12/11/2026: “assuming that the observations are iid conditional on”.</p>
 
-          <div class="callout insight">
-            <div class="callout-title">Mô hình tư duy</div>
-            <p>Z giống cách một hãng bảo hiểm định phí cho tài xế mới: hồ sơ riêng của người đó chỉ được tính một phần, phần còn lại lấy từ mức trung bình của nhóm. Chỗ analogy gãy: hãng bảo hiểm có hàng triệu hồ sơ để ước lượng K, còn brand ví dụ ước lượng K từ vài chục tuần, nên bản thân K cũng có sai số và phải nằm trong evidence record cạnh Z.</p>
-          </div>
-
-          <p>Ba tuần đó lại trùng một đợt promo toàn shop, nên r = 0,82 đang gộp cả tác động của promo. Partial correlation (tương quan sau khi khử ảnh hưởng của một biến thứ ba) trả về 0,554 với r(mentions, promo) = 0,75 và r(off-take, promo) = 0,80 (số minh hoạ, công thức theo Kim 2015). Nhân tiếp với Z = 0,50 được 0,277.</p>
-
-          <ol class="steps">
-            <li><h4>0,82: r thô, Pearson, 3 tuần</h4><p>Con số trên slide.</p></li>
-            <li><h4>0,55: sau khi khử promo</h4><p>Bỏ phần chung giữa mentions và promo.</p></li>
-            <li><h4>0,28: sau khi co theo credibility</h4><p>Với gate ví dụ ở 0,40, con số này không qua cổng. Receipt phải ghi đủ cả ba con số, kể cả con số đẹp nhất.</p></li>
-          </ol>
+          <details class="accordion"><summary><span class="chev">▶</span><span class="accordion-tag">Tuỳ chọn · thống kê</span><span>Tương quan riêng phần không tự loại hết confounding</span></summary>
+            <div class="accordion-body">
+              <p>Bảng tám hàng tổng hợp dưới đây có X = mentions, Y = off-take, Z = promo (đơn vị chuẩn hoá tuỳ ý). Có thể tính lại rXY ≈ 0,816, rXZ ≈ 0,707, rYZ ≈ 0,577. Theo <a href="https://www.itl.nist.gov/div898/software/dataplot/refman2/auxillar/partcorr.htm">NIST Partial Correlation</a> (đọc 12/11/2026), rXY·Z = (rXY − rXZrYZ)/√[(1−rXZ²)(1−rYZ²)] ≈ <b>0,707</b>.</p>
+              <div class="table-wrap"><table><thead><tr><th>Hàng</th><th>X</th><th>Y</th><th>Z</th></tr></thead><tbody>
+                <tr><td>1</td><td>−2</td><td>−3</td><td>−1</td></tr><tr><td>2</td><td>−2</td><td>−1</td><td>−1</td></tr>
+                <tr><td>3</td><td>0</td><td>−1</td><td>1</td></tr><tr><td>4</td><td>0</td><td>1</td><td>1</td></tr>
+                <tr><td>5</td><td>0</td><td>−1</td><td>−1</td></tr><tr><td>6</td><td>0</td><td>1</td><td>−1</td></tr>
+                <tr><td>7</td><td>2</td><td>1</td><td>1</td></tr><tr><td>8</td><td>2</td><td>3</td><td>1</td></tr>
+              </tbody></table></div>
+              <p>Đây chỉ là tương quan sau điều chỉnh tuyến tính cho Z; biến chưa đo và thiết kế chọn mẫu vẫn có thể gây nhiễu. Không nhân kết quả với Z của Bühlmann. Ba quan sát không đủ cho suy luận tương quan riêng phần một biến: kiểm định thông thường có n−3 = 0 bậc tự do. NIST ghi “with 1 and N - 3 degrees of freedom”.</p>
+            </div>
+          </details>
 
           <p><b>Calibration</b> (mức khớp giữa xác suất model nói ra và tần suất thật) là cổng thứ ba. Hiệu chuẩn lý tưởng nghĩa là trong 100 lần model nói 0,8 thì đúng 80 lần (Guo, Pleiss, Sun &amp; Weinberger, <a href="https://arxiv.org/abs/1706.04599">On Calibration of Modern Neural Networks</a>, ICML 2017). Trên 400 SKU-tuần chia 5 bin (số minh hoạ), ECE = 0,129 và bin cao nhất, nơi model nói 0,91, chỉ đúng 65%. Một gate dạng “p̂ ≥ 0,9 thì auto-execute” đang mua một sự kiện 65% với giá 91%. Kèm theo là số lượng mẫu mỗi bin, vì reliability diagram một mình không cho biết bin nào đông bin nào thưa.</p>
 
           <figure class="figure">
-            <svg viewBox="0 0 660 380" role="img" aria-label="Reliability diagram năm bin với đường chéo hiệu chuẩn lý tưởng; mọi cột nằm dưới đường chéo và phần chênh lệch được tô riêng, bên dưới là số mẫu của từng bin">
+            <div class="diagram-viewport" role="region" tabindex="0" aria-label="Sơ đồ; cuộn ngang để đọc đầy đủ nhãn" style="--diagram-width:660px"><svg viewBox="0 0 660 380" role="img" aria-label="Reliability diagram năm bin với đường chéo hiệu chuẩn lý tưởng; mọi cột nằm dưới đường chéo và phần chênh lệch được tô riêng, bên dưới là số mẫu của từng bin">
               <path class="dgm-line" d="M70 320 H430" stroke-width="1.5"/>
               <path class="dgm-line" d="M70 320 V60" stroke-width="1.5"/>
               <path class="dgm-line" d="M70 320 L410 60" stroke-width="1.6" stroke-dasharray="6 5"/>
@@ -1812,9 +1783,16 @@ provider_receipt=p_82 · outcome_window=+7d · reward=+₫3,1M</pre>
               <text class="dgm-ink2" x="460" y="164" font-size="12" font-family="IBM Plex Mono">acc = 0,455</text>
               <text class="dgm-ink2" x="460" y="186" font-size="12" font-family="IBM Plex Mono">conf = 0,584</text>
               <text class="dgm-ink2" x="460" y="208" font-size="12" font-family="IBM Plex Mono">n = 400 · M = 5</text>
-            </svg>
+            </svg></div>
             <figcaption><b>Hình 3.4.</b> Mọi cột nằm dưới đường chéo, tức model tự tin quá mức một cách có hệ thống, và khoảng chênh lớn dần về phía bên phải nơi nó tự tin nhất. Số mẫu mỗi bin vẽ kèm để không ai đọc quá tay bin thưa nhất. Số minh hoạ; công thức ECE theo Guo và cộng sự, ICML 2017 (arXiv 1706.04599).</figcaption>
           </figure>
+
+          <div class="table-wrap"><table><thead><tr><th>Bin</th><th>n</th><th>p̂ trung bình</th><th>Tỷ lệ đúng</th></tr></thead><tbody>
+            <tr><td>1</td><td>40</td><td>0,12</td><td>0,10</td></tr><tr><td>2</td><td>60</td><td>0,31</td><td>0,25</td></tr>
+            <tr><td>3</td><td>100</td><td>0,52</td><td>0,45</td></tr><tr><td>4</td><td>120</td><td>0,71</td><td>0,55</td></tr>
+            <tr><td>5</td><td>80</td><td>0,91</td><td>0,65</td></tr>
+          </tbody></table></div>
+          <p>ECE = Σ(nᵦ/400)|p̂ᵦ − accᵦ| = 0,1285 ≈ 0,129. Đây là kiểm tra theo bin, không bảo đảm xác suất đúng cho từng SKU; chọn cách hiệu chuẩn trên validation rồi báo cáo trên test độc lập.</p>
 
           <p>Cổng cuối là lift. Một thí nghiệm giảm giá ngẫu nhiên 10.000 khách mỗi nhánh, chia theo model dự báo khả năng mua (số minh hoạ), cho thấy vì sao một model dự báo giỏi vẫn chọn sai người.</p>
 
@@ -1838,8 +1816,8 @@ provider_receipt=p_82 · outcome_window=+7d · reward=+₫3,1M</pre>
 
           <div>
             <span class="eyebrow" style="display:block;margin-bottom:10px">Áp dụng</span>
-            <details class="accordion"><summary><span class="chev">▶</span><span class="accordion-tag">Data lead</span><span>In Z cạnh mọi con số trên slide</span></summary>
-              <div class="accordion-body">Ước lượng K = EPV/VHM từ chuỗi tuần bạn đang có, rồi in Z = k/(k+K) cạnh mọi con số trên slide tuần tới. Nếu K chưa ước lượng được thì ghi rõ khoảng giá trị đã dùng, vì bản thân K cũng có sai số.</div>
+            <details class="accordion"><summary><span class="chev">▶</span><span class="accordion-tag">Data lead</span><span>Ghi estimand và giả định cạnh con số</span></summary>
+              <div class="accordion-body">Ghi rõ đang ước lượng trung bình, xác suất mua hay tác động can thiệp. Chỉ dùng shrinkage khi có mô hình nhóm phù hợp; ghi nguồn của μ và K, rồi kiểm trên dữ liệu giữ riêng.</div>
             </details>
           </div>
 
@@ -1848,17 +1826,17 @@ provider_receipt=p_82 · outcome_window=+7d · reward=+₫3,1M</pre>
               <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true" focusable="false"><path d="M12 2v6m0 8v6M4.9 4.9l4.2 4.2m5.8 5.8l4.2 4.2M2 12h6m8 0h6M4.9 19.1l4.2-4.2m5.8-5.8l4.2-4.2"/></svg>
               Điều cần nhớ
             </span>
-            <p>Con số được phép chạm tiền là con số đã <span class="hl">khử nhiễu, co theo k/(k+K) và hiệu chuẩn</span>; và không cổng nào biến forecast accuracy thành lift.</p>
+            <p><span class="hl">Trọng số không phải xác suất; dự báo không phải lift.</span> Chọn phép ước lượng theo đại lượng cần biết và giả định dữ liệu, rồi mới đặt gate quyết định.</p>
           </div>
 
           <div class="quiz" data-correct="3">
             <span class="eyebrow">Kiểm tra nhanh</span>
-            <p class="quiz-q">Model dự báo doanh số tuần sau đạt 95% accuracy. Nó nói gì về lift của một đợt giảm giá 10%?</p>
+            <p class="quiz-q">Model dự báo việc khách mua hay không đạt 95% accuracy trên tập test. Nó nói gì về lift của một đợt giảm giá 10%?</p>
             <button class="quiz-opt" onclick="quizPick(this,0)"><span class="quiz-letter">A</span><span>Gần như chắc chắn có lift, vì model đọc đúng nhu cầu của tuần đó.</span></button>
             <button class="quiz-opt" onclick="quizPick(this,1)"><span class="quiz-letter">B</span><span>Lift bằng accuracy trừ baseline, nên đọc được luôn từ chính điểm số đó.</span></button>
             <button class="quiz-opt" onclick="quizPick(this,2)"><span class="quiz-letter">C</span><span>Dùng điểm số của model làm propensity rồi chạy OPE là đủ để ra lift.</span></button>
             <button class="quiz-opt" onclick="quizPick(this,3)"><span class="quiz-letter">D</span><span>Không nói gì về lift; muốn có lift phải có counterfactual.</span></button>
-            <div class="quiz-feedback" role="status" data-explain="D đúng: accuracy đo việc xếp hạng ai sẽ mua, còn lift là phần mua thêm vì lever, và phần đó chỉ hiện ra khi có nhóm đối chứng. A sai vì nhóm High trong bảng có CVR 40% ở cả hai nhánh: dự báo đúng mà uplift chỉ +1,0 điểm. B sai vì accuracy và lift là hai thang khác đơn vị, trừ nhau không ra gì. C sai vì propensity trong OPE là xác suất policy cũ đã chọn action, ghi tại lúc chọn, không phải điểm dự báo mua hàng của một model khác."></div>
+            <div class="quiz-feedback" role="status" data-explain="D đúng: accuracy là tỷ lệ dự đoán mua/không mua đúng theo quy tắc phân lớp đã chọn; nó không đo chất lượng xếp hạng. Lift là phần thay đổi vì lever, cần một thiết kế counterfactual hợp lệ cùng giả định đi kèm. Ví dụ 95% khách không mua thì dự đoán tất cả không mua cũng đạt 95% accuracy. A sai vì nhóm High có CVR 40% ở treatment và 39% ở control: xác suất mua cao mà uplift chỉ +1,0 điểm. B sai vì accuracy và lift là hai thang khác đơn vị, trừ nhau không ra gì. C sai vì propensity trong OPE là xác suất policy cũ đã chọn action, ghi tại lúc chọn, không phải điểm dự báo mua hàng của một model khác."></div>
           </div>
         </div>
         <div class="lesson-nav" data-navfor="m3-l2"></div>
@@ -1895,7 +1873,7 @@ provider_receipt=p_82 · outcome_window=+7d · reward=+₫3,1M</pre>
           </div>
 
           <figure class="figure">
-            <svg viewBox="0 0 780 300" role="img" aria-label="Thang ba bậc bằng chứng: descriptive, quasi-experiment và randomized, mỗi bậc ghi câu trả lời được và câu không trả lời được">
+            <div class="diagram-viewport" role="region" tabindex="0" aria-label="Sơ đồ; cuộn ngang để đọc đầy đủ nhãn" style="--diagram-width:780px"><svg viewBox="0 0 780 300" role="img" aria-label="Thang ba bậc bằng chứng: descriptive, quasi-experiment và randomized, mỗi bậc ghi câu trả lời được và câu không trả lời được">
               <text class="dgm-ink2" x="20" y="28" font-size="12" font-family="IBM Plex Mono">SỨC MẠNH CLAIM ↑</text>
               <rect class="dgm-box" x="20" y="180" width="240" height="96" rx="14"/>
               <text class="dgm-ink" x="40" y="210" font-size="13" font-weight="700">1 · DESCRIPTIVE</text>
@@ -1915,7 +1893,7 @@ provider_receipt=p_82 · outcome_window=+7d · reward=+₫3,1M</pre>
               <path class="dgm-flow" d="M140 180 V158 H270" stroke-width="2" marker-end="url(#m3l3-ah)"/>
               <path class="dgm-flow" d="M390 110 V88 H520" stroke-width="2" marker-end="url(#m3l3-ah)"/>
               <defs><marker id="m3l3-ah" markerWidth="9" markerHeight="9" refX="7" refY="4.5" orient="auto"><path d="M0 0 L9 4.5 L0 9 z" fill="var(--accent-2)"/></marker></defs>
-            </svg>
+            </svg></div>
             <figcaption><b>Hình 3.5.</b> Lên một bậc nghĩa là chấp nhận thêm ràng buộc thiết kế, chứ không phải có thêm dữ liệu. Mỗi bậc mang theo một cách hỏng riêng, và bậc cao nhất vẫn hỏng được. Nếu record không chứng minh nổi ràng buộc của bậc đó, kết luận phải tụt xuống bậc dưới, kể cả khi con số vẫn đẹp.</figcaption>
           </figure>
 
@@ -1949,7 +1927,7 @@ provider_receipt=p_82 · outcome_window=+7d · reward=+₫3,1M</pre>
           <p>Search thắng Creator trên desktop và trên mobile, rồi thua khi gộp. Cơ chế: session của Creator 60% là desktop còn của Search 90% là mobile, và desktop chuyển đổi cao hơn ở cả hai kênh. Bảng gộp đang đo tỉ lệ thiết bị chứ không đo chất lượng kênh. Pearl gọi đây là Simpson’s paradox và nói rõ nó không phải câu hỏi thống kê (UCLA R-414, 12/2013): không có tiêu chí thống kê nào cảnh báo bạn đang đọc nhầm bảng, chỉ có cấu trúc nhân quả mới trả lời được.</p>
 
           <figure class="figure">
-            <svg viewBox="0 0 720 210" role="img" aria-label="Ba đồ thị nhân quả ba nút: confounder thì điều chỉnh, collider thì không điều chỉnh, mediator thì không điều chỉnh nếu muốn total effect">
+            <div class="diagram-viewport" role="region" tabindex="0" aria-label="Sơ đồ; cuộn ngang để đọc đầy đủ nhãn" style="--diagram-width:720px"><svg viewBox="0 0 720 210" role="img" aria-label="Ba đồ thị nhân quả ba nút: confounder thì điều chỉnh, collider thì không điều chỉnh, mediator thì không điều chỉnh nếu muốn total effect">
               <circle class="dgm-box" cx="50" cy="120" r="18"/><text class="dgm-ink" x="50" y="125" text-anchor="middle" font-size="12" font-family="IBM Plex Mono">A</text>
               <circle class="dgm-accent" cx="120" cy="50" r="18"/><text class="dgm-ink" x="120" y="55" text-anchor="middle" font-size="12" font-family="IBM Plex Mono">L</text>
               <circle class="dgm-box" cx="190" cy="120" r="18"/><text class="dgm-ink" x="190" y="125" text-anchor="middle" font-size="12" font-family="IBM Plex Mono">Y</text>
@@ -1974,13 +1952,13 @@ provider_receipt=p_82 · outcome_window=+7d · reward=+₫3,1M</pre>
               <text class="dgm-ink" x="616" y="168" text-anchor="middle" font-size="12" font-weight="700">mediator</text>
               <text class="dgm-ink2" x="616" y="190" text-anchor="middle" font-size="11" font-family="IBM Plex Mono">KHÔNG (nếu cần total effect)</text>
               <defs><marker id="m3l3b-ah" markerWidth="9" markerHeight="9" refX="7" refY="4.5" orient="auto"><path d="M0 0 L9 4.5 L0 9 z" fill="var(--accent-2)"/></marker></defs>
-            </svg>
-            <figcaption><b>Hình 3.6.</b> Cùng một tên biến ở ba vị trí cho ba chỉ dẫn ngược nhau: chỉ hình dạng mũi tên mới quyết định điều chỉnh hay không. Vì vậy một danh sách biến không thay được một đồ thị, và ở ví dụ trên thì device là biến pre-treatment nên bảng tách mới trả lời câu hỏi quyết định.</figcaption>
+            </svg></div>
+            <figcaption><b>Hình 3.6.</b> Cùng một tên biến ở ba vị trí cho ba chỉ dẫn ngược nhau: chỉ hình dạng mũi tên mới quyết định điều chỉnh hay không. Vì vậy một danh sách biến không thay được một đồ thị, và ở ví dụ trên thì device là nguyên nhân chung của gán lever và outcome trong DAG minh hoạ, nên tách/điều chỉnh theo nó phù hợp với việc ước lượng total effect ở đây. Chỉ mang nhãn pre-treatment chưa đủ: biến có trước treatment vẫn có thể là collider.</figcaption>
           </figure>
 
           <p>Pearl còn chỉ ra vì sao cái bảng gộp đó nhìn hợp lý tới vậy. Trực giác bị xúc phạm ở đây là một trực giác nhân quả và nó đúng: một hành động làm tăng xác suất của B trong từng nhóm nhỏ thì cũng làm tăng xác suất của B trên toàn dân số, miễn là nó không làm đổi tỉ lệ giữa các nhóm. Bảng gộp ở trên đúng là đã làm đổi tỉ lệ đó. Hệ quả cho engine: phép toán quyết định cần là P(E | do(C)), tức xác suất khi bạn tác động, không phải P(E | C), tức xác suất khi bạn chỉ nhìn thấy.</p>
 
-          <p>Quy tắc rút ra: điều chỉnh cho nguyên nhân chung, không bao giờ điều chỉnh cho hệ quả chung hay cho biến nằm sau lever. Kèm theo là một field bắt buộc trong evidence record: <b>khoá gộp</b> (aggregation key, cấp gộp mà con số được tính trên đó). Một con số không kèm khoá gộp thì chưa phải bằng chứng. Bạn đã co con số theo lượng bằng chứng ở bài 3.2; thang này quyết định con số đó được phép mang nhãn gì.</p>
+          <p>Để ước lượng <b>total effect trong các DAG minh hoạ</b>, chọn tập điều chỉnh chặn backdoor mà không mở collider path; không điều chỉnh mediator vì sẽ chặn một phần tác động cần đo. Quy tắc theo vai trò trong đồ thị, không chỉ theo thời điểm. Direct effect, mediation hay dữ liệu dọc cần phương pháp và giả định riêng, có thể xử lý biến post-treatment. Kèm theo là một field bắt buộc trong evidence record: <b>khoá gộp</b> (aggregation key, cấp gộp mà con số được tính trên đó). Một con số không kèm khoá gộp thì chưa phải bằng chứng. Bài 3.2 tách trọng số, xác suất và lift; thang này quyết định một kết quả được phép mang nhãn gì.</p>
 
           <div class="takeaway">
             <span class="eyebrow">
@@ -2032,7 +2010,7 @@ provider_receipt=p_82 · outcome_window=+7d · reward=+₫3,1M</pre>
           </div>
 
           <figure class="figure">
-            <svg viewBox="0 0 700 510" role="img" aria-label="Cây quyết định chọn design causal: randomize được hay không, có interference hay không, interference ở không gian hay thời gian, dẫn tới sáu lá gồm A/B cấp user, geo cluster, switchback, robust design selector, BSTS CausalImpact và MMM DoubleML">
+            <div class="diagram-viewport" role="region" tabindex="0" aria-label="Sơ đồ; cuộn ngang để đọc đầy đủ nhãn" style="--diagram-width:700px"><svg viewBox="0 0 700 510" role="img" aria-label="Cây quyết định chọn design causal: randomize được hay không, có interference hay không, interference ở không gian hay thời gian, dẫn tới sáu lá gồm A/B cấp user, geo cluster, switchback, robust design selector, BSTS CausalImpact và MMM DoubleML">
               <rect class="dgm-accent" x="16" y="220" width="140" height="56" rx="10" stroke-width="2"/>
               <text class="dgm-ink" x="86" y="244" text-anchor="middle" font-size="12" font-weight="700">Randomize</text>
               <text class="dgm-ink" x="86" y="262" text-anchor="middle" font-size="12" font-weight="700">được không?</text>
@@ -2091,7 +2069,7 @@ provider_receipt=p_82 · outcome_window=+7d · reward=+₫3,1M</pre>
               <text class="dgm-ink2" x="344" y="326" font-size="11" font-family="IBM Plex Mono">chưa rõ</text>
               <text class="dgm-ink2" x="20" y="500" font-size="11" font-family="IBM Plex Mono">+ CUPED áp được cho A/B, geo và switchback: rút ngắn thời gian, không đổi giả định</text>
               <defs><marker id="m3l4-ah" markerWidth="9" markerHeight="9" refX="7" refY="4.5" orient="auto"><path d="M0 0 L9 4.5 L0 9 z" fill="var(--accent-2)"/></marker></defs>
-            </svg>
+            </svg></div>
             <figcaption><b>Hình 3.7.</b> Ba câu hỏi, sáu lá, và mỗi lá kèm đúng một giả định phải ghi vào record. Nhánh “chưa rõ” có một lá hợp lệ: trả về shortlist hai design kèm rủi ro, thay vì đoán bừa một cái.</figcaption>
           </figure>
 
@@ -2099,26 +2077,27 @@ provider_receipt=p_82 · outcome_window=+7d · reward=+₫3,1M</pre>
             <table>
               <thead><tr><th>Công cụ</th><th>Estimand</th><th>Dữ liệu tối thiểu</th><th>Không trả lời được</th></tr></thead>
               <tbody>
-                <tr><td><b>A/B cấp user</b></td><td>ATE trên user</td><td>n = 16σ²/Δ² mỗi nhánh (Kohavi và cộng sự, DMKD 2009)</td><td>spillover thị trường; lever không randomize được theo user</td></tr>
+                <tr><td><b>A/B cấp user</b></td><td>ATE trên user</td><td>xấp xỉ n = 16σ²/Δ² mỗi nhánh khi hai nhóm bằng nhau, α = 0,05 hai phía, power ≈ 80%, quan sát độc lập và phương sai chung σ²; clustering cần hiệu chỉnh</td><td>spillover thị trường; lever không randomize được theo user</td></tr>
                 <tr><td><b>Geo / cluster</b></td><td>ATE cấp thị trường, ví dụ ROAS</td><td>một tập geo để bốc ngẫu nhiên, cộng pretest cấp geo</td><td>khác biệt trong nội bộ một geo</td></tr>
                 <tr><td><b>Switchback</b></td><td>ATE cấp thị trường theo block thời gian</td><td>region-day, tăng theo thời lượng chứ không theo traffic</td><td>tác động dài hơn một block, ví dụ hình thành thói quen</td></tr>
                 <tr><td><b>BSTS / CausalImpact</b></td><td>tác động tích luỹ trên một chuỗi</td><td>pre-period cộng ít nhất một chuỗi control chưa bị chạm</td><td>thay đổi toàn sàn, vì control cũng bị chạm</td></tr>
-                <tr><td><b>MMM Bayesian</b></td><td>ROI theo kênh, đường đáp ứng ngân sách</td><td>tối thiểu 2 năm dữ liệu tuần cấp geo (Meridian docs, 29/08/2026)</td><td>tác động cấp user; confounder chưa đo</td></tr>
+                <tr><td><b>MMM Bayesian</b></td><td>ROI theo kênh, đường đáp ứng ngân sách</td><td>Meridian khuyến nghị khoảng ≥2 năm dữ liệu tuần cấp geo; đây là rule of thumb, không phải ngưỡng identification</td><td>tác động cấp user; confounder chưa đo</td></tr>
                 <tr><td><b>DoubleML / CATE</b></td><td>ATE, GATE, CATE, policy rule</td><td>log có lever, outcome và tập covariate đủ giàu</td><td>confounder chưa đo; nó không tạo ra randomization</td></tr>
               </tbody>
             </table>
           </div>
 
-          <p>CUPED nằm ngang chứ không nằm dọc trên cây này. Nó dùng dữ liệu tiền thí nghiệm để giảm phương sai theo đúng một hệ số: var(Δ) × (1 − ρ²), với ρ là tương quan giữa outcome và biến tiền thí nghiệm. Nó rút ngắn thời gian chạy, và không đổi một chữ nào trong giả định identification.</p>
+          <p><a href="https://developers.google.com/meridian/docs/pre-modeling/collect-data">Meridian, Collect and organize your data</a> (đọc 12/11/2026) gọi hướng dẫn thời lượng là “a general rule of thumb”. Dữ liệu còn cần variation, covariate thích hợp và giả định causal; đủ hai năm không bảo đảm ước lượng đúng.</p>
+          <p>CUPED là điều chỉnh để tăng precision, không phải một mức bằng chứng causal mới. Với một covariate X không bị treatment ảnh hưởng và hệ số tối ưu θ = Cov(Y,X)/Var(X), outcome điều chỉnh Y − θ(X − E[X]) có phương sai Var(Y)(1 − ρ²). Đây là kết quả lý tưởng của control variate tuyến tính; inference phải khớp đơn vị randomization và cách fit θ.</p>
 
           <div class="callout info">
-            <div class="callout-title">CUPED dưới mức randomization, số đã kiểm</div>
-            <p>Khi đơn vị randomization thô hơn đơn vị quan sát, covariate xây ở mức mịn quyết định thí nghiệm chạy bao lâu. Trên 10 thí nghiệm switchback ở mức region-day, CUPED chuẩn theo feature region-day giảm phương sai 5% tới 10%, còn CUPED dựng từ dự đoán ở mức từng đơn hàng rồi gộp lên giảm 18% tới 40%, kéo thời gian chạy xuống khoảng một phần ba (Instacart Engineering, 01/07/2026). Ràng buộc đi kèm: mọi feature phải hoàn toàn tiền-treatment, và cách kiểm là placebo test, chạy đúng phép so sánh trung bình trên chính giá trị dự đoán. Nếu tác động ước lượng trên giá trị dự đoán khác 0 có ý nghĩa, tức là có feature đang bị treatment chạm, và kết quả CUPED của thí nghiệm đó không dùng được.</p>
+            <div class="callout-title">Tự tính lợi ích CUPED</div>
+            <p>Ví dụ tổng hợp ρ = 0,6: phương sai còn 1 − 0,6² = 0,64, giảm 36%. Nếu tốc độ traffic, effect cần phát hiện và các giả định giữ nguyên, cỡ mẫu xấp xỉ còn 64%, không phải còn một phần ba. Pre-treatment là yêu cầu về thời điểm/cơ chế, không được “chứng minh” bằng một placebo p-value lớn. Một placebo lệch là tín hiệu cần điều tra, chưa riêng nó xác định leakage. Nguồn <a href="https://exp-platform.com/Documents/2013-02-CUPED-ImprovingSensitivityOfControlledExperiments.pdf">Deng và cộng sự, CUPED (2013)</a>, đọc 12/11/2026: “utilizes data from the pre-experiment period to reduce metric variability”.</p>
           </div>
 
           <p>Quy tắc đứng trên cả cây là quy ước của khoá này: chọn design có estimand gần quyết định nhất, không chọn design có sai số nhỏ nhất. Shekhar &amp; Howard (<a href="https://arxiv.org/abs/2605.25290"><i>Choosing Online Experiment Designs under Interference in Ads, Recommendations, and Member-Experience Systems</i></a>, arXiv 2605.25290, 24/05/2026) đi xa hơn một bước: họ chọn design bằng cách cân đồng thời exposure bias, phương sai theo đơn vị gán, MDE, contamination/carryover, chi phí vận hành và estimand mismatch. Cùng bộ chọn đó chạy trên ba dataset công khai (Criteo, Open Bandit, KuaiRand) cho ba đáp án khác nhau, nên câu trả lời đổi theo dữ liệu chứ không theo sở thích của người phân tích. Một khoảng tin cậy hẹp trên estimand sai vẫn tệ hơn một khoảng rộng trên estimand đúng.</p>
 
-          <p>Nối lại với bài 1.3: thumbnail và giá có thể cùng ở một mức bằng chứng mà autonomy vẫn khác nhau. Thumbnail randomize được theo user, đảo ngược được, blast radius nhỏ, A/B xong trong vài ngày. Giá vướng interference qua catalogue dùng chung, margin không lấy lại được, và cần một design tốn khoảng bốn lần chi phí kỹ thuật so với A/B cấp user. Công cụ đo là thứ nối hai thang đó với nhau.</p>
+          <p>Nối lại với bài 1.3: thumbnail và giá có thể cùng ở một mức bằng chứng mà autonomy vẫn khác nhau. Thumbnail randomize được theo user, đảo ngược được, blast radius nhỏ, thời gian A/B phụ thuộc effect, traffic và power. Giá có thể vướng interference qua catalogue dùng chung và margin không lấy lại được; chi phí design phải ước lượng tại hệ đang xét. Công cụ đo là thứ nối hai thang đó với nhau.</p>
 
           <div class="takeaway">
             <span class="eyebrow">
@@ -2135,7 +2114,7 @@ provider_receipt=p_82 · outcome_window=+7d · reward=+₫3,1M</pre>
             <button class="quiz-opt" onclick="quizPick(this,1)"><span class="quiz-letter">B</span><span>A/B cấp user chia 50/50, so CVR hai nhánh sau 14 ngày.</span></button>
             <button class="quiz-opt" onclick="quizPick(this,2)"><span class="quiz-letter">C</span><span>Pre/post 14 ngày trên hai kênh, có so với cùng kỳ năm trước.</span></button>
             <button class="quiz-opt" onclick="quizPick(this,3)"><span class="quiz-letter">D</span><span>MMM trên dữ liệu tuần, refit mỗi tuần cho tới khi khoảng tin cậy hẹp lại.</span></button>
-            <div class="quiz-feedback" role="status" data-explain="A đúng: hai kênh chung một auction là interference cấp thị trường, nên đơn vị randomization phải là geo hoặc block thời gian, và estimand đổi thành cấp thị trường. B sai vì nhóm control vẫn đấu giá với nhóm treatment, control bị nhiễm và SUTVA vỡ ngay từ thiết kế. C sai vì pre/post là bằng chứng descriptive: mùa vụ, voucher và tồn kho vẫn nằm nguyên trong con số. D sai vì MMM cần tối thiểu hai năm dữ liệu tuần và trả lời câu hỏi phân bổ theo quý; refit hàng tuần không làm giả định conditional exchangeability đúng hơn."></div>
+            <div class="quiz-feedback" role="status" data-explain="A đúng: hai kênh chung một auction là interference cấp thị trường, nên đơn vị randomization phải là geo hoặc block thời gian, và estimand đổi thành cấp thị trường. B sai vì nhóm control vẫn đấu giá với nhóm treatment, control bị nhiễm và SUTVA vỡ ngay từ thiết kế. C sai vì pre/post là bằng chứng descriptive: mùa vụ, voucher và tồn kho vẫn nằm nguyên trong con số. D sai vì refit để tìm CI hẹp không giải quyết confounding hay interference. Meridian có khuyến nghị dữ liệu theo năm, nhưng đủ năm không tự tạo identification; horizon của MMM phụ thuộc câu hỏi và dữ liệu."></div>
           </div>
         </div>
         <div class="lesson-nav" data-navfor="m3-l4"></div>
@@ -2163,7 +2142,7 @@ provider_receipt=p_82 · outcome_window=+7d · reward=+₫3,1M</pre>
 
           <p>Team đưa lên một policy mới: giảm giá cho SKU biên thấp khi tồn kho vượt 60 ngày. Họ chạy off-policy evaluation trên log 12 tuần và ra +18% (số minh hoạ). Mở log ra thì policy cũ gần như chưa bao giờ giảm giá cho nhóm SKU đó. Con số +18% được tính, không bị lỗi, và vẫn không nói về policy mà họ sắp bật.</p>
 
-          <p><b>OPE</b> (off-policy evaluation, ước lượng giá trị của một policy mới trên log do policy cũ sinh ra) hỏi: policy mới sẽ làm gì nếu chạy trên traffic cũ. Muốn trả lời, mỗi episode trong log phải có context, eligible action set, action đã chọn, xác suất policy cũ chọn action đó (<b>propensity</b>), reward kèm cutoff, và missingness. Thiếu propensity thật thì mọi thứ phía sau là số bịa.</p>
+          <p><b>OPE</b> (off-policy evaluation, ước lượng giá trị của một policy mới trên log do policy cũ sinh ra) hỏi: policy mới sẽ làm gì nếu chạy trên traffic cũ. Muốn trả lời, mỗi episode trong log phải có context, eligible action set, action đã chọn, xác suất policy cũ chọn action đó (<b>propensity</b>), reward kèm cutoff, và missingness. Đường IPS/SNIPS của bài này cần propensity hợp lệ. Nếu log thiếu nó, không điền bằng share traffic; phương pháp tái dựng hoặc mô hình quan sát cần giả định và kiểm chứng riêng.</p>
 
           <div class="code-card">
             <div class="prompt-head"><span>Ba estimator quen thuộc</span></div>
@@ -2174,7 +2153,7 @@ DR    = reward_model(x, π_new) + w × residual</pre>
           </div>
 
           <figure class="figure">
-            <svg viewBox="0 0 720 330" role="img" aria-label="Hai phân phối xác suất chọn action chồng lấn một phần; vùng bên phải mà policy cũ chưa từng đi tới được đánh dấu no support và phải abstain">
+            <div class="diagram-viewport" role="region" tabindex="0" aria-label="Sơ đồ; cuộn ngang để đọc đầy đủ nhãn" style="--diagram-width:720px"><svg viewBox="0 0 720 330" role="img" aria-label="Hai phân phối xác suất chọn action chồng lấn một phần; vùng bên phải mà policy cũ chưa từng đi tới được đánh dấu no support và phải abstain">
               <path class="dgm-line" d="M60 250 H690" stroke-width="1.5"/>
               <path class="dgm-box" d="M70 250 C170 250 180 110 270 110 C360 110 370 250 470 250 Z" stroke-width="2"/>
               <path class="dgm-accent" d="M300 250 C400 250 430 84 520 84 C605 84 620 250 700 250 Z" stroke-width="2"/>
@@ -2186,13 +2165,13 @@ DR    = reward_model(x, π_new) + w × residual</pre>
               <text class="dgm-ink2" x="385" y="286" text-anchor="middle" font-size="11" font-family="IBM Plex Mono">overlap mỏng → weight 1/p lớn</text>
               <text class="dgm-ink2" x="60" y="42" font-size="11" font-family="IBM Plex Mono">mật độ xác suất chọn action ↑</text>
               <text class="dgm-ink2" x="60" y="314" font-size="11" font-family="IBM Plex Mono">p = 10% ⇒ max weight 1/p = 10; vùng π_log chưa đi qua không có gì để reweight</text>
-            </svg>
-            <figcaption><b>Hình 3.8.</b> Estimator không đọc được vùng mà policy cũ chưa bao giờ đi tới. Nếu 30% khối lượng xác suất của policy mới rơi vào vùng đó, IPS và SNIPS không báo lỗi: chúng lặng lẽ trả về giá trị của một policy khác, đã chuẩn hoá lại trên phần support quan sát được.</figcaption>
+            </svg></div>
+            <figcaption><b>Hình 3.8.</b> Thiếu support không tự gây lỗi số học. Ví dụ một context, log chỉ chọn A với reward 1; policy mới chọn A 70%, C chưa quan sát 30%. IPS = 0,7; SNIPS = 0,7/0,7 = 1. Chỉ SNIPS chuẩn hoá theo tổng weight; cả hai đều chưa xác định giá trị đầy đủ của policy mới vì chưa biết reward của C. Công thức: <a href="https://www.cs.cornell.edu/~tj/publications/swaminathan_joachims_15d.pdf">Swaminathan &amp; Joachims (2015)</a>, đọc 12/11/2026.</figcaption>
           </figure>
 
           <p>Cách đo độ mỏng đó là <b>ESS</b> (effective sample size, số mẫu thực sự đóng góp). Công thức của Owen, <i>Monte Carlo theory, methods and examples</i>, chương 9 phương trình 9.13: <b>ESS = (Σw)² / Σw²</b>. Owen nói thẳng rằng ngưỡng báo động của ESS là chuyện tuỳ ứng dụng, nên không có con số phổ quát: bạn đăng ký trước một ngưỡng cho từng lớp quyết định và ghi nó vào evidence pack.</p>
 
-          <p>Mười dòng log dưới đây là số minh hoạ, dựng để phép tính nhìn thấy được. Hai dòng có propensity rất nhỏ nuốt gần hết trọng số.</p>
+          <p>Mười dòng log dưới đây là số minh hoạ, dựng để phép tính nhìn thấy được. Hai dòng có propensity rất nhỏ nuốt gần hết trọng số. Lab chọn ngưỡng ESS/n = 50% để cảnh báo; đó không phải chứng nhận overlap hay ngưỡng thống kê phổ quát.</p>
 
           <div class="lab" data-lab="m3l5-ess">
             <div class="table-wrap">
@@ -2232,13 +2211,12 @@ DR    = reward_model(x, π_new) + w × residual</pre>
             <p class="mono" data-lab-verdict aria-live="polite">ESS 2,44 trên 10 dòng: hai dòng chiếm gần hết trọng số, gate đọc là abstain.</p>
           </div>
 
-          <p>Đọc thẳng từ bảng: IPS nói 32,9% trong khi mức reward thật mà policy cũ đạt được là 4,66%. Một estimator trả về giá trị gấp bảy lần mức reward trung bình của log, và vẫn gấp 3,6 lần cả tỉ lệ cao nhất từng quan sát trong log (9,1%), thì chưa tìm ra policy tốt: nó tìm ra hai dòng có w = 12 và w = 25. Bỏ hai dòng đó, tức 20% log, thì con số rơi từ 0,329 xuống 0,034. Nếu xoá một phần năm log làm đổi quyết định thì log chưa bao giờ chứa quyết định đó. Khoảng tin cậy bootstrap của IPS là [0,028; 0,781], rộng gấp 17 lần của SNIPS [0,040; 0,084]: các điểm ước lượng cãi nhau, các khoảng thì không.</p>
-
-          <p>DR trên chính log này ra 0,106 và cũng không cứu được gì, vì double robustness là lời hứa về bias khi có một model đúng, còn nó vẫn nhân với w. DM ra 0,043 với khoảng hẹp nhất, và đó là estimator có thể sai một cách tự tin nhất, vì sai số của nó nằm trong reward model chứ không hiện lên khoảng tin cậy của output. Clip chỉ là một núm xoay giữa bias và variance: w ≤ 5 kéo IPS về 0,111 và nâng ESS lên 4,74, nhìn đẹp hơn mà đã cố ý gây bias, nên mức clip phải nằm trong gate đăng ký trước.</p>
+          <p>Tính từ 10 hàng: reward trung bình của log = 0,0466; Σw ≈ 43,5161; Σwr ≈ 3,29028. Vì thế IPS ≈ <b>0,3290</b>, SNIPS ≈ <b>0,0756</b>, ESS ≈ <b>2,44</b>. IPS không chuẩn hoá nên có thể vượt mọi reward trong mẫu; điều đó không tự chứng minh sai, nhưng ở đây hai weight lớn khiến ước lượng rất nhạy. Bỏ hai dòng 5 và 8 cho IPS ≈ 0,0342, nhưng đã thay tập dữ liệu, chưa trả lời câu hỏi ban đầu.</p>
+          <p>Clip w ≤ 5 cho IPS ≈ <b>0,1113</b> và ESS ≈ <b>4,74</b>; đó là thay đổi estimator có đánh đổi bias–variance, không tạo thêm support. Không báo khoảng tin cậy hay giá trị DR/DM nếu chưa cung cấp quy trình lấy mẫu lại và reward model. DR có thể nhất quán nếu một trong hai mô hình nuisance đúng dưới các giả định identification/overlap; nó không cho bằng chứng ở action chưa từng được quan sát. Nguồn: <a href="https://arxiv.org/abs/1511.03722">Jiang &amp; Li, Doubly Robust Off-policy Value Evaluation</a>, đọc 12/11/2026.</p>
 
           <div class="callout warn">
             <div class="callout-title">Đừng gate bằng tên estimator</div>
-            <p>Trên Open Bandit Dataset, estimator chính xác nhất đổi theo cỡ mẫu: DM thắng ở n = 10.000, DRos thắng ở n = 300.000 cho hai trong ba campaign (Saito và cộng sự, benchmark OBP). Kết quả tại The Web Conference 2026 (Korovaitceva và cộng sự, 12/04/2026) đi xa hơn: ngay trong môi trường tổng hợp, thứ hạng giữa các estimator cũng nhạy với random seed, log generator và cỡ mẫu. Vì vậy cổng promote phải đọc ESS, phần khối lượng xác suất của policy mới được log phủ, độ rộng khoảng tin cậy, và sự đồng dấu giữa hai họ estimator, chứ không đọc chữ “DR”. Open Bandit Pipeline (Apache-2.0) là reference implementation để một reviewer chạy lại được, thay vì mỗi đội tự viết IPS.</p>
+            <p>Trong lab, cùng một log nhưng clip/drop làm IPS, SNIPS và ESS thay đổi; tên estimator không thay thế phép kiểm giả định. Cổng promote cần đọc support của policy mới, reward/missingness, độ nhạy với weight và uncertainty, rồi giải thích khác biệt giữa các estimator. Không lấy “hai estimator cùng dấu” làm bằng chứng độc lập khi chúng dùng cùng log và cùng giả định. <a href="https://github.com/st-tech/zr-obp">Open Bandit Pipeline</a> là một implementation tham khảo để đối chiếu công thức; vẫn phải kiểm version và estimand của hệ mình.</p>
           </div>
 
           <p>Exploration là một artifact, không phải một cú liều. Serving plane giữ một ngân sách exploration có biên rõ, ví dụ ≤2% số episode đủ điều kiện, chỉ trên hành động reversible, dưới một value cap cố định. Sampler phải ghi propensity thật vào episode ngay tại lúc chọn; propensity điền lại sau là số bịa và làm hỏng mọi importance weight ở trên. Bản thân exploration policy cũng là artifact có version và promotion record như champion. Log không phải khí thải của hệ, nó là tài sản được thiết kế trước: không cố ý tạo overlap hôm nay thì tháng sau OPE vẫn phải abstain. Đây chính là điều kiện positivity bạn đã gặp ở bài 3.4, gọi bằng một cái tên khác và đo bằng một dụng cụ khác.</p>
@@ -2246,7 +2224,7 @@ DR    = reward_model(x, π_new) + w × residual</pre>
           <div>
             <span class="eyebrow" style="display:block;margin-bottom:10px">Áp dụng</span>
             <details class="accordion"><summary><span class="chev">▶</span><span class="accordion-tag">Data lead</span><span>Kiểm log có cột propensity chưa</span></summary>
-              <div class="accordion-body">Grep log tuần trước xem có cột propensity không; nếu không, sửa write path trước khi bàn tới estimator. Không có mẫu số thì mọi IPS, SNIPS và DR chạy trên log đó đều là số bịa.</div>
+              <div class="accordion-body">Grep log tuần trước xem có cột propensity không; nếu không, sửa write path trước khi bàn tới estimator. Đánh dấu log chưa đủ điều kiện cho đường IPS/SNIPS này; chỉ dùng propensity tái dựng sau khi chứng minh được policy và lịch sử đầu vào tương ứng.</div>
             </details>
           </div>
 
@@ -2265,7 +2243,7 @@ DR    = reward_model(x, π_new) + w × residual</pre>
             <button class="quiz-opt" onclick="quizPick(this,1)"><span class="quiz-letter">B</span><span>Gán propensity 0,1 cho action C rồi tính bình thường.</span></button>
             <button class="quiz-opt" onclick="quizPick(this,2)"><span class="quiz-letter">C</span><span>Abstain: zero support, cần exploration hoặc một thí nghiệm.</span></button>
             <button class="quiz-opt" onclick="quizPick(this,3)"><span class="quiz-letter">D</span><span>Chấp nhận kết quả nếu ESS trên phần còn lại vẫn cao và khoảng tin cậy hẹp.</span></button>
-            <div class="quiz-feedback" role="status" data-explain="C đúng: không có dòng log nào cho action C nên không có gì để reweight, và double robustness chỉ hứa về bias khi một trong hai model đúng, nó vẫn nhân với importance weight. A sai vì reward model ngoại suy vào vùng chưa có dữ liệu là đúng chỗ sai số của nó vô hình. B sai vì bịa xác suất cho một action chưa từng xảy ra làm mọi weight mất nghĩa, và ESS sẽ đẹp lên trong khi ước lượng lệch đi. D sai vì ESS và khoảng tin cậy chỉ mô tả phần support quan sát được: bạn đang đo một policy khác, đã chuẩn hoá lại trên 70% khối lượng xác suất còn lại."></div>
+            <div class="quiz-feedback" role="status" data-explain="C đúng: không có dòng log nào cho action C nên không có gì để reweight, và double robustness chỉ hứa về bias khi một trong hai model đúng, nó vẫn nhân với importance weight. A sai vì reward model ngoại suy vào vùng chưa có dữ liệu là đúng chỗ sai số của nó vô hình. B sai vì bịa xác suất cho một action chưa từng xảy ra làm mọi weight mất nghĩa, và ESS sẽ đẹp lên trong khi ước lượng lệch đi. D sai vì ESS cao và CI hẹp không nhận diện reward của C. Với ví dụ reward A = 1, IPS = 0,7 còn SNIPS = 1; chỉ SNIPS chuẩn hoá phần support. Cả hai chưa xác định giá trị đầy đủ của policy mới."></div>
           </div>
         </div>
         <div class="lesson-nav" data-navfor="m3-l5"></div>
@@ -2313,10 +2291,10 @@ DR    = reward_model(x, π_new) + w × residual</pre>
 
           <p>Xác suất TS chơi một lever bằng đúng xác suất posterior rằng lever đó tốt nhất (Lattimore &amp; Szepesvári, <em>Bandit Algorithms</em>, 2020, Eq. 36.1). Tỷ lệ chia traffic vì vậy là readout của phần chồng lấn giữa các posterior, không phải một tham số ai đó chỉnh tay.</p>
 
-          <p>Lab dưới đây là bandit <strong>không có context</strong>: ba lever, một posterior mỗi lever. Hệ thật hầu hết là <strong>contextual</strong>, tức posterior đặt trên một hàm của feature (LinTS, neural TS), nên π ghi vào episode là π(a|x) chứ không phải π(a). Toàn bộ phần propensity, ESS và OPE ở bài 3.5 viết cho dạng có context; cái đổi là posterior, không phải nguyên tắc.</p>
+          <p>Lab dưới đây là mô phỏng tổng hợp không có context: ba lever, một posterior mỗi lever. Nếu policy dùng feature của từng lượt, cần ghi π(a|x) thay cho π(a). Đây là mở rộng thiết kế, không phải kết quả của lab.</p>
 
           <figure class="figure">
-            <svg viewBox="0 0 760 330" role="img" aria-label="Hai đường mật độ posterior Beta sau 5 ngày: lever B hẹp và cao quanh 4,5%, lever C thấp và rộng quanh 3,2%, hai đỉnh đã tách nhau và vùng chồng lấn chỉ còn một dải mỏng quanh 4,1% được tô đậm">
+            <div class="diagram-viewport" role="region" tabindex="0" aria-label="Sơ đồ; cuộn ngang để đọc đầy đủ nhãn" style="--diagram-width:760px"><svg viewBox="0 0 760 330" role="img" aria-label="Hai đường mật độ posterior Beta sau 5 ngày: lever B hẹp và cao quanh 4,5%, lever C thấp và rộng quanh 3,2%, hai đỉnh đã tách nhau và vùng chồng lấn chỉ còn một dải mỏng quanh 4,1% được tô đậm">
                 <path class="dgm-accent" stroke="none" d="M428 250 L428 249.7 L436 249.2 L444 247.8 L452 244.7 L460 242.6 L468 244.6 L476 246.0 L484 247.2 L492 248.0 L500 248.6 L508 249.0 L516 249.3 L524 249.6 L532 249.7 L532 250 Z"/>
                 <path class="dgm-line" stroke-width="2" d="M76 250 H700"/>
                 <path class="dgm-flow" stroke-width="2.4" d="M420 249.9 L428 249.7 L436 249.2 L444 247.8 L452 244.7 L460 238.3 L468 226.8 L476 208.6 L484 183.3 L492 152.9 L500 121.5 L508 95.4 L516 80.4 L524 80.0 L532 93.9 L540 118.5 L548 148.1 L556 177.2 L564 202.1 L572 220.8 L580 233.5 L588 241.4 L596 245.8 L604 248.1 L612 249.2 L620 249.7 L628 249.9"/>
@@ -2333,8 +2311,8 @@ DR    = reward_model(x, π_new) + w × residual</pre>
                 <text class="dgm-ink2" x="648" y="270" font-size="11" font-family="IBM Plex Mono">conversion</text>
                 <path class="dgm-line" stroke-width="1.4" stroke-dasharray="3 3" d="M76 300 H676"/>
                 <text class="dgm-ink2" x="76" y="318" font-size="11">ngày 1: cả ba lever đều là Beta(1, 1), đường phẳng, P(best) ≈ 1/3 mỗi lever</text>
-              </svg>
-            <figcaption><b>Hình 4.1</b> · Posterior sau ngày 5 của đúng lab seed 555 ở cuối bài. Posterior của B hẹp hơn posterior của C khoảng 1,9 lần và hai đỉnh đã tách hẳn, nên phần chồng lấn chỉ còn một dải mỏng quanh 4,1%. Chính dải đó là tỷ lệ traffic C nhận ngày hôm sau: 0,002. Số minh hoạ từ mô phỏng có seed.</figcaption>
+              </svg></div>
+            <figcaption><b>Hình 4.1</b> · Posterior sau ngày 5 của đúng lab seed 555 ở cuối bài. Posterior của B hẹp hơn posterior của C khoảng 1,9 lần và hai đỉnh đã tách hẳn, nên phần chồng lấn chỉ còn một dải mỏng quanh 4,1%. Diện tích xác suất so sánh các draw quyết định P(best); độ cao hay độ rộng riêng của hai đường không trực tiếp bằng share traffic. Số minh hoạ từ mô phỏng có seed.</figcaption>
           </figure>
 
           <div class="table-wrap">
@@ -2350,51 +2328,21 @@ DR    = reward_model(x, π_new) + w × residual</pre>
             </table>
           </div>
 
-          <p>Ngày 2, propensity của A đã còn 0,005: TS bỏ lever thua sau một ngày, không cần significance test và không cần ai bấm duyệt. Ngày 5 propensity của A còn 0,001, tức cả ngày chỉ 2 session rơi vào nó và lever đó gần như hết đường đánh giá off-policy vì log không còn đủ dòng cho nó. Bạn đã gặp mẫu số này ở bài 3.5: propensity là mẫu số của importance weight, và bandit chạy càng tốt thì nó càng bào mỏng overlap của chính log mình sinh ra.</p>
+          <p>Ngày 2, P(best) Monte Carlo của A còn 0,005; ngày 5 giá trị hiển thị làm tròn là 0,001 và quota chỉ 2 session. Đây là một seed, không bảo đảm TS luôn nhận ra lever thua sau một ngày. Sampler TS không đòi significance test; quyền tự chạy vẫn phụ thuộc approval và risk policy. Bạn đã gặp mẫu số này ở bài 3.5: propensity là mẫu số của importance weight, và bandit chạy càng tốt thì nó càng bào mỏng overlap của chính log mình sinh ra.</p>
 
           <p>Giá của việc học có tên là <strong>regret</strong>: <code>R_n = n·µ* − E[Σ reward]</code>, cộng dồn phần conversion đã nhường lại để biết câu trả lời. Số worked trên bảng trên: 1.028 session rơi vào A với khoảng cách 1,5 điểm phần trăm so với B cho 15,4 conversion; 2.265 session rơi vào C với khoảng cách 1,0 điểm cho 22,7. Tổng 38,1 conversion trong 5 ngày, trên nền 623 conversion thu được (số minh hoạ). Đọc bằng lời: tuần đó việc học có giá 38 đơn hàng, và đó là con số đem đi xin duyệt ngân sách exploration.</p>
 
           <p>UCB1 giải cùng bài toán bằng optimism: chọn lever lớn nhất theo <code>x̄_j + √(2·ln n / n_j)</code>, bonus lớn khi lever ít được quan sát (Auer, Cesa-Bianchi &amp; Fischer, <em>Machine Learning</em> 47:235–256, 2002). Bound đó viết cho reward trong [0, 1]: với n = 1.000 và n_j = 100, bonus là √(2·6,91/100) ≈ 0,372, gấp hơn chín lần chính tỷ lệ conversion 4%, nên UCB1 nguyên bản sẽ explore gần như đều. TS không có số hạng bonus; exploration đến từ randomisation của posterior và tự tắt dần khi posterior hẹp lại.</p>
 
           <figure class="figure">
-            <svg viewBox="0 0 760 330" role="img" aria-label="Trái: regret tích luỹ theo 5, 10 và 30 ngày cho greedy, epsilon-greedy 10 phần trăm, Thompson sampling và Thompson sampling có exploration floor. Phải: cột mean và p90 của greedy so với Thompson sampling khi update từng quyết định">
-              <text class="dgm-ink" x="70" y="26" font-size="12" font-weight="700">batch 3.000 session/ngày · regret tích luỹ (conversion)</text>
-              <path class="dgm-line" stroke-width="1.6" d="M70 260 H440"/>
-              <path class="dgm-line" stroke-width="1.6" d="M70 40 V260"/>
-              <path class="dgm-line" fill="none" stroke-width="2" stroke-dasharray="2 4" d="M110 148.5 L220 146.5 L400 142.4"/>
-              <path fill="none" stroke="var(--warning)" stroke-width="2.4" d="M110 150.4 L220 127.4 L400 51.2"/>
-              <path class="dgm-flow" stroke-width="2.8" d="M110 195.5 L220 187.6 L400 177.0"/>
-              <path class="dgm-flow" stroke-width="2.2" stroke-dasharray="6 4" d="M110 184.6 L220 157.5 L400 56.9"/>
-              <text class="dgm-ink2" x="110" y="278" font-size="11" text-anchor="middle" font-family="IBM Plex Mono">5 ngày</text>
-              <text class="dgm-ink2" x="220" y="278" font-size="11" text-anchor="middle" font-family="IBM Plex Mono">10</text>
-              <text class="dgm-ink2" x="400" y="278" font-size="11" text-anchor="middle" font-family="IBM Plex Mono">30</text>
-              <text class="dgm-ink2" x="76" y="46" font-size="11" font-family="IBM Plex Mono">150</text>
-              <text class="dgm-ink2" x="76" y="256" font-size="11" font-family="IBM Plex Mono">0</text>
-              <text x="404" y="46" font-size="11" fill="var(--warning)" font-weight="700">ε-greedy 10% · 142,4</text>
-              <text class="dgm-ink2" x="404" y="62" font-size="11">TS + floor 5% · 138,5</text>
-              <text class="dgm-ink2" x="404" y="140" font-size="11">greedy · 80,2</text>
-              <text class="dgm-ink" x="404" y="180" font-size="11" font-weight="700">TS · 56,6</text>
-              <text class="dgm-ink" x="500" y="26" font-size="12" font-weight="700">update từng quyết định · 15.000 session</text>
-              <path class="dgm-line" stroke-width="1.6" d="M500 260 H740"/>
-              <rect class="dgm-box" x="516" y="182.9" width="34" height="77.1"/>
-              <rect class="dgm-warn" x="558" y="58.6" width="34" height="201.4"/>
-              <rect class="dgm-accent" x="640" y="219.9" width="34" height="40.1"/>
-              <rect class="dgm-accent" x="682" y="192.2" width="34" height="67.8"/>
-              <text class="dgm-ink2" x="533" y="176" font-size="10" text-anchor="middle" font-family="IBM Plex Mono">63,1</text>
-              <text class="dgm-ink2" x="575" y="52" font-size="10" text-anchor="middle" font-family="IBM Plex Mono">164,8</text>
-              <text class="dgm-ink2" x="657" y="213" font-size="10" text-anchor="middle" font-family="IBM Plex Mono">32,8</text>
-              <text class="dgm-ink2" x="699" y="186" font-size="10" text-anchor="middle" font-family="IBM Plex Mono">55,5</text>
-              <text class="dgm-ink" x="554" y="278" font-size="11" text-anchor="middle">greedy</text>
-              <text class="dgm-ink" x="678" y="278" font-size="11" text-anchor="middle">TS</text>
-              <text class="dgm-ink2" x="500" y="300" font-size="11">cột trái mỗi cặp là mean, cột phải là p90</text>
-            </svg>
-            <figcaption><b>Hình 4.2</b> · Ở batch 3.000 session/ngày, regret của greedy gần như phẳng còn ε-greedy tăng gần tuyến tính. Đuôi mới là chỗ greedy trả giá: p90 của nó gấp 2,6 lần mean. Số minh hoạ từ mô phỏng có seed.</figcaption>
+            <div class="table-wrap"><table><thead><tr><th>Policy tổng hợp sau khi đã biết B tốt nhất</th><th>Share A / B / C</th><th>Pseudo-regret / 3.000 session</th></tr></thead><tbody>
+              <tr><td>Chỉ chọn B (oracle)</td><td>0 / 1 / 0</td><td>0</td></tr>
+              <tr><td>ε-greedy 10%, explore đều cả ba</td><td>1/30 / 14/15 / 1/30</td><td>2,50 conversion</td></tr>
+              <tr><td>Floor 5% mỗi lever, phần còn lại cho B</td><td>0,05 / 0,90 / 0,05</td><td>3,75 conversion</td></tr>
+              <tr><td>Commit nhầm toàn bộ vào A</td><td>1 / 0 / 0</td><td>45,00 conversion</td></tr>
+            </tbody></table></div>
+            <figcaption><b>Hình 4.2.</b> Phép tính kỳ vọng, không phải benchmark mô phỏng: 3.000 × [share(A) × (0,045 − 0,030) + share(C) × (0,045 − 0,035)]. Floor tốn 18,75 conversion sau 5 ngày nếu tỷ lệ giữ nguyên. Greedy có thể mắc ở lever sai nếu không thu thêm bằng chứng; một seed thuận lợi không xác lập bảo đảm regret.</figcaption>
           </figure>
-
-          <div class="callout warn">
-            <div class="callout-title">Đừng dạy "greedy có regret tuyến tính" như một định luật</div>
-            <p>Với batch 3.000 session/ngày, regret của greedy là 76,0 rồi 77,4 rồi 80,2 conversion ở mốc 5, 10 và 30 ngày, vì một ngày đã đủ để nó chốt và nó chỉ suy biến thành explore-then-commit. Cái tuyến tính là ε-greedy 10%: 74,7 rồi 90,4 rồi 142,4. Rủi ro thật của greedy nằm ở đuôi và ở sự im lặng: khi update từng quyết định, mean regret 63,1 nhưng p90 là 164,8, và chỉ 65,1% số lần chạy kết thúc trên đúng lever tốt nhất (số minh hoạ, mô phỏng có seed).</p>
-          </div>
 
           <div class="compare">
             <div class="compare-col bad"><span class="eyebrow">Anti-pattern</span><ul>
@@ -2405,23 +2353,23 @@ DR    = reward_model(x, π_new) + w × residual</pre>
             <div class="compare-col good"><span class="eyebrow">Cách giữ được</span><ul>
               <li>Chỉ random hoá lever kernel hoàn tác được trong một cadence: thumbnail, creative, copy, ranking slot, bundle badge.</li>
               <li>Lever có kinh tế không đảo ngược (giảm giá đặt lại giá tham chiếu, PO, hợp đồng, thông báo công khai) rời khỏi action set của bandit, đi thang evidence và approval.</li>
-              <li>Exploration budget là share traffic đăng ký trước, có giá niêm yết: floor 5% mỗi lever tốn thêm 7,4 conversion sau 5 ngày và 81,9 sau 30 ngày (số minh hoạ).</li>
+              <li>Exploration budget là share traffic đăng ký trước và có expected cost: bảng trên cho floor 5% mỗi lever tốn 3,75 conversion/ngày so với oracle, dưới đúng các tỷ lệ tổng hợp đã nêu.</li>
             </ul></div>
           </div>
 
-          <p>Còn một dòng nữa phải ghi tại chỗ: <strong>propensity</strong>, xác suất policy đã chọn action đó, viết trong cùng transaction phát ra action, kèm policy version, số draw M và seed. Điền lại sau bằng "share traffic của tuần" cho ra một đại lượng khác hẳn. Trên cùng 10 dòng log ví dụ: propensity thật cho ESS 2,44 trên 10 và SNIPS 0,0756; điền lại bằng share phẳng 0,20 cho ESS 8,14 và SNIPS 0,0551 (số minh hoạ). Log không tốt lên chút nào. Cái hỏng là chẩn đoán: người duyệt nhìn thấy ESS 8,1, kết luận log khoẻ, và ký một con số dựng trên mẫu số bịa.</p>
+          <p>Khi triển khai bộ gán ngẫu nhiên, phải ghi <strong>propensity</strong> là xác suất mà sampler thực sự dùng sau eligibility, exploration floor và các biến đổi khác, kèm context và policy version trong cùng transaction với action. Lab chia quota cố định không cung cấp log randomization cấp request; P(best) ước lượng trước làm tròn không tự là propensity của request. Nếu dùng Monte Carlo, lưu thêm M và seed để tái lập xấp xỉ. Điền lại sau bằng "share traffic của tuần" cho ra một đại lượng khác hẳn. Trên cùng 10 dòng log ví dụ: propensity thật cho ESS 2,44 trên 10 và SNIPS 0,0756; điền lại bằng share phẳng 0,20 cho ESS 8,14 và SNIPS 0,0551 (số minh hoạ). Log không tốt lên chút nào. Cái hỏng là chẩn đoán: người duyệt nhìn thấy ESS 8,1, kết luận log khoẻ, và ký một con số dựng trên mẫu số bịa.</p>
 
           <div class="concept" data-lab="thompson">
             <span class="eyebrow">Lab · Thompson sampling</span>
             <h4>Bấm một lần là một ngày: rút posterior, chia traffic, cập nhật</h4>
-            <p>Ba lever có tỷ lệ conversion thật ẩn 3,0%, 4,5% và 3,5% (số minh hoạ). Mỗi lần bấm là một ngày 3.000 session: ước lượng P(lever tốt nhất) bằng 2.000 draw, chia session theo tỷ lệ đó, cập nhật α và β của riêng lever đã chạy.</p>
+            <p>Ba lever có tỷ lệ conversion tổng hợp 3,0%, 4,5% và 3,5%. Mỗi lần bấm là một ngày 3.000 session: ước lượng P(lever tốt nhất) bằng 2.000 draw rồi làm tròn thành số session cố định cho từng lever. Đây là xấp xỉ chia batch, không randomize từng request. Ước lượng Monte Carlo có thể bằng 0 dù xác suất posterior vẫn dương; regret dùng tỷ lệ ẩn chỉ biết trong mô phỏng.</p>
             <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:12px">
               <button type="button" class="btn btn-ghost" data-lab-next>Ngày tiếp theo →</button>
               <button type="button" class="btn btn-ghost" data-lab-reset>Đặt lại</button>
             </div>
             <div class="table-wrap" style="margin-top:12px">
               <table>
-                <thead><tr><th>Lever</th><th>Beta(α, β)</th><th>π_b = P(best)</th><th>Session</th><th>Conversion</th></tr></thead>
+                <thead><tr><th>Lever</th><th>Beta(α, β)</th><th>P(best) ước lượng</th><th>Session</th><th>Conversion</th></tr></thead>
                 <tbody data-lab-rows>
                   <tr><td>A thumbnail</td><td>Beta(1, 1)</td><td>0,333</td><td>0</td><td>0</td></tr>
                   <tr><td>B creator-post</td><td>Beta(1, 1)</td><td>0,333</td><td>0</td><td>0</td></tr>
@@ -2455,7 +2403,7 @@ DR    = reward_model(x, π_new) + w × residual</pre>
             <button class="quiz-opt" onclick="quizPick(this,1)"><span class="quiz-letter">B</span><span>Đánh dấu các episode đó không đủ điều kiện OPE, và sửa write path để propensity được ghi cùng transaction với action.</span></button>
             <button class="quiz-opt" onclick="quizPick(this,2)"><span class="quiz-letter">C</span><span>Dùng DR thay cho IPS, vì doubly robust bù được phần propensity sai.</span></button>
             <button class="quiz-opt" onclick="quizPick(this,3)"><span class="quiz-letter">D</span><span>Lấy 0,333 cho cả ba creative, vì bandit khởi động từ prior đều nhau.</span></button>
-            <div class="quiz-feedback" role="status" data-explain="B đúng: propensity là xác suất tại đúng thời điểm draw và chỉ tồn tại lúc đó, nên episode thiếu nó thì không dùng cho OPE được. A sai vì share quan sát được là đại lượng khác: thí nghiệm backfill cho ESS đẹp lên từ 2,44 lên 8,14 trong khi SNIPS lệch 27%, tức sai lệch tự giấu mình. C sai vì DR vẫn nhân với importance weight nên propensity sai thì DR sai theo. D sai vì prior đều chỉ đúng ở ngày đầu; từ ngày 2 posterior đã tách và propensity của lever thua rơi xuống 0,005."></div>
+            <div class="quiz-feedback" role="status" data-explain="B đúng: cần xác suất của policy tại lúc gán. Khi chưa tái dựng và kiểm chứng được từ policy cùng lịch sử đầu vào đóng băng, các episode này chưa đủ điều kiện cho đường IPS/SNIPS của bài. A sai vì share quan sát được là đại lượng khác: thí nghiệm backfill cho ESS đẹp lên từ 2,44 lên 8,14 trong khi SNIPS lệch 27%, tức sai lệch tự giấu mình. C sai vì DR không tự chứng minh reward model đúng hay phục hồi support thiếu; không thể mặc định nó sửa được propensity sai. D sai vì prior đều chỉ đúng ở ngày đầu; từ ngày 2 posterior đã tách và propensity của lever thua rơi xuống 0,005."></div>
           </div>
         </div>
         <div class="lesson-nav" data-navfor="m4-l1"></div>
@@ -2488,7 +2436,7 @@ DR    = reward_model(x, π_new) + w × residual</pre>
           <p>Vòng học thực ra là bốn vòng lồng nhau. Vòng trong một run sửa kế hoạch nhưng không đổi capability. Vòng outcome ghép quyết định với kết quả về trễ. Vòng promotion so champion với challenger trên evidence đã đóng băng. Vòng governance đổi mục tiêu, quyền và risk budget. Càng ra ngoài, cadence càng chậm và authority càng cao.</p>
 
           <figure class="figure">
-            <svg viewBox="0 0 760 300" role="img" aria-label="Bốn khung lồng nhau từ governance ở ngoài cùng tới runtime ở trong cùng, lõi là champion artifact hash, và một dải bandit posterior cập nhật hàng đêm nằm trong khung promotion">
+            <div class="diagram-viewport" role="region" tabindex="0" aria-label="Sơ đồ; cuộn ngang để đọc đầy đủ nhãn" style="--diagram-width:760px"><svg viewBox="0 0 760 300" role="img" aria-label="Bốn khung lồng nhau từ governance ở ngoài cùng tới runtime ở trong cùng, lõi là champion artifact hash, và một dải bandit posterior cập nhật hàng đêm nằm trong khung promotion">
               <rect class="dgm-box" x="20" y="20" width="720" height="264" rx="18" stroke-width="1.6"/>
               <rect class="dgm-box" x="70" y="52" width="620" height="200" rx="16" stroke-width="1.6"/>
               <rect class="dgm-box" x="125" y="84" width="510" height="140" rx="14" stroke-width="1.6"/>
@@ -2505,7 +2453,7 @@ DR    = reward_model(x, π_new) + w × residual</pre>
               <rect class="dgm-warn" x="90" y="222" width="580" height="24" rx="8" stroke-width="1.4"/>
               <text class="dgm-ink" x="104" y="238" font-size="11" font-family="IBM Plex Mono">bandit posterior · cập nhật hàng đêm · snapshot có version · drift alarm riêng</text>
               <text class="dgm-ink2" x="40" y="272" font-size="11">đổi mục tiêu, decision rights và risk budget</text>
-            </svg>
+            </svg></div>
             <figcaption><b>Hình 4.3</b> · Bốn vòng khác nhau ở cadence và ở authority. Champion artifact nằm ở lõi và chỉ đổi ở vòng promotion; bản cập nhật posterior hàng đêm là một change surface có lịch, nên nó nằm trong vòng promotion chứ không nằm ở runtime.</figcaption>
           </figure>
 
@@ -2612,7 +2560,7 @@ DR    = reward_model(x, π_new) + w × residual</pre>
           <p>Attempt là append-only vì lịch sử thử là bằng chứng: sửa đè lên attempt cũ thì mất luôn dấu vết của lần gửi đã có thể đã tới nơi. Còn transition phải là <code>UPDATE ... WHERE state = expected_state</code>: hai worker cùng nhặt một command thì bản thứ hai thất bại ở mệnh đề WHERE và dừng, thay vì cả hai cùng gửi. Đây là chỗ duplicate delivery của queue bị chặn, và nó chặn bằng cấu trúc chứ không bằng khoá phân tán hay bằng may mắn về timing.</p>
 
           <figure class="figure">
-            <svg viewBox="0 0 800 300" role="img" aria-label="Máy trạng thái hành động: command mang idempotency key, attempt append-only, provider receipt; đường cảnh báo cho thấy response mất giữa attempt và receipt, và vòng đứt nét cho thấy retry dùng lại đúng idempotency key">
+            <div class="diagram-viewport" role="region" tabindex="0" aria-label="Sơ đồ; cuộn ngang để đọc đầy đủ nhãn" style="--diagram-width:800px"><svg viewBox="0 0 800 300" role="img" aria-label="Máy trạng thái hành động: command mang idempotency key, attempt append-only, provider receipt; đường cảnh báo cho thấy response mất giữa attempt và receipt, và vòng đứt nét cho thấy retry dùng lại đúng idempotency key">
               <rect class="dgm-box" x="30" y="50" width="200" height="92" rx="14" stroke-width="1.6"/>
               <text class="dgm-ink" x="50" y="80" font-size="12" font-weight="700">1 · COMMAND</text>
               <text class="dgm-ink" x="50" y="104" font-size="12">command_id ổn định</text>
@@ -2638,7 +2586,7 @@ DR    = reward_model(x, π_new) + w × residual</pre>
                 <marker id="m4l3-ah" markerWidth="9" markerHeight="9" refX="7" refY="4.5" orient="auto"><path d="M0 0 L9 4.5 L0 9 z" fill="var(--accent-2)"/></marker>
                 <marker id="m4l3-ahw" markerWidth="9" markerHeight="9" refX="7" refY="4.5" orient="auto"><path d="M0 0 L9 4.5 L0 9 z" fill="var(--warning)"/></marker>
               </defs>
-            </svg>
+            </svg></div>
             <figcaption><b>Hình 4.4</b> · Ba trạng thái là ba định danh khác nhau. Mất response chỉ xoá hiểu biết của bạn về bước 3, không xoá việc provider đã làm, nên recovery phải hỏi lại bằng identity thay vì gửi thêm một lệnh mới.</figcaption>
           </figure>
 
@@ -2673,7 +2621,7 @@ transition       = UPDATE ... WHERE state = expected_state</pre>
           <p>Gate duyệt cũng là một artifact có tỷ lệ lỗi đo được, không phải một bảo đảm. Anthropic báo cáo người dùng Claude Code bấm đồng ý 93% số permission prompt (<a href="https://www.anthropic.com/engineering/claude-code-auto-mode">Anthropic, 25/03/2026</a>). Một cổng mà gần như ai cũng bấm đồng ý đã thôi làm chức năng kiểm soát; chữ ký ở đó mất dần giá trị bằng chứng.</p>
 
           <figure class="figure">
-            <svg viewBox="0 0 640 300" role="img" aria-label="Mặt phẳng FNR theo FPR với hai điểm: stage 1 có FNR 6,6 phần trăm và FPR 8,5 phần trăm, full pipeline có FNR 17 phần trăm và FPR 0,4 phần trăm, nối bằng mũi tên thêm stage 2">
+            <div class="diagram-viewport" role="region" tabindex="0" aria-label="Sơ đồ; cuộn ngang để đọc đầy đủ nhãn" style="--diagram-width:640px"><svg viewBox="0 0 640 300" role="img" aria-label="Mặt phẳng FNR theo FPR với hai điểm: stage 1 có FNR 6,6 phần trăm và FPR 8,5 phần trăm, full pipeline có FNR 17 phần trăm và FPR 0,4 phần trăm, nối bằng mũi tên thêm stage 2">
               <path class="dgm-line" stroke-width="1.6" d="M80 250 H600"/>
               <path class="dgm-line" stroke-width="1.6" d="M80 250 V44"/>
               <path class="dgm-line" stroke-width="1" stroke-dasharray="3 4" d="M80 200 H600"/>
@@ -2699,7 +2647,7 @@ transition       = UPDATE ... WHERE state = expected_state</pre>
               <text class="dgm-ink2" x="340" y="292" font-size="11" text-anchor="middle">FPR: chặn nhầm hành động lành (%)</text>
               <text class="dgm-ink2" x="26" y="150" font-size="11" text-anchor="middle" transform="rotate(-90 26 150)">FNR: bỏ sót hành động nguy hiểm (%)</text>
               <defs><marker id="m4l3b-ah" markerWidth="9" markerHeight="9" refX="7" refY="4.5" orient="auto"><path d="M0 0 L9 4.5 L0 9 z" fill="var(--accent-2)"/></marker></defs>
-            </svg>
+            </svg></div>
             <figcaption><b>Hình 4.5</b> · Thêm một tầng reasoning kéo FPR từ 8,5% xuống 0,4%, và kéo FNR từ 6,6% lên 17%. Reviewer là một điểm ai đó đã chọn trên đường cong này, nên chọn điểm là việc của owner. Số đo trên 52 hành động overeager thật và 10.000 request nội bộ thật (<a href="https://www.anthropic.com/engineering/claude-code-auto-mode">Anthropic, 25/03/2026</a>).</figcaption>
           </figure>
 
@@ -2729,7 +2677,7 @@ transition       = UPDATE ... WHERE state = expected_state</pre>
             <button class="quiz-opt" onclick="quizPick(this,1)"><span class="quiz-letter">B</span><span>Ghi episode là success, vì provider hiếm khi nhận rồi mới lỗi ở đường về.</span></button>
             <button class="quiz-opt" onclick="quizPick(this,2)"><span class="quiz-letter">C</span><span>Retry cùng idempotency_key, hoặc query provider receipt theo identity để biết lệnh cũ đã thực thi chưa.</span></button>
             <button class="quiz-opt" onclick="quizPick(this,3)"><span class="quiz-letter">D</span><span>Chờ 24h rồi gửi lại lệnh mới với command_id mới cho chắc.</span></button>
-            <div class="quiz-feedback" role="status" data-explain="C đúng: identity là thứ duy nhất phân biệt được 'chưa làm' với 'đã làm nhưng ta không biết'. A sai vì command_id mới sinh ra idempotency_key mới, nên provider coi đây là hành động khác và bạn có campaign thứ hai. B sai vì đánh dấu success mà không có receipt là ghi vào ledger một điều chưa ai xác nhận, và mọi outcome join sau đó thừa hưởng lỗi đó. D sai vì chờ không đổi trạng thái phía provider; sau 24h bạn vẫn không biết, và lệnh mới với command_id mới vẫn tạo bản thứ hai."></div>
+            <div class="quiz-feedback" role="status" data-explain="C đúng: identity là thứ duy nhất phân biệt được 'chưa làm' với 'đã làm nhưng ta không biết'. A sai vì tạo command mới không xác minh trạng thái lệnh cũ. Nếu giữ nguyên key thì vẫn cùng hành động; nếu phát key mới thì có nguy cơ tạo campaign thứ hai. B sai vì đánh dấu success mà không có receipt là ghi vào ledger một điều chưa ai xác nhận, và mọi outcome join sau đó thừa hưởng lỗi đó. D sai vì thời gian chờ không xác nhận trạng thái phía provider; key mới có thể tạo bản thứ hai và key cũ có thể đã hết TTL. Kiểm receipt và contract của provider trước."></div>
           </div>
         </div>
         <div class="lesson-nav" data-navfor="m4-l3"></div>
@@ -2774,7 +2722,7 @@ transition       = UPDATE ... WHERE state = expected_state</pre>
     </div>
 
     <figure class="figure">
-      <svg viewBox="0 0 700 250" role="img" aria-label="Chuỗi bốn bước của một trial: plan, retrieve từ tenant sai, recompute, answer đúng. Ba thanh bên dưới cho thấy grader outcome chỉ phủ bước cuối, grader trajectory phủ cả chuỗi, grader safety phủ đúng bước retrieve.">
+      <div class="diagram-viewport" role="region" tabindex="0" aria-label="Sơ đồ; cuộn ngang để đọc đầy đủ nhãn" style="--diagram-width:700px"><svg viewBox="0 0 700 250" role="img" aria-label="Chuỗi bốn bước của một trial: plan, retrieve từ tenant sai, recompute, answer đúng. Ba thanh bên dưới cho thấy grader outcome chỉ phủ bước cuối, grader trajectory phủ cả chuỗi, grader safety phủ đúng bước retrieve.">
         <rect class="dgm-box" x="14" y="18" width="142" height="50" rx="9"/>
         <text class="dgm-ink" x="85" y="48" text-anchor="middle" font-size="12" font-family="IBM Plex Mono">1 · plan</text>
         <path class="dgm-flow" d="M156 43 H180" stroke-width="2" marker-end="url(#m5l1-ah)"/>
@@ -2801,7 +2749,7 @@ transition       = UPDATE ... WHERE state = expected_state</pre>
         <text class="dgm-ink" x="257" y="202" text-anchor="middle" font-size="10.5" font-family="IBM Plex Mono">FAIL</text>
         <text class="dgm-ink2" x="344" y="202" font-size="11">grader SAFETY · tenant isolation vỡ ở bước 2</text>
         <defs><marker id="m5l1-ah" markerWidth="9" markerHeight="9" refX="7" refY="4.5" orient="auto"><path d="M0 0 L9 4.5 L0 9 z" fill="var(--accent-2)"/></marker></defs>
-      </svg>
+      </svg></div>
       <figcaption><b>Hình 5.1.</b> Cùng một trial, ba grader nhìn ba phạm vi khác nhau. Grader nào chỉ phủ ô cuối thì mọi lỗi trước ô đó đều vô hình với nó.</figcaption>
     </figure>
 
@@ -2820,10 +2768,10 @@ transition       = UPDATE ... WHERE state = expected_state</pre>
     <h4>pass^k: reliability cộng dồn ngược lại phía bạn</h4>
     <p><code>pass^k</code> ra đời trong τ-bench (arXiv 2406.12045, 17/06/2024) và được định nghĩa là «xác suất cả k trial i.i.d. của một task đều thành công, lấy trung bình trên các task»:</p>
     <div class="code-card"><pre>pass^k = E_task[ C(c, k) / C(n, k) ]     # c = số trial thành công trong n trial</pre></div>
-    <p>Số đo của chính bài báo đó: gpt-4o trên τ-retail có pass^1 = 61,2% nhưng pass^8 &lt; 25%; τ-airline pass^1 = 35,2% (arXiv 2406.12045, 17/06/2024). Một phép tính để thấy cơ chế: nếu mỗi lần chạy thành công độc lập với xác suất p = 0,9 thì pass^8 = 0,9⁸ = <b>43,0%</b>. Con số 43,0% này là số tự tính, không phải số đo. Đọc bằng lời: một agent «đúng 9 trên 10 lần» sẽ hỏng ít nhất một lần trong hơn một nửa số chuỗi tám bước. Và vì trial thật dùng chung memory, chung context, giả định độc lập thường quá lạc quan, nên pass^k đo được thường tệ hơn p^k.</p>
+    <p>Số đo của chính bài báo đó: gpt-4o trên τ-retail có pass^1 = 61,2% nhưng pass^8 &lt; 25%; τ-airline pass^1 = 35,2% (arXiv 2406.12045, 17/06/2024). Một phép tính để thấy cơ chế: nếu mỗi lần chạy thành công độc lập với xác suất p = 0,9 thì pass^8 = 0,9⁸ = <b>43,0%</b>. Con số 43,0% này là số tự tính, không phải số đo. Đọc bằng lời: với giả định này, hơn một nửa các bộ tám lần chạy lại toàn bộ cùng một task có ít nhất một lần hỏng. Đây không phải tám bước trong một run. Khi xác suất khác nhau theo task, cần lấy trung bình p_task^k; không lấy (pass^1)^k. Phụ thuộc giữa các trial có thể đổi xác suất theo cả hai hướng, nên phải nêu cách reset state và đo multi-trial trực tiếp.</p>
 
     <figure class="figure">
-      <svg viewBox="0 0 700 250" role="img" aria-label="Đồ thị pass^k theo k từ 1 đến 8. Đường tính toán với p bằng 0,9 tụt từ 90% xuống 43,0%. Hai điểm đo của τ-retail gpt-4o nằm thấp hơn: pass^1 bằng 61,2% và pass^8 dưới 25%.">
+      <div class="diagram-viewport" role="region" tabindex="0" aria-label="Sơ đồ; cuộn ngang để đọc đầy đủ nhãn" style="--diagram-width:700px"><svg viewBox="0 0 700 250" role="img" aria-label="Đồ thị pass^k theo k từ 1 đến 8. Đường tính toán với p bằng 0,9 tụt từ 90% xuống 43,0%. Hai điểm đo của τ-retail gpt-4o nằm thấp hơn: pass^1 bằng 61,2% và pass^8 dưới 25%.">
         <path class="dgm-line" d="M62 26 V210 H672" stroke-width="1.5"/>
         <text class="dgm-ink2" x="56" y="34" text-anchor="end" font-size="10" font-family="IBM Plex Mono">100%</text>
         <text class="dgm-ink2" x="56" y="79" text-anchor="end" font-size="10" font-family="IBM Plex Mono">75%</text>
@@ -2843,7 +2791,7 @@ transition       = UPDATE ... WHERE state = expected_state</pre>
         <text class="dgm-ink2" x="330" y="70" font-size="10.5" font-family="IBM Plex Mono">0,9^k · số tự tính · 43,0% ở k=8</text>
         <text class="dgm-ink2" x="86" y="96" font-size="10.5" font-family="IBM Plex Mono">τ-retail gpt-4o đo thực: 61,2%</text>
         <text class="dgm-ink2" x="652" y="186" text-anchor="end" font-size="10.5" font-family="IBM Plex Mono">đo thực: pass^8 &lt; 25%</text>
-      </svg>
+      </svg></div>
       <figcaption><b>Hình 5.2.</b> Chỉ hai điểm đầu và cuối của đường dưới là số đo (arXiv 2406.12045); đoạn nối là gợi ý hình dạng. Đường trên là số học thuần, và số đo vẫn nằm dưới nó.</figcaption>
     </figure>
 
@@ -2935,7 +2883,7 @@ transition       = UPDATE ... WHERE state = expected_state</pre>
     <p>Hai chỗ hay đứt trong chuỗi đó, và cả hai đều đứt lặng lẽ. Chỗ thứ nhất là ranh giới giữa quyết định và hành động: một episode sinh ra một <code>command_id</code>, nhưng mỗi lần retry lại tạo một <code>attempt_id</code> mới, nên nếu attempt không mang theo command thì hai lần gửi trông như hai quyết định riêng biệt. Chỗ thứ hai là ranh giới thời gian: outcome về sau cutoff nhiều ngày, thường qua một job batch khác, và job đó phải mang <code>decision_episode_id</code> chứ không được nối lại bằng cách so ngày. Cả hai chỗ đều nên có một test: sinh một episode giả, rồi assert rằng truy từ <code>trace_id</code> tới <code>outcome_id</code> đi qua đủ tám id mà không đứt đoạn nào.</p>
 
     <figure class="figure">
-      <svg viewBox="0 0 700 240" role="img" aria-label="Waterfall của một decision episode với năm span: retrieve, kernel, approval, action, outcome. Span kernel bắt đầu trước khi retrieve kết thúc, approval là span dài nhất, và outcome nằm cách bảy ngày sau.">
+      <div class="diagram-viewport" role="region" tabindex="0" aria-label="Sơ đồ; cuộn ngang để đọc đầy đủ nhãn" style="--diagram-width:700px"><svg viewBox="0 0 700 240" role="img" aria-label="Waterfall của một decision episode với năm span: retrieve, kernel, approval, action, outcome. Span kernel bắt đầu trước khi retrieve kết thúc, approval là span dài nhất, và outcome nằm cách bảy ngày sau.">
         <path class="dgm-line" d="M162 22 H686" stroke-width="1.5"/>
         <text class="dgm-ink2" x="162" y="16" font-size="10" font-family="IBM Plex Mono">0</text>
         <text class="dgm-ink2" x="686" y="16" text-anchor="end" font-size="10" font-family="IBM Plex Mono">thời gian trong một episode →</text>
@@ -2963,13 +2911,13 @@ transition       = UPDATE ... WHERE state = expected_state</pre>
         <path class="dgm-line" d="M254 32 V210" stroke-width="1" stroke-dasharray="4 5"/>
         <path class="dgm-line" d="M275 32 V210" stroke-width="1" stroke-dasharray="4 5"/>
         <text class="dgm-ink2" x="265" y="228" text-anchor="middle" font-size="10" font-family="IBM Plex Mono">chồng lấn</text>
-      </svg>
+      </svg></div>
       <figcaption><b>Hình 5.3.</b> Mặc định mỗi span lưu id, version, hash, timing, token và cost, status. Không dump prompt, dữ liệu khách hàng hay tool result.</figcaption>
     </figure>
 
     <h4>Pin theo commit, không pin theo tên chuẩn</h4>
-    <p>Vocabulary nên theo OpenTelemetry, nhưng đừng chờ một số version để pin. Trong semantic conventions v1.42.0 phát hành 12/06/2026, toàn bộ attribute, metric, event và span <code>gen_ai.*</code> bị deprecate ở repo chính và chuyển sang repo riêng <code>semantic-conventions-genai</code>. Kiểm lại ngày 29/08/2026: repo mới đó chưa có release nào được tag, và trong tài liệu span của nó, <em>mọi</em> loại span đều mang badge Development, gồm inference, embeddings, retrieval, fetch-response, memory và execute-tool. Không có cái nào được đánh Stable.</p>
-    <p>Hệ quả vận hành rất cụ thể: pin instrumentation theo commit hash cùng ngày snapshot, giữ compatibility map của riêng bạn, và coi mỗi lần đổi convention là một change surface có owner. Câu bạn viết trong runbook nên là «chúng tôi bám commit X ngày 12/06/2026», chứ không phải «chúng tôi theo chuẩn OTel».</p>
+    <p><a href="https://opentelemetry.io/docs/specs/semconv/gen-ai/">Trang OpenTelemetry GenAI</a> hiện chuyển người đọc sang repository riêng <code>semantic-conventions-genai</code>: “This page has moved and is no longer maintained in this repository.” Vì vậy đừng suy ra độ ổn định của mọi GenAI span từ version của repo semantic conventions chính. Kiểm trạng thái từng convention mà instrumentation dùng, rồi pin release hoặc commit đã kiểm.</p>
+    <p>Hệ quả vận hành rất cụ thể: pin instrumentation theo release hoặc commit đã kiểm cùng snapshot, giữ compatibility map của riêng bạn, và coi mỗi lần đổi convention là một change surface có owner. Câu bạn viết trong runbook nên là «chúng tôi bám release hoặc commit X, với mapping đã kiểm», chứ không phải «chúng tôi theo chuẩn OTel».</p>
 
     <div class="compare">
       <div class="compare-col bad"><span class="eyebrow">Log nhiều</span><ul>
@@ -2987,8 +2935,8 @@ transition       = UPDATE ... WHERE state = expected_state</pre>
     </div>
 
     <div class="callout warn">
-      <div class="callout-title">Hash chưa phải anonymization khi input space nhỏ</div>
-      <p>Nếu một trường chỉ nhận một trong vài chục giá trị, chẳng hạn tên dòng SKU hay mã tỉnh, thì ai cầm log cũng dựng được bảng tra: băm hết vài chục giá trị đó rồi so. Không cần phá SHA-256, chỉ cần liệt kê miền giá trị. Hash chỉ có tác dụng khi miền giá trị đủ lớn hoặc có salt bí mật được quản như một secret, và cả hai điều kiện đó phải viết ra thay vì giả định.</p>
+      <div class="callout-title">Hash chưa tự làm dữ liệu thành vô danh</div>
+      <p>Nếu một trường chỉ nhận một trong vài chục giá trị, chẳng hạn tên dòng SKU hay mã tỉnh, thì ai cầm log cũng dựng được bảng tra: băm hết vài chục giá trị đó rồi so. Không cần phá SHA-256, chỉ cần liệt kê miền giá trị. Miền lớn hoặc salt không tự chứng minh anonymization. Nếu cần liên kết ổn định, thiết kế pseudonymisation với dữ liệu bổ sung được giữ tách biệt và kiểm soát truy cập; vẫn giữ retention/purpose. <a href="https://ico.org.uk/for-organisations/uk-gdpr-guidance-and-resources/data-sharing/anonymisation/pseudonymisation/">ICO, Pseudonymisation</a> (đọc 12/11/2026): “Pseudonymised personal data is in scope of data protection law.”</p>
     </div>
 
     <p>Ví dụ trở lại vụ email gửi trùng. Khi trace đã nối liền, câu trả lời hiện ra trong vài phút: hai attempt khác nhau dùng hai idempotency key khác nhau, vì hai đường code chuẩn hoá target theo hai cách. Việc phải làm là giao quyền sở hữu canonical key cho một chỗ duy nhất, không phải thêm retry ngẫu nhiên hay tăng thời gian chờ.</p>
@@ -3038,30 +2986,31 @@ transition       = UPDATE ... WHERE state = expected_state</pre>
 
     <div class="concept">
       <span class="eyebrow">Khái niệm</span>
-      <h4>Conformal prediction: biến một tín hiệu tự tin thành một bảo đảm có điều kiện</h4>
-      <p><strong>Conformal prediction</strong> bọc quanh một model đã train sẵn và trả về một <em>prediction set</em> thay cho một điểm. Theo Angelopoulos &amp; Bates (arXiv 2107.07511, v6 07/12/2022): chọn score function <code>s(x,y)</code>, score càng lớn càng lệch; tính <code>q̂</code> là phân vị <code>⌈(n+1)(1−α)⌉/n</code> của score trên calibration set giữ riêng; lấy <code>C(x) = { y : s(x,y) ≤ q̂ }</code>. với bảo đảm <code>P(Y ∈ C(X)) ≥ 1 − α</code>.</p>
+      <h4>Conformal prediction: khoảng dự báo outcome có bảo đảm marginal</h4>
+      <p><strong>Conformal prediction</strong> bọc quanh một model đã train sẵn và trả về một <em>prediction set</em> thay cho một điểm. Theo <a href="https://arxiv.org/html/2107.07511v6">Angelopoulos &amp; Bates, v6</a> (đọc 12/11/2026): chọn score function <code>s(x,y)</code>, score càng lớn càng lệch; tính <code>q̂</code> là phân vị <code>⌈(n+1)(1−α)⌉/n</code> của score trên calibration set giữ riêng; lấy <code>C(x) = { y : s(x,y) ≤ q̂ }</code>. với bảo đảm <code>P(Y ∈ C(X)) ≥ 1 − α</code>.</p>
       <p>Số worked: <code>n = 500</code>, <code>α = 0,10</code> cho <code>⌈501 × 0,9⌉ / 500 = 451/500 = 0,902</code>, tức phân vị 90,2% chứ không phải 90%. Đọc bằng lời: cái <code>+1</code> và phần làm tròn lên là hiệu chỉnh hữu hạn mẫu, ai gõ <code>quantile(scores, 0.9)</code> đã vứt bảo đảm đi.</p>
     </div>
 
     <p>Giả định đỡ toàn bộ chuyện này là <strong>exchangeability</strong> (hoán vị được): điểm test phải là «một điểm calibration nữa», tức phân phối chung của calibration cộng test không đổi khi hoán vị thứ tự. Bảo đảm còn là <em>marginal</em>, trung bình trên toàn bộ dữ liệu, nên nó không hứa gì cho nhóm nhỏ: trong ví dụ của chính bài báo, nhóm A chiếm 90% được phủ trọn còn nhóm B chiếm 10% trượt sạch, coverage tổng vẫn 90%.</p>
 
-    <p>Set rộng ra là tín hiệu phải hành động, không phải chi tiết kỹ thuật. Đó là lúc uncertainty thành gate. Ngoài «act» và «không act», hệ quyết định có đầu ra thứ ba: <strong>abstain và escalate</strong>. Ngưỡng abstain ghi trước trong decision contract, và ghi theo <em>quyết định</em> chứ không theo model. Câu hỏi đúng là «hai lever ứng viên có cách nhau xa hơn khoảng dự đoán không». Nếu chúng nằm lọt trong cùng một khoảng, bằng chứng không tách được, và đầu ra đúng là UNKNOWN rồi escalate, đúng logic ba giá trị ở bài 2.2.</p>
+    <p>Ở đây Y là sell-through tuần tới của một SKU dưới policy đang chạy, X là feature đã biết trước tuần. Model quantile được train trên tập riêng, score là max(q_lo(X)−Y, Y−q_hi(X)); q̂ lấy từ calibration SKU-tuần giữ riêng và kiểm trên tuần test về sau. Chuỗi thời gian không mặc nhiên exchangeable: phải kiểm giả định theo thiết kế hoặc dùng phương pháp phù hợp. Đây là khoảng cho <b>outcome Y</b>, không phải khoảng tin cậy cho trung bình E[Y|X], cũng không phải khoảng cho tác động E[Y(creator)−Y(ads)].</p>
+    <p>Gate trong bảng/lab chỉ hỏi forecast có đủ hẹp cho quy trình đã định hay không, với ngưỡng minh hoạ 12 pp. <b>PASS không cấp quyền chọn lever hay execute.</b> Hai lever chênh dự kiến 2 pp vẫn cần bằng chứng causal riêng; khoảng outcome rộng hơn hoặc hẹp hơn 2 pp đều không tự xác định được tác động của việc đổi lever.</p>
 
     <div class="table-wrap">
       <table>
-        <thead><tr><th>Tuần</th><th>Spread quantile</th><th>q̂</th><th>Bề rộng = spread + 2q̂</th><th>Coverage</th><th>MAPE</th><th>PSI</th><th>Gate</th></tr></thead>
+        <thead><tr><th>Tuần</th><th>Spread quantile</th><th>q̂</th><th>Bề rộng = spread + 2q̂</th><th>Coverage</th><th>MAPE</th><th>PSI</th><th>Gate dự báo</th></tr></thead>
         <tbody>
-          <tr><td>W1 (trước)</td><td>6,0 pp</td><td>1,0 pp</td><td><b>8,0 pp</b></td><td>0,90</td><td>6,1%</td><td>0,0025</td><td>ACT</td></tr>
-          <tr><td>W2</td><td>6,0 pp</td><td>1,6 pp</td><td><b>9,2 pp</b></td><td>0,87</td><td>6,3%</td><td>0,0247</td><td>ACT</td></tr>
+          <tr><td>W1 (trước)</td><td>6,0 pp</td><td>1,0 pp</td><td><b>8,0 pp</b></td><td>0,90</td><td>6,1%</td><td>0,0025</td><td>PASS</td></tr>
+          <tr><td>W2</td><td>6,0 pp</td><td>1,6 pp</td><td><b>9,2 pp</b></td><td>0,87</td><td>6,3%</td><td>0,0247</td><td>PASS</td></tr>
           <tr><td>W3</td><td>6,1 pp</td><td>3,1 pp</td><td><b>12,3 pp</b></td><td>0,79</td><td>6,8%</td><td>0,1971</td><td>⚑ ABSTAIN</td></tr>
           <tr><td>W4</td><td>6,0 pp</td><td>5,2 pp</td><td><b>16,4 pp</b></td><td>0,71</td><td>7,4%</td><td>0,3722</td><td>⚑ ABSTAIN + expiry</td></tr>
         </tbody>
       </table>
     </div>
-    <p>Bảng trên là <b>số minh hoạ</b> cho brand ví dụ, trừ PSI của W4 (0,3722), tính từ công thức ở dưới trên vector bin W4 = [0,24 0,18 0,14 0,10 0,08 0,07 0,06 0,05 0,05 0,03]; PSI của W1–W3 lấy từ bin table riêng của từng tuần và không nội suy được từ W4. Bề rộng tăng 8,0 lên 16,4 pp và toàn bộ mức tăng đến từ <code>q̂</code> (1,0 lên 5,2) trong khi spread của model đứng yên: chính calibration phát hiện model sai thường xuyên hơn. MAPE nhích 1,3 điểm nên không dashboard nào bắn, còn coverage rơi 0,90 xuống 0,71 vì calibration vẫn gộp cả lịch sử cũ. Hai lever cách nhau 2 pp trong khi tới W3 khoảng đã rộng 12,3 pp, nên quyết định chết trước model.</p>
+    <p>Các mức q̂, coverage, MAPE và PSI W1–W3 là đầu vào tổng hợp được chọn riêng để minh hoạ gate, không phải output từ một bộ calibration được cung cấp. PSI W4 ≈ 0,3722 được tính từ vector [0,24 0,18 0,14 0,10 0,08 0,07 0,06 0,05 0,05 0,03] so với 10 bin đều 0,10. Trong kịch bản này bề rộng tăng 8,0 lên 16,4 pp và báo động trước ngưỡng KPI; drift không bảo đảm q̂ luôn nở hay báo động luôn tới trước KPI.</p>
 
     <figure class="figure">
-      <svg viewBox="0 0 700 352" role="img" aria-label="Bốn làn theo bốn tuần W1 đến W4. Làn MAPE gần phẳng. Làn bề rộng conformal set vượt ngưỡng abstain 12 pp từ W3. Làn PSI vượt 0,25 ở W4. Làn champion có hạn dùng theo lịch ở W8 nhưng bị kéo sớm ở W3.">
+      <div class="diagram-viewport" role="region" tabindex="0" aria-label="Sơ đồ; cuộn ngang để đọc đầy đủ nhãn" style="--diagram-width:700px"><svg viewBox="0 0 700 352" role="img" aria-label="Bốn làn theo bốn tuần W1 đến W4. Làn MAPE gần phẳng. Làn bề rộng conformal set vượt ngưỡng abstain 12 pp từ W3. Làn PSI vượt 0,25 ở W4. Làn champion có hạn dùng theo lịch ở W8 nhưng bị kéo sớm ở W3.">
         <path class="dgm-line" d="M250 34 V306" stroke-width="1.5" stroke-dasharray="6 5"/>
         <text class="dgm-ink2" x="256" y="30" font-size="10" font-family="IBM Plex Mono">sàn đổi thuật toán xếp hạng</text>
         <text class="dgm-ink2" x="190" y="318" text-anchor="middle" font-size="10" font-family="IBM Plex Mono">W1</text>
@@ -3104,22 +3053,22 @@ transition       = UPDATE ... WHERE state = expected_state</pre>
         <text class="dgm-ink2" x="612" y="295" font-size="10" font-family="IBM Plex Mono">hạn W8</text>
         <text class="dgm-ink" x="430" y="296" text-anchor="middle" font-size="11">▲ expiry kéo sớm</text>
         <text class="dgm-ink2" x="172" y="344" font-size="10" font-family="IBM Plex Mono">chạy lại evidence pack → recalibrate | retrain | re-evidence</text>
-      </svg>
-      <figcaption><b>Hình 5.4.</b> Số trong hình là số minh hoạ cho brand ví dụ. Điểm của hình: trung bình vẫn ổn, uncertainty động trước, và gate bắn trước khi KPI kịp xấu.</figcaption>
+      </svg></div>
+      <figcaption><b>Hình 5.4.</b> Số trong hình là số minh hoạ cho brand ví dụ. Hình minh hoạ một kịch bản gate dự báo báo động sớm; đây không phải bảo đảm phát hiện drift.</figcaption>
     </figure>
 
     <h4>PSI và KS: hai loại báo động, hai loại sai lầm</h4>
-    <p>PSI (Population Stability Index) so phân phối hiện tại với tham chiếu theo bin: <code>PSI = Σᵢ (aᵢ − bᵢ) · ln(aᵢ / bᵢ)</code>. Số worked, bin 1 của W4 với tham chiếu chia 10 decile đều nên <code>bᵢ = 0,10</code>: <code>(0,24 − 0,10) × ln(0,24/0,10) = 0,14 × 0,8755 = 0,1226</code>; cộng đủ 10 bin ra 0,3722. Đọc bằng lời: hai đuôi chi phối, bin 1 và bin 10 gánh 56% tổng, bin không đổi góp đúng 0. Bẫy cài đặt: khi <code>aᵢ → 0</code> thì <code>ln(aᵢ/bᵢ) → −∞</code>, nên phải cộng một lượng nhỏ vào mỗi bin, đúng cách Fiddler thêm <code>base_count = 1</code>.</p>
+    <p>PSI (Population Stability Index) so phân phối hiện tại với tham chiếu theo bin: <code>PSI = Σᵢ (aᵢ − bᵢ) · ln(aᵢ / bᵢ)</code>. Số worked, bin 1 của W4 với tham chiếu chia 10 decile đều nên <code>bᵢ = 0,10</code>: <code>(0,24 − 0,10) × ln(0,24/0,10) = 0,14 × 0,8755 = 0,1226</code>; cộng đủ 10 bin ra 0,3722. Đọc bằng lời: hai đuôi chi phối, bin 1 và bin 10 gánh 56% tổng, bin không đổi góp đúng 0. Bẫy cài đặt: khi <code>aᵢ → 0</code> thì <code>ln(aᵢ/bᵢ) → −∞</code>, nên cần quy ước xử lý bin rỗng được ghi trước. Lab dùng chặn sàn xác suất ở ε = 10⁻⁴; đó khác với cộng pseudocount vào count rồi chuẩn hoá lại. Hai cách có thể cho PSI khác nhau. Fixture dưới đây không có bin rỗng nên guard không đổi số.</p>
 
     <div class="callout warn">
       <div class="callout-title">0,10 và 0,25 là quy ước ngân hàng, không phải định lý</div>
-      <p>Hai mốc này đến từ thực hành credit scoring. Luận án đo tính chất thống kê của PSI (Bilal Yurdakul, Western Michigan University, 04/2018; bản đăng Yurdakul &amp; Naranjo, <em>Journal of Risk Model Validation</em>, 2020) viết trong tóm tắt rằng chúng «đang được dùng mà không tham chiếu tới sai số loại I hay loại II»; ở ngân hàng, PSI cao là cái kích hoạt một cuộc điều tra nội bộ, tức mức escalation chứ không phải quy tắc quyết định. Kiểm nhà cung cấp ngày 29/08/2026: Evidently để ngưỡng PSI mặc định 0,1; Arize không chốt mốc cố định mà khuyên auto threshold theo giá trị trailing của production; Google Vertex AI Model Monitoring v2 không cài PSI, chỉ có L-Infinity và Jensen-Shannon. Hãy coi ngưỡng PSI như mức báo động bạn ghi trước và bảo vệ được, giống ngưỡng shadow ở bài 4.2.</p>
+      <p>Hai mốc này đến từ thực hành credit scoring. <a href="https://scholarworks.wmich.edu/dissertations/3208/">Luận án về PSI</a> (Yurdakul, Western Michigan University, 04/2018) viết trong tóm tắt rằng chúng «đang được dùng mà không tham chiếu tới sai số loại I hay loại II»; ở ngân hàng, PSI cao là cái kích hoạt một cuộc điều tra nội bộ, tức mức escalation chứ không phải quy tắc quyết định. Hãy coi ngưỡng PSI như mức báo động bạn ghi trước và bảo vệ được, giống ngưỡng shadow ở bài 4.2.</p>
     </div>
 
-    <p>KS (Kolmogorov-Smirnov) đo khoảng cách dọc lớn nhất giữa hai CDF thực nghiệm, <code>D = supₓ |Fₙ(x) − G_m(x)|</code>, và trả p-value. Evidently dùng KS cho cột numeric khi reference có tối đa 1000 dòng, rồi chuyển sang Wasserstein và Jensen-Shannon ngưỡng 0,1 khi reference lớn hơn. Cú chuyển đó là bài học thiết kế: <b>p-value không phải effect size</b>. Bẫy kèm theo là multiple testing: KS ở α = 0,05 trên 200 feature sẽ bắn khoảng 10 feature mỗi ngày dù không có drift nào, nên hãy gate ở mức dataset theo tỷ lệ cột drift (mặc định Evidently 0,5).</p>
+    <p>KS (Kolmogorov-Smirnov) đo khoảng cách dọc lớn nhất giữa hai CDF thực nghiệm, <code>D = supₓ |Fₙ(x) − G_m(x)|</code>, và trả p-value. Điểm cần tách: <b>p-value không phải effect size</b>. Dựa vào p-value cần giả định lấy mẫu phù hợp, nhất là khi dữ liệu theo thời gian/phụ thuộc. Với 200 phép kiểm null hợp lệ ở α = 0,05, số báo nhầm kỳ vọng là 10 dù không có drift; đó không phải lời hứa ngày nào cũng đúng 10. Ghi policy multiple testing và escalation trước khi xem dashboard.</p>
 
     <figure class="figure">
-      <svg viewBox="0 0 700 230" role="img" aria-label="Hai panel phân phối score. Panel trái exchangeable: điểm test nằm trong cùng phân phối với calibration, q mũ chặn đúng phân vị, coverage đạt. Panel phải sau shift: phân phối mới lệch sang phải, điểm test nằm ngoài q mũ, bảo đảm mất.">
+      <div class="diagram-viewport" role="region" tabindex="0" aria-label="Sơ đồ; cuộn ngang để đọc đầy đủ nhãn" style="--diagram-width:700px"><svg viewBox="0 0 700 230" role="img" aria-label="Hai panel phân phối score. Panel trái exchangeable: điểm test nằm trong cùng phân phối với calibration, q mũ chặn đúng phân vị, coverage đạt. Panel phải sau shift: phân phối mới lệch sang phải, điểm test nằm ngoài q mũ, bảo đảm mất.">
         <text class="dgm-ink" x="24" y="24" font-size="12">Exchangeable</text>
         <path class="dgm-flow" d="M24 168 C 78 168 78 62 132 62 C 186 62 186 168 240 168" stroke-width="2.5" fill="none"/>
         <path class="dgm-line" d="M24 168 H330" stroke-width="1.5"/>
@@ -3142,24 +3091,24 @@ transition       = UPDATE ... WHERE state = expected_state</pre>
         <text class="dgm-ink2" x="578" y="58" font-size="11" font-family="IBM Plex Mono">q̂</text>
         <text class="dgm-ink2" x="384" y="200" font-size="10.5">calibration mô tả một thế giới đã không còn</text>
         <text class="dgm-ink" x="384" y="218" font-size="11" font-family="IBM Plex Mono">bảo đảm mất ✗</text>
-      </svg>
-      <figcaption><b>Hình 5.5.</b> Ba cách vá, mỗi cách một cái giá: weighted conformal cần biết trước tỷ số w(x); rolling window hoặc decay weight trả giá bằng <code>n_eff = (Σwᵢ)²/Σwᵢ²</code>, đúng công thức ESS ở bài 3.5; ACI theo <code>α(t+1) = α(t) + γ(α − err_t)</code> mua lại tần suất coverage chứ không mua lại bề rộng.</figcaption>
+      </svg></div>
+      <figcaption><b>Hình 5.5.</b> Các hướng xử lý cần giả định riêng: weighted conformal dùng tỷ số phân phối thích hợp; rolling window giảm dữ liệu cũ nhưng không tự có bảo đảm; ACI cập nhật α(t+1) = α(t) + γ(α − err_t) nhằm kiểm soát tần suất lỗi dài hạn, không hứa coverage có điều kiện từng tuần. ESS của weight chỉ là chẩn đoán, không phải định lý coverage.</figcaption>
     </figure>
 
     <figure class="figure">
       <div class="lab" data-lab="drift">
-        <p><b>Lab.</b> Kéo thanh trượt để nội suy tỷ trọng bin của feature quyết định từ baseline (0) tới W4 (100). PSI tính bằng đúng công thức ở trên; ở mức 0 phân phối trùng baseline đều nên PSI = 0.</p>
+        <p><b>Lab.</b> Kéo thanh trượt để nội suy tỷ trọng bin từ baseline (0) tới W4 (100). PSI tính từ bin; q̂ được nội suy riêng từ 1,0 đến 5,2 pp như một giả định mô phỏng. Không có công thức suy q̂ từ PSI; hai đầu vào chỉ cùng chạy theo thanh trượt trong ví dụ này.</p>
         <label for="m5l3-shift">Mức shift phân phối feature</label>
         <input id="m5l3-shift" type="range" min="0" max="100" step="1" value="0" style="width:100%;max-width:420px;margin:8px 0 4px">
         <div class="lab-out" aria-live="polite">
           <span style="display:inline-block;margin-right:20px">PSI <b data-out="psi">0,0000</b></span>
           <span style="display:inline-block;margin-right:20px">q̂ <b data-out="qhat">1,0 pp</b></span>
           <span style="display:inline-block;margin-right:20px">Bề rộng set <b data-out="width">8,0 pp</b></span>
-          <span style="display:inline-block">Gate <b data-out="gate">ACT</b></span>
+          <span style="display:inline-block">Gate dự báo <b data-out="gate">PASS</b></span>
         </div>
         <p data-out="note"></p>
       </div>
-      <figcaption><b>Hình 5.6.</b> Gate lật sang ABSTAIN khi bề rộng vượt w* = 12 pp. Ngay ở mức shift 0, khoảng 8,0 pp đã rộng hơn khoảng cách 2 pp giữa hai lever, nên xếp hạng chúng cần một thí nghiệm chứ không phải một forecast.</figcaption>
+      <figcaption><b>Hình 5.6.</b> Gate dự báo chuyển PASS → ABSTAIN khi bề rộng vượt 12 pp. Ở mọi mức shift, gate chọn can thiệp vẫn chưa đủ bằng chứng: khoảng dự báo Y không xác định tác động creator so với ads.</figcaption>
     </figure>
 
     <h4>Champion expiry và guardrail auto-rollback</h4>
@@ -3193,7 +3142,7 @@ transition       = UPDATE ... WHERE state = expected_state</pre>
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true" focusable="false"><path d="M12 2v6m0 8v6M4.9 4.9l4.2 4.2m5.8 5.8l4.2 4.2M2 12h6m8 0h6M4.9 19.1l4.2-4.2m5.8-5.8l4.2-4.2"/></svg>
         Takeaway
       </span>
-      <p>Bảo đảm 90% của conformal đứng trên exchangeability; khi phân phối đổi, <span class="hl">bề rộng set reo trước KPI</span>, nên ngưỡng abstain, ngưỡng PSI và hạn dùng champion phải nằm sẵn trong decision contract.</p>
+      <p><span class="hl">Khoảng dự báo outcome không phải khoảng tác động can thiệp.</span> Bảo đảm marginal cần exchangeability; gate dự báo, drift và quyền hành động phải được kiểm riêng.</p>
     </div>
 
     <div class="quiz" data-correct="3">
@@ -3202,8 +3151,8 @@ transition       = UPDATE ... WHERE state = expected_state</pre>
       <button class="quiz-opt" onclick="quizPick(this,0)"><span class="quiz-letter">A</span><span>Còn nguyên. Bảo đảm này là distribution-free, nên đúng với mọi phân phối, kể cả phân phối vừa đổi.</span></button>
       <button class="quiz-opt" onclick="quizPick(this,1)"><span class="quiz-letter">B</span><span>Còn. q̂ tính lại mỗi tuần trên calibration set, nên nó tự hấp thụ shift và coverage tự phục hồi.</span></button>
       <button class="quiz-opt" onclick="quizPick(this,2)"><span class="quiz-letter">C</span><span>Không còn, và việc phải làm là retrain model trên dữ liệu sau shift rồi bật lại gate.</span></button>
-      <button class="quiz-opt" onclick="quizPick(this,3)"><span class="quiz-letter">D</span><span>Không còn: exchangeability vỡ thì bảo đảm mất theo, và kéo coverage về thì phải trả bằng bề rộng.</span></button>
-      <div class="quiz-feedback" role="status" data-explain="D đúng: Theorem 1 giả định điểm test hoán vị được với các điểm calibration; sau shift, calibration mô tả một thế giới đã khác, nên bảo đảm không áp dụng. A lẫn hai chuyện: distribution-free nghĩa là không cần biết dạng phân phối, không có nghĩa là chịu được việc phân phối đổi giữa calibration và test. B đúng một nửa và sai chỗ chết người: q̂ có nở ra thật, nhưng nó nở theo lịch sử đang bị pha loãng, và bảng W1 đến W4 cho thấy coverage vẫn rơi từ 0,90 xuống 0,71 trong khi bề rộng gấp đôi; muốn kéo coverage về thì phải rolling window, weighted conformal hoặc ACI, và cái giá vẫn là bề rộng. C nhảy thẳng sang kết luận: alarm drift không phân biệt được ba kết cục recalibrate, retrain, re-evidence, nên nó kích hoạt chạy lại evidence pack chứ không tự ra lệnh retrain."></div>
+      <button class="quiz-opt" onclick="quizPick(this,3)"><span class="quiz-letter">D</span><span>Chưa được viện dẫn bảo đảm cũ: cần rà exchangeability, kiểm coverage mới và giữ gate theo contract.</span></button>
+      <div class="quiz-feedback" role="status" data-explain="D đúng: PSI là alarm để điều tra, không tự chứng minh exchangeability còn hay mất. Nếu calibration và test không exchangeable thì định lý cũ không cấp bảo đảm 90%. A nhầm distribution-free với bất biến trước shift. B sai vì recalibrate theo lịch không tự phục hồi coverage. C sai vì alarm chưa chỉ ra phải recalibrate, retrain hay thu thập evidence mới; kiểm target, dữ liệu và coverage trước. Bảng tổng hợp không chứng minh cách sửa nào sẽ thành công."></div>
     </div>
   </div>
   <div class="lesson-nav" data-navfor="m5-l3"></div>
@@ -3246,7 +3195,7 @@ transition       = UPDATE ... WHERE state = expected_state</pre>
           </div>
 
           <figure class="figure">
-            <svg viewBox="0 0 800 380" role="img" aria-label="Mười bước của một tuần quyết định, từ ba tầng dữ liệu tới ledger row, với bốn gate và một vòng lặp quay lại tuần sau">
+            <div class="diagram-viewport" role="region" tabindex="0" aria-label="Sơ đồ; cuộn ngang để đọc đầy đủ nhãn" style="--diagram-width:800px"><svg viewBox="0 0 800 380" role="img" aria-label="Mười bước của một tuần quyết định, từ ba tầng dữ liệu tới ledger row, với bốn gate và một vòng lặp quay lại tuần sau">
               <rect class="dgm-box" x="40" y="34" width="160" height="62" rx="10"/>
               <text class="dgm-ink" x="52" y="59" font-size="12" font-weight="700">1 · Ba tầng dữ liệu</text>
               <text class="dgm-ink2" x="52" y="77" font-size="11" font-family="IBM Plex Mono">1P · market · social</text>
@@ -3260,8 +3209,8 @@ transition       = UPDATE ... WHERE state = expected_state</pre>
               <text class="dgm-ink2" x="444" y="77" font-size="11" font-family="IBM Plex Mono">UNKNOWN → abstain</text>
 
               <rect class="dgm-accent" x="628" y="34" width="160" height="62" rx="10" stroke-width="2"/>
-              <text class="dgm-ink" x="640" y="59" font-size="12" font-weight="700">4 · Credibility gate</text>
-              <text class="dgm-ink2" x="640" y="77" font-size="11" font-family="IBM Plex Mono">Z = k/(k+K)</text>
+              <text class="dgm-ink" x="640" y="59" font-size="12" font-weight="700">4 · Evidence gate</text>
+              <text class="dgm-ink2" x="640" y="77" font-size="11" font-family="IBM Plex Mono">estimand + assumptions</text>
 
               <rect class="dgm-box" x="628" y="150" width="160" height="62" rx="10"/>
               <text class="dgm-ink" x="640" y="175" font-size="12" font-weight="700">5 · Candidate lever</text>
@@ -3300,8 +3249,8 @@ transition       = UPDATE ... WHERE state = expected_state</pre>
               <text class="dgm-ink2" x="180" y="349" font-size="10" text-anchor="middle" font-family="IBM Plex Mono">tuần T+1 bắt đầu từ ledger đã ghi</text>
 
               <defs><marker id="m6l1-ah" markerWidth="8" markerHeight="8" refX="6" refY="4" orient="auto"><path d="M0 0 L8 4 L0 8 z" fill="var(--accent-2)"/></marker></defs>
-            </svg>
-            <figcaption><b>Hình 6.1.</b> Bốn ô viền đậm là gate có quyền dừng tuần: bước 3 khi một operand là UNKNOWN, bước 4 khi bằng chứng quá ít mẫu, bước 7 khi tập dự đoán nở rộng, bước 8 khi blast radius vượt trần tự chủ. Vòng nét đứt cho thấy việc học chỉ chạy sau khi ledger row đã ghi, không chạy song song với hành động.</figcaption>
+            </svg></div>
+            <figcaption><b>Hình 6.1.</b> Bốn ô viền đậm là gate có quyền dừng tuần: bước 3 khi một operand là UNKNOWN, bước 4 khi bằng chứng chưa phù hợp estimand, bước 7 khi tập dự đoán nở rộng, bước 8 khi blast radius vượt trần tự chủ. Vòng nét đứt cho thấy việc học chỉ chạy sau khi ledger row đã ghi, không chạy song song với hành động.</figcaption>
           </figure>
 
           <p>Bước 1 tới 2 quyết định phần lớn phần còn lại. Đơn hàng và tồn kho là tier 1, dữ liệu market intel mua ngoài là tier 2, mentions và comment là tier 3; cả ba đi qua point-in-time store trước khi chạm kernel, nên câu hỏi mà replay hỏi được luôn là «chúng ta biết gì lúc 02:00 sáng thứ Hai», không phải «bây giờ dữ liệu ra sao». Luật đi kèm ba tầng: một tier thấp không bao giờ được là operand duy nhất của rule làm dịch chuyển tiền.</p>
@@ -3313,7 +3262,7 @@ transition       = UPDATE ... WHERE state = expected_state</pre>
             <p>Trên một dây chuyền lắp ráp, limit switch (công tắc giới hạn) nào cũng có quyền dừng băng chuyền, và dừng là kết quả hợp lệ chứ không phải sự cố. Chỗ so sánh này vỡ: limit switch chỉ đọc vị trí vật lý ngay lúc đó, còn gate ở bước 4 phán xét trên cả một chuỗi lịch sử, nên cùng một đầu vào tuần này qua được mà tuần trước thì không.</p>
           </div>
 
-          <p>Bước 4 là gate của bằng chứng. Chuỗi ba tuần cho tương quan r = 0,82 giữa mentions và off-take; với K = 3 thì Z = 3/(3+3) = 0,5, nên tín hiệu vào hội đồng là 0,82 × 0,5 = 0,41 chứ không phải 0,82 (số minh hoạ, bài 3.2). Đọc bằng lời: cùng một tương quan, hệ tin ít hơn khi mới có ba tuần quan sát, và K là thứ phải ước lượng từ EPV/VHM chứ không phải một hằng số ai cũng biết. Bước 7 làm việc tương tự với dự báo: khi bề rộng conformal set vượt ngưỡng, hệ trả abstain thay vì trả một điểm số đẹp, vì bảo đảm coverage dựa trên giả định exchangeability và giả định đó vỡ khi phân phối đổi (bài 5.3).</p>
+          <p>Bước 4 tách ba loại số: tương quan chỉ mô tả liên hệ; shrinkage trung bình cần mô hình nhóm; lift cần thiết kế counterfactual. Không nhân r với k/(k+K) rồi gọi kết quả là confidence (bài 3.2). Bước 7 kiểm chất lượng forecast bằng coverage và bề rộng khoảng dự báo outcome. Qua gate dự báo vẫn chưa đủ để chọn creator thay ads: lựa chọn can thiệp cần bằng chứng causal riêng, đúng estimand và support (bài 3.4–3.5).</p>
 
           <p>Bước 8 là chỗ đội hay nhầm nhất. Cú chuyển ₫200M giữa hai kênh ads chạm khoảng 20% chi tiêu tuần và có spillover ở auction, nên trần tự chủ của nó là A3 kèm một trần chi cứng; đổi thumbnail cùng mức bằng chứng vẫn được A4 vì đảo ngược trong vài phút và chạm một SKU; giảm giá 10% toàn shop thì dừng ở A2 dù bằng chứng mạnh hơn cả hai (số minh hoạ, bài 1.3). Bằng chứng không mua được quyền tự chủ nếu blast radius không cho phép.</p>
 
@@ -3401,7 +3350,7 @@ transition       = UPDATE ... WHERE state = expected_state</pre>
               <tr><td>2.3</td><td>LLM được quyền đề xuất và giải thích, không được quyền phát số: mọi con số trong output phải resolve về một receipt id của kernel, nếu không thì fixture chặn bản tóm tắt trước khi owner đọc.</td></tr>
               <tr><td>2.4</td><td>Audit trả lời ai làm gì; provenance trả lời từ đâu ra; replay chứng minh cùng input và cùng version cho cùng một receipt.</td></tr>
               <tr><td>3.1</td><td>Memory đáng tin nhờ scope, provenance và lifecycle; similarity chỉ là một ranking signal.</td></tr>
-              <tr><td>3.2</td><td>Con số được phép chạm tiền là con số đã khử nhiễu, co theo k/(k+K) và hiệu chuẩn; và không cổng nào biến forecast accuracy thành lift.</td></tr>
+              <tr><td>3.2</td><td>Trọng số không phải xác suất; dự báo không phải lift. Phép ước lượng phải khớp đại lượng cần biết và giả định dữ liệu.</td></tr>
               <tr><td>3.3</td><td>Estimator chỉ đáng tin khi record hỗ trợ assumptions của estimator.</td></tr>
               <tr><td>3.4</td><td>Chọn design theo estimand gần quyết định nhất, và ghi vào record đúng cái giả định mà nhánh đó bắt bạn mua, kèm cách kiểm nó.</td></tr>
               <tr><td>3.5</td><td>OPE đáng tin nhờ logging contract và overlap, không nhờ tên thuật toán “DR”.</td></tr>
@@ -3410,7 +3359,7 @@ transition       = UPDATE ... WHERE state = expected_state</pre>
               <tr><td>4.3</td><td>Exactly-once là mục tiêu nghiệp vụ đạt bằng idempotency cộng reconciliation, không phải bảo đảm mặc định của queue.</td></tr>
               <tr><td>5.1</td><td>Gate promotion bằng pass^k trên cả bốn trục outcome, trajectory, safety và operations, vì một agent đi sai đường vẫn nói đúng câu ở lượt cuối.</td></tr>
               <tr><td>5.2</td><td>Trace mặc định lưu đủ id, version, timing, cost và hash để điều tra được, và lưu càng ít nội dung càng tốt.</td></tr>
-              <tr><td>5.3</td><td>Bảo đảm 90% của conformal đứng trên exchangeability; khi phân phối đổi, bề rộng set reo trước KPI, nên ngưỡng abstain, ngưỡng PSI và hạn dùng champion phải nằm sẵn trong decision contract.</td></tr>
+              <tr><td>5.3</td><td>Khoảng dự báo outcome không xác định tác động can thiệp. Kiểm riêng exchangeability, gate dự báo, drift và quyền hành động.</td></tr>
               <tr><td>6.1</td><td>Thiết kế từ evidence contract và failure recovery; model hay agent framework là lựa chọn sau cùng, không phải bước đầu tiên của tuần.</td></tr>
               <tr><td>6.2</td><td>«Hiện đại nhất» thực chất là kỷ luật nối claim với bằng chứng và vận hành fail-safe, không phải một danh sách buzzword.</td></tr>
             </tbody>
@@ -3424,7 +3373,7 @@ transition       = UPDATE ... WHERE state = expected_state</pre>
               <tr><td><b>Decision rights</b></td><td>Ma trận lever nhân blast radius? trần A-level cho từng lever? ai duyệt khi vượt trần?</td></tr>
               <tr><td><b>Episode</b></td><td>Append-only? provenance? replay hash? source cutoff?</td></tr>
               <tr><td><b>Memory</b></td><td>Scope? valid-time? expiry? conflict và supersession? quarantine khi nghi poisoning?</td></tr>
-              <tr><td><b>Đo lường</b></td><td>k bằng bao nhiêu và K ước lượng từ đâu? đã khử confounder bằng partial correlation chưa? calibration curve? đang đọc forecast hay lift?</td></tr>
+              <tr><td><b>Đo lường</b></td><td>Đại lượng cần ước lượng là gì? giả định nhóm/mẫu có giữ? calibration trên tập giữ riêng? đang đọc forecast hay lift, và confounder nào chưa xử lý?</td></tr>
               <tr><td><b>Evidence</b></td><td>Estimand? assignment và control? propensity và reward? overlap và ESS?</td></tr>
               <tr><td><b>Bandit / OPE</b></td><td>Exploration chỉ chạy trên action đảo ngược được? propensity ghi lúc draw? ESS = (Σw)²/Σw² bằng bao nhiêu? CI của các estimator có overlap không?</td></tr>
               <tr><td><b>Uncertainty</b></td><td>Coverage mục tiêu? ngưỡng bề rộng set để abstain? PSI hoặc KS alarm? champion expiry ngày nào?</td></tr>
@@ -3435,8 +3384,8 @@ transition       = UPDATE ... WHERE state = expected_state</pre>
           </table></div>
 
           <div class="callout warn">
-            <div class="callout-title">Quy định · kiểm tra 05/09/2026</div>
-            <p>Điều 12(1) EU AI Act yêu cầu hệ high-risk cho phép tự động ghi log trong suốt vòng đời của hệ. Nghĩa vụ minh bạch tại Điều 50 có mốc áp dụng 02/08/2026; riêng phần machine-readable marking ở Điều 50(2), hệ đưa ra thị trường trước 02/08/2026 được gia hạn tới 02/12/2026. <a href="https://eur-lex.europa.eu/legal-content/EN/TXT/?uri=OJ:L_202601744">Regulation (EU) 2026/1744</a> ngày 08/07/2026 (Digital Omnibus on AI) lùi ngày áp dụng cho hệ high-risk theo Điều 6(2) và Annex III sang 02/12/2027, theo Điều 6(1) và Annex I sang 02/08/2028; văn bản đăng Official Journal 24/07/2026, hiệu lực 27/07/2026. Mốc và cách diễn giải vẫn đổi: kiểm Official Journal trước khi dựa vào bất kỳ mốc nào, và coi đoạn này là điểm bắt đầu để hỏi pháp chế chứ không phải kết luận pháp lý.</p>
+            <div class="callout-title">Quy định · EU AI Act</div>
+            <p>Điều 12(1) EU AI Act yêu cầu hệ high-risk cho phép tự động ghi log trong suốt vòng đời của hệ. Nghĩa vụ minh bạch tại Điều 50 có mốc áp dụng 02/08/2026; riêng phần machine-readable marking ở Điều 50(2), hệ đưa ra thị trường trước 02/08/2026 được gia hạn tới 02/12/2026. <a href="https://eur-lex.europa.eu/legal-content/EN/TXT/?uri=OJ:L_202601744">Regulation (EU) 2026/1744</a> (<a href="https://ai-act-service-desk.ec.europa.eu/en/ai-act/article-113?full=1">EC Article 113</a>) ngày 08/07/2026 (Digital Omnibus on AI) lùi ngày áp dụng cho hệ high-risk theo Điều 6(2) và Annex III sang 02/12/2027, theo Điều 6(1) và Annex I sang 02/08/2028; văn bản đăng Official Journal 24/07/2026, hiệu lực 27/07/2026. Mốc và cách diễn giải vẫn đổi: kiểm Official Journal trước khi dựa vào bất kỳ mốc nào, và coi đoạn này là điểm bắt đầu để hỏi pháp chế chứ không phải kết luận pháp lý.</p>
           </div>
 
           <p>Điều 14 về human oversight ánh xạ khá thẳng lên thang A0–A4 ở bài 1.2: hệ high-risk phải có người hiểu được năng lực và giới hạn của hệ, theo dõi được vận hành, và can thiệp hoặc dừng được. Đọc theo ngôn ngữ của khoá này, kill switch, rollback target và approval context hash là điều kiện để bất kỳ mức tự chủ nào được coi là có giám sát, chứ không phải phần thêm dành riêng cho A4.</p>
@@ -3447,9 +3396,9 @@ transition       = UPDATE ... WHERE state = expected_state</pre>
                 <thead><tr><th style="width:190px">Miền</th><th>Nguồn primary</th></tr></thead>
                 <tbody>
                   <tr><td>Provenance</td><td><a href="https://www.w3.org/TR/prov-o/">W3C PROV-O</a></td></tr>
-                  <tr><td>Risk</td><td><a href="https://www.nist.gov/publications/artificial-intelligence-risk-management-framework-generative-artificial-intelligence">NIST AI 600-1</a> · <a href="https://csrc.nist.gov/Projects/cosais">NIST COSAiS</a> (overlay SP 800-53 cho một loạt use case, trong đó có agentic; tới 09/2026 mới có annotated outline dạng discussion draft 01/2026 và concept paper 14/08/2025, chưa phải chuẩn để tuân thủ)</td></tr>
+                  <tr><td>Risk</td><td><a href="https://www.nist.gov/publications/artificial-intelligence-risk-management-framework-generative-artificial-intelligence">NIST AI 600-1</a> · <a href="https://csrc.nist.gov/projects/cosis">NIST COSIS (trước là COSAiS)</a>: đổi tên 20/10/2026; trang dự án liệt kê concept paper 14/08/2025 và annotated outline thảo luận 08/01/2026. Đây là công việc đang phát triển, không phải overlay cuối cùng để tuyên bố tuân thủ. NIST: “Previously issued documents and publications have not been altered.”</td></tr>
                   <tr><td>Memory</td><td><a href="https://arxiv.org/abs/2309.02427">CoALA</a> · <a href="https://arxiv.org/abs/2410.10813">LongMemEval</a></td></tr>
-                  <tr><td>Credibility</td><td><a href="https://openacttexts.github.io/Loss-Data-Analytics/ChapCredibility.html">Loss Data Analytics</a>, ch. 9 «Experience Rating Using Credibility Theory» (open text, đọc 29/08/2026)</td></tr>
+                  <tr><td>Credibility</td><td><a href="https://openacttextdev.github.io/LDA_Ed2/ChapCredibility.html">Loss Data Analytics</a>, bản 2, ch. 12 «Experience Rating Using Credibility Theory» (đọc 12/11/2026)</td></tr>
                   <tr><td>Causal</td><td>Brodersen, Gallusser, Koehler, Remy &amp; Scott (2015), <a href="https://projecteuclid.org/journals/annals-of-applied-statistics/volume-9/issue-1/Inferring-causal-impact-using-Bayesian-structural-time-series-models/10.1214/14-AOAS788.full">Inferring causal impact using Bayesian structural time-series models</a>, <i>Annals of Applied Statistics</i> 9(1):247–274 · <a href="https://developers.google.com/meridian">Meridian docs</a> · <a href="https://docs.doubleml.org/stable/guide/basics.html">DoubleML docs</a></td></tr>
                   <tr><td>Bandit</td><td>Lattimore &amp; Szepesvári, <a href="https://tor-lattimore.com/downloads/book/book.pdf"><i>Bandit Algorithms</i></a> (Cambridge University Press, 2020) · Russo, Van Roy, Kazerouni, Osband &amp; Wen, <a href="https://arxiv.org/abs/1707.02038">A Tutorial on Thompson Sampling</a> · Agrawal &amp; Goyal <a href="https://arxiv.org/abs/1111.1797">arXiv 1111.1797</a> và <a href="https://arxiv.org/abs/1209.3353">1209.3353</a> cho Beta-Bernoulli</td></tr>
                   <tr><td>OPE</td><td>Dudík, Langford &amp; Li, <a href="https://arxiv.org/abs/1103.4601">Doubly Robust Policy Evaluation and Learning</a> · <a href="https://github.com/st-tech/zr-obp">Open Bandit Pipeline</a> làm reference implementation</td></tr>
@@ -3526,7 +3475,7 @@ const LESSONS = [
   {id:'m2-l3', mod:2, part:'Phần II · Kiến trúc tin cậy', title:'Engine ⟂ LLM copilot: LLM đề xuất, kernel định đoạt', desc:'Belief nằm ở code tất định, LLM chỉ nộp typed proposal; number-grounding fixture chặn mọi con số không resolve về receipt id; arbiter cho proposal xung đột là code có version.'},
   {id:'m2-l4', mod:2, part:'Phần II · Kiến trúc tin cậy', title:'Decision episode, provenance và replay thật', desc:'Projection khác event ledger; provenance theo Entity, Activity, Agent; sáu nhóm trường của Decision Event Schema, container fallacy, và nghĩa vụ ghi log Article 12 cho hệ high-risk.'},
   {id:'m3-l1', mod:3, part:'Phần III · Memory & Evidence', title:'Memory năm lớp và vòng đời chống stale, conflict, poisoning', desc:'Scope, provenance và valid-time quyết định memory nào được đọc; nguồn ngoài chỉ vào được qua quarantine.'},
-  {id:'m3-l2', mod:3, part:'Phần III · Memory & Evidence', title:'Đo trước khi tin: credibility k/(k+K), calibration, forecast ≠ lift', desc:'Co con số theo lượng bằng chứng, tìm điểm hoà K ≈ 3,75, hiệu chuẩn trước khi cho số nhân với tiền.'},
+  {id:'m3-l2', mod:3, part:'Phần III · Memory & Evidence', title:'Đo trước khi tin: shrinkage, calibration, forecast ≠ lift', desc:'Trung bình co về nhóm dưới giả định rõ; phân biệt trọng số, xác suất và tác động can thiệp.'},
   {id:'m3-l3', mod:3, part:'Phần III · Memory & Evidence', title:'Evidence hierarchy: pre/post không tự trở thành causal', desc:'Ba cấp bằng chứng, field phải lưu ở mỗi cấp, và khoá gộp như một quyết định trong evidence record.'},
   {id:'m3-l4', mod:3, part:'Phần III · Memory & Evidence', title:'Chọn đúng công cụ causal: A/B, geo, switchback, CUPED, CausalImpact, MMM, DoubleML', desc:'Cây quyết định theo interference và horizon; mỗi lá kèm một giả định phải ghi và cách kiểm nó.'},
   {id:'m3-l5', mod:3, part:'Phần III · Memory & Evidence', title:'Policy learning và OPE: propensity, overlap, ESS', desc:'Logging contract, ESS = (Σw)²/Σw² trên bảng 10 dòng, và điều kiện abstain khi overlap vỡ.'},
@@ -3693,7 +3642,7 @@ let _st; window.addEventListener('scroll',()=>{clearTimeout(_st);_st=setTimeout(
 
 /* Keyboard navigation: ← → move between lessons (skipped while typing) */
 document.addEventListener('keydown',e=>{
-  if(e.target.closest?.('input,textarea,select')||e.metaKey||e.ctrlKey||e.altKey)return;
+  if(e.defaultPrevented||e.target.closest?.('input,textarea,select,[contenteditable],.figure,.table-wrap,pre')||e.metaKey||e.ctrlKey||e.altKey)return;
   if(e.key!=='ArrowLeft'&&e.key!=='ArrowRight')return;
   const cur=document.querySelector('.nav-link.active')?.dataset.lesson;
   const i=LESSONS.findIndex(l=>l.id===cur);
@@ -3748,7 +3697,7 @@ document.addEventListener('keydown',e=>{
     } else if (drop) {
       tail = 'Bỏ dòng hiếm làm ESS đẹp lên nhưng đó là một log khác: câu hỏi ban đầu vẫn chưa được trả lời.';
     } else {
-      tail = 'Overlap đủ dày để đọc khoảng tin cậy, với điều kiện mọi action của policy mới đều xuất hiện trong log.';
+      tail = 'Qua ngưỡng ESS/n = 50% do lab chọn; vẫn phải kiểm support, reward và uncertainty trước khi suy luận.';
     }
     if (clip > 0) {
       tail += ' Clip w ≤ ' + clip + ' đã cố ý gây bias, nên mức clip phải nằm trong gate đăng ký trước.';
@@ -3892,7 +3841,7 @@ document.addEventListener('keydown',e=>{
   'use strict';
   var REF = [0.10, 0.10, 0.10, 0.10, 0.10, 0.10, 0.10, 0.10, 0.10, 0.10];
   var W4  = [0.24, 0.18, 0.14, 0.10, 0.08, 0.07, 0.06, 0.05, 0.05, 0.03];
-  var EPS = 1e-4;            // guard kiểu base_count: bin rỗng không đẩy PSI ra vô cực
+  var EPS = 1e-4;            // chặn sàn xác suất; không phải cộng pseudocount rồi chuẩn hoá
   var SPREAD = 6.0;          // pp, spread quantile của model
   var QHAT0 = 1.0, QHAT1 = 5.2;  // pp, q̂ ở W1 và W4
   var WSTAR = 12.0;          // pp, ngưỡng abstain ghi trước trong decision contract
@@ -3921,16 +3870,15 @@ document.addEventListener('keydown',e=>{
     var out = function (k) { return lab.querySelector('[data-out="' + k + '"]'); };
     out('psi').textContent = vi(p, 4);
     out('qhat').textContent = vi(q, 1) + ' pp';
-    out('width').textContent = vi(w, 1) + ' pp';
-    out('gate').textContent = act ? 'ACT' : 'ABSTAIN';
+    out('width').textContent = vi(w, 2) + ' pp';
+    out('gate').textContent = act ? 'PASS' : 'ABSTAIN';
 
     var band = p < 0.10 ? 'dưới mốc 0,10' : (p < 0.25 ? 'giữa 0,10 và 0,25' : 'trên mốc 0,25');
     out('note').textContent =
       'PSI ' + band + ' (quy ước ngân hàng, không phải định lý). ' +
-      'Bề rộng ' + vi(w, 1) + ' pp so với ngưỡng w* = ' + vi(WSTAR, 1) + ' pp: gate ' +
-      (act ? 'còn cho phép hành động' : 'trả ABSTAIN và escalate kèm receipt') + '. ' +
-      'Hai lever cách nhau ' + vi(LEVER_GAP, 1) + ' pp, vẫn nằm lọt trong khoảng dự đoán, ' +
-      'nên bằng chứng này không xếp hạng được chúng ở bất kỳ mức shift nào.';
+      'Bề rộng ' + vi(w, 2) + ' pp so với ngưỡng w* = ' + vi(WSTAR, 1) + ' pp: gate ' +
+      (act ? 'PASS cho chất lượng forecast' : 'trả ABSTAIN và escalate kèm receipt') + '. ' +
+      'q̂ là đầu vào mô phỏng riêng, không suy từ PSI. Chênh lệch hai lever ' + vi(LEVER_GAP, 1) + ' pp cần bằng chứng causal riêng; PASS không cấp quyền chọn lever.';
   }
 
   function init() {
