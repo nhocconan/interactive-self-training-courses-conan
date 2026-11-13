@@ -448,6 +448,8 @@ footer.site{border-top:1px solid var(--border);padding:26px 24px;text-align:cent
   .lesson{box-shadow:none;border-color:#bbb}
   body{background:#fff;color:#000}
 }
+
+#m3-l5,#m3-l6{scroll-margin-top:82px}
 </style>
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E📚%3C/text%3E%3C/svg%3E">
 </head>
@@ -464,7 +466,7 @@ footer.site{border-top:1px solid var(--border);padding:26px 24px;text-align:cent
   <aside class="sidebar" id="sidebar" aria-label="Điều hướng khoá học">
     <div class="sidebar-brand">
       <div class="sidebar-brand-title">RAG, <em>Layer by Layer</em></div>
-      <div class="sidebar-brand-sub">19 bài</div>
+      <div class="sidebar-brand-sub">21 bài</div>
     </div>
     <div class="progress-wrap">
       <div class="progress-meta"><span>Tiến độ</span><span><b id="pg-done">0</b>/<span id="pg-total">0</span> · <span id="pg-pct">0</span>%</span></div>
@@ -490,7 +492,7 @@ footer.site{border-top:1px solid var(--border);padding:26px 24px;text-align:cent
       <div class="hero">
         <div class="hero-inner">
           <h1><span class="grad-text">RAG, Layer by Layer</span> — từ naive RAG lên production</h1>
-          <p class="hero-sub">Cho kỹ sư đang build sản phẩm knowledge/chatbot: từ RAG ngây thơ nhất (embed một chunk, tìm hàng xóm gần nhất) tới cách đo retrieval, rồi các lớp production gồm chunking, hybrid BM25 + RRF, multi-query, contextual chunking, cross-encoder rerank, CRAG, entity planning, distillation, caching. Mỗi lớp chỉ được giữ khi eval chứng minh nó sửa đúng lỗi trên một nền tảng chatbot multi-tenant ví dụ.</p>
+          <p class="hero-sub">Cho kỹ sư đang build sản phẩm knowledge/chatbot: từ RAG ngây thơ nhất (embed một chunk, tìm hàng xóm gần nhất) tới cách đo retrieval, rồi các lớp production gồm chunking, hybrid BM25 + RRF, multi-query, contextual chunking, cross-encoder rerank, CRAG, entity planning, distillation, caching. Mỗi lớp chỉ được giữ khi eval chứng minh nó sửa đúng lỗi trên một nền tảng chatbot multi-tenant ví dụ. Với tài liệu trực quan, thực hành giữ quan hệ bảng/chú thích, provenance cấp trang và đánh giá đủ bằng chứng đa trang.</p>
           <div style="margin-top:28px;display:flex;gap:12px;flex-wrap:wrap">
             <a class="btn btn-primary" id="start-btn">Bắt đầu học →</a>
             <a class="btn btn-ghost" href="#curriculum">Xem chương trình</a>
@@ -513,6 +515,8 @@ footer.site{border-top:1px solid var(--border);padding:26px 24px;text-align:cent
             <tr><td><b>Embedding</b></td><td>Hàm ánh xạ text → vector nhiều chiều; text gần nghĩa → gần nhau về hình học.</td></tr>
             <tr><td><b>Cosine similarity</b></td><td>Cos góc giữa 2 vector, [−1..1]; chỉ đo hướng, không đo độ lớn — thước khoảng cách ngữ nghĩa.</td></tr>
             <tr><td><b>Chunk</b></td><td>Đơn vị nguyên tử retrieval; một mảnh text được embed và truy xuất riêng.</td></tr>
+              <tr><td><b>Page provenance</b></td><td>Tài liệu, phiên bản, trang và vùng để mở lại đúng bằng chứng; page index thực khác số trang in.</td></tr>
+              <tr><td><b>Sufficient evidence set</b></td><td>Tập bằng chứng cùng đủ hỗ trợ đáp án; AND trong một tập, OR giữa các tập thay thế.</td></tr>
             <tr><td><b>Recall@K / Hit@K</b></td><td>Recall@K đo phần relevant chunk xuất hiện trong top K; Hit@K hỏi nhị phân top K có ít nhất một relevant chunk hay không.</td></tr>
             <tr><td><b>MRR / nDCG@K</b></td><td>MRR thưởng relevant chunk đầu tiên lên sớm; nDCG@K đo thứ tự khi nhiều chunk có mức liên quan khác nhau.</td></tr>
             <tr><td><b>Ablation</b></td><td>Giữ nguyên eval set, bật đúng một thay đổi, đo quality · latency · cost rồi giữ hoặc hoàn tác — không cộng layer theo cảm giác.</td></tr>
@@ -1198,7 +1202,7 @@ footer.site{border-top:1px solid var(--border);padding:26px 24px;text-align:cent
       <header class="module-header" data-module="3">
         <span class="eyebrow">Module 03 · Phần III</span>
         <h2>Chất lượng retrieval nâng cao</h2>
-        <p>Có recall rồi, phải nâng chất lượng. Contextual chunking sửa mất ngữ cảnh, cross-encoder rerank sửa mờ bi-encoder, CRAG biết khi retrieval hỏng, và self-corrective retrieval thử lại một lần trong phạm vi được phép.</p>
+        <p>Có recall rồi, phải nâng chất lượng. Contextual chunking sửa mất ngữ cảnh, cross-encoder rerank sửa mờ bi-encoder, CRAG biết khi retrieval hỏng, và self-corrective retrieval thử lại một lần trong phạm vi được phép. Hai bài cuối kiểm cách biểu diễn bố cục và tập bằng chứng đủ để trả lời.</p>
       </header>
 <article class="lesson" id="m3-l1" data-lesson>
         <div class="lesson-head">
@@ -1507,6 +1511,62 @@ footer.site{border-top:1px solid var(--border);padding:26px 24px;text-align:cent
         <div class="lesson-body"><div class="objectives"><span class="eyebrow">Học xong bạn có thể</span><ul><li>Tách lựa chọn retrieval mềm khỏi ranh giới quyền/xuất bản cứng.</li><li>Thiết kế một retry có biên và kết quả từ chối rõ ràng.</li></ul></div><p>Khách hỏi chính sách đổi trả. Kho đã duyệt chưa có; bản nháp ghi “hoàn100%”. Bản nháp không phải đáp án đã duyệt bị giấu. Bot không được đưa nó cho khách chỉ vì nó liên quan.</p><p>Rescue có biên chạy nhiều nhất một lần sau retrieval yếu. Nó có thể mở rộng từ khoá hoặc alias thực thể trong cùng corpus được phép, đã duyệt và còn hiệu lực. Không nới tenant, ACL, trạng thái xuất bản hay ngày hiệu lực. Xem bản nháp là chế độ reviewer riêng, cần được cấp quyền rõ ràng.</p><div class="table-wrap"><table><thead><tr><th>Bước</th><th>Quyết định</th></tr></thead><tbody><tr><td>Strict pass</td><td>Retrieve trong phạm vi quyền/xuất bản cứng</td></tr><tr><td>Một rescue</td><td>Mở rộng điều kiện mềm; giữ mọi predicate cứng</td></tr><tr><td>Nhận</td><td>Bằng chứng vẫn đúng phạm vi và qua quality gate đã kiểm định</td></tr><tr><td>Vẫn yếu</td><td>Hỏi rõ hoặc từ chối kết luận; lưu trace và budget</td></tr></tbody></table></div><p>CRAG tier tăng là tín hiệu liên quan, không phải chứng minh sự thật hay quyền, cũng không bảo đảm không hạ chất lượng. Tái dùng embedding tương thích khi được; reranker vẫn có thể tốn một model call. Chính sách retry có thể tất định dù score model thay đổi.</p><p>Ghi thay đổi query, phạm vi được phép, phiên bản nguồn và <code>selfCorrected=true</code>. So bounded retry với baseline trên validation. Ferrazzi và cộng sự đo tradeoff tuỳ tác vụ: cấu hình agentic của họ dùng trung bình 3,3× input và 1,9× output token; đây không phải lý do phổ quát để loại agentic retrieval. <a href="https://arxiv.org/html/2601.07711v2" target="_blank" rel="noreferrer">Ferrazzi và cộng sự,2026</a>.</p><div class="takeaway"><span class="eyebrow">Takeaway</span><p><span class="hl">Retry trong cùng corpus đã duyệt, được phép; score tốt hơn không vượt ranh giới cứng.</span></p></div><div class="quiz" data-correct="1"><span class="eyebrow">Kiểm tra nhanh</span><p class="quiz-q">Rescue tìm được bản nháp đổi trả rất liên quan. Bot phục vụ khách được làm gì?</p><button class="quiz-opt" onclick="quizPick(this,0)"><span class="quiz-letter">A</span><span>Trả bản nháp kèm cảnh báo.</span></button><button class="quiz-opt" onclick="quizPick(this,1)"><span class="quiz-letter">B</span><span>Giữ ràng buộc đã duyệt/được phép; hỏi rõ hoặc từ chối nếu bằng chứng vẫn thiếu.</span></button><button class="quiz-opt" onclick="quizPick(this,2)"><span class="quiz-letter">C</span><span>Trả khi CRAG tier tăng.</span></button><button class="quiz-opt" onclick="quizPick(this,3)"><span class="quiz-letter">D</span><span>Nới ACL một lần rồi ghi trace.</span></button><div class="quiz-feedback" role="status" data-explain="Tier liên quan không duyệt bản nháp hay cấp quyền cho caller. Chỉ đổi lựa chọn retrieval mềm bên trong corpus được phép."></div></div></div>
         <div class="lesson-nav" data-navfor="m3-l4"></div>
       </article>
+<article class="lesson" id="m3-l5" data-lesson>
+<div class="lesson-head"><div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px"><div><span class="eyebrow">Bài 3.5</span><h3>Bằng chứng cấp trang — giữ bố cục và vị trí nguồn</h3></div></div></div>
+<div class="lesson-body"><div class="objectives"><span class="eyebrow">Học xong bạn có thể</span><ul><li>Ghi vùng trang để người khác mở lại đúng bằng chứng.</li><li>Chọn text, ảnh hoặc kết hợp từ lỗi cấu trúc đã quan sát.</li></ul></div>
+<p>Người mua hỏi SKU A có bao nhiêu đơn vị. Bản trích text ghi “A B 4 9”; bot đáp chín. Phiếu mua giả lập ghi A có bốn thùng, chú thích trang sau quy định hai đơn vị/thùng. Ký tự còn đủ nhưng quan hệ đã mất.</p>
+<div class="concept"><h4>Page provenance · xuất xứ cấp trang</h4><p>Lưu tài liệu, phiên bản, trang và vùng để mở lại bằng chứng. Bài 1.3 giữ biên bảng; ở đây cần giữ cả quan hệ hàng/header và tham chiếu sang trang khác.</p></div>
+<figure class="figure"><div class="diagram-viewport" role="region" tabindex="0" aria-label="Bảng và chú thích; cuộn ngang để đọc" style="--diagram-width:560px"><svg viewBox="0 0 560 260" role="img" aria-label="Ví dụ giả lập: hàng A có 4 thùng; trang sau quy định 2 đơn vị mỗi thùng, được 8 đơn vị.">
+<rect class="dgm-box" x="12" y="14" width="256" height="180" rx="8"/><text class="dgm-ink" x="28" y="40" font-size="13">Trang in 3 · index 0</text>
+<rect class="dgm-accent" x="28" y="54" width="224" height="34"/><text class="dgm-ink" x="42" y="76" font-size="13">Mã hàng</text><text class="dgm-ink" x="170" y="76" font-size="13">Thùng</text>
+<rect class="dgm-accent" x="28" y="88" width="224" height="36"/><text class="dgm-ink" x="42" y="111" font-size="14">A</text><text class="dgm-ink" x="184" y="111" font-size="14">4</text>
+<text class="dgm-ink2" x="42" y="151" font-size="14">B</text><text class="dgm-ink2" x="184" y="151" font-size="14">9</text>
+<rect class="dgm-box" x="292" y="14" width="256" height="180" rx="8"/><text class="dgm-ink" x="308" y="40" font-size="13">Trang in 4 · index 1</text><text class="dgm-ink" x="308" y="100" font-size="13">Chú thích A: 2 đơn vị/thùng</text>
+<path class="dgm-flow" d="M252 106 H290" stroke-width="2" marker-end="url(#m3l5-link)"/>
+<text class="dgm-ink" x="280" y="221" text-anchor="middle" font-size="16">A → 4 × 2 = 8 đơn vị</text><text class="dgm-ink2" x="280" y="245" text-anchor="middle" font-size="12">Bảng + chú thích cùng phiên bản</text>
+<defs><marker id="m3l5-link" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0 L10 5 L0 10 Z" fill="var(--ink-3)"/></marker></defs>
+</svg></div><figcaption><b>Hình 3.5</b>: Quan hệ hàng/cột giữ 4 thuộc về A; phép tính còn cần chú thích ở trang khác.</figcaption></figure>
+<div class="table-wrap"><table><thead><tr><th>Đầu vào</th><th>Giữ được</th><th>Cần kiểm</th></tr></thead><tbody><tr><td>Text có cấu trúc</td><td>SKU, header, giá trị hàng</td><td>A còn gắn với 4?</td></tr><tr><td>Ảnh trang</td><td>Vị trí hàng và dấu chú thích</td><td>Nhãn đủ rõ ở độ phân giải đưa vào?</td></tr><tr><td>Kết hợp</td><td>Hai biểu diễn</td><td>Cùng tài liệu/phiên bản/page ID?</td></tr></tbody></table></div>
+<p>Với PDF, tách page index thực, đếm từ 0, khỏi số trang in. Vùng cắt cần gốc tọa độ, đơn vị, kích thước và góc xoay. Fixture HTML dùng CSS pixel, gốc trên-trái trang 560×340; đây không phải tọa độ PDF.</p>
+<div class="code-card"><pre>doc=order-demo; version=v1; format=html-fixture
+page_index=0; printed_label=3; region=order-row-a
+bbox=[32,100,528,183]; space=CSS-px-top-left; page=[560,340]
+headers=[SKU,boxes]; row=[A,4]; footnote=order-note-a</pre></div>
+<p>Text giữ identifier để tìm kiếm và có thể biểu diễn bảng đúng. Ảnh giữ vị trí nhìn thấy, nhưng nhãn nhỏ vẫn có thể bị đọc sai. <a href="https://arxiv.org/html/2602.17687v1" target="_blank" rel="noreferrer">Preprint IRPAPERS</a> ghi nhận lỗi text/image retrieval bổ sung nhau; text QA tốt hơn trong cấu hình thử trên bài báo khoa học. Corpus, model và câu hỏi sinh của nghiên cứu không xác lập phương án thắng phổ quát.</p>
+<details class="accordion"><summary><span class="chev">▶</span><span class="accordion-tag">Thực hành</span><span>Mở lại và sửa bằng chứng mua hàng</span></summary><div class="accordion-body"><p>Mở <a href="assets/rag-visual-documents/synthetic-pages.html" target="_blank" rel="noreferrer">các trang nguồn giả lập</a>. Ghi vùng chú thích rồi đối chiếu đáp án mẫu: <code>page_index=1; printed_label=4; region=order-note-a; bbox=[32,100,528,180]; units_per_box=2</code>. Kết quả: <code>4 thùng × 2 đơn vị/thùng = 8 đơn vị</code>, dẫn cả hai vùng. Sửa cấu trúc text trước; thử ảnh nếu cách biểu diễn đó vẫn không đáng tin.</p></div></details>
+<p>Áp dụng lại tenant, quyền, xuất bản và phiên bản từ bài 2.1 cho mọi biểu diễn và trang cha. Chỉ thị trong tài liệu vẫn là dữ liệu không tin cậy. Có thể gộp candidate text/ảnh theo bài 2.3 sau khi thống nhất page ID và phạm vi cứng; fusion không khôi phục header bị mất.</p>
+<div class="takeaway"><span class="eyebrow">Takeaway</span><p>Chọn biểu diễn giữ được quan hệ cần dùng, kèm <span class="hl">trích dẫn vùng trang có phiên bản, mở lại được</span>.</p></div>
+<div class="quiz" data-correct="1"><span class="eyebrow">Kiểm tra nhanh</span><p class="quiz-q">Ảnh cho biết A có 4 thùng nhưng thiếu chú thích đơn vị/thùng. Hệ nên làm gì?</p><button class="quiz-opt" onclick="quizPick(this,0)"><span class="quiz-letter">A</span><span>Trả 4 đơn vị kèm trích trang.</span></button><button class="quiz-opt" onclick="quizPick(this,1)"><span class="quiz-letter">B</span><span>Đọc chú thích cùng phiên bản, đúng quyền; thiếu thì chưa kết luận tổng.</span></button><button class="quiz-opt" onclick="quizPick(this,2)"><span class="quiz-letter">C</span><span>Đổi sang đầu vào kết hợp và nhận tổng đầu tiên.</span></button><div class="quiz-feedback" role="status" data-explain="B tìm hệ số quy đổi còn thiếu. A nhầm thùng với đơn vị. C đổi biểu diễn nhưng chưa xác nhận chú thích được truy xuất và đọc đúng."></div></div></div><div class="lesson-nav" data-navfor="m3-l5"></div>
+</article>
+
+<article class="lesson" id="m3-l6" data-lesson>
+<div class="lesson-head"><div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px"><div><span class="eyebrow">Bài 3.6</span><h3>Tập bằng chứng — đo đủ nguồn trước khi chấm đáp án</h3></div></div></div>
+<div class="lesson-body"><div class="objectives"><span class="eyebrow">Học xong bạn có thể</span><ul><li>Gắn nhãn bằng chứng cần đồng thời và bằng chứng thay thế.</li><li>Thiết kế ablation tách retrieval khỏi đầu vào generator.</li></ul></div>
+<p>Search xếp trang 3 ở đầu. Hit@K bằng 1, nhưng bot trả bốn đơn vị vì thiếu trang 4. Câu hỏi bảo trì cũng có thể cần sơ đồ một trang và chú giải trang khác.</p>
+<div class="concept"><h4>Evidence set · tập bằng chứng</h4><p>Một tập đủ chứa các mảnh cùng hỗ trợ đáp án. <a href="https://arxiv.org/html/2610.41360v1" target="_blank" rel="noreferrer">Preprint page-centric retrieval</a> phân biệt bằng chứng đủ, một phần và ngữ cảnh. Mở rộng qrels bài 1.4: thứ hạng chưa chứng minh đủ căn cứ.</p></div>
+<figure class="figure"><div class="diagram-viewport" role="region" tabindex="0" aria-label="Sơ đồ thiết bị giả lập và chú giải; cuộn ngang để đọc" style="--diagram-width:560px"><svg viewBox="0 0 560 240" role="img" aria-label="Ví dụ giả lập, không dùng vận hành: cổng phải được ghi B ở trang M1; M2 ghi B: 3 Nm và A: 1 Nm.">
+<rect class="dgm-box" x="12" y="12" width="300" height="180" rx="8"/><text class="dgm-ink" x="28" y="38" font-size="13">Sổ tay giả lập · trang M1</text>
+<rect class="dgm-accent" x="100" y="70" width="120" height="72" rx="6"/><text class="dgm-ink" x="160" y="112" text-anchor="middle" font-size="13">Thiết bị mẫu</text>
+<path class="dgm-line" d="M64 106 H100"/><path class="dgm-line" d="M220 106 H258"/><circle class="dgm-box" cx="62" cy="106" r="8"/><circle class="dgm-accent" cx="260" cy="106" r="8"/>
+<text class="dgm-ink" x="30" y="166" font-size="13">A · trái</text><text class="dgm-ink" x="224" y="166" font-size="13">B · phải</text>
+<path class="dgm-flow" d="M312 106 H346" stroke-width="2" marker-end="url(#m3l6-link)"/>
+<rect class="dgm-box" x="348" y="12" width="200" height="180" rx="8"/><text class="dgm-ink" x="364" y="38" font-size="13">Trang M2 · chú giải</text><text class="dgm-ink" x="364" y="94" font-size="16">B: 3 Nm</text><text class="dgm-ink2" x="364" y="137" font-size="16">A: 1 Nm</text>
+<text class="dgm-ink2" x="280" y="224" text-anchor="middle" font-size="13">M1 xác định vị trí; M2 cho giá trị</text><defs><marker id="m3l6-link" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0 L10 5 L0 10 Z" fill="var(--ink-3)"/></marker></defs>
+</svg></div><figcaption><b>Hình 3.6</b>: Câu hỏi về cổng bên phải cần cả sơ đồ lẫn chú giải. Giá trị hoàn toàn giả lập, không phải hướng dẫn thiết bị thật.</figcaption></figure>
+<div class="table-wrap"><table><thead><tr><th>Kiểm</th><th>Ví dụ mua hàng</th><th>Chưa chứng minh</th></tr></thead><tbody><tr><td>Hit cấp trang</td><td>Có trang 3</td><td>Đủ căn cứ quy đổi</td></tr><tr><td>Tập đủ</td><td>Hàng A AND chú thích</td><td>Đúng phép tính/đơn vị</td></tr><tr><td>Đáp án và trích dẫn</td><td>8 đơn vị; hai vùng hỗ trợ</td><td>Bền vững trên tài liệu thật</td></tr></tbody></table></div>
+<p>Trong một tập đủ, các mảnh bắt buộc nối bằng AND: hàng A cùng chú thích quy đổi. Giữa các tập đủ thay thế là OR. Nếu bản tóm tắt tương đương, đúng quyền, chứa cả hai fact, gắn nó thành tập đủ khác; không bắt lấy mọi trang liên quan. Text và ảnh của cùng hàng là hai biểu diễn thay thế, không phải hai fact độc lập.</p>
+<div class="code-card"><pre>query: SKU A có bao nhiêu đơn vị?
+gold_sets: [[order-row-a, order-note-a]]
+retrieved: [order-row-a]
+evidence_recall: 1/2 = 0.5; full_set_success: 0
+expected: 8 units; citations: both regions</pre></div>
+<details class="accordion"><summary><span class="chev">▶</span><span class="accordion-tag">Thực hành</span><span>Gắn nhãn rồi tách biến thử</span></summary><div class="accordion-body"><p>Dùng <a href="assets/rag-visual-documents/synthetic-pages.html" target="_blank" rel="noreferrer">phiếu mua và sổ tay giả lập</a>. Mẫu điền: <code>query=giá trị cổng phải; gold_sets=[[manual-diagram,manual-legend]]; answer=B,3Nm; citations=M1+M2</code>. Bỏ chú giải: ghi thiếu bằng chứng, chưa kết luận giá trị. Tải <a href="assets/rag-visual-documents/check-evidence.py" download>checker</a> và <a href="assets/rag-visual-documents/evidence-cases.json" download>cases</a> để kiểm phép tính; không chạy retrieval/model.</p></div></details>
+<p>Tải <a href="assets/rag-visual-documents/synthetic-pages.html" download>nguồn HTML</a>, checker và cases vào cùng một thư mục. Chạy <code>python3 check-evidence.py</code> tại đó; cả chín ca mẫu phải khớp nhãn. Lệnh chỉ kiểm nhãn và phép tính, không gọi retrieval hay model.</p><p>Khi thử hệ thật, giữ generator, corpus version, query, quyền, K cấp trang và budget cố định để so text retrieval với image retrieval. Đo latency/cost thực, tách chi phí xây index. Sau đó cố định bằng chứng truy xuất, so đầu vào text, ảnh, kết hợp với generator tương thích giữ nguyên. Ghi độ phân giải, giới hạn token/trang và cấu hình không hỗ trợ; đổi cả retrieval lẫn generation sẽ không tách được tác động.</p>
+<p>So từng cặp kết quả về đơn vị, header, sơ đồ/chú giải, trích dẫn và từ chối. Đủ hai vùng cho full-set success 1; đáp “8 thùng” vẫn sai. Fixture chỉ minh họa lỗi; chọn cấu hình bằng validation đại diện, giữ final test chưa dùng như bài 1.4.</p>
+<p>Fixture có thêm <code>order-summary-a</code>, bản tóm tắt tương đương cùng phiên bản. Với câu <code>purchase_alternatives</code>, tập đủ là <code>[[order-row-a,order-note-a],[order-summary-a]]</code>. Checker nhận cả hai cách: cặp vùng gốc hoặc riêng bản tóm tắt.</p><div class="takeaway"><span class="eyebrow">Takeaway</span><p>Chấm <span class="hl">tập bằng chứng đủ</span> riêng với đáp án/trích dẫn; tách thay đổi retrieval khỏi thay đổi đầu vào generator.</p></div>
+<div class="quiz" data-correct="0"><span class="eyebrow">Kiểm tra nhanh</span><p class="quiz-q">Đã lấy đủ hai vùng mua hàng. Đáp án ghi “8 thùng”, dẫn cả hai trang. Kết luận nào đúng?</p><button class="quiz-opt" onclick="quizPick(this,0)"><span class="quiz-letter">A</span><span>Đủ bằng chứng; đáp án sai đơn vị.</span></button><button class="quiz-opt" onclick="quizPick(this,1)"><span class="quiz-letter">B</span><span>Retrieval thất bại vì đơn vị sinh ra sai.</span></button><button class="quiz-opt" onclick="quizPick(this,2)"><span class="quiz-letter">C</span><span>Đáp án đạt vì có trích dẫn hai trang.</span></button><div class="quiz-feedback" role="status" data-explain="A tách kết quả từng tầng. B quy lỗi generator sang retrieval dù bằng chứng đủ. C coi trích dẫn là chứng minh phép tính và đơn vị, trong khi nguồn hỗ trợ 8 đơn vị, không phải 8 thùng."></div></div></div><div class="lesson-nav" data-navfor="m3-l6"></div>
+</article>
+
     </div><!-- /container module 3 -->
 
     <!-- ============ MODULE 4 ============ -->
@@ -2021,6 +2081,8 @@ dynamic: dữ liệu visitor + ngày + bằng chứng truy xuất + câu hỏi</
               <tr><td>3.2 Cross-encoder</td><td>Lexical/dense tạo candidate; rerank cặp.30→15 là cấu hình giả lập cần đo.</td></tr>
               <tr><td>3.3 CRAG</td><td>Empty n=0; các khoảng score không chồng lấn khi n>0; thiếu score không gán confident.</td></tr>
               <tr><td>3.4 Self-corrective</td><td>Một retry giữ nguyên phạm vi được phép/đã duyệt; score không cấp quyền.</td></tr>
+              <tr><td>3.5 Bằng chứng cấp trang</td><td>Chọn biểu diễn giữ được quan hệ cần dùng, kèm trích dẫn vùng trang có phiên bản, mở lại được.</td></tr>
+              <tr><td>3.6 Tập bằng chứng</td><td>Chấm tập bằng chứng đủ riêng với đáp án/trích dẫn; tách thay đổi retrieval khỏi thay đổi đầu vào generator.</td></tr>
               <tr><td>4.1 Entity planning</td><td>Alias catalog đã biết làm baseline; hỏi rõ khi mơ hồ thật.</td></tr>
               <tr><td>4.2 Distillation</td><td>Dedup đảo được trong phạm vi biên tập; không hứa tăng accuracy.</td></tr>
               <tr><td>4.3 versionState + dispatcher</td><td>Lifecycle + reranker opt-in off-by-default: cost trong tay operator.</td></tr>
@@ -2042,6 +2104,8 @@ dynamic: dữ liệu visitor + ngày + bằng chứng truy xuất + câu hỏi</
               <tr><td>5. Context</td><td>Context sinh có kiểm nguồn cha và đủ cache input?</td><td>Prefix sai/cũ;35%/49% chỉ là nghiên cứu Anthropic2024.</td></tr>
               <tr><td>6. Rerank</td><td>Bi top-30 → cross top-15? Dispatcher opt-in, off-by-default?</td><td>Mờ bi-encoder lẫn sibling; chi phí mất kiểm soát nếu on-by-default.</td></tr>
               <tr><td>7. Quality gate</td><td>G1: CRAG 4 trạng thái + self-corrective rescue (hard scope unchanged)? G2 faithfulness check opt-in sau generate?</td><td>Tự tin trả lời rác; không cứu câu bị filter giấu; câu bịa trên retrieval tốt không ai bắt.</td></tr>
+              <tr><td>7a. Bố cục / trang</td><td>Hàng/header/chú thích còn đúng quan hệ? Có phiên bản, page index và vùng mở lại được?</td><td>Ký tự đủ nhưng nhầm hàng/đơn vị; không đối chiếu được nguồn.</td></tr>
+              <tr><td>7b. Tập bằng chứng</td><td>Có gold sufficient sets và kiểm riêng đáp án, đơn vị, trích dẫn? Ablation tách retrieval/generation?</td><td>Một hit liên quan có thể che thiếu trang; không biết thay đổi nào tạo tác dụng.</td></tr>
               <tr><td>8. Entity planning</td><td>Alias đã biết làm baseline? Trace và clarify unresolved?</td><td>Sibling sai hoặc match cưỡng ép.</td></tr>
               <tr><td>9. Distillation</td><td>Ngưỡng dedup đã validation? Tag đảo được, giữ ACL/version?</td><td>Xoá nhầm khác biệt quan trọng; giảm count không đo chất lượng.</td></tr>
               <tr><td>10. Curation</td><td>Override rõ nghĩa? Alias đã duyệt? Intent/phiên bản còn mơ hồ thì clarify?</td><td>Merge sai hướng action; scope hẹp vẫn còn mơ hồ.</td></tr>
@@ -2100,13 +2164,15 @@ const LESSONS = [
   {id:'m3-l2', mod:3, part:'Phần III · Chất lượng retrieval nâng cao', title:'Cross-encoder reranking — chấm cặp query/document', desc:'Encode riêng và chấm chung cặp query/document; đo funnel top-30 → top-15 giả lập.'},
   {id:'m3-l3', mod:3, part:'Phần III · Chất lượng retrieval nâng cao', title:'CRAG — biết khi retrieval hỏng', desc:'Phân loại retrieval 4 trạng thái confident/moderate/low/empty; \'tôi không biết\' là feature; control plane G1/G2.'},
   {id:'m3-l4', mod:3, part:'Phần III · Chất lượng retrieval nâng cao', title:'Self-corrective retrieval — vòng cứu hỏng có biên', desc:'Một retry thay soft preference trong hard scope quyền/publication bất biến; đo score, chất lượng và chi phí.'},
+  {id:'m3-l5', mod:3, part:'Phần III · Chất lượng retrieval nâng cao', title:'Bằng chứng cấp trang — giữ bố cục và vị trí nguồn', desc:'Chọn text, ảnh trang hoặc kết hợp dựa trên quan hệ trong bảng và provenance có phiên bản.'},
+  {id:'m3-l6', mod:3, part:'Phần III · Chất lượng retrieval nâng cao', title:'Tập bằng chứng — đo đủ nguồn trước khi chấm đáp án', desc:'Tách mức liên quan của trang, tập bằng chứng đầy đủ và đáp án/trích dẫn khi ablation tài liệu trực quan.'},
   {id:'m4-l1', mod:4, part:'Phần IV · Kỹ thuật production', title:'Entity-aware planning — lớp khử nhập nhằng của production', desc:'Planner giải thực thể bằng match lexical trước retrieval; reject sibling trap; clarify khi tie.'},
   {id:'m4-l2', mod:4, part:'Phần IV · Kỹ thuật production', title:'Production · Distillation — dedup + Q→A', desc:'Dedup có nhãn đảo được và ngưỡng validation; Q→A bổ sung nguồn giá trị cao với parent citation.'},
   {id:'m4-l3', mod:4, part:'Phần IV · Kỹ thuật production', title:'Production · versionState + dispatcher rerank', desc:'versionState lifecycle (draft/current/approved/deprecated) + reranker dispatcher nhiều provider opt-in, off by default.'},
   {id:'m4-l4', mod:4, part:'Phần IV · Kỹ thuật production', title:'Production · Biên tập tinh chỉnh — override, scopeMode, synonym', desc:'Override theo khóa; scopeMode hẹp catalog; overlap đề xuất alias, editor duyệt trước merge.'},
   {id:'m4-l5', mod:4, part:'Phần IV · Kỹ thuật production', title:'Caching — cắt chi phí token và độ trễ', desc:'Tách provider prefix và app cache; đủ input đổi đáp án, quyền/version hiện tại và đo hit/cost.'},
   {id:'m5-l1', mod:5, part:'Phần V · Ghép toàn bộ', title:'Bức tranh trọn vẹn — mọi lớp chạy cùng lúc', desc:'Các lớp retrieval 1 pipeline, mỗi lớp sửa 1 lỗi của lớp dưới; cache bọc quanh; retrieval là attack surface.'},
-  {id:'m6-l1', mod:6, part:'Tổng kết', title:'Cheat sheet — takeaway từng bài + checklist thiết kế RAG', desc:'Tổng hợp takeaway của 18 bài còn lại, checklist khi thiết kế hệ RAG mới, và 2 quiz capstone để tự chẩn đoán lỗi.'},
+  {id:'m6-l1', mod:6, part:'Tổng kết', title:'Cheat sheet — takeaway từng bài + checklist thiết kế RAG', desc:'Tổng hợp takeaway của 20 bài còn lại, checklist khi thiết kế hệ RAG mới, và 2 quiz capstone để tự chẩn đoán lỗi.'},
 ];
 
 const PANES = ['overview','complete'];

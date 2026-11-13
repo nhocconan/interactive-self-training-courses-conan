@@ -449,6 +449,8 @@ footer.site{border-top:1px solid var(--border);padding:26px 24px;text-align:cent
   .lesson{box-shadow:none;border-color:#bbb}
   body{background:#fff;color:#000}
 }
+
+#m4-l4,#m4-l5,#m4-l6{scroll-margin-top:82px}
 </style>
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E📚%3C/text%3E%3C/svg%3E">
 </head>
@@ -465,7 +467,7 @@ footer.site{border-top:1px solid var(--border);padding:26px 24px;text-align:cent
   <aside class="sidebar" id="sidebar" aria-label="Điều hướng khoá học">
     <div class="sidebar-brand">
       <div class="sidebar-brand-title">Agentic <em>Decision</em></div>
-      <div class="sidebar-brand-sub">20 bài</div>
+      <div class="sidebar-brand-sub">23 bài</div>
     </div>
     <div class="progress-wrap">
       <div class="progress-meta"><span>Tiến độ</span><span><b id="pg-done">0</b>/<span id="pg-total">0</span> · <span id="pg-pct">0</span>%</span></div>
@@ -491,7 +493,7 @@ footer.site{border-top:1px solid var(--border);padding:26px 24px;text-align:cent
       <div class="hero">
         <div class="hero-inner">
           <h1><span class="grad-text">Hệ quyết định có học.</span> Quyền và phép kiểm rõ ràng.</h1>
-          <p class="hero-sub">Cho kiến trúc sư, tech lead và data lead sắp dựng một hệ ra quyết định có học cho vận hành kinh doanh. Từ decision contract và hai thang L0–L5 / A0–A4, qua kiến trúc 4 plane với kernel không thể bypass, rule receipts, Engine ⟂ LLM copilot, tới <strong>đo trước khi tin</strong> (credibility, calibration, forecast ≠ lift), chọn đúng công cụ causal, explore/exploit với propensity thật, uncertainty làm gate, và learning loop promote/rollback như một release. Hệ ví dụ xuyên suốt: một brand e-commerce quyết định mỗi tuần lever nào kéo sell-through.</p>
+          <p class="hero-sub">Cho kiến trúc sư, tech lead và data lead sắp dựng một hệ ra quyết định có học cho vận hành kinh doanh. Từ decision contract và hai thang L0–L5 / A0–A4, qua kiến trúc 4 plane với kernel không thể bypass, rule receipts, Engine ⟂ LLM copilot, tới <strong>đo trước khi tin</strong> (credibility, calibration, forecast ≠ lift), chọn đúng công cụ causal, explore/exploit với propensity thật, uncertainty làm gate, và learning loop promote/rollback như một release. Hệ ví dụ xuyên suốt: một brand e-commerce quyết định mỗi tuần lever nào kéo sell-through. Ba bài tự chọn 4.4–4.6 thực hành phân bổ tài nguyên có ràng buộc chung bằng Python; chọn nhánh này khi nhiều phương án dùng chung ngân sách hoặc công suất.</p>
           <div style="margin-top:28px;display:flex;gap:12px;flex-wrap:wrap">
             <a class="btn btn-primary" id="start-btn">Bắt đầu học →</a>
             <a class="btn btn-ghost" href="#curriculum">Xem chương trình</a>
@@ -535,7 +537,7 @@ footer.site{border-top:1px solid var(--border);padding:26px 24px;text-align:cent
             <tr><td><b>Interference / SUTVA</b></td><td>Đơn vị này bị ảnh hưởng bởi treatment của đơn vị khác; khi có, «tác động lên đơn vị i» không còn xác định.</td></tr>
             <tr><td><b>CUPED</b></td><td>Giảm phương sai bằng dữ liệu tiền thí nghiệm theo hệ số (1 − ρ²); rút ngắn thời gian, không đổi giả định.</td></tr>
             <tr><td><b>Exchangeability</b></td><td>Điểm test là «một điểm calibration nữa»; giả định đỡ toàn bộ bảo đảm của conformal.</td></tr>
-          </tbody>
+          <tr><td>Binary allocation</td><td>Chọn hoặc không chọn từng việc, đồng thời kiểm ngân sách và công suất của cả tập.</td></tr><tr><td>Slack / solver status</td><td>Lượng thiếu được cho phép trong bản mềm / trạng thái chứng minh của solver; cả hai cần hợp đồng riêng trước khi dùng kết quả.</td></tr></tbody>
         </table></div>
       </div>
     </section>
@@ -2253,7 +2255,7 @@ DR    = reward_model(x, π_new) + w × residual</pre>
       <header class="module-header" data-module="4">
         <span class="eyebrow">Module 04 · Phần IV · Learning & Action</span>
         <h2>Học và hành động: explore/exploit, learning loop, typed action</h2>
-        <p>Học và hành động: explore/exploit với Thompson sampling và propensity ghi tại draw; learning loop candidate → shadow → canary → promote/rollback; và typed action state machine với receipt, recovery và reviewer có FNR đo được.</p>
+        <p>Học và hành động: explore/exploit với Thompson sampling và propensity ghi tại draw; learning loop candidate → shadow → canary → promote/rollback; và typed action state machine với receipt, recovery và reviewer có FNR đo được. Các bài 4.4–4.6 là nhánh tự chọn về phân bổ chung, solver và độ nhạy; không bắt buộc với mọi hệ quyết định.</p>
       </header>
 <article class="lesson" id="m4-l1" data-lesson>
         <div class="lesson-head">
@@ -2680,6 +2682,47 @@ transition       = UPDATE ... WHERE state = expected_state</pre>
         </div>
         <div class="lesson-nav" data-navfor="m4-l3"></div>
       </article>
+<article class="lesson" id="m4-l4" data-lesson><div class="lesson-head"><div><span class="eyebrow">Bài 4.4 · Nhánh tự chọn</span><h3>Phân bổ chung: xếp hạng từng việc chưa đủ</h3></div></div><div class="lesson-body">
+<p>Xưởng có hai suất bảo trì và ngân sách 10. Việc A được 12 điểm, cao hơn B và C mỗi việc 9 điểm. Chọn A trước nghe hợp lý, nhưng nó tiêu 6, phần còn 4 không đủ làm B hoặc C. Hai việc điểm thấp hơn lại ghép thành 18 điểm trong cùng ngân sách.</p>
+<div class="objectives"><span class="eyebrow">Sau bài này bạn có thể</span><ul><li>Viết biến chọn và hai ràng buộc dùng chung.</li><li>Dùng oracle nhỏ để bác một cách chọn tham lam hoặc làm tròn.</li></ul></div>
+<p>Đây là nhánh tự chọn cho bài toán phân bổ chung, cần biết tổng và Python cơ bản. Ở bài 3.2, dự báo tốt chưa đồng nghĩa quyết định tốt; ở đây, ngay cả điểm đã chốt cũng cần được ghép thành một phương án khả thi.</p>
+<div class="concept"><span class="eyebrow">Một mô hình cho cả tập</span><p><strong>Biến nhị phân</strong> xᵢ nhận 1 nếu làm việc i, nhận 0 nếu không. Tối đa hóa tổng điểm, đồng thời giữ tổng chi phí≤10 và tổng suất≤2. Mỗi việc dùng một suất, không được chia nhỏ.</p></div>
+<div class="table-wrap"><table><thead><tr><th scope="col">Việc giả lập</th><th scope="col">Ngân sách</th><th scope="col">Suất việc</th><th scope="col">Điểm</th></tr></thead><tbody><tr><td>A</td><td>6</td><td>1</td><td>12</td></tr><tr><td>B</td><td>5</td><td>1</td><td>9</td></tr><tr><td>C</td><td>5</td><td>1</td><td>9</td></tr></tbody></table></div>
+<p>Cụ thể: max 12 xₐ+9 xᵦ+9 x꜀; 6 xₐ+5 xᵦ+5 x꜀≤10; xₐ+xᵦ+x꜀≤2. Thay BC vào: chi phí 5+5=10, suất 1+1=2, điểm 9+9=18. Những phép cộng này kiểm cả tập, không xếp riêng từng dòng.</p>
+<div class="table-wrap"><table><thead><tr><th scope="col">Cách chọn</th><th scope="col">Tập chọn</th><th scope="col">Chi phí</th><th scope="col">Điểm / kết luận</th></tr></thead><tbody><tr><td>Greedy</td><td>A</td><td>6</td><td>12</td></tr><tr><td>Liệt kê chính xác</td><td>B+C</td><td>10</td><td>18</td></tr><tr><td>LP phân số</td><td>1; 4/5; 0</td><td>10</td><td>96/5 = 19,2</td></tr><tr><td>Làm tròn xuống</td><td>A</td><td>6</td><td>12</td></tr><tr><td>Làm tròn gần nhất</td><td>A+B</td><td>11</td><td>Vượt ngân sách 10</td></tr></tbody></table></div>
+<p>Tất cả số là fixture giả lập. <strong>LP relaxation</strong> là bản nới biến chọn thành số từ 0 đến 1. Với chính bảng này, vector(1;0,8;0) dùng 10 ngân sách,1,8 suất, đạt 19,2. Đây là cận trên cho bài nguyên; không phải một kế hoạch thực thi với 0,8 việc.</p>
+<p>Đẳng thức là 12 xₐ + 9 xᵦ + 9 x꜀ = 1,8 × (6 xₐ + 5 xᵦ + 5 x꜀) + 1,2 xₐ. Tổng chi phí không quá 10 và xₐ không quá 1 nên điểm không vượt 1,8 × 10 + 1,2 = 19,2. Vector phân số trên đạt cận. Làm tròn xuống còn A với 12 điểm; làm tròn gần nhất thành AB tốn 11. Ví dụ chỉ bác hai cách làm tròn này.</p>
+<p>Trong miền tồn kho, thay ba việc bằng ba lô điều chuyển không chia được, suất việc bằng suất xe. Cùng ngân sách và tải dùng chung vẫn buộc kiểm tổ hợp, dù từng lô riêng đều hợp lệ.</p>
+<p>Tải <a href="labs/decision-optimization.zip" download>gói mã và dữ liệu</a>, giải nén rồi mở terminal trong thư mục <code>decision-optimization</code>. Đọc <a href="labs/decision-optimization/README.md">hướng dẫn</a>, dự đoán tập thắng rồi chạy lệnh dưới. Đọc <code>nominal</code>, <code>greedy</code>, <code>lp_fixture</code>; oracle liệt kê 8 tập con. Nó chặn đầu vào quá 10 mục vì 2ⁿ tăng nhanh, không được giới thiệu như solver mở rộng quy mô.</p>
+<div class="prompt-card"><div class="prompt-head"><span>Liệt kê offline và sinh bảng</span><button class="copy-btn" onclick="copyCode(this)">Sao chép</button></div><pre>python3 allocation.py --write my-results.json --tables my-tables.md</pre></div><div class="takeaway"><span class="eyebrow">Điều cần nhớ</span><p>Khi các việc dùng chung tài nguyên, <span class="hl">kiểm cả tập được chọn bằng ràng buộc chung</span>; thứ hạng từng việc và làm tròn nghiệm phân số chưa đủ.</p></div><div class="quiz" data-correct="1"><span class="eyebrow">Kiểm tra nhanh</span><p class="quiz-q">Ba việc A/B/C dùng chung ngân sách 10; chi phí 6/5/5 và điểm 12/9/9. Hai suất còn trống. Phương án nào đúng với mô hình nhị phân?</p><button class="quiz-opt" onclick="quizPick(this,0)"><span class="quiz-letter">A</span><span>Chọn A vì có điểm và tỷ lệ điểm/chi phí cao nhất.</span></button><button class="quiz-opt" onclick="quizPick(this,1)"><span class="quiz-letter">B</span><span>Chọn B+C: chi phí 10, hai suất, tổng 18 điểm.</span></button><button class="quiz-opt" onclick="quizPick(this,2)"><span class="quiz-letter">C</span><span>Chọn A+B từ nghiệm làm tròn gần nhất để đạt 21 điểm.</span></button><div class="quiz-feedback" role="status" data-explain="B đúng theo ràng buộc chung. A là phương án khả thi nhưng chỉ đạt 12, thấp hơn 18. C có 21 điểm nhưng tốn 11, nên vi phạm ngân sách; điểm cao không sửa được tính bất khả thi."></div></div></div><div class="lesson-nav" data-navfor="m4-l4"></div></article>
+
+<article class="lesson" id="m4-l5" data-lesson><div class="lesson-head"><div><span class="eyebrow">Bài 4.5 · Nhánh tự chọn</span><h3>Nhận kết quả solver bằng hợp đồng rõ ràng</h3></div></div><div class="lesson-body">
+<p>Owner đổi ngân sách từ 10 xuống 9 nhưng vẫn yêu cầu làm ít nhất hai việc. Solver không trả kế hoạch. Đồng nhất kết quả rỗng với “không khả thi” sẽ gộp mô hình sai, hết thời gian và chứng minh vô nghiệm.</p>
+<div class="objectives"><span class="eyebrow">Sau bài này bạn có thể</span><ul><li>Phân nhánh theo năm trạng thái CP-SAT.</li><li>Kiểm lại nghiệm và nhận diện bản nới ràng buộc.</li></ul></div>
+<p>Bài 4.4 đã cho oracle nhỏ kiểm kết quả. Khi đổi solver, giữ kiểm độc lập. LLM chỉ trích tham số để host kiểm kiểu, đơn vị, giới hạn và nguồn; ứng dụng giữ ràng buộc và quyền thực hiện.</p>
+<div class="table-wrap"><table><thead><tr><th scope="col">Trạng thái CP-SAT</th><th scope="col">Hợp đồng ứng dụng</th></tr></thead><tbody><tr><td>OPTIMAL</td><td>Có nghiệm tối ưu theo mô hình/cấu hình đã ghi</td></tr><tr><td>FEASIBLE</td><td>Có nghiệm; chưa chứng minh tối ưu</td></tr><tr><td>INFEASIBLE</td><td>Đã chứng minh không có nghiệm cho mô hình này</td></tr><tr><td>UNKNOWN</td><td>Chưa kết luận; không đọc giá trị biến</td></tr><tr><td>MODEL_INVALID</td><td>Mô hình không qua kiểm hợp lệ; sửa mô hình</td></tr></tbody></table></div>
+<p><a href="https://developers.google.com/optimization/cp/cp_solver">Tài liệu CP-SAT</a> quy định hệ số ràng buộc nguyên và các trạng thái trên. Nếu đổi đơn vị tiền, phải đổi nhất quán cả chi phí lẫn ngân sách. <code>true</code> hoặc số thập phân không được lén nhận như số nguyên trong hợp đồng lab.</p>
+<p>Với ba việc cũ, hai việc rẻ nhất tốn 5+5=10, nên ngân sách 9 và điều kiện ít nhất 2 thật sự vô nghiệm. Oracle phân biệt được điều này bằng liệt kê, không dựa vào việc chờ lâu.</p>
+<div class="table-wrap"><table><thead><tr><th scope="col">Mô hình</th><th scope="col">Trạng thái oracle</th><th scope="col">Kết quả</th></tr></thead><tbody><tr><td>Gốc: budget 10</td><td>OPTIMAL</td><td>BC; 18 điểm</td></tr><tr><td>Cứng: budget 9, ít nhất 2</td><td>INFEASIBLE</td><td>Không có phương án</td></tr><tr><td>Mềm: thiếu việc phạt 4</td><td>OPTIMAL</td><td>A; thiếu 1; net 8</td></tr></tbody></table></div>
+<p><strong>Slack</strong> là lượng thiếu được khai báo cho một mục tiêu mềm. Bản mới cho xₐ+xᵦ+x꜀+s≥2, s nguyên không âm, mục tiêu tổng điểm−4 s. Chọn A được 12−4 × 1=8 điểm ròng; thiếu một việc. Ngân sách 9 và hai suất vẫn cứng, không được “trả phạt” để vượt.</p>
+<p>Trong tồn kho, có thể xin phép giao thiếu một lô với chi phí chậm giao rõ ràng; không được tự nới tải xe hoặc số hàng thực có. Đặt tên/version riêng cho bản mềm rồi xin quyết định, không báo mô hình gốc đã khả thi.</p>
+<p>Chạy <code>python3 allocation.py</code>, đọc <code>infeasible</code> và <code>relaxed_penalty_4</code>. Hàm <code>audit</code> kiểm lại ID, ngân sách, suất, lượng thiếu và điểm bằng phép trừ tài nguyên, tách khỏi vòng liệt kê. FEASIBLE chỉ được nhận khi có chính sách gap/duyệt đặt trước.</p>
+<p>Adapter CP-SAT tùy chọn dùng bản 9.15.6755 trên <a href="https://pypi.org/project/ortools/9.15.6755/">PyPI</a>. Ba ca trong README lần lượt cho OPTIMAL, INFEASIBLE và OPTIMAL ở bản mềm; kết quả được đối chiếu với oracle nhỏ. Nó báo version, bound, cấu hình; không đọc nghiệm sau UNKNOWN/MODEL_INVALID. Thiếu dependency là lỗi adapter, không ảnh hưởng oracle.</p>
+<div class="takeaway"><span class="eyebrow">Điều cần nhớ</span><p>Chỉ đọc nghiệm khi solver có nghiệm, <span class="hl">kiểm lại ràng buộc độc lập</span> và coi mọi nới lỏng là một mô hình mới cần được cho phép.</p></div><div class="quiz" data-correct="2"><span class="eyebrow">Kiểm tra nhanh</span><p class="quiz-q">Solver dừng ở UNKNOWN cho yêu cầu ít nhất 2 việc trong ngân sách 9. Hệ nên xử lý thế nào?</p><button class="quiz-opt" onclick="quizPick(this,0)"><span class="quiz-letter">A</span><span>Báo không có kế hoạch vì đã hết thời gian tìm.</span></button><button class="quiz-opt" onclick="quizPick(this,1)"><span class="quiz-letter">B</span><span>Tự nâng ngân sách lên 10 rồi thực hiện BC.</span></button><button class="quiz-opt" onclick="quizPick(this,2)"><span class="quiz-letter">C</span><span>Giữ trạng thái chưa kết luận, không đọc nghiệm, chuyển theo quy trình đã đặt.</span></button><div class="quiz-feedback" role="status" data-explain="C đúng: UNKNOWN chưa chứng minh có hay không có nghiệm. A nhầm giới hạn tìm kiếm với chứng minh INFEASIBLE. B thay ràng buộc cứng và thực hiện một bài toán khác mà chưa được cho phép."></div></div></div><div class="lesson-nav" data-navfor="m4-l5"></div></article>
+
+<article class="lesson" id="m4-l6" data-lesson><div class="lesson-head"><div><span class="eyebrow">Bài 4.6 · Nhánh tự chọn</span><h3>Thử độ nhạy trước khi dùng phương án tối ưu</h3></div></div><div class="lesson-body">
+<p>BC thắng 18 điểm hôm qua. Hôm nay điểm B và C cùng giảm còn 4; giữ BC chỉ còn 8, trong khi A vẫn 12. Solver không sai phép tối ưu: hệ số mà nhóm đưa vào đã đổi, còn kế hoạch cũ chưa được thử dưới sự thay đổi đó.</p>
+<div class="objectives"><span class="eyebrow">Sau bài này bạn có thể</span><ul><li>Đánh giá phương án cố định trước khi tối ưu lại.</li><li>Tách kết quả kịch bản khỏi bảo đảm thống kê và causal lift.</li></ul></div>
+<p>Bài 4.5 yêu cầu phương án khả thi. <strong>Phân tích độ nhạy</strong> hỏi phương án và giá trị đổi thế nào khi tham số đổi. Kịch bản là giả định tác giả đặt, không phải biến động quan sát hay phân phối xác suất ước lượng.</p>
+<div class="table-wrap"><table><thead><tr><th scope="col">Kịch bản</th><th scope="col">Giữ BC ban đầu</th><th scope="col">Tối ưu lại</th></tr></thead><tbody><tr><td>Gốc</td><td>18 điểm</td><td>B+C; 18 điểm</td></tr><tr><td>Điểm B/C còn 4</td><td>8 điểm</td><td>A; 12 điểm</td></tr><tr><td>Ngân sách còn 9</td><td>Không khả thi</td><td>A; 12 điểm</td></tr><tr><td>Suất việc còn 1</td><td>Không khả thi</td><td>A; 12 điểm</td></tr></tbody></table></div>
+<p>Bảng lấy từ <code>scenarios</code> cùng chương trình. Cột giữa giữ nguyên BC rồi kiểm lại; cột cuối giải lại với dữ liệu mới. Khi ngân sách còn 9, chi phí BC vẫn 10 nên không khả thi. Khi còn một suất, BC vẫn cần hai. Không được gán điểm tốt cho một kế hoạch đã vi phạm tài nguyên.</p>
+<p>Giữ ngân sách 10, hai suất: A có điểm(12;12), BC có(18;8) trên hai kịch bản điểm. <strong>Max-min</strong> chọn mức thấp nhất tốt nhất: min(A)=12&gt;min(BC)=8. A nhường 6 điểm ở bản gốc để nâng mức thấp nhất trong hai kịch bản.</p>
+<p>Ngoài hai bộ điểm giả định, kết luận cần tính lại. Trong tồn kho, giảm nhu cầu làm mất giá trị, cắt chuyến có thể làm mất khả thi. Một hệ số an toàn tùy ý không thay được hai phép kiểm.</p>
+<p>Bài 3.2 đã tách forecast khỏi lift. Bài 5.3 sẽ giới hạn conformal ở marginal outcome coverage dưới exchangeability. <a href="https://arxiv.org/html/2107.07511v6">Angelopoulos và Bates</a> phân biệt marginal với conditional coverage. Suy ra cho bài này: chưa đủ bảo đảm mọi mục cùng được phủ hoặc tập optimizer chọn được phủ; cần thiết kế bổ sung.</p>
+<p>Companion không tính conformal, xác suất kịch bản hoặc đối chứng nhân quả. OPTIMAL chỉ nói tối ưu theo mô hình nhập; nó không tạo “bảo đảm 90%” hay lift.</p>
+<p>Trước khi chạy, dự đoán A hay BC thắng khi điểm B/C còn 4. Ghi lỗi khả thi và phương án mới mỗi hàng. Trong bản sao, thêm kịch bản A giảm rồi báo lại phạm vi kết luận; giữ nguyên nhãn chuẩn.</p>
+<div class="prompt-card"><div class="prompt-head"><span>Xuất báo cáo có thể đối chiếu</span><button class="copy-btn" onclick="copyCode(this)">Sao chép</button></div><pre>python3 allocation.py --write scenario-report.json --tables scenario-tables.md</pre></div><div class="takeaway"><span class="eyebrow">Điều cần nhớ</span><p>Báo độ nhạy <span class="hl">theo những kịch bản đã khai báo</span>; tối ưu trên điểm hoặc cận giả định không tự tạo bảo đảm đồng thời hay tác động can thiệp.</p></div><div class="quiz" data-correct="0"><span class="eyebrow">Kiểm tra nhanh</span><p class="quiz-q">Nhóm thay điểm bằng cận dưới conformal 90% của từng mục, tối ưu rồi nói “cả tập được chọn được bảo đảm 90% và có lift”. Bạn nên phản hồi gì?</p><button class="quiz-opt" onclick="quizPick(this,0)"><span class="quiz-letter">A</span><span>Chưa đủ: marginal outcome coverage không chứng minh đồng thời, chọn thích nghi hay lift.</span></button><button class="quiz-opt" onclick="quizPick(this,1)"><span class="quiz-letter">B</span><span>Đúng nếu solver trả OPTIMAL và ngân sách không vượt.</span></button><button class="quiz-opt" onclick="quizPick(this,2)"><span class="quiz-letter">C</span><span>Đúng nếu giảm thêm 10% mọi điểm sau khi tối ưu.</span></button><div class="quiz-feedback" role="status" data-explain="A đúng: phải có thiết kế/giả định phù hợp cho bảo đảm chung, chọn theo dữ liệu và tác động nhân quả. B chỉ chứng minh tối ưu đối với hệ số đã đưa vào. C là một phép giảm tùy ý, không tạo định lý coverage hoặc counterfactual."></div></div></div><div class="lesson-nav" data-navfor="m4-l6"></div></article>
+
     </div><!-- /container module 4 -->
 
     <!-- ============ MODULE 5 ============ -->
@@ -3328,15 +3371,15 @@ transition       = UPDATE ... WHERE state = expected_state</pre>
           <div class="objectives">
             <span class="eyebrow">Học xong bài này bạn có thể</span>
             <ul>
-              <li>Chạy một buổi architecture review bằng 11 dòng checklist, mỗi dòng một câu hỏi bắt buộc.</li>
-              <li>Nhắc lại điều phải nhớ của cả 20 bài trong một bảng.</li>
+              <li>Chạy một buổi architecture review bằng 12 dòng checklist, mỗi dòng một câu hỏi bắt buộc.</li>
+              <li>Nhắc lại điều phải nhớ của cả 23 bài trong một bảng.</li>
               <li>Trỏ đúng nguồn primary cho từng miền khi cần kiểm lại một con số.</li>
             </ul>
           </div>
 
           <p>16:00 thứ Sáu, buổi architecture review còn 40 phút và ba câu hỏi vẫn treo: reward đóng lúc nào, provider trả accepted nhưng response mất thì xử lý ra sao, memory cũ hết hiệu lực lúc nào. Mỗi quyết định kiến trúc cần bằng chứng có thể kiểm tra. Một hệ đáng tin khi mỗi claim nối được với artifact, dataset, version, test, limitation và owner. Hai bảng dưới đây là thứ mở ra trong 40 phút đó.</p>
 
-          <span class="eyebrow" style="display:block;margin-bottom:10px">Điều phải nhớ của 20 bài</span>
+          <span class="eyebrow" style="display:block;margin-bottom:10px">Điều phải nhớ của 23 bài</span>
           <div class="table-wrap"><table>
             <thead><tr><th style="width:92px">Bài</th><th>Một dòng mang theo</th></tr></thead>
             <tbody>
@@ -3354,7 +3397,7 @@ transition       = UPDATE ... WHERE state = expected_state</pre>
               <tr><td>3.5</td><td>OPE đáng tin nhờ logging contract và overlap, không nhờ tên thuật toán “DR”.</td></tr>
               <tr><td>4.1</td><td>Exploration có chi phí; ghi propensity tại lúc draw: thiếu propensity hợp lệ thì chưa đủ dữ liệu cho đường IPS/SNIPS của bài.</td></tr>
               <tr><td>4.2</td><td>Self-improving production là evidence-gated release management cho policy, model, prompt và memory.</td></tr>
-              <tr><td>4.3</td><td>Exactly-once là mục tiêu nghiệp vụ đạt bằng idempotency cộng reconciliation, không phải bảo đảm mặc định của queue.</td></tr>
+              <tr><td>4.3</td><td>Exactly-once là mục tiêu nghiệp vụ đạt bằng idempotency cộng reconciliation, không phải bảo đảm mặc định của queue.</td></tr><tr><td>4.4</td><td>Khi các việc dùng chung tài nguyên, kiểm cả tập được chọn bằng ràng buộc chung; thứ hạng từng việc và làm tròn nghiệm phân số chưa đủ.</td></tr><tr><td>4.5</td><td>Chỉ đọc nghiệm khi solver có nghiệm, kiểm lại ràng buộc độc lập và coi mọi nới lỏng là một mô hình mới cần được cho phép.</td></tr><tr><td>4.6</td><td>Báo độ nhạy theo những kịch bản đã khai báo; tối ưu trên điểm hoặc cận giả định không tự tạo bảo đảm đồng thời hay tác động can thiệp.</td></tr>
               <tr><td>5.1</td><td>Gate promotion bằng pass^k trên cả bốn trục outcome, trajectory, safety và operations, vì một agent đi sai đường vẫn nói đúng câu ở lượt cuối.</td></tr>
               <tr><td>5.2</td><td>Trace mặc định lưu đủ id, version, timing, cost và hash để điều tra được, và lưu càng ít nội dung càng tốt.</td></tr>
               <tr><td>5.3</td><td>Khoảng dự báo outcome không xác định tác động can thiệp. Kiểm riêng exchangeability, gate dự báo, drift và quyền hành động.</td></tr>
@@ -3373,7 +3416,7 @@ transition       = UPDATE ... WHERE state = expected_state</pre>
               <tr><td><b>Memory</b></td><td>Scope? valid-time? expiry? conflict và supersession? quarantine khi nghi poisoning?</td></tr>
               <tr><td><b>Đo lường</b></td><td>Đại lượng cần ước lượng là gì? giả định nhóm/mẫu có giữ? calibration trên tập giữ riêng? đang đọc forecast hay lift, và confounder nào chưa xử lý?</td></tr>
               <tr><td><b>Evidence</b></td><td>Estimand? assignment và control? propensity và reward? overlap và ESS?</td></tr>
-              <tr><td><b>Bandit / OPE</b></td><td>Exploration chỉ chạy trên action đảo ngược được? propensity ghi lúc draw? ESS = (Σw)²/Σw² bằng bao nhiêu? CI của các estimator có overlap không?</td></tr>
+              <tr><td><b>Bandit / OPE</b></td><td>Exploration chỉ chạy trên action đảo ngược được? propensity ghi lúc draw? ESS = (Σw)²/Σw² bằng bao nhiêu? CI của các estimator có overlap không?</td></tr><tr><td><b>Phân bổ chung</b></td><td>Nhiều mục có dùng chung tài nguyên? Kiểm khả thi độc lập, trạng thái solver, bản nới được duyệt và kịch bản độ nhạy?</td></tr>
               <tr><td><b>Uncertainty</b></td><td>Coverage mục tiêu? ngưỡng bề rộng set để abstain? PSI hoặc KS alarm? champion expiry ngày nào?</td></tr>
               <tr><td><b>Action</b></td><td>Approval context? idempotency? attempt và receipt? DLQ, recovery, rollback?</td></tr>
               <tr><td><b>Eval</b></td><td>Outcome, trajectory và safety? multi-trial theo pass^k? number-grounding fixture? fixture theo slice và adversarial?</td></tr>
@@ -3480,11 +3523,14 @@ const LESSONS = [
   {id:'m4-l1', mod:4, part:'Phần IV · Learning & Action', title:'Explore/exploit: Thompson sampling, regret và ngân sách exploration có propensity', desc:'Posterior Beta, tỷ lệ chia traffic là readout của chồng lấn, regret tính bằng conversion, exploration floor có giá, và propensity ghi tại lúc draw.'},
   {id:'m4-l2', mod:4, part:'Phần IV · Learning & Action', title:'Learning loop thật: candidate → backtest → shadow → canary → promote/rollback', desc:'Bốn vòng lồng nhau, change surface phải liệt kê được, backtest trên replayed episodes, ngưỡng đặt trước, và rollback không un-spend.'},
   {id:'m4-l3', mod:4, part:'Phần IV · Learning & Action', title:'Typed action state machine: idempotency, attempt, receipt, recovery', desc:'Ba định danh và compare-and-set, recovery bằng identity, stale approval, và reviewer là artifact có FNR/FPR đo được.'},
+  {id:'m4-l4', mod:4, part:'Phần IV · Learning & Action', title:'Phân bổ chung: xếp hạng từng việc chưa đủ', desc:'Dựng biến nhị phân, ràng buộc chung và oracle liệt kê.'},
+  {id:'m4-l5', mod:4, part:'Phần IV · Learning & Action', title:'Nhận kết quả solver bằng hợp đồng rõ ràng', desc:'Tách trạng thái solver, kiểm khả thi và bản nới có phạt.'},
+  {id:'m4-l6', mod:4, part:'Phần IV · Learning & Action', title:'Thử độ nhạy trước khi dùng phương án tối ưu', desc:'So phương án cố định với tối ưu lại dưới các kịch bản có nhãn.'},
   {id:'m5-l1', mod:5, part:'Phần V · Evals & Operations', title:'Agent evals: outcome đúng chưa đủ, trajectory cũng phải đúng', desc:'Bốn trục eval, pass^k, LLM judge làm sàn regression, và mười fixture bắt buộc trước khi mở gate.'},
   {id:'m5-l2', mod:5, part:'Phần V · Evals & Operations', title:'Unified trace: từ retrieval tới provider receipt, mặc định không log nội dung', desc:'Correlation contract nối trace_id tới outcome_id, pin instrumentation theo commit, redaction làm mặc định.'},
   {id:'m5-l3', mod:5, part:'Phần V · Evals & Operations', title:'Uncertainty là một gate: conformal prediction, drift PSI/KS, champion expiry', desc:'Bề rộng conformal set làm ngưỡng abstain, PSI và KS làm báo động, champion expiry và guardrail auto-rollback có bound và persistence.'},
   {id:'m6-l1', mod:6, part:'Phần VI · Blueprint', title:'Capstone: lever nào tuần này?', desc:'Trace một tuần của brand ví dụ qua mười bước, bốn gate có quyền dừng, cạm bẫy spillover của cú chuyển ₫200M, và roadmap NOW / NEXT / LATER.'},
-  {id:'m6-l2', mod:6, part:'Phần VI · Blueprint', title:'Tóm tắt: checklist kiến trúc và nguồn đọc tiếp', desc:'Điều phải nhớ của cả 20 bài trong một bảng, 11 dòng checklist cho architecture review, mốc quy định 2026 và nguồn primary theo từng miền.'},
+  {id:'m6-l2', mod:6, part:'Phần VI · Blueprint', title:'Tóm tắt: checklist kiến trúc và nguồn đọc tiếp', desc:'Điều phải nhớ của cả 23 bài trong một bảng, 12 dòng checklist cho architecture review, mốc quy định 2026 và nguồn primary theo từng miền.'},
 ];
 
 const PANES = ['overview','complete'];

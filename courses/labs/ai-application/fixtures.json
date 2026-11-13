@@ -1,0 +1,11 @@
+[
+  {"name":"valid","raw":"{\"request_id\":\"REQ-7\",\"action\":\"reserve_filter\",\"quantity\":2,\"evidence_ids\":[\"EV-7\"],\"evidence_version\":1}","expected":"accepted","effects":1,"quantity":2},
+  {"name":"invalid-json","raw":"{broken","expected":"invalid_json","effects":0,"quantity":0},
+  {"name":"wrong-type","raw":"{\"request_id\":\"REQ-7\",\"action\":\"reserve_filter\",\"quantity\":\"2\",\"evidence_ids\":[\"EV-7\"],\"evidence_version\":1}","expected":"invalid_schema","effects":0,"quantity":0},
+  {"name":"extra-field","raw":"{\"request_id\":\"REQ-7\",\"action\":\"reserve_filter\",\"quantity\":2,\"evidence_ids\":[\"EV-7\"],\"evidence_version\":1,\"approved\":true}","expected":"invalid_schema","effects":0,"quantity":0},
+  {"name":"invented-evidence","raw":"{\"request_id\":\"REQ-7\",\"action\":\"reserve_filter\",\"quantity\":2,\"evidence_ids\":[\"EV-INVENTED\"],\"evidence_version\":1}","expected":"evidence_missing","effects":0,"quantity":0},
+  {"name":"missing-evidence","raw":"{\"request_id\":\"REQ-7\",\"action\":\"reserve_filter\",\"quantity\":2,\"evidence_ids\":[],\"evidence_version\":1}","expected":"invalid_schema","effects":0,"quantity":0},
+  {"name":"untrusted-evidence","raw":"{\"request_id\":\"REQ-7\",\"action\":\"reserve_filter\",\"quantity\":2,\"evidence_ids\":[\"NOTE-7\"],\"evidence_version\":1}","expected":"evidence_untrusted","effects":0,"quantity":0},
+  {"name":"stale-evidence","raw":"{\"request_id\":\"REQ-7\",\"action\":\"reserve_filter\",\"quantity\":2,\"evidence_ids\":[\"EV-7\"],\"evidence_version\":2}","expected":"evidence_stale","effects":0,"quantity":0},
+  {"name":"policy-limit","raw":"{\"request_id\":\"REQ-7\",\"action\":\"reserve_filter\",\"quantity\":99,\"evidence_ids\":[\"EV-7\"],\"evidence_version\":1}","expected":"policy_denied","effects":0,"quantity":0}
+]

@@ -1,0 +1,299 @@
+{
+  "purpose": "Authored deterministic label/arithmetic examples; no retrieval or model execution and no benchmark accuracy estimate.",
+  "fixture": "synthetic-pages.html",
+  "source_version": "v1",
+  "regions": {
+    "order-row-a": {
+      "document": "order-demo",
+      "page_index": 0,
+      "printed_label": "3",
+      "bbox": [
+        32,
+        100,
+        528,
+        183
+      ]
+    },
+    "order-note-a": {
+      "document": "order-demo",
+      "page_index": 1,
+      "printed_label": "4",
+      "bbox": [
+        32,
+        100,
+        528,
+        180
+      ]
+    },
+    "manual-diagram": {
+      "document": "manual-demo",
+      "page_index": 0,
+      "printed_label": "M1",
+      "bbox": [
+        32,
+        100,
+        528,
+        260
+      ]
+    },
+    "manual-legend": {
+      "document": "manual-demo",
+      "page_index": 1,
+      "printed_label": "M2",
+      "bbox": [
+        32,
+        100,
+        528,
+        225
+      ]
+    },
+    "order-summary-a": {
+      "document": "order-demo",
+      "page_index": 1,
+      "printed_label": "4",
+      "bbox": [
+        32,
+        194,
+        528,
+        254
+      ]
+    }
+  },
+  "questions": {
+    "purchase": {
+      "query": "How many units of SKU A?",
+      "gold_sets": [
+        [
+          "order-row-a",
+          "order-note-a"
+        ]
+      ],
+      "expected_answer": {
+        "value": 8,
+        "unit": "units"
+      },
+      "worked_calculation": {
+        "boxes": 4,
+        "units_per_box": 2
+      }
+    },
+    "manual": {
+      "query": "What fictional torque value belongs to the right connector?",
+      "gold_sets": [
+        [
+          "manual-diagram",
+          "manual-legend"
+        ]
+      ],
+      "expected_answer": {
+        "value": 3,
+        "unit": "Nm",
+        "connector": "B"
+      }
+    },
+    "purchase_alternatives": {
+      "query": "How many units of SKU A, with the equivalent summary also available?",
+      "gold_sets": [
+        [
+          "order-row-a",
+          "order-note-a"
+        ],
+        [
+          "order-summary-a"
+        ]
+      ],
+      "expected_answer": {
+        "value": 8,
+        "unit": "units"
+      }
+    }
+  },
+  "cases": [
+    {
+      "id": "purchase-row-only",
+      "question": "purchase",
+      "retrieved": [
+        "order-row-a"
+      ],
+      "answer": {
+        "value": 4,
+        "unit": "units"
+      },
+      "citations": [
+        "order-row-a"
+      ],
+      "expected": {
+        "evidence_recall": 0.5,
+        "full_set_success": 0,
+        "answer_exact": 0,
+        "citation_set_complete": 0
+      }
+    },
+    {
+      "id": "purchase-complete",
+      "question": "purchase",
+      "retrieved": [
+        "order-row-a",
+        "order-note-a"
+      ],
+      "answer": {
+        "value": 8,
+        "unit": "units"
+      },
+      "citations": [
+        "order-row-a",
+        "order-note-a"
+      ],
+      "expected": {
+        "evidence_recall": 1.0,
+        "full_set_success": 1,
+        "answer_exact": 1,
+        "citation_set_complete": 1
+      }
+    },
+    {
+      "id": "purchase-wrong-unit",
+      "question": "purchase",
+      "retrieved": [
+        "order-row-a",
+        "order-note-a"
+      ],
+      "answer": {
+        "value": 8,
+        "unit": "boxes"
+      },
+      "citations": [
+        "order-row-a",
+        "order-note-a"
+      ],
+      "expected": {
+        "evidence_recall": 1.0,
+        "full_set_success": 1,
+        "answer_exact": 0,
+        "citation_set_complete": 1
+      }
+    },
+    {
+      "id": "purchase-repeated-row",
+      "question": "purchase",
+      "retrieved": [
+        "order-row-a",
+        "order-row-a"
+      ],
+      "answer": null,
+      "citations": [
+        "order-row-a"
+      ],
+      "expected": {
+        "evidence_recall": 0.5,
+        "full_set_success": 0,
+        "answer_exact": 0,
+        "citation_set_complete": 0
+      }
+    },
+    {
+      "id": "manual-drawing-only",
+      "question": "manual",
+      "retrieved": [
+        "manual-diagram"
+      ],
+      "answer": null,
+      "citations": [
+        "manual-diagram"
+      ],
+      "expected": {
+        "evidence_recall": 0.5,
+        "full_set_success": 0,
+        "answer_exact": 0,
+        "citation_set_complete": 0
+      }
+    },
+    {
+      "id": "manual-complete",
+      "question": "manual",
+      "retrieved": [
+        "manual-diagram",
+        "manual-legend"
+      ],
+      "answer": {
+        "value": 3,
+        "unit": "Nm",
+        "connector": "B"
+      },
+      "citations": [
+        "manual-diagram",
+        "manual-legend"
+      ],
+      "expected": {
+        "evidence_recall": 1.0,
+        "full_set_success": 1,
+        "answer_exact": 1,
+        "citation_set_complete": 1
+      }
+    },
+    {
+      "id": "manual-incomplete-citation",
+      "question": "manual",
+      "retrieved": [
+        "manual-diagram",
+        "manual-legend"
+      ],
+      "answer": {
+        "value": 3,
+        "unit": "Nm",
+        "connector": "B"
+      },
+      "citations": [
+        "manual-legend"
+      ],
+      "expected": {
+        "evidence_recall": 1.0,
+        "full_set_success": 1,
+        "answer_exact": 1,
+        "citation_set_complete": 0
+      }
+    },
+    {
+      "id": "purchase-or-summary-only",
+      "question": "purchase_alternatives",
+      "retrieved": [
+        "order-summary-a"
+      ],
+      "answer": {
+        "value": 8,
+        "unit": "units"
+      },
+      "citations": [
+        "order-summary-a"
+      ],
+      "expected": {
+        "evidence_recall": 1.0,
+        "full_set_success": 1,
+        "answer_exact": 1,
+        "citation_set_complete": 1
+      }
+    },
+    {
+      "id": "purchase-or-original-pair",
+      "question": "purchase_alternatives",
+      "retrieved": [
+        "order-row-a",
+        "order-note-a"
+      ],
+      "answer": {
+        "value": 8,
+        "unit": "units"
+      },
+      "citations": [
+        "order-row-a",
+        "order-note-a"
+      ],
+      "expected": {
+        "evidence_recall": 1.0,
+        "full_set_success": 1,
+        "answer_exact": 1,
+        "citation_set_complete": 1
+      }
+    }
+  ]
+}

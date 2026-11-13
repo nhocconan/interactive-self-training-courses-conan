@@ -12,7 +12,7 @@ up LDAP / Active Directory single sign-on.
 
 Open the [public course catalog](https://nhocconan.github.io/interactive-self-training-courses-conan/courses/)
 for standalone interactive lessons. The [course registry](docs/INTERACTIVE-COURSE-STANDARD.md#course-registry)
-lists prerequisites and practice outcomes for the 13 courses. No portal login is required on GitHub Pages.
+lists prerequisites and practice outcomes for the 14 courses. No portal login is required on GitHub Pages.
 
 ## Quick start
 
