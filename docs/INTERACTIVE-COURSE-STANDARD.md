@@ -46,7 +46,7 @@ the engine but not yet consumed (forward-compatible).
 ## Course registry
 
 The public catalog is [`courses/index.html`](../courses/index.html). There are
-**13 base courses and five English mirrors**. Counts below include recap lessons
+**14 base courses and five English mirrors**. Counts below include recap lessons
 and come from each course's `LESSONS` array. Choose a branch for the task at hand;
 completing every course is not a prerequisite for building an agent.
 
@@ -57,13 +57,14 @@ completing every course is not a prerequisite for building an agent.
 | [Agent Operations](../courses/ai-agent-operational-training.html) · [EN](../courses/ai-agent-operational-training.en.html) | 23 | Work Agents | A staging workflow with accepted/rejected rows and recovery |
 | [Context & Harness](../courses/context-harness-engineering.html) · [EN](../courses/context-harness-engineering.en.html) | 17 | Programming basics | A runtime with scoped context, tools and protected side effects |
 | [Reliability & Evaluation](../courses/agent-reliability-evaluation.html) | 19 | A task to evaluate | A held-out eval set, failure cases and a rollout gate |
+| [AI Application Lab](../courses/ai-application-engineering.html) | 12 | Python, JSON, Git and basic SQL | An offline workflow, a completed policy checkpoint and independently checked crash/replay behavior |
 | [Loop Engineering](../courses/loop-engineering.html) | 12 | Context & Harness; Reliability foundations | A bounded loop with an independent verifier and resume state |
 | [MCP & Tool Layer](../courses/mcp-tool-layer.html) | 18 | Context & Harness | A versioned tool contract with authorization and failure checks |
 | [Agentic Software Development](../courses/agentic-software-development.html) · [EN](../courses/agentic-software-development.en.html) | 23 | Context & Harness; software development | A repo playbook with ownership, acceptance checks and review capacity |
-| [RAG](../courses/rag-information-retrieval-course.html) · [EN](../courses/rag-information-retrieval-course.en.html) | 19 | Retrieval basics; Reliability foundations | A query/qrels baseline, ablation and tenant/ACL negative test |
+| [RAG](../courses/rag-information-retrieval-course.html) · [EN](../courses/rag-information-retrieval-course.en.html) | 21 | Retrieval basics; Reliability foundations | A query/qrels baseline, ablation and tenant/ACL negative test |
 | [Fine-tuning](../courses/llm-finetuning.html) | 17 | Prompt/context baseline; Python | Leakage-safe data splits and a paired comparison with the baseline |
 | [DSS & Data Warehouse](../courses/dss-datawarehouse-idss-course.html) | 21 | Data and programming basics | A decision/data design with explicit uncertainty and evidence limits |
-| [Agentic Decision Systems](../courses/decision-intelligence-agentic-systems.html) | 20 | DSS; Reliability statistics sections | A decision contract, estimand, evidence record and abstention path |
+| [Agentic Decision Systems](../courses/decision-intelligence-agentic-systems.html) | 23 | DSS; Reliability statistics sections | A decision contract, estimand, evidence record and abstention path |
 | [Typed Decisions / Jev](../courses/typed-decision-systems-jev.html) | 18 | Decision Systems; API programming | A typed selector with policy checks, calibration, shadow eval and recovery |
 
 Keep repeated foundations short so each HTML file works independently. Operations
