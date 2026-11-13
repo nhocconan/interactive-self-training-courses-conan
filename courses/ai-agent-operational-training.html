@@ -93,8 +93,8 @@
       --shadow-md: 0 4px 12px rgba(10, 37, 64, .10);
       --shadow-lg: 0 18px 48px -12px rgba(10, 37, 64, .28);
       --sidebar-w: 300px;
-      --maxw: 1080px;
-      --measure: none;
+      --maxw: 1280px;
+      --measure: 75ch;
       --focus: 0 0 0 2px var(--bg), 0 0 0 4px var(--accent-2);
     }
 
@@ -507,7 +507,7 @@
       padding: 0 40px
     }
 
-    /* Prose fills the full column (measure cap disabled). */
+    /* Keep prose readable while figures and tables use the full column. */
     .lesson-body>p,
     .lesson-body>ul,
     .lesson-body>ol,
@@ -517,7 +517,7 @@
 
     @media (min-width:1660px) {
       :root {
-        --maxw: 1180px
+        --maxw: 1280px
       }
     }
 
@@ -1749,7 +1749,9 @@
         color: #000
       }
     }
-  </style>
+  .diagram-scroll-hint{padding:7px 12px;border-bottom:1px solid var(--border);background:var(--surface-2);color:var(--ink-2);font-size:12px;font-weight:600}
+.diagram-scroll-hint[hidden]{display:none}
+</style>
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E📚%3C/text%3E%3C/svg%3E">
 </head>
 
@@ -4463,8 +4465,36 @@ Chỉ song song phần không phụ thuộc, đủ quyền/tài nguyên/quota/re
     }, { passive: true });
 
     /* Keyboard navigation: ← → move between lessons (skipped while typing) */
-    document.addEventListener('keydown', e => {
-      if (e.defaultPrevented || e.target.closest?.('input,textarea,select,[contenteditable],.figure,.table-wrap,pre') || e.metaKey || e.ctrlKey || e.altKey) return;
+    /* Show a visible cue only when a diagram or table needs local horizontal scrolling. */
+const diagramResize = new ResizeObserver(entries => {
+  entries.forEach(({target}) => {
+    const hint = target.matches('.table-wrap') ? target.firstElementChild : target.previousElementSibling;
+    hint.hidden = target.scrollWidth <= target.clientWidth + 1;
+  });
+});
+document.querySelectorAll('.diagram-viewport,.table-wrap').forEach(region => {
+  const hint = document.createElement('div');
+  hint.className = 'diagram-scroll-hint';
+  hint.hidden = true;
+  hint.setAttribute('aria-hidden', 'true');
+  const isTable = region.matches('.table-wrap');
+  const vi = document.documentElement.lang === 'vi';
+  if (isTable) {
+    region.setAttribute('role', 'region');
+    region.tabIndex = 0;
+    if (!region.hasAttribute('aria-label')) region.setAttribute('aria-label', vi
+      ? 'Bảng dữ liệu; cuộn ngang để xem đầy đủ nội dung'
+      : 'Data table; scroll horizontally to view all columns');
+  }
+  hint.textContent = isTable
+    ? (vi ? '↔ Cuộn ngang để xem toàn bộ bảng' : '↔ Scroll horizontally to view the full table')
+    : (vi ? '↔ Cuộn ngang để xem toàn bộ sơ đồ' : '↔ Scroll horizontally to view the full diagram');
+  if (isTable) region.prepend(hint); else region.before(hint);
+  diagramResize.observe(region);
+});
+
+document.addEventListener('keydown', e => {
+      if (e.defaultPrevented || e.target.closest?.('input,textarea,select,button,a,[contenteditable],[role="region"],.figure,.table-wrap,pre') || e.metaKey || e.ctrlKey || e.altKey) return;
       if (e.key !== 'ArrowLeft' && e.key !== 'ArrowRight') return;
       const cur = document.querySelector('.nav-link.active')?.dataset.lesson;
       const i = LESSONS.findIndex(l => l.id === cur);

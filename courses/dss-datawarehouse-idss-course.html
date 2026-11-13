@@ -70,7 +70,7 @@
   --shadow-sm:0 1px 2px rgba(10,37,64,.06),0 1px 3px rgba(10,37,64,.05);
   --shadow-md:0 4px 12px rgba(10,37,64,.10);
   --shadow-lg:0 18px 48px -12px rgba(10,37,64,.28);
-  --sidebar-w:288px;  --maxw:820px;
+  --sidebar-w:288px;  --maxw:1280px;
   --focus:0 0 0 2px var(--bg),0 0 0 4px var(--accent-2);
 }
 
@@ -267,6 +267,7 @@ code{font-family:var(--font-mono);font-size:.86em;background:var(--surface-2);
 .lesson-head h3{color:#fff;font-size:clamp(1.4rem,3vw,1.9rem);margin-top:4px}
 .lesson-body{padding:26px 30px 6px;font-size:16px}
 .lesson-body>*+*{margin-top:18px}
+.lesson-body>p,.lesson-body>ul,.lesson-body>ol{max-width:75ch}
 .lesson-body p{color:var(--ink)}
 .lesson-body ul,.lesson-body ol{padding-left:22px;color:var(--ink)}
 .lesson-body li+li{margin-top:6px}
@@ -447,6 +448,8 @@ footer.site{border-top:1px solid var(--border);padding:26px 24px;text-align:cent
   .lesson{box-shadow:none;border-color:#bbb}
   body{background:#fff;color:#000}
 }
+.diagram-scroll-hint{padding:7px 12px;border-bottom:1px solid var(--border);background:var(--surface-2);color:var(--ink-2);font-size:12px;font-weight:600}
+.diagram-scroll-hint[hidden]{display:none}
 </style>
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E📚%3C/text%3E%3C/svg%3E">
 </head>
@@ -3524,8 +3527,36 @@ let _st; window.addEventListener('scroll',()=>{clearTimeout(_st);_st=setTimeout(
 },400)},{passive:true});
 
 /* Keyboard navigation: ← → move between lessons (skipped while typing) */
+/* Show a visible cue only when a diagram or table needs local horizontal scrolling. */
+const diagramResize = new ResizeObserver(entries => {
+  entries.forEach(({target}) => {
+    const hint = target.matches('.table-wrap') ? target.firstElementChild : target.previousElementSibling;
+    hint.hidden = target.scrollWidth <= target.clientWidth + 1;
+  });
+});
+document.querySelectorAll('.diagram-viewport,.table-wrap').forEach(region => {
+  const hint = document.createElement('div');
+  hint.className = 'diagram-scroll-hint';
+  hint.hidden = true;
+  hint.setAttribute('aria-hidden', 'true');
+  const isTable = region.matches('.table-wrap');
+  const vi = document.documentElement.lang === 'vi';
+  if (isTable) {
+    region.setAttribute('role', 'region');
+    region.tabIndex = 0;
+    if (!region.hasAttribute('aria-label')) region.setAttribute('aria-label', vi
+      ? 'Bảng dữ liệu; cuộn ngang để xem đầy đủ nội dung'
+      : 'Data table; scroll horizontally to view all columns');
+  }
+  hint.textContent = isTable
+    ? (vi ? '↔ Cuộn ngang để xem toàn bộ bảng' : '↔ Scroll horizontally to view the full table')
+    : (vi ? '↔ Cuộn ngang để xem toàn bộ sơ đồ' : '↔ Scroll horizontally to view the full diagram');
+  if (isTable) region.prepend(hint); else region.before(hint);
+  diagramResize.observe(region);
+});
+
 document.addEventListener('keydown',e=>{
-  if(e.defaultPrevented||e.target.closest?.('input,textarea,select,[contenteditable],.figure,.table-wrap,pre')||e.metaKey||e.ctrlKey||e.altKey)return;
+  if(e.defaultPrevented||e.target.closest?.('input,textarea,select,button,a,[contenteditable],[role="region"],.figure,.table-wrap,pre')||e.metaKey||e.ctrlKey||e.altKey)return;
   if(e.key!=='ArrowLeft'&&e.key!=='ArrowRight')return;
   const cur=document.querySelector('.nav-link.active')?.dataset.lesson;
   const i=LESSONS.findIndex(l=>l.id===cur);

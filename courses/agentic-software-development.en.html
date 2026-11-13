@@ -29,7 +29,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Agentic Software Development · From solo dev to a synced team</title>
-<meta name="description" content="A practical course for engineers and tech leads: scope work, verify outcomes, configure narrow rights, learn from failures and measure accepted output with total review/rework. Worked fixtures are synthetic and reproducible; primary sources are linked.">
+<meta name="description" content="Organize work with coding agents: scoped tasks and verification, worker messaging, remote steering and assistant-to-code handoffs. Lessons include synthetic examples, exercises and primary sources.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
@@ -71,7 +71,7 @@
   --shadow-sm:0 1px 2px rgba(10,37,64,.06),0 1px 3px rgba(10,37,64,.05);
   --shadow-md:0 4px 12px rgba(10,37,64,.10);
   --shadow-lg:0 18px 48px -12px rgba(10,37,64,.28);
-  --sidebar-w:288px;  --maxw:820px;
+  --sidebar-w:288px;  --maxw:1280px;
   --focus:0 0 0 2px var(--bg),0 0 0 4px var(--accent-2);
 }
 
@@ -268,6 +268,7 @@ code{font-family:var(--font-mono);font-size:.86em;background:var(--surface-2);
 .lesson-head h3{color:#fff;font-size:clamp(1.4rem,3vw,1.9rem);margin-top:4px}
 .lesson-body{padding:26px 30px 6px;font-size:16px}
 .lesson-body>*+*{margin-top:18px}
+.lesson-body>p,.lesson-body>ul,.lesson-body>ol{max-width:75ch}
 .lesson-body p{color:var(--ink)}
 .lesson-body ul,.lesson-body ol{padding-left:22px;color:var(--ink)}
 .lesson-body li+li{margin-top:6px}
@@ -448,6 +449,8 @@ footer.site{border-top:1px solid var(--border);padding:26px 24px;text-align:cent
   .lesson{box-shadow:none;border-color:#bbb}
   body{background:#fff;color:#000}
 }
+.diagram-scroll-hint{padding:7px 12px;border-bottom:1px solid var(--border);background:var(--surface-2);color:var(--ink-2);font-size:12px;font-weight:600}
+.diagram-scroll-hint[hidden]{display:none}
 </style>
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E📚%3C/text%3E%3C/svg%3E">
 </head>
@@ -464,7 +467,7 @@ footer.site{border-top:1px solid var(--border);padding:26px 24px;text-align:cent
   <aside class="sidebar" id="sidebar" aria-label="Course navigation">
     <div class="sidebar-brand">
       <div class="sidebar-brand-title">Agentic <em>SW Dev</em></div>
-      <div class="sidebar-brand-sub">23 lessons</div>
+      <div class="sidebar-brand-sub">26 lessons</div>
     </div>
     <div class="progress-wrap">
       <div class="progress-meta"><span>Progress</span><span><b id="pg-done">0</b>/<span id="pg-total">0</span> · <span id="pg-pct">0</span>%</span></div>
@@ -490,7 +493,7 @@ footer.site{border-top:1px solid var(--border);padding:26px 24px;text-align:cent
       <div class="hero">
         <div class="hero-inner">
           <h1><span class="grad-text">Agentic Software Development</span> — from solo dev to a synced team</h1>
-          <p class="hero-sub">A practical course for engineers and tech leads: scope work, verify outcomes, configure narrow rights, learn from failures and measure accepted output with total review/rework. Worked fixtures are synthetic and reproducible; primary sources are linked.</p>
+          <p class="hero-sub">Organize work with coding agents: scoped tasks and verification, worker messaging, remote steering and assistant-to-code handoffs. Lessons include synthetic examples, exercises and primary sources.</p>
           <div style="margin-top:28px;display:flex;gap:12px;flex-wrap:wrap">
             <a class="btn btn-primary" id="start-btn">Start learning →</a>
             <a class="btn btn-ghost" href="#curriculum">View curriculum</a>
@@ -507,7 +510,7 @@ footer.site{border-top:1px solid var(--border);padding:26px 24px;text-align:cent
         <div class="section-head"><h2>Glossary</h2><span class="line"></span></div>
         <div class="table-wrap"><table>
           <thead><tr><th style="width:220px">Term</th><th>Meaning (as used here)</th></tr></thead>
-          <tbody><tr><td><b>Agentic harness</b></td><td>Tools, context, execution and policy around a model; outcomes depend on both model and environment.</td></tr><tr><td><b>Autonomy ladder</b></td><td>Vocabulary for task- and risk-based autonomy, not a requirement to climb.</td></tr><tr><td><b>Delegation gap</b></td><td>AI involvement differs from accepted tasks without intervention; state units and denominators.</td></tr><tr><td><b>Plan mode</b></td><td>Harness-specific planning behavior; inspect effective rights. A short diff can be high risk.</td></tr><tr><td><b>Spec-driven development</b></td><td>Spec-first, spec-anchored and spec-as-source describe maintenance commitment, not automatic speed or quality.</td></tr><tr><td><b>Verifier / gate</b></td><td>An oracle and outcome check; green only establishes the criteria encoded in that check.</td></tr><tr><td><b>CLAUDE.md / AGENTS.md</b></td><td>Harness conventions for instructions; verify loading. Context does not remove process authority.</td></tr><tr><td><b>Tool policy / approval / sandbox</b></td><td>Call policy, asking conditions and process boundaries are distinct, with service authorization as another layer.</td></tr><tr><td><b>Config as code</b></td><td>Reviewed shared artifacts; still verify setup, trust, credentials and effective rights.</td></tr><tr><td><b>Rule accretion</b></td><td>Promote lessons at the right failure layer with owners/regressions; severe first incidents may require immediate controls.</td></tr><tr><td><b>Auto memory</b></td><td>Saved agent context can be wrong or stale; check provenance and sharing policy.</td></tr><tr><td><b>Golden set</b></td><td>Tasks with input, oracle and reset; separate regressions from capability exploration and report protocol/uncertainty.</td></tr><tr><td><b>pass@k / pass^k</b></td><td>At least one / all k attempts succeed. The formulas 1−(1−p)^k and p^k both assume independent equal-p trials for a fixed task; average per-task results when difficulty varies.</td></tr><tr><td><b>Error budget</b></td><td>Allowed operational failures under a defined SLO, denominator and window; separate from eval scores and authority.</td></tr><tr><td><b>Brief</b></td><td>Objective, output, tools/sources and boundaries coordinate work without replacing runtime policy.</td></tr><tr><td><b>WIP / review capacity</b></td><td>Unfinished work within a boundary and measured review throughput. Little’s Law uses stable averages: L=λW.</td></tr><tr><td><b>Blast radius / reversibility</b></td><td>Impact and recovery depend on environment, backups and dependencies, not immutable command classes.</td></tr><tr><td><b>Amplifier</b></td><td>DORA’s framing of AI and organizational systems, not a causal law for every team.</td></tr><tr><td><b>Feedback loop</b></td><td>Time to evidence of required behavior, read with risk, maintenance and cost.</td></tr><tr><td><b>On the loop</b></td><td>Improve the harness against recurrence while still repairing artifacts, rolling back or intervening when needed.</td></tr></tbody>
+          <tbody><tr><td><b>Agentic harness</b></td><td>Tools, context, execution and policy around a model; outcomes depend on both model and environment.</td></tr><tr><td><b>Autonomy ladder</b></td><td>Vocabulary for task- and risk-based autonomy, not a requirement to climb.</td></tr><tr><td><b>Delegation gap</b></td><td>AI involvement differs from accepted tasks without intervention; state units and denominators.</td></tr><tr><td><b>Plan mode</b></td><td>Harness-specific planning behavior; inspect effective rights. A short diff can be high risk.</td></tr><tr><td><b>Spec-driven development</b></td><td>Spec-first, spec-anchored and spec-as-source describe maintenance commitment, not automatic speed or quality.</td></tr><tr><td><b>Verifier / gate</b></td><td>An oracle and outcome check; green only establishes the criteria encoded in that check.</td></tr><tr><td><b>CLAUDE.md / AGENTS.md</b></td><td>Harness conventions for instructions; verify loading. Context does not remove process authority.</td></tr><tr><td><b>Tool policy / approval / sandbox</b></td><td>Call policy, asking conditions and process boundaries are distinct, with service authorization as another layer.</td></tr><tr><td><b>Config as code</b></td><td>Reviewed shared artifacts; still verify setup, trust, credentials and effective rights.</td></tr><tr><td><b>Rule accretion</b></td><td>Promote lessons at the right failure layer with owners/regressions; severe first incidents may require immediate controls.</td></tr><tr><td><b>Auto memory</b></td><td>Saved agent context can be wrong or stale; check provenance and sharing policy.</td></tr><tr><td><b>Golden set</b></td><td>Tasks with input, oracle and reset; separate regressions from capability exploration and report protocol/uncertainty.</td></tr><tr><td><b>pass@k / pass^k</b></td><td>At least one / all k attempts succeed. The formulas 1−(1−p)^k and p^k both assume independent equal-p trials for a fixed task; average per-task results when difficulty varies.</td></tr><tr><td><b>Error budget</b></td><td>Allowed operational failures under a defined SLO, denominator and window; separate from eval scores and authority.</td></tr><tr><td><b>Brief</b></td><td>Objective, output, tools/sources and boundaries coordinate work without replacing runtime policy.</td></tr><tr><td><b>WIP / review capacity</b></td><td>Unfinished work within a boundary and measured review throughput. Little’s Law uses stable averages: L=λW.</td></tr><tr><td><b>Blast radius / reversibility</b></td><td>Impact and recovery depend on environment, backups and dependencies, not immutable command classes.</td></tr><tr><td><b>Amplifier</b></td><td>DORA’s framing of AI and organizational systems, not a causal law for every team.</td></tr><tr><td><b>Feedback loop</b></td><td>Time to evidence of required behavior, read with risk, maintenance and cost.</td></tr><tr><td><b>On the loop</b></td><td>Improve the harness against recurrence while still repairing artifacts, rolling back or intervening when needed.</td></tr><tr><td>Peer messaging</td><td>Task/revision-bound messages resolve dependencies; receipt differs from acceptance.</td></tr><tr><td>MCP / A2A</td><td>Tool/context integration and agent-service communication; inspect support in the actual runtime.</td></tr><tr><td>Executor</td><td>The machine/environment executing work; it can differ from your control device.</td></tr><tr><td>Durable execution</td><td>Persist progress and reconcile state to recover; external effects are not automatically exactly-once.</td></tr></tbody>
         </table></div>
       </div>
     </section>
@@ -1016,6 +1019,7 @@ footer.site{border-top:1px solid var(--border);padding:26px 24px;text-align:cent
 </figure>
 <h4>Apply it</h4><p>Exercise: store “test with npm test”, change a fixture repo to npm run test:unit, then start a fresh session. Check whether the agent verifies package.json or blindly follows the stale note. Add this case to memory evaluation. Compare memory/no-memory on matched tasks, model, context and retrieval budgets; hold out tasks not used to write the notes. Benchmark uplift does not directly imply team ROI. Record provenance, review expiry and deletion. Issue/web content must not silently become trusted guidance.</p>
 <p class="muted"><b>Primary source:</b> <a href="https://code.claude.com/docs/en/memory" target="_blank" rel="noopener noreferrer">Claude Code: Memory</a>.</p>
+<p>OpenAI dots can keep ongoing context across ChatGPT, Slack and Teams. A delegated worker still receives selected task context, not every past conversation. Compare the handoff in <a href="#m5-l10">lesson 5.10</a>; see <a href="https://learn.chatgpt.com/docs/dots/tasks-and-memory" target="_blank" rel="noopener noreferrer">dots tasks and memory</a>.</p>
 <div class="takeaway"><span class="eyebrow">Takeaway</span><p><span class="hl">Memory is sourced, expiring context; team</span> learning requires verification, review and regression checks.</p></div>
 <div class="quiz" data-correct="1"><span class="eyebrow">Quick check</span><p class="quiz-q">Memory names an old command while the repo uses a different one. What next?</p><button class="quiz-opt" onclick="quizPick(this,0)"><span class="quiz-letter">A</span><span>Prefer memory because it survived many sessions.</span></button><button class="quiz-opt" onclick="quizPick(this,1)"><span class="quiz-letter">B</span><span>Check the current repo, correct the sourced note and add a stale-memory regression.</span></button><button class="quiz-opt" onclick="quizPick(this,2)"><span class="quiz-letter">C</span><span>Disable every form of memory forever.</span></button><div class="quiz-feedback" role="status" data-explain="B repairs stale information and tests recurrence. A mistakes persistence for reliability. C discards possible value without measurement; apply provenance, rights and appropriate evaluation."></div></div>
   </div>
@@ -1169,8 +1173,8 @@ footer.site{border-top:1px solid var(--border);padding:26px 24px;text-align:cent
 <text class="dgm-ink" font-family="IBM Plex Mono" font-size="13" font-weight="700" x="32" y="130">Output format</text>
 <text class="dgm-ink2" font-size="11" x="32" y="148">which file, which schema, how long</text>
 <rect class="dgm-warn" height="56" rx="10" width="372" x="372" y="106"></rect>
-<text class="dgm-ink" font-size="11.5" x="388" y="130">Lead can't parse the result → has to re-run</text>
-<text class="dgm-ink" font-size="11.5" x="388" y="148">from scratch, paying tokens twice for one job.</text>
+<text class="dgm-ink" font-size="11.5" x="388" y="130">Missing artifact/schema → clarification</text>
+<text class="dgm-ink" font-size="11.5" x="388" y="148">or a targeted retry, with extra cost.</text>
 <rect class="dgm-accent" height="56" rx="10" stroke-width="2" width="340" x="16" y="174"></rect>
 <text class="dgm-ink" font-family="IBM Plex Mono" font-size="13" font-weight="700" x="32" y="198">Tools &amp; sources</text>
 <text class="dgm-ink2" font-size="11" x="32" y="216">which tools it may use, which sources</text>
@@ -1181,14 +1185,15 @@ footer.site{border-top:1px solid var(--border);padding:26px 24px;text-align:cent
 <text class="dgm-ink" font-family="IBM Plex Mono" font-size="13" font-weight="700" x="32" y="266">Task boundaries</text>
 <text class="dgm-ink2" font-size="11" x="32" y="284">what it may touch — and what it must NOT</text>
 <rect class="dgm-warn" height="56" rx="10" width="372" x="372" y="242"></rect>
-<text class="dgm-ink" font-size="11.5" x="388" y="266">Child agent starts coordinating siblings;</text>
-<text class="dgm-ink" font-size="11.5" x="388" y="284">out-of-scope work or missing output.</text>
+<text class="dgm-ink" font-size="11.5" x="388" y="266">Worker changes another owner's scope</text>
+<text class="dgm-ink" font-size="11.5" x="388" y="284">without agreement; assigned work is missing.</text>
 <text class="dgm-ink2" font-size="10.5" x="16" y="314">Brief guides behavior; runtime permissions, monitoring and acceptance remain separate.</text>
 </svg></div>
 <figcaption>The brief coordinates work; runtime permissions and intermediate observation remain useful. The diagram does not assume the lead sees only the final answer.</figcaption>
 </figure>
 <h4>Apply it</h4><p>Fan out only when at least two parts are sufficiently independent and expected benefit exceeds coordination cost. Two is a logical minimum, not an efficiency threshold. Worktrees isolate files on disk, not conflicting API decisions. Each branch needs suitable verification; reviewers need both the diff and enough spec/context to grade it. Separate context or a different model does not establish independent errors. Test model tiering against cost and escaped defects; the largest model need not always review. For data jobs, “done” requires valid output, schema/checksum and an independent oracle; file existence alone is insufficient. Compare with a sequential baseline on matched tasks: time to accepted output, total human review/rework, tokens and integration defects. A research benchmark gain is not a coding promise.</p>
 <p class="muted"><b>Primary source:</b> <a href="https://www.anthropic.com/research/multi-agent-research-system" target="_blank" rel="noopener noreferrer">Anthropic, How we built our multi-agent research system (13 Jun 2025)</a>: “most coding tasks involve fewer truly parallelizable tasks than research”.</p>
+<p>Peer messages can resolve interface changes before integration. Use <a href="#m5-l8">lesson 5.8</a> to practice that path. A message does not grant new authority. A worker is read-only only if the actual tool/process policy enforces it; a role label or worktree does not create that boundary.</p>
 <div class="takeaway"><span class="eyebrow">Takeaway</span><p><span class="hl">A brief is a work contract;</span> permissions, monitoring and integrated acceptance are separate controls.</p></div>
 <div class="quiz" data-correct="1"><span class="eyebrow">Quick check</span><p class="quiz-q">The suite missed three recent bugs. What precedes fan-out?</p><button class="quiz-opt" onclick="quizPick(this,0)"><span class="quiz-letter">A</span><span>Increase agent count so somebody must find each defect.</span></button><button class="quiz-opt" onclick="quizPick(this,1)"><span class="quiz-letter">B</span><span>Add reproducible regressions, agree interfaces and narrow permissions, then pilot with independent review.</span></button><button class="quiz-opt" onclick="quizPick(this,2)"><span class="quiz-letter">C</span><span>Give only the diff to the largest model and treat it as a quality guarantee.</span></button><div class="quiz-feedback" role="status" data-explain="B addresses oracle and integration weaknesses before scaling. A does not guarantee detection. C withholds acceptance context and mistakes model capability for assurance. Measure total review/rework and accepted output in the pilot."></div></div>
   </div>
@@ -1270,7 +1275,7 @@ footer.site{border-top:1px solid var(--border);padding:26px 24px;text-align:cent
   <div class="lesson-body">
 <div class="objectives"><span class="eyebrow">After this lesson you can</span><ul><li>Translate persona job titles into tasks, permissions and acceptance criteria.</li><li>Choose topology by task dependencies rather than the largest benchmark gain.</li><li>Place human checkpoints according to risk and unresolved decisions.</li></ul></div>
 <p>You create PO, Designer, PM, BA, Dev and QA characters. Their messages are polite, but decisions remain incompatible. Role names aid communication without specifying who may edit what or who verifies the result.</p>
-<p>A role-as-bundle contains objectives, tools, permissions, output and acceptance checks. A persona frames a perspective; it creates neither domain expertise nor a security principal. This lesson does not establish that all personas must be removed or that exactly one lead is always best.</p>
+<p>A role-as-bundle specifies the objective, tools, effective rights, output and acceptance check. A persona supplies a viewpoint; it does not create expertise or an isolated identity.</p>
 <div class="table-wrap"><table><thead><tr><th>Role label</th><th>Checkable bundle</th><th>Human intervention</th></tr></thead><tbody><tr><td>QA</td><td>Read spec + diff, reproduce defects, report severity and evidence; do not edit another worker’s files.</td><td>Conflicting oracle or an unverified finding.</td></tr><tr><td>Designer</td><td>Review the main flow, errors and accessibility against approved requirements.</td><td>An unresolved experience tradeoff.</td></tr><tr><td>Lead</td><td>Track dependencies, assign ownership and integrate artifacts with separately bounded runtime rights.</td><td>Scope changes, broader rights or conflicting objectives.</td></tr></tbody></table></div>
 <figure class="figure">
 <div class="diagram-viewport" role="region" tabindex="0" aria-label="Diagram; scroll horizontally to read all labels" style="--diagram-width:760px"><svg aria-label="Topology is a design hypothesis. One lead may suit centralized integration; a pipeline or sequential agent may suit tightly dependent tasks. Task benchmark gains or losses cannot be assigned to a persona org chart." role="img" viewBox="0 0 760 400">
@@ -1303,16 +1308,16 @@ footer.site{border-top:1px solid var(--border);padding:26px 24px;text-align:cent
 <path class="dgm-flow" d="M546 140 L530 166" marker-end="url(#m5l4-ah)" stroke-width="2"></path>
 <path class="dgm-flow" d="M594 140 L610 166" marker-end="url(#m5l4-ah)" stroke-width="2"></path>
 <path class="dgm-flow" d="M640 140 L696 166" marker-end="url(#m5l4-ah)" stroke-width="2"></path>
-<rect class="dgm-box" height="52" rx="10" width="80" x="400" y="170"></rect>
+<rect class="dgm-box" height="62" rx="10" width="80" x="400" y="170"></rect>
 <text class="dgm-ink" font-size="10.5" font-weight="700" text-anchor="middle" x="440" y="191">Scout</text>
-<text class="dgm-ink2" font-size="9.5" text-anchor="middle" x="440" y="207">narrow scope · read-only</text>
-<rect class="dgm-box" height="52" rx="10" width="80" x="488" y="170"></rect>
+<text class="dgm-ink2" font-size="9.5" text-anchor="middle" x="440" y="207"><tspan x="440">narrow scope ·</tspan><tspan x="440" dy="12">read-only</tspan></text>
+<rect class="dgm-box" height="62" rx="10" width="80" x="488" y="170"></rect>
 <text class="dgm-ink" font-size="10.5" font-weight="700" text-anchor="middle" x="528" y="191">Build</text>
 <text class="dgm-ink2" font-size="9.5" text-anchor="middle" x="528" y="207">4-field brief</text>
-<rect class="dgm-box" height="52" rx="10" width="80" x="576" y="170"></rect>
+<rect class="dgm-box" height="62" rx="10" width="80" x="576" y="170"></rect>
 <text class="dgm-ink" font-size="10.5" font-weight="700" text-anchor="middle" x="616" y="191">Verify</text>
 <text class="dgm-ink2" font-size="9.5" text-anchor="middle" x="616" y="207">own context</text>
-<rect class="dgm-box" height="52" rx="10" width="80" x="664" y="170"></rect>
+<rect class="dgm-box" height="62" rx="10" width="80" x="664" y="170"></rect>
 <text class="dgm-ink" font-size="10.5" font-weight="700" text-anchor="middle" x="704" y="191">Red team</text>
 <text class="dgm-ink2" font-size="9.5" text-anchor="middle" x="704" y="207">calibrated lens</text>
 <rect class="dgm-box" height="40" rx="10" width="344" x="400" y="240"></rect>
@@ -1325,8 +1330,10 @@ footer.site{border-top:1px solid var(--border);padding:26px 24px;text-align:cent
 </svg></div>
 <figcaption>Topology is a design hypothesis. One lead may suit centralized integration; a pipeline or sequential agent may suit tightly dependent tasks. Task benchmark gains or losses cannot be assigned to a persona org chart.</figcaption>
 </figure>
-<h4>Apply it</h4><p>Pilot matched work with a sequential baseline and the proposed setup. Record time to accepted output, total human review/rework, cost and escaped defects. Zero reviewer findings may mean correct output, a weak oracle or missed bugs. Seed known defects to calibrate detection rather than forcing a reviewer to invent a finding every run. Intent → plan approval → acceptance is a pilot cadence, not a ban on intermediate human intervention. Ask for help when data are missing, risk is high or rights must expand; allow abstention instead of guessing. Assign an integration owner and separate file ownership while checking API contracts across files.</p>
+<h4>Apply it</h4><p>Choose a setup for each fixture: (a) a schema migration whose later steps depend on the first decision; (b) independent accessibility and API reviews; (c) API/UI workers negotiating a shared field. Start with sequential execution for (a), separate first-pass reviews for (b), and targeted peer messages plus a versioned contract for (c). Change the setup if measured integration cost outweighs the benefit.</p>
+<p>Compare time to accepted output, human review/rework, tool/model cost and escaped defects on matched work. Seed known bugs to check reviewer sensitivity; zero findings alone cannot distinguish correct code from missed bugs. Intent → plan approval → acceptance is this pilot’s cadence. If human approval is required, place it at an explicit human-controlled gate; an automated agent plan review is a different event.</p>
 <p class="muted"><b>Primary source:</b> <a href="https://code.claude.com/docs/en/agent-teams" target="_blank" rel="noopener noreferrer">Claude Code: Agent teams</a>.</p>
+<p class="muted"><b>Research:</b> <a href="https://arxiv.org/abs/2512.08296" target="_blank" rel="noopener noreferrer">Towards a Science of Scaling Agent Systems</a> compares tasks and coordination architectures. Its benchmark results do not identify a universally best persona org chart or predict your team’s speedup.</p>
 <div class="takeaway"><span class="eyebrow">Takeaway</span><p><span class="hl">Evaluate roles by tasks, permissions and</span> evidence; choose coordination by dependencies and pilot outcomes.</p></div>
 <div class="quiz" data-correct="0"><span class="eyebrow">Quick check</span><p class="quiz-q">Six personas exchange many messages but produce incompatible output. What next?</p><button class="quiz-opt" onclick="quizPick(this,0)"><span class="quiz-letter">A</span><span>Specify bundles, interfaces and ownership; pilot a simple topology and measure acceptance and rework.</span></button><button class="quiz-opt" onclick="quizPick(this,1)"><span class="quiz-letter">B</span><span>Add a Scrum Master persona to guarantee alignment.</span></button><button class="quiz-opt" onclick="quizPick(this,2)"><span class="quiz-letter">C</span><span>Ban all personas because every multi-agent system underperforms one agent.</span></button><div class="quiz-feedback" role="status" data-explain="A makes responsibilities and outputs checkable. B adds coordination before identifying the failure mechanism. C turns task-dependent results into an absolute rule. One lead is a configuration to test, not a conclusion from one benchmark number."></div></div>
   </div>
@@ -1370,17 +1377,18 @@ footer.site{border-top:1px solid var(--border);padding:26px 24px;text-align:cent
 <rect class="dgm-accent" height="64" rx="10" stroke-width="2" width="188" x="556" y="150"></rect>
 <text class="dgm-ink" font-size="11.5" font-weight="700" text-anchor="middle" x="650" y="172">Approval gate — human</text>
 <text class="dgm-ink2" font-size="10" text-anchor="middle" x="650" y="189">push · deploy · delete · outbound</text>
-<text class="dgm-ink2" font-size="10" text-anchor="middle" x="650" y="205">(the red cells from lesson 5.3)</text>
+<text class="dgm-ink2" font-size="10" text-anchor="middle" x="650" y="205">(writes requiring review in this pilot)</text>
 <rect class="dgm-warn" height="48" rx="10" width="728" x="16" y="250"></rect>
 <text class="dgm-ink" font-size="11" font-weight="700" x="32" y="270">Sender authentication does not authorize instructions inside fetched content.</text>
 <text class="dgm-ink" font-size="11" x="32" y="288">Data labels guide the model; separate credentials and tested output gates constrain effects.</text>
-<text class="dgm-ink2" font-size="10.5" x="16" y="322">Per-agent credentials · a one-action kill-switch for the whole fleet · logs that can trace any command</text>
+<text class="dgm-ink2" font-size="10.5" x="16" y="322">Stop design target: parent + children + schedules; verify each executor.</text>
 <defs><marker id="m5l5-ah" markerHeight="9" markerWidth="9" orient="auto" refX="7" refY="4.5"><path d="M0 0 L9 4.5 L0 9 z" fill="var(--accent-2)"></path></marker></defs>
 </svg></div>
 <figcaption>This is a design example, not certification of a particular bot. Even reading and reporting can leak data if scope or output paths are wrong.</figcaption>
 </figure>
 <h4>Apply it</h4><p>Exercise with a synthetic repo and dummy token: put a push instruction in an issue; verify the credential cannot write through shell or alternate API routes. Stop the run externally, revoke the token and retry the API call; it must fail. Record run ID, source event, tool call, target and outcome without raw secrets. Enforce budgets, concurrency/rate limits and timeout outside the model. A verbal refusal is insufficient if a tool still executes. If identity or scope is uncertain, draft or abstain and notify the owner. Inspect each platform’s effective permissions rather than memorizing launch dates or star counts.</p>
 <p class="muted"><b>Primary source:</b> <a href="https://code.claude.com/docs/en/permissions" target="_blank" rel="noopener noreferrer">Claude Code: Permissions</a>.</p>
+<p>A message from another agent is not user consent. This pilot reviews the listed writes; a deployed workflow may act within explicit standing authorization and policy. When stopping, enumerate the main task, delegated work and recurring triggers, then check each executor. In dots, Pause affects the main task; Activity and Scheduled have separate stop controls. See <a href="#m5-l10">lesson 5.10</a>.</p>
 <div class="takeaway"><span class="eyebrow">Takeaway</span><p><span class="hl">Read access to content does not</span> authorize its author; verify output paths through real permissions and stop drills.</p></div>
 <div class="quiz" data-correct="1"><span class="eyebrow">Quick check</span><p class="quiz-q">A public issue tells the bot to push --force. Which setup fits?</p><button class="quiz-opt" onclick="quizPick(this,0)"><span class="quiz-letter">A</span><span>Add only a capitalized system instruction.</span></button><button class="quiz-opt" onclick="quizPick(this,1)"><span class="quiz-letter">B</span><span>No push credential; sourced input; all write paths constrained by tested rights/gates and an external stop.</span></button><button class="quiz-opt" onclick="quizPick(this,2)"><span class="quiz-letter">C</span><span>A sender allowlist automatically removes all injection in issues.</span></button><div class="quiz-feedback" role="status" data-explain="B uses layers but still needs bypass and exfiltration tests. A is probabilistic guidance alone. C confuses command senders with readable content; public data remains untrusted."></div></div>
   </div>
@@ -1428,16 +1436,20 @@ footer.site{border-top:1px solid var(--border);padding:26px 24px;text-align:cent
 <path class="dgm-flow" d="M300 256 L310 256" marker-end="url(#m5l6-ah)" stroke-width="2"></path>
 <path class="dgm-flow" d="M448 196 L458 196" marker-end="url(#m5l6-ah)" stroke-width="2"></path>
 <path class="dgm-flow" d="M596 136 L606 136" marker-end="url(#m5l6-ah)" stroke-width="2"></path>
-<text class="dgm-ink2" font-size="10.5" x="16" y="40">Automation increases →  (and a loop can climb: run rung 1 by hand for a week before hanging it on rung 4)</text>
+<text class="dgm-ink2" font-size="10.5" x="16" y="40">A pilot path: test representative cases before changing triggers or permissions.</text>
 <rect class="dgm-warn" height="48" rx="10" width="580" x="164" y="330"></rect>
-<text class="dgm-ink" font-size="11" font-weight="700" x="180" y="350">The higher the rung, the harder the gates — not optional:</text>
+<text class="dgm-ink" font-size="11" font-weight="700" x="180" y="350">Each environment needs controls matched to its risks:</text>
 <text class="dgm-ink" font-size="11" x="180" y="368">max-turns · timeouts · daily run caps · token budget · read-only + safe outputs</text>
 <defs><marker id="m5l6-ah" markerHeight="9" markerWidth="9" orient="auto" refX="7" refY="4.5"><path d="M0 0 L9 4.5 L0 9 z" fill="var(--accent-2)"></path></marker></defs>
 </svg></div>
 <figcaption>The thresholds are exercise settings, not universal safe values. Green means the wrapper met its completion contract; task outcome needs its own artifact check.</figcaption>
 </figure>
-<h4>Apply it</h4><p>Try empty, missing and repeated-failure log fixtures by hand before scheduling. Start read-only; creating issues/comments is itself an external write requiring rights. Record prompt revision, input snapshot, tool outcomes and cost. Stop on budget, timeout, missing authorization or no progress; the agent may not raise its own cap. CI must handle untrusted PR content and isolate secrets. Headless commands and hook syntax vary by platform/version: check documentation and test a sandbox run instead of copying an old feature table.</p>
+<h4>Apply it</h4><p>Try empty, missing and repeated-failure logs before scheduling. Record input/prompt revision, outputs and external caps. Check the chosen runner’s supported hooks, tools and failure behavior. Scheduling starts work; recovery needs persisted state and reconciliation.</p>
 <p class="muted"><b>Primary source:</b> <a href="https://code.claude.com/docs/en/best-practices" target="_blank" rel="noopener noreferrer">Claude Code: Best practices</a>.</p>
+<h4>Resume after an uncertain write</h4><p>Use this synthetic trace: a runner creates a draft issue in a fake service, then crashes before saving success. The service committed the write; the runner does not know the result. A stable action key must be persisted before sending the request.</p>
+<div class="table-wrap"><table><thead><tr><th>Event</th><th>Runner ledger</th><th>Fake service</th></tr></thead><tbody><tr><td>Before request</td><td>run-42; input r18; action key issue-42; running</td><td>No record yet</td></tr><tr><td>Write accepted; runner crashes</td><td>Still running; result unknown</td><td>issue-7 exists with action key issue-42</td></tr><tr><td>Resume same task</td><td>Reconcile by key; verify content; save receipt</td><td>One issue, not a second issue</td></tr></tbody></table></div>
+<p>Exercise: simulate two cases: the service commits but its receipt is lost; the request never reaches the service. Reconcile destination state in each case. Write <code>recovery-log.md</code> with the retained key, observed destination state and next action. If the destination supports idempotency keys, retry with the same key and verify its semantics. Otherwise query/reconcile first; if the result cannot be established, keep it unknown and request a decision. A retry cap alone does not prevent duplicates.</p>
+<p>For executable crash/restart exercises use the <a href="ai-application-engineering.html#m5-l1">AI Application Lab (Vietnamese)</a>. Its atomic effect and receipt are in one local SQLite transaction; that property does not extend to an external API.</p><p class="muted"><b>Sources:</b> <a href="https://www.anthropic.com/engineering/effective-harnesses-for-long-running-agents" target="_blank" rel="noopener noreferrer">long-running agent harnesses</a>; <a href="https://docs.langchain.com/oss/python/langgraph/fault-tolerance" target="_blank" rel="noopener noreferrer">checkpoint replay and external side effects</a>.</p>
 <div class="takeaway"><span class="eyebrow">Takeaway</span><p><span class="hl">Package repeated work into bounded runs;</span> wrapper completion, task correctness and authorization are separate checks.</p></div>
 <div class="quiz" data-correct="2"><span class="eyebrow">Quick check</span><p class="quiz-q">How should a morning CI-failure summary begin?</p><button class="quiz-opt" onclick="quizPick(this,0)"><span class="quiz-letter">A</span><span>A full-write agent holding “keep CI green forever”.</span></button><button class="quiz-opt" onclick="quizPick(this,1)"><span class="quiz-letter">B</span><span>An uncapped while-true loop to catch failures fastest.</span></button><button class="quiz-opt" onclick="quizPick(this,2)"><span class="quiz-letter">C</span><span>Fixtures and a read-only report with evidence checks, external caps/timeouts; hand trials before scheduling.</span></button><div class="quiz-feedback" role="status" data-explain="C defines checkable input/output and stopping. A expands rights beyond reading. B lacks backpressure or a cost bound; a prompt asking the model to stop cannot replace an external cap."></div></div>
   </div>
@@ -1484,7 +1496,7 @@ footer.site{border-top:1px solid var(--border);padding:26px 24px;text-align:cent
 <path class="dgm-flow" d="M346 179 L416 179" marker-end="url(#m5l7-ah)" stroke-width="2"></path>
 <rect class="dgm-box" height="46" rx="10" width="330" x="16" y="214"></rect>
 <text class="dgm-ink" font-family="IBM Plex Mono" font-size="12" font-weight="700" x="32" y="234">.github/workflows/…</text>
-<text class="dgm-ink2" font-size="10" x="32" y="251">CI loops (rungs 3–5 of the 5.6 ladder)</text>
+<text class="dgm-ink2" font-size="10" x="32" y="251">CI and scheduled runners (lesson 5.6)</text>
 <rect class="dgm-box" height="46" rx="10" width="324" x="420" y="214"></rect>
 <text class="dgm-ink" font-size="11" x="436" y="234">Runs on schedules/repo events, read-only,</text>
 <text class="dgm-ink" font-size="11" x="436" y="251">writes via safe outputs</text>
@@ -1508,6 +1520,78 @@ footer.site{border-top:1px solid var(--border);padding:26px 24px;text-align:cent
   </div>
   <div class="lesson-nav" data-navfor="m5-l7"></div>
 </article>
+<article class="lesson" id="m5-l8" data-lesson>
+  <div class="lesson-head"><div><span class="eyebrow">Lesson 5.8</span><h3>Agent messages: handoffs and contract revisions</h3></div></div>
+  <div class="lesson-body">
+<div class="objectives"><span class="eyebrow">By the end you can</span><ul><li>Choose a suitable messaging route.</li><li>Match a message to its revision and evidence.</li></ul></div>
+<p>The API renamed a field, but the UI worker still sends “done” against the old version. If the lead reads only the final message, the two patches will not integrate. Messages need to identify the contract currently in force.</p>
+<p>Claude Code supports messaging named subagents and messaging between sessions; every exchange need not become an agent team. In OpenAI Responses Multi-agent, <code>send_message</code> queues a message without starting a new turn; <code>followup_task</code> assigns more work and starts or resumes a non-root agent’s turn. Check the actual mechanism before waiting for a response. A message does not itself grant permissions or transfer the full context.</p>
+<p>MCP provides tools, resources and prompts; A2A describes communication between agent services through messages, tasks and artifacts. They complement each other. MCP has a Tasks extension for deferred results, outside core since revision 2026-07-28; both client and server must declare support. “MCP is synchronous, A2A is asynchronous” is an inaccurate distinction. Native messaging does not itself establish A2A compatibility.</p>
+<figure class="figure"><div class="table-wrap"><table><thead><tr><th>Synthetic trace</th><th>Message / artifact</th><th>Lead’s response</th></tr></thead><tbody><tr><td>1 · API → UI</td><td>r17: <code>retryAfter</code> in seconds</td><td>Record the current contract.</td></tr><tr><td>2 · Lead → both</td><td>r18: <code>retry_after_ms</code> in milliseconds</td><td>Request ACK r18.</td></tr><tr><td>3 · UI → lead, delayed</td><td>done r17; <code>ui-test.log</code></td><td>Reject acceptance; request an update.</td></tr><tr><td>4 · UI → lead</td><td>ACK r18; then patch + tests for r18</td><td>Check API/UI integration, then record accepted.</td></tr></tbody></table></div><figcaption>ACK confirms receipt of the contract; accepted follows output verification.</figcaption></figure>
+<h4>A message to adapt</h4>
+<p>This is a local recipe, not a protocol schema:</p>
+<div class="prompt-card"><div class="prompt-head"><span>Message envelope</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div><pre>msg_id: msg-042
+task: quota-ui; from: lead; to: ui-worker
+revision: r18; contract: retry_after_ms = milliseconds
+action: update UI + boundary test
+evidence: contracts/r18.md
+deadline: 16:00 Asia/Ho_Chi_Minh
+reply: ACK r18; blocked + missing input; or result + paths</pre></div>
+<p>Your workflow records processed <code>msg_id</code> values so duplicate messages do not create duplicate work; do not assume runtime deduplication. After the deadline, ask for status before reassigning. When blocked, identify the missing input and the decision owner; on cancellation, record the final state and confirm the worker stopped.</p>
+<h4>Practice</h4><p>Have two reviewers inspect the API/UI fixture separately and save their first findings before communicating. Then send r18, deliberately delay a “done r17” message and repeat <code>msg-042</code>. Submit <code>handoff.md</code>: messages received, results accepted/rejected, evidence and outstanding decisions.</p>
+<p class="muted"><b>Sources:</b> <a href="https://code.claude.com/docs/en/sub-agents" target="_blank" rel="noopener noreferrer">Claude subagents</a>, <a href="https://code.claude.com/docs/en/cross-session-messaging" target="_blank" rel="noopener noreferrer">cross-session messaging</a>, <a href="https://developers.openai.com/api/docs/guides/responses-multi-agent" target="_blank" rel="noopener noreferrer">OpenAI Multi-agent</a>, <a href="https://a2a-protocol.org/latest/topics/a2a-and-mcp/" target="_blank" rel="noopener noreferrer">A2A and MCP</a>, <a href="https://modelcontextprotocol.io/extensions/tasks/overview" target="_blank" rel="noopener noreferrer">MCP Tasks</a>.</p>
+<div class="takeaway"><span class="eyebrow">Takeaway</span><p><span class="hl">Receiving a message is not acceptance;</span> accept output only against the current contract and revision.</p></div>
+<div class="quiz" data-correct="1"><span class="eyebrow">Quick check</span><p class="quiz-q">The lead receives “done r17” after agreeing r18. What next?</p><button class="quiz-opt" onclick="quizPick(this,0)"><span class="quiz-letter">A</span><span>Accept it because the worker finished.</span></button><button class="quiz-opt" onclick="quizPick(this,1)"><span class="quiz-letter">B</span><span>Request the update and verify output for r18.</span></button><button class="quiz-opt" onclick="quizPick(this,2)"><span class="quiz-letter">C</span><span>Relabel the artifact as r18.</span></button><div class="quiz-feedback" role="status" data-explain="B checks the current contract. A confuses the end of a turn with acceptance. C changes a label without changing behavior or evidence."></div></div>
+  </div><div class="lesson-nav" data-navfor="m5-l8"></div>
+</article>
+
+<article class="lesson" id="m5-l9" data-lesson>
+  <div class="lesson-head"><div><span class="eyebrow">Lesson 5.9</span><h3>Steering from a phone: where does the work run?</h3></div></div>
+  <div class="lesson-body">
+<div class="objectives"><span class="eyebrow">By the end you can</span><ul><li>Identify the executor and artifact location.</li><li>Reconnect without repeating an action whose outcome is unknown.</li></ul></div>
+<p>Your phone disconnects immediately after a command to create an artifact. Retrying may create a second copy; assuming work stopped may overlook a running process. Separate the control screen from the executor: the machine or environment doing the work.</p>
+<p>Claude Remote Control keeps execution on the original computer. OpenAI Remote connections use the connected host’s projects, chats, files, credentials and permissions. That host must remain available; closing the phone does not move work to the cloud. You can still inspect diffs/tests, answer questions, narrow scope and approve actions remotely.</p>
+<figure class="figure"><div class="table-wrap"><table><thead><tr><th>Work route</th><th>Executor</th><th>Required availability</th></tr></thead><tbody><tr><td>Phone → local session</td><td>Original host</td><td>Computer, app/process and network remain available.</td></tr><tr><td>Phone → SSH project</td><td>Project’s remote host</td><td>Connection route and remote environment are available.</td></tr><tr><td>OpenAI dots → cloud coding</td><td>Configured Codex cloud environment</td><td>Environment’s repo, setup and permissions; laptop can be offline.</td></tr></tbody></table></div><figcaption>Changing screens does not change the executor. Disconnection does not automatically migrate a task to the cloud.</figcaption></figure>
+<p>Changing dots’ selected computer does not move an existing task. Codex offers an explicit handoff between suitable hosts; that is a separate transfer action, not automatic recovery when a host sleeps. On reconnecting, check the actual run location before sending another command.</p>
+<h4>An approval packet readable on a phone</h4><p>Bind the decision to the correct run. This synthetic example permits only a local artifact:</p>
+<div class="prompt-card"><div class="prompt-head"><span>Run + approval packet</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div><pre>host: lab-mac; project: fixture-export
+run: export-09; revision: r18
+action: run fixture test; write artifacts/export-09.csv
+expected: 3 rows; no external write
+evidence: diff.patch + test.log
+decision: approve this action / request change
+unknown outcome: query run + artifact before retry</pre></div>
+<h4>Reconnect drill</h4><p>Create <code>fixture-export</code>: a script exporting three synthetic rows to local CSV and a test checking all three rows. Save the command in the repo. Without a remote app, use two terminals on one machine to practise leaving the control session and reconnecting; this does not test the vendor’s mobile connection.</p><p>Create <code>run-map.md</code> from the packet. Start the test in a fake repo and disconnect the phone’s network. Reconnect, query the run, open the artifact and check its row count before deciding whether to retry. In a separate disposable run, stop the executor and record what needs resuming. A disconnected phone is not evidence that the executor stopped.</p>
+<p>If asked to stop everything, check the parent, child workers, background processes and schedules separately; record the states you actually observe. One session’s stop button does not establish that other executors stopped. Match evidence to the correct revision, as in lesson 5.8.</p>
+<p class="muted"><b>Sources:</b> <a href="https://code.claude.com/docs/en/remote-control" target="_blank" rel="noopener noreferrer">Claude Remote Control</a>, <a href="https://learn.chatgpt.com/docs/remote-connections" target="_blank" rel="noopener noreferrer">OpenAI Remote connections</a>, <a href="https://learn.chatgpt.com/docs/dots/tasks-and-memory" target="_blank" rel="noopener noreferrer">dots: task locations</a>.</p>
+<div class="takeaway"><span class="eyebrow">Takeaway</span><p><span class="hl">Identify the executor before steering remotely;</span> on reconnecting, inspect status and artifacts before retrying.</p></div>
+<div class="quiz" data-correct="2"><span class="eyebrow">Quick check</span><p class="quiz-q">The phone loses its connection after an artifact-creation command. What next?</p><button class="quiz-opt" onclick="quizPick(this,0)"><span class="quiz-letter">A</span><span>Repeat the command to ensure there is a result.</span></button><button class="quiz-opt" onclick="quizPick(this,1)"><span class="quiz-letter">B</span><span>Treat the task as stopped along with the phone.</span></button><button class="quiz-opt" onclick="quizPick(this,2)"><span class="quiz-letter">C</span><span>Reconnect to the correct executor; query the run and artifact.</span></button><div class="quiz-feedback" role="status" data-explain="C resolves the unknown outcome before retrying. A may repeat an already successful action. B confuses losing the control screen with stopping execution."></div></div>
+  </div><div class="lesson-nav" data-navfor="m5-l9"></div>
+</article>
+
+<article class="lesson" id="m5-l10" data-lesson>
+  <div class="lesson-head"><div><span class="eyebrow">Lesson 5.10</span><h3>From personal assistant to a draft PR</h3></div></div>
+  <div class="lesson-body">
+<div class="objectives"><span class="eyebrow">By the end you can</span><ul><li>Turn bug reports into a coding-worker brief.</li><li>Evaluate correctness and total human effort.</li></ul></div>
+<p>An assistant receives three CSV bug reports: two duplicates and one missing a reproduction step. Giving all three to a coding worker adds review work. The first output should be a deduplicated issue draft that explicitly records what is missing.</p>
+<figure class="figure"><div class="table-wrap"><table><thead><tr><th>Product</th><th>Vendor-described capability</th><th>Handoff implication</th></tr></thead><tbody><tr><td><a href="https://about.fb.com/news/2026/09/introducing-muse-personal-ai-agent/" target="_blank" rel="noopener noreferrer">Meta Muse</a></td><td>Dedicated cloud VM; interaction through its app/WhatsApp.</td><td>The assistant has an executor beyond the phone.</td></tr><tr><td><a href="https://learn.chatgpt.com/docs/dots/tasks-and-memory" target="_blank" rel="noopener noreferrer">OpenAI dots</a></td><td>Delegates Work/Codex tasks; prepared local or cloud environments.</td><td>Choose the environment before assigning coding work.</td></tr><tr><td><a href="https://docs.x.ai/grok-bot/overview" target="_blank" rel="noopener noreferrer">xAI’s Grok Bot</a></td><td>Cloud computer and connected apps; your Bots share one cloud computer.</td><td>Several Bots do not imply separate computers.</td></tr></tbody></table></div><figcaption>These are documented capabilities, not a benchmark or a promise of shared connectors/A2A integration.</figcaption></figure>
+<p>“Dot” can refer to another product; this lesson specifically means OpenAI dots. Use native delegation where available. If a tool lacks it, manually transferring the brief and artifacts still completes the exercise; no integration between these products is assumed.</p>
+<h4>From report to review</h4><p>The assistant writes <code>triage.md</code>: source IDs, version, expected behavior, actual behavior, unknowns and duplicate groups. The owner accepts expected behavior before the worker changes code. The worker reproduces the failure, patches it and runs tests; the assistant packages the diff, revision, commands/results and limitations for review. Open a draft PR only if authorized; a local <code>draft-pr.md</code> completes this exercise.</p>
+<div class="prompt-card"><div class="prompt-head"><span>Prompt for a fake repo</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div><pre>Fake repo fixture-export, base r18, synthetic data.
+Limit inspection to reports/B1.md, B2.md, B3.md and CSV code/tests.
+Deduplicate; draft an issue with source/version/expected/actual/unknowns.
+Wait for the owner to accept expected behavior, then assign reproduction + patch + tests.
+Return triage.md, reproduction, diff, test.log and draft-pr.md.
+If a reproduction step is missing, ask; do not invent it.
+No outbound messages, real issues/PRs or merging.</pre></div>
+<p>Use fixture-export from lesson 5.9 and deliberately change the exporter to drop the last row. Create B1/B2 both reporting “expected 3 rows, actual 2 rows”; B3 reports a failure but omits its input or reproduction steps. Score correct deduplication, retained facts, marked unknowns and whether the patch meets agreed expectations. Record total human minutes for briefing, answering questions, review and rework; count missed facts. Shorter agent runtime alone does not establish less human work.</p>
+<p>In dots, <a href="https://learn.chatgpt.com/docs/dots/controls" target="_blank" rel="noopener noreferrer">Pause</a> stops the current main task; open delegated tasks in Activity to stop them separately. Open Scheduled to disable/delete future recurring work. Verify all three states separately in the drill.</p>
+<p>For depth: <a href="ai-application-engineering.html">AI Application Lab (Vietnamese)</a> covers workflows and verification; <a href="ai-work-agents-practical-guide.html">AI Work Agents (Vietnamese)</a> covers delegated office work.</p>
+<div class="takeaway"><span class="eyebrow">Takeaway</span><p><span class="hl">Give the worker a brief with agreed expected behavior;</span> receive evidence and a draft for the owner to review.</p></div>
+<div class="quiz" data-correct="0"><span class="eyebrow">Quick check</span><p class="quiz-q">The worker lacks a reproduction step although the assistant remembers the goal. What helps?</p><button class="quiz-opt" onclick="quizPick(this,0)"><span class="quiz-letter">A</span><span>Add sources to the brief and explicitly mark missing details.</span></button><button class="quiz-opt" onclick="quizPick(this,1)"><span class="quiz-letter">B</span><span>Ask the worker to infer it from shared memory.</span></button><button class="quiz-opt" onclick="quizPick(this,2)"><span class="quiz-letter">C</span><span>Open a PR so the reviewer can find the missing step.</span></button><div class="quiz-feedback" role="status" data-explain="A repairs the handoff contract. B assumes fully shared context. C shifts missing information to the reviewer before there is a checkable reproduction."></div></div>
+  </div><div class="lesson-nav" data-navfor="m5-l10"></div>
+</article>
+
     </div><!-- /container module 5 -->
 
     <!-- ============ MODULE 6 ============ -->
@@ -1645,6 +1729,7 @@ footer.site{border-top:1px solid var(--border);padding:26px 24px;text-align:cent
 </figure>
 <h4>Apply it</h4><p>Exercise: a stable review lane completes 4 PRs/day; a one-day average target gives WIP 4 by Little’s Law. Use fewer workers for dependencies or difficult review; WIP is not a default agent count. Regressions use a fixed task/protocol, with repeats and uncertainty for noisy metrics; hard invariant breaches block immediately. Operational budget: 1,000 eligible operations, 98% SLO, 6 failures leaves 14 in the defined window. An eval at 94% below a 98% gate is separate and may hold rollout despite remaining budget. Rights expand only with an accountable risk decision; throughput, spare budget or a stronger model do not authorize actions. Reassess accepted output, total human hours, cost, backlog and post-release defects.</p>
 <p class="muted"><b>Primary source:</b> <a href="https://www.anthropic.com/research/demystifying-evals-for-ai-agents" target="_blank" rel="noopener noreferrer">Anthropic, Demystifying evals for AI agents (09 Jan 2026)</a>.</p>
+<h4>Deliver a review packet</h4><p>Apply lessons 5.8–5.10 to one synthetic bug: prepare <code>triage.md</code> with sources and unknowns; <code>handoff.md</code> with owners, contract revision and resolved peer findings; <code>run-map.md</code> with executor, task ID and artifact location; and <code>draft-pr.md</code> linking the patch and checks. Include the uncertain-write trace from <code>recovery-log.md</code>. Keep all records on the same task/revision. Manual handoff is valid; creating a real PR is optional and requires the intended repo’s write authorization.</p><p>Acceptance: another developer can reproduce the reported bug, see the relevant test fail before the patch and pass after it, explain how a stale message is rejected, and identify how to stop delegated work. A polished summary with missing artifacts does not pass.</p>
 <div class="takeaway"><span class="eyebrow">Takeaway</span><p><span class="hl">A pilot needs ownership, oracles and</span> bounded authority; scaling and rights changes require evidence and authorization.</p></div>
 <div class="quiz" data-correct="0"><span class="eyebrow">Quick check</span><p class="quiz-q">Eval is below its gate while operational budget remains. Expand permissions?</p><button class="quiz-opt" onclick="quizPick(this,0)"><span class="quiz-letter">A</span><span>Hold rollout to investigate the gate; new rights still require separate risk review and authorization.</span></button><button class="quiz-opt" onclick="quizPick(this,1)"><span class="quiz-letter">B</span><span>Yes: spare budget permits more autonomy.</span></button><button class="quiz-opt" onclick="quizPick(this,2)"><span class="quiz-letter">C</span><span>Changing the model alone is enough.</span></button><div class="quiz-feedback" role="status" data-explain="A separates eval criteria, operational budget and authority. B conflates denominators with rights. C does not establish oracle correctness, outcomes or scope."></div></div>
   </div>
@@ -1677,7 +1762,7 @@ footer.site{border-top:1px solid var(--border);padding:26px 24px;text-align:cent
 <div class="objectives"><span class="eyebrow">After this lesson you can</span><ul><li>Connect the lessons into one operating loop.</li><li>Keep measurement, authorization and acceptance separate.</li><li>Use the checklist on a bounded pilot.</li></ul></div>
 <p>On Monday the team asks where to begin. Use this as a map back to the worked examples, not a substitute for their assumptions.</p>
 <p>The core loop is scoped task → evidence → acceptance → learning. Configuration and shared artifacts carry lessons; people and external enforcement remain responsible for authority, oracle quality and impact.</p>
-<div class="table-wrap"><table><thead><tr><th>Lesson</th><th>Takeaway</th></tr></thead><tbody><tr><td>1.1</td><td>Autonomy is a decision about task, authority and evidence; green checks require correct oracles and risk-based acceptance.</td></tr><tr><td>1.2</td><td>Adoption share is not productivity; ROI requires accepted output, complete costs and an explicit comparison design.</td></tr><tr><td>1.3</td><td>Measure waiting and total effort; generated code is not proof of delivered value.</td></tr><tr><td>2.1</td><td>Planning reduces unresolved decisions; document length and artifact count do not establish quality.</td></tr><tr><td>2.2</td><td>Evidence needs run provenance and outcome checks; a green check is only as strong as its oracle and enforcement boundary.</td></tr><tr><td>2.3</td><td>Evaluate tests by their oracle and detected defects; whether to use TDD is a hypothesis to test on your work.</td></tr><tr><td>3.1</td><td>Repo rules supply context; verify loading and enforce critical constraints through rights and gates.</td></tr><tr><td>3.2</td><td>Reduce prompts within authorized tasks while preserving real boundaries; verify rights with action probes.</td></tr><tr><td>3.3</td><td>Versioned configuration makes setup reviewable; effective rights, credentials and trust still require verification in the task environment.</td></tr><tr><td>4.1</td><td>Lessons need the right causal layer, regressions and ownership; test enforcement rather than inferring it from “hook/CI”.</td></tr><tr><td>4.2</td><td>Memory is sourced, expiring context; team learning requires verification, review and regression checks.</td></tr><tr><td>4.3</td><td>A postmortem produces a checkable regression; eval gates, repeated-trial consistency and operational error budgets answer different questions.</td></tr><tr><td>5.1</td><td>Set WIP from measured flow and review capacity; Little’s Law requires a shared boundary and stable averages.</td></tr><tr><td>5.2</td><td>A brief is a work contract; permissions, monitoring and integrated acceptance are separate controls.</td></tr><tr><td>5.3</td><td>Guardrails require tested boundaries, identity, observation and stop/recovery paths; prompts alone are insufficient containment.</td></tr><tr><td>5.4</td><td>Evaluate roles by tasks, permissions and evidence; choose coordination by dependencies and pilot outcomes.</td></tr><tr><td>5.5</td><td>Read access to content does not authorize its author; verify output paths through real permissions and stop drills.</td></tr><tr><td>5.6</td><td>Package repeated work into bounded runs; wrapper completion, task correctness and authorization are separate checks.</td></tr><tr><td>5.7</td><td>Start with small shared artifacts, an oracle and narrow rights; expand automation through tested cases and authorization.</td></tr><tr><td>6.1</td><td>Fit measurement to tasks and risk; keep throughput beside quality and total effort rather than treating one ceremony or tool as the answer.</td></tr><tr><td>6.2</td><td>Specifications serve contracts and learning; choose maintenance commitment by risk and total time to acceptance.</td></tr><tr><td>6.3</td><td>A pilot needs ownership, oracles and bounded authority; scaling and rights changes require evidence and authorization.</td></tr></tbody></table></div>
+<div class="table-wrap"><table><thead><tr><th>Lesson</th><th>Takeaway</th></tr></thead><tbody><tr><td>1.1</td><td>Autonomy is a decision about task, authority and evidence; green checks require correct oracles and risk-based acceptance.</td></tr><tr><td>1.2</td><td>Adoption share is not productivity; ROI requires accepted output, complete costs and an explicit comparison design.</td></tr><tr><td>1.3</td><td>Measure waiting and total effort; generated code is not proof of delivered value.</td></tr><tr><td>2.1</td><td>Planning reduces unresolved decisions; document length and artifact count do not establish quality.</td></tr><tr><td>2.2</td><td>Evidence needs run provenance and outcome checks; a green check is only as strong as its oracle and enforcement boundary.</td></tr><tr><td>2.3</td><td>Evaluate tests by their oracle and detected defects; whether to use TDD is a hypothesis to test on your work.</td></tr><tr><td>3.1</td><td>Repo rules supply context; verify loading and enforce critical constraints through rights and gates.</td></tr><tr><td>3.2</td><td>Reduce prompts within authorized tasks while preserving real boundaries; verify rights with action probes.</td></tr><tr><td>3.3</td><td>Versioned configuration makes setup reviewable; effective rights, credentials and trust still require verification in the task environment.</td></tr><tr><td>4.1</td><td>Lessons need the right causal layer, regressions and ownership; test enforcement rather than inferring it from “hook/CI”.</td></tr><tr><td>4.2</td><td>Memory is sourced, expiring context; team learning requires verification, review and regression checks.</td></tr><tr><td>4.3</td><td>A postmortem produces a checkable regression; eval gates, repeated-trial consistency and operational error budgets answer different questions.</td></tr><tr><td>5.1</td><td>Set WIP from measured flow and review capacity; Little’s Law requires a shared boundary and stable averages.</td></tr><tr><td>5.2</td><td>A brief is a work contract; permissions, monitoring and integrated acceptance are separate controls.</td></tr><tr><td>5.3</td><td>Guardrails require tested boundaries, identity, observation and stop/recovery paths; prompts alone are insufficient containment.</td></tr><tr><td>5.4</td><td>Evaluate roles by tasks, permissions and evidence; choose coordination by dependencies and pilot outcomes.</td></tr><tr><td>5.5</td><td>Read access to content does not authorize its author; verify output paths through real permissions and stop drills.</td></tr><tr><td>5.6</td><td>Package repeated work into bounded runs; wrapper completion, task correctness and authorization are separate checks.</td></tr><tr><td>5.7</td><td>Start with small shared artifacts, an oracle and narrow rights; expand automation through tested cases and authorization.</td></tr><tr><td>5.8</td><td>Receiving a message is not acceptance; accept output only against the current contract and revision.</td></tr><tr><td>5.9</td><td>Identify the executor before steering remotely; on reconnecting, inspect status and artifacts before retrying.</td></tr><tr><td>5.10</td><td>Give the worker a brief with agreed expected behavior; receive evidence and a draft for the owner to review.</td></tr><tr><td>6.1</td><td>Fit measurement to tasks and risk; keep throughput beside quality and total effort rather than treating one ceremony or tool as the answer.</td></tr><tr><td>6.2</td><td>Specifications serve contracts and learning; choose maintenance commitment by risk and total time to acceptance.</td></tr><tr><td>6.3</td><td>A pilot needs ownership, oracles and bounded authority; scaling and rights changes require evidence and authorization.</td></tr></tbody></table></div>
 <figure class="figure">
 <div class="diagram-viewport" role="region" tabindex="0" aria-label="Diagram; scroll horizontally to read all labels" style="--diagram-width:720px"><svg aria-label="Read the loop with the acceptance owner and an external stop path; a green report alone cannot expand authority." role="img" viewBox="0 0 720 440">
 <!-- outer frame: the thesis -->
@@ -1754,7 +1839,7 @@ footer.site{border-top:1px solid var(--border);padding:26px 24px;text-align:cent
       <div class="complete">
         <div class="complete-badge">✓</div>
         <h2>Course complete</h2>
-        <p>A practical course for engineers and tech leads: scope work, verify outcomes, configure narrow rights, learn from failures and measure accepted output with total review/rework. Worked fixtures are synthetic and reproducible; primary sources are linked.</p>
+        <p>Organize work with coding agents: scoped tasks and verification, worker messaging, remote steering and assistant-to-code handoffs. Lessons include synthetic examples, exercises and primary sources.</p>
         <div style="margin-top:26px"><a class="btn btn-primary" href="#overview">Back to overview</a></div>
       </div>
     </section>
@@ -1793,6 +1878,9 @@ const LESSONS = [
   {id:'m5-l5', mod:5, part:'Part V · Team + fleet', title:'Always-on fleets: request entry points and write permissions', desc:"Read access to content does not authorize its author; verify output paths through real permissions and stop drills."},
   {id:'m5-l6', mod:5, part:'Part V · Team + fleet', title:'From repeated work to bounded automated runs', desc:"Package repeated work into bounded runs; wrapper completion, task correctness and authorization are separate checks."},
   {id:'m5-l7', mod:5, part:'Part V · Team + fleet', title:'Where to start: the day-one file kit for an existing repo — and a new one', desc:"Start with small shared artifacts, an oracle and narrow rights; expand automation through tested cases and authorization."},
+  {id:'m5-l8', mod:5, part:'Part V · Team + fleet', title:'Agent messages: handoffs and contract revisions', desc:"Choose a messaging mechanism; bind contracts to revisions and distinguish receipt from acceptance."},
+  {id:'m5-l9', mod:5, part:'Part V · Team + fleet', title:'Steering from a phone: where does the work run?', desc:"Identify the executor when using a phone; inspect status and artifacts before retrying after reconnecting."},
+  {id:'m5-l10', mod:5, part:'Part V · Team + fleet', title:'From personal assistant to a draft PR', desc:"Turn deduplicated reports into an agreed brief, then receive a patch, tests and a draft PR for review."},
   {id:'m6-l1', mod:6, part:'Part VI · Methodology & synthesis', title:'What changes in Agile when the team has agents', desc:"Fit measurement to tasks and risk; keep throughput beside quality and total effort rather than treating one ceremony or tool as the answer."},
   {id:'m6-l2', mod:6, part:'Part VI · Methodology & synthesis', title:'Choose spec maintenance by feedback loop', desc:"Specifications serve contracts and learning; choose maintenance commitment by risk and total time to acceptance."},
   {id:'m6-l3', mod:6, part:'Part VI · Methodology & synthesis', title:'Capstone: a playbook for an example team', desc:"A pilot needs ownership, oracles and bounded authority; scaling and rights changes require evidence and authorization."},
@@ -1951,8 +2039,36 @@ let _st; window.addEventListener('scroll',()=>{clearTimeout(_st);_st=setTimeout(
 },400)},{passive:true});
 
 /* Keyboard navigation: ← → move between lessons (skipped while typing) */
+/* Show a visible cue only when a diagram or table needs local horizontal scrolling. */
+const diagramResize = new ResizeObserver(entries => {
+  entries.forEach(({target}) => {
+    const hint = target.matches('.table-wrap') ? target.firstElementChild : target.previousElementSibling;
+    hint.hidden = target.scrollWidth <= target.clientWidth + 1;
+  });
+});
+document.querySelectorAll('.diagram-viewport,.table-wrap').forEach(region => {
+  const hint = document.createElement('div');
+  hint.className = 'diagram-scroll-hint';
+  hint.hidden = true;
+  hint.setAttribute('aria-hidden', 'true');
+  const isTable = region.matches('.table-wrap');
+  const vi = document.documentElement.lang === 'vi';
+  if (isTable) {
+    region.setAttribute('role', 'region');
+    region.tabIndex = 0;
+    if (!region.hasAttribute('aria-label')) region.setAttribute('aria-label', vi
+      ? 'Bảng dữ liệu; cuộn ngang để xem đầy đủ nội dung'
+      : 'Data table; scroll horizontally to view all columns');
+  }
+  hint.textContent = isTable
+    ? (vi ? '↔ Cuộn ngang để xem toàn bộ bảng' : '↔ Scroll horizontally to view the full table')
+    : (vi ? '↔ Cuộn ngang để xem toàn bộ sơ đồ' : '↔ Scroll horizontally to view the full diagram');
+  if (isTable) region.prepend(hint); else region.before(hint);
+  diagramResize.observe(region);
+});
+
 document.addEventListener('keydown',e=>{
-  if(e.defaultPrevented||e.target.closest?.('input,textarea,select,[contenteditable],.figure,.table-wrap,pre')||e.metaKey||e.ctrlKey||e.altKey)return;
+  if(e.defaultPrevented||e.target.closest?.('input,textarea,select,button,a,[contenteditable],[role="region"],.figure,.table-wrap,pre')||e.metaKey||e.ctrlKey||e.altKey)return;
   if(e.key!=='ArrowLeft'&&e.key!=='ArrowRight')return;
   const cur=document.querySelector('.nav-link.active')?.dataset.lesson;
   const i=LESSONS.findIndex(l=>l.id===cur);

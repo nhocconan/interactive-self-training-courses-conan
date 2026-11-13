@@ -60,7 +60,7 @@ completing every course is not a prerequisite for building an agent.
 | [AI Application Lab](../courses/ai-application-engineering.html) | 12 | Python, JSON, Git and basic SQL | An offline workflow, a completed policy checkpoint and independently checked crash/replay behavior |
 | [Loop Engineering](../courses/loop-engineering.html) | 12 | Context & Harness; Reliability foundations | A bounded loop with an independent verifier and resume state |
 | [MCP & Tool Layer](../courses/mcp-tool-layer.html) | 18 | Context & Harness | A versioned tool contract with authorization and failure checks |
-| [Agentic Software Development](../courses/agentic-software-development.html) · [EN](../courses/agentic-software-development.en.html) | 23 | Context & Harness; software development | A repo playbook with ownership, acceptance checks and review capacity |
+| [Agentic Software Development](../courses/agentic-software-development.html) · [EN](../courses/agentic-software-development.en.html) | 26 | Context & Harness; software development | A repo playbook with peer-message handoffs, remote execution mapping, recovery and a reviewable code change |
 | [RAG](../courses/rag-information-retrieval-course.html) · [EN](../courses/rag-information-retrieval-course.en.html) | 21 | Retrieval basics; Reliability foundations | A query/qrels baseline, ablation and tenant/ACL negative test |
 | [Fine-tuning](../courses/llm-finetuning.html) | 17 | Prompt/context baseline; Python | Leakage-safe data splits and a paired comparison with the baseline |
 | [DSS & Data Warehouse](../courses/dss-datawarehouse-idss-course.html) | 21 | Data and programming basics | A decision/data design with explicit uncertainty and evidence limits |
@@ -108,11 +108,15 @@ superlatives and slogans that restate the heading.
 
 ## Diagram regression gate
 
-`node scripts/audit-svg-clip.mjs` measures actual SVG text bounds and rendered
-font size at 1440px and 375px. The local regression floor is 8 CSS px; this is
+`node scripts/audit-svg-clip.mjs` measures SVG text and shape bounds, clipping
+ancestors, desktop canvas width and rendered font size at 375/768/1440/1920/2560px.
+Run `node scripts/audit-svg-clip.mjs --self-test` to exercise the detector against
+clipped shapes/wrappers, accessible scroll regions and transformed geometry. The local regression floor is 8 CSS px; this is
 not a WCAG font-size certification. Dense diagrams can retain their native scale
 inside a labelled, focusable horizontal scroll region; captions stay at page
-width. Manual inspection still checks meaning, contrast, labels and arrows.
+width. The shared course canvas is 1280px; direct prose keeps a 75ch measure. Dense
+figures show a scroll cue only when needed. Manual inspection still checks
+meaning, contrast, labels and arrows.
 The audit runs in `scripts/verify.sh` and the versioned pre-push hook. Enable the
 hook on a fresh clone with `git config core.hooksPath .githooks`; it needs the
 app's Playwright dependency and an installed Chromium or macOS Google Chrome.

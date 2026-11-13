@@ -15,6 +15,7 @@ echo "== app: vitest =="
 echo "== svg arrow audit =="
 python3 scripts/audit-svg-arrows.py || fail=1
 echo "== svg clipping and readable text (desktop/mobile) =="
+node scripts/audit-svg-clip.mjs --self-test || fail=1
 node scripts/audit-svg-clip.mjs || fail=1
 [ $fail -eq 0 ] && echo "verify: all green ✔ (CHECKLIST §5 browser walk-through still required)" || echo "verify: FAILED"
 exit $fail

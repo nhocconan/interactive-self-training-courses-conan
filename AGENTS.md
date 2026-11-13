@@ -69,11 +69,13 @@ Strong success criteria let you loop independently. Weak criteria ("make it work
 
 ## 5. Course diagram audit
 
-Preserve SVG label scale at 375px and 1440px. The local regression floor is
+Use the shared 1280px course canvas for figures and tables; keep prose readable.
+Preserve SVG label scale at 375/768/1440/1920/2560px. The local regression floor is
 8 rendered CSS px, with subpixel measurement tolerance; it is not a WCAG
 certification. Use a labelled, focusable local scroll region for dense figures
-and keep captions at page width. Inspect labels and arrow meaning in a browser.
+and keep captions at page width. Check painted shapes and clipping ancestors,
+not only text bounds. Inspect labels and arrow meaning in a browser.
 
 | Concern | Rule | Audit | Gate |
 |---|---|---|---|
-| SVG clipping and text below 8 rendered CSS px at 375/1440px | §5 | `scripts/audit-svg-clip.mjs` | `scripts/verify.sh`, `.githooks/pre-push` |
+| SVG/frame clipping, wasted desktop canvas and text below 8 rendered CSS px | §5 | `scripts/audit-svg-clip.mjs` (`--self-test` exercises the detector) | `scripts/verify.sh`, `.githooks/pre-push` |

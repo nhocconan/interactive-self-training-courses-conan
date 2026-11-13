@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 /**
- * Audit SVG text that renders outside its own <svg> box in course HTML files.
+ * Audit SVG content that renders outside its frame or is clipped by a wrapper in course HTML files.
  *
  * The bug: a <text> label is longer than the space the viewBox gives it, so the
  * end of the string is clipped off at the edge of the figure. It is invisible to
@@ -23,12 +23,13 @@
  *
  *   `getBoundingClientRect()` accounts for transforms and for the SVG's own
  *   scaling, so this script compares the <text> rect against its <svg> rect and
- *   nothing else. Measure; do not model.
+ *   also checks painted primitives and clipping ancestors. Measure; do not model.
  *
  * A green run is not a substitute for looking at the figure — it only proves
- * nothing spills out of the frame, not that the label sits where it belongs.
+ * content stays inside its frame and remains reachable, not that the label sits
+ * where it belongs. Large screens also retain the shared 1280px content canvas.
  *
- * Usage:  node scripts/audit-svg-clip.mjs [files...]     (default: courses/*.html)
+ * Usage:  node scripts/audit-svg-clip.mjs [--self-test | files...]     (default: courses/*.html)
  * Exit 1 if anything is flagged.
  */
 import { createRequire } from 'node:module';
@@ -41,7 +42,6 @@ import { createServer } from 'node:http';
 
 const HERE = dirname(fileURLToPath(import.meta.url));
 const ROOT = dirname(HERE);
-const SLACK = 1.0;   // px of overflow to tolerate — sub-pixel rounding, not a bug
 
 const require = createRequire(join(ROOT, 'app', 'node_modules', 'x.js'));
 let chromium;
@@ -78,37 +78,69 @@ function findBrowser() {
 }
 
 const PROBE = () => {
-  // Reveal every lesson: articles are hidden until navigated to, and a hidden
-  // element has no layout, so an un-revealed figure would measure as 0×0.
-  document.querySelectorAll('[data-lesson]').forEach(a => {
+  // Navigation links also have data-lesson; reveal only the lesson articles.
+  document.querySelectorAll('article[data-lesson]').forEach(a => {
     a.style.display = 'block';
     a.hidden = false;
   });
   const out = [];
+  const overflow = (inner, outer) => Object.entries({
+    left: outer.left - inner.left, right: inner.right - outer.right,
+    top: outer.top - inner.top, bottom: inner.bottom - outer.bottom,
+  }).sort((a, b) => b[1] - a[1])[0];
   document.querySelectorAll('svg[viewBox]').forEach(svg => {
     const sb = svg.getBoundingClientRect();
     if (!sb.width) return;
-    const label = svg.getAttribute('aria-label') || '(no aria-label)';
-    svg.querySelectorAll('text').forEach(t => {
-      const b = t.getBoundingClientRect();
-      if (!b.width) return;
-      const over = {
-        left: sb.left - b.left,
-        right: b.right - sb.right,
-        top: sb.top - b.top,
-        bottom: b.bottom - sb.bottom,
-      };
-      const worst = Object.entries(over).sort((a, c) => c[1] - a[1])[0];
-      if (worst[1] > 1.0) {
-        out.push({
-          lesson: t.closest('[data-lesson]')?.id || '(overview)',
-          figure: label.slice(0, 60),
-          text: t.textContent.trim().slice(0, 60),
-          side: worst[0],
-          px: Math.round(worst[1] * 10) / 10,
-        });
-      }
+    const common = {
+      lesson: svg.closest('article[data-lesson]')?.id || '(overview)',
+      figure: (svg.getAttribute('aria-label') || '(no aria-label)').slice(0, 60),
+    };
+    const report = (text, side, px) => out.push({
+      ...common, text, side, px: Math.round(px * 10) / 10,
     });
+    // Dense figures must not scroll merely because a narrow reading column
+    // wastes space that the shared 1280px course canvas makes available.
+    const main = svg.closest('.main');
+    const container = svg.closest('.container');
+    if (innerWidth >= 1440 && main && container) {
+      const available = Math.min(1280, main.getBoundingClientRect().width);
+      const missing = available - container.getBoundingClientRect().width;
+      if (missing > 1) report('course container leaves usable desktop width', 'layout', missing);
+    }
+
+    // Test painted primitives too: text can fit while its box or connector is cut.
+    svg.querySelectorAll('text,rect,circle,ellipse,line,polyline,polygon,path,image,use').forEach(el => {
+      if (el.closest('defs,marker,clipPath,mask,pattern,symbol')) return;
+      const b = el.getBoundingClientRect();
+      if (!b.width && !b.height) return;
+      const [side, px] = overflow(b, sb);
+      if (px > 1) report(el.tagName === 'text'
+        ? el.textContent.trim().slice(0, 60) : `<${el.tagName}>`, side, px);
+    });
+    // A labelled keyboard-scrollable region may deliberately show part of an
+    // SVG. Its viewport, however, must not be cropped by an outer wrapper.
+    let visible = { left: sb.left, right: sb.right, top: sb.top, bottom: sb.bottom };
+    for (let ancestor = svg.parentElement; ancestor && ancestor !== document.body; ancestor = ancestor.parentElement) {
+      const style = getComputedStyle(ancestor);
+      const rect = ancestor.getBoundingClientRect();
+      const xClips = /hidden|clip|auto|scroll/.test(style.overflowX);
+      const yClips = /hidden|clip|auto|scroll/.test(style.overflowY);
+      const xOverflow = Math.max(rect.left - visible.left, visible.right - rect.right);
+      const yOverflow = Math.max(rect.top - visible.top, visible.bottom - rect.bottom);
+      const xScroll = /auto|scroll/.test(style.overflowX) && ancestor.scrollWidth > ancestor.clientWidth + 1;
+      const yScroll = /auto|scroll/.test(style.overflowY) && ancestor.scrollHeight > ancestor.clientHeight + 1;
+      if ((xClips && xOverflow > 1) || (yClips && yOverflow > 1)) {
+        const accessible = ancestor.tabIndex >= 0 && ancestor.getAttribute('role') === 'region'
+          && (ancestor.getAttribute('aria-label') || ancestor.getAttribute('aria-labelledby'));
+        if ((xClips && xOverflow > 1 && !(xScroll && accessible)) ||
+            (yClips && yOverflow > 1 && !(yScroll && accessible))) {
+          report(`clipped by <${ancestor.tagName.toLowerCase()}>.${ancestor.className}`, 'wrapper', Math.max(xOverflow, yOverflow));
+          break;
+        }
+      }
+      if (xClips) visible = { ...visible, left: Math.max(visible.left, rect.left), right: Math.min(visible.right, rect.right) };
+      if (yClips) visible = { ...visible, top: Math.max(visible.top, rect.top), bottom: Math.min(visible.bottom, rect.bottom) };
+    }
   });
   return out;
 };
@@ -130,8 +162,10 @@ const READABILITY_PROBE = () => {
   return out;
 };
 
-const files = process.argv.slice(2).length
-  ? process.argv.slice(2).map(f => resolve(f))
+const args = process.argv.slice(2);
+const selfTest = args.includes('--self-test');
+const files = selfTest ? [] : args.length
+  ? args.map(f => resolve(f))
   : (await Array.fromAsync(glob(join(ROOT, 'courses', '*.html')))).sort();
 
 /** Serve over HTTP, not file://. Over file:// the webfont request is blocked,
@@ -163,13 +197,35 @@ const exe = findBrowser();
 const browser = await chromium.launch(exe ? { executablePath: exe } : {});
 let hits = 0;
 
+if (selfTest) {
+  const page = await browser.newPage({ viewport: { width: 1920, height: 900 } });
+  const cases = [
+    ['shape beyond viewBox', '<svg viewBox="0 0 100 100" width="100"><rect x="80" y="20" width="30" height="20"/></svg>', 1],
+    ['cropped wrapper', '<div style="width:70px;overflow:hidden"><svg viewBox="0 0 100 100" width="100"><rect x="10" y="10" width="80" height="80"/></svg></div>', 1],
+    ['accessible horizontal scroll', '<div role="region" aria-label="Diagram" tabindex="0" style="width:70px;overflow:auto"><svg viewBox="0 0 100 100" width="100"><rect x="10" y="10" width="80" height="80"/></svg></div>', 0],
+    ['unreachable horizontal scroll', '<div style="width:70px;overflow:auto"><svg viewBox="0 0 100 100" width="100"><rect x="10" y="10" width="80" height="80"/></svg></div>', 1],
+    ['scroll viewport cropped by outer wrapper', '<div style="width:50px;overflow:hidden"><div role="region" aria-label="Diagram" tabindex="0" style="width:70px;overflow:auto"><svg viewBox="0 0 100 100" width="100"><rect x="10" y="10" width="80" height="80"/></svg></div></div>', 1],
+    ['vertical crop outside horizontal scroller', '<div style="width:70px;height:50px;overflow:hidden"><div role="region" aria-label="Diagram" tabindex="0" style="width:70px;overflow:auto"><svg viewBox="0 0 100 100" width="100"><rect x="10" y="10" width="80" height="80"/></svg></div></div>', 1],
+    ['wasted desktop canvas', '<main class="main" style="width:1600px"><div class="container" style="width:820px"><svg viewBox="0 0 100 100" width="100"><rect x="10" y="10" width="80" height="80"/></svg></div></main>', 1],
+    ['rotated content inside frame', '<svg viewBox="0 0 100 100" width="100"><rect x="40" y="40" width="20" height="20" transform="rotate(45 50 50)"/></svg>', 0],
+  ];
+  for (const [name, html, expected] of cases) {
+    await page.setContent(html);
+    const actual = (await page.evaluate(PROBE)).length;
+    if (actual !== expected) throw new Error(`${name}: expected ${expected} issue(s), got ${actual}`);
+    console.log(`PASS ${name}`);
+  }
+  await page.close();
+}
+
+
 for (const file of files) {
   const { origin } = await serve(dirname(file));
   const page = await browser.newPage({ viewport: { width: 1440, height: 900 } });
   try {
     await page.goto(`${origin}/${encodeURIComponent(basename(file))}`, { waitUntil: 'networkidle' });
     await page.evaluate(() => document.fonts?.ready);
-    for (const width of [1440, 375]) {
+    for (const width of [375, 768, 1440, 1920, 2560]) {
       await page.setViewportSize({ width, height: 900 });
       const found = await page.evaluate(PROBE);
       for (const f of found) {
@@ -177,7 +233,7 @@ for (const file of files) {
         console.log(
           `${basename(file)} | ${f.lesson} | ${f.figure} | ${width}px\n` +
           `    "${f.text}"\n` +
-          `    -> overflows ${f.side} edge of its <svg> by ${f.px}px\n`
+          `    -> clips ${f.side} by ${f.px}px\n`
         );
       }
       const tiny = await page.evaluate(READABILITY_PROBE);
