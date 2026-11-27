@@ -26,8 +26,10 @@ belongs to the family.
 - Started from `template.html`; **no external JS libs**; one self-contained file.
 - Color only via semantic tokens; light mode by default, dark mode through the persisted topbar toggle.
 - Nav/progress/pagination derive from the single `LESSONS` array.
-- Parts = level bands **L1→L5**; every lesson has a level badge, objectives, a
-  **Takeaway**, and a **Quiz**; ≥1 inline-SVG figure/comparison/table per lesson.
+- Group lessons by level (L1–L5). Show difficulty and prerequisites as plain
+  text where they help learners choose a starting point. Each lesson has
+  objectives, a takeaway, a quiz and at least
+  one diagram, comparison or table.
 - WCAG 2.2 AA (skip-link, focus rings, keyboard, 44px targets, reduced-motion).
 - Emits `postMessage({type:'lms:progress', percent, …})` — see LMS contract below.
 

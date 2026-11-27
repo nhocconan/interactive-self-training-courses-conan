@@ -136,7 +136,6 @@ code{font-family:var(--font-mono);font-size:.86em;background:var(--surface-2);
 .mono{font-family:var(--font-mono)}
 .eyebrow{font-family:var(--font-mono);font-size:11px;letter-spacing:.22em;
   text-transform:uppercase;color:var(--accent-2);font-weight:600}
-.grad-text{background:var(--grad);-webkit-background-clip:text;background-clip:text;color:transparent}
 
 /* Skip link (a11y) */
 .skip-link{position:fixed;top:-60px;left:12px;z-index:200;background:var(--accent);
@@ -215,17 +214,10 @@ code{font-family:var(--font-mono);font-size:.86em;background:var(--surface-2);
 /* ============================================================================
    5 · HERO / COVER
    ============================================================================ */
-.hero{position:relative;overflow:hidden;border-bottom:1px solid var(--border);
-  background:var(--surface);
-  background-image:
-    radial-gradient(760px 300px at 88% -12%,color-mix(in srgb,var(--brand-gold) 24%,transparent),transparent 60%),
-    radial-gradient(640px 380px at 6% 112%,color-mix(in srgb,var(--accent-2) 14%,transparent),transparent 60%),
-    radial-gradient(560px 340px at 50% 0%,color-mix(in srgb,var(--accent) 8%,transparent),transparent 65%)}
+.hero{border-bottom:1px solid var(--border);background:var(--surface)}
 .hero-inner{max-width:var(--maxw);margin:0 auto;padding:72px 24px 60px}
-.hero h1{font-size:clamp(2.1rem,5vw,3.4rem);font-weight:800;margin:20px 0 0;letter-spacing:-.03em}
-.hero-sub{font-size:clamp(1rem,2vw,1.2rem);color:var(--ink-2);margin-top:18px}
-.chip{display:inline-flex;align-items:center;gap:6px;font-family:var(--font-mono);font-size:11px;
-  color:var(--ink-2);background:var(--surface);border:1px solid var(--border);border-radius:99px;padding:6px 12px}
+.hero h1{font-size:clamp(2.1rem,5vw,3.4rem);font-weight:800;margin:0;letter-spacing:-.03em}
+.hero-sub{max-width:70ch;font-size:clamp(1rem,2vw,1.2rem);color:var(--ink-2);margin-top:18px}
 .btn{display:inline-flex;align-items:center;gap:8px;font-weight:600;font-size:14px;
   padding:12px 22px;border-radius:12px;cursor:pointer;border:1px solid transparent;transition:transform .15s,box-shadow .15s}
 .btn-primary{background:var(--accent);color:var(--on-accent)}
@@ -236,7 +228,7 @@ code{font-family:var(--font-mono);font-size:.86em;background:var(--surface-2);
 /* ============================================================================
    6 · TOC / CURRICULUM
    ============================================================================ */
-.section-pad{padding:56px 0}
+.section-pad{padding-block:56px}
 .section-head{display:flex;align-items:baseline;gap:14px;margin-bottom:28px}
 .section-head h2{font-size:1.9rem}
 .section-head .line{flex:1;height:1px;background:var(--border)}
@@ -245,7 +237,7 @@ code{font-family:var(--font-mono);font-size:.86em;background:var(--surface-2);
 .toc-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:12px}
 .toc-card{display:flex;gap:14px;align-items:flex-start;padding:16px;border:1px solid var(--border);
   border-radius:var(--radius);background:var(--surface);cursor:pointer;transition:transform .15s,box-shadow .15s,border-color .15s}
-.toc-card:hover{transform:translateY(-2px);box-shadow:var(--shadow-md);border-color:var(--accent);text-decoration:none}
+.toc-card:hover{box-shadow:var(--shadow-md);border-color:var(--accent);text-decoration:none}
 .toc-card-num{font-family:var(--font-mono);font-size:20px;font-weight:700;color:var(--accent-2);line-height:1}
 .toc-card-title{display:block;font-weight:700;font-size:15px;color:var(--ink)}
 .toc-card-desc{display:block;font-size:12.5px;color:var(--ink-2);margin-top:4px;line-height:1.5}
@@ -264,9 +256,9 @@ code{font-family:var(--font-mono);font-size:.86em;background:var(--surface-2);
 
 .lesson{margin:22px 0 40px;background:var(--surface);border:1px solid var(--border);
   border-radius:var(--radius-lg);overflow:hidden;box-shadow:var(--shadow-sm)}
-.lesson-head{background:var(--grad);color:#fff;padding:26px 30px}
-.lesson-head .eyebrow{color:color-mix(in srgb,var(--brand-gold) 90%,#fff)}
-.lesson-head h3{color:#fff;font-size:clamp(1.4rem,3vw,1.9rem);margin-top:4px}
+.lesson-head{background:var(--surface-2);color:var(--ink);padding:26px 30px}
+.lesson-head .eyebrow{color:var(--ink-2)}
+.lesson-head h3{color:var(--ink);font-size:clamp(1.4rem,3vw,1.9rem);margin-top:4px}
 .lesson-body{padding:26px 30px 6px;font-size:16px}
 .lesson-body>*+*{margin-top:18px}
 .lesson-body>p,.lesson-body>ul,.lesson-body>ol{max-width:75ch}
@@ -299,7 +291,8 @@ code{font-family:var(--font-mono);font-size:.86em;background:var(--surface-2);
 .callout.danger{border-color:color-mix(in srgb,var(--danger) 45%,var(--border));background:var(--danger-bg)}
 .callout.danger::before{-webkit-mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M8.6 3h6.8L21 8.6v6.8L15.4 21H8.6L3 15.4V8.6z'/%3E%3Cpath d='M12 7.9v5'/%3E%3Cpath d='M12 16.5h.01'/%3E%3C/svg%3E") center/contain no-repeat;mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M8.6 3h6.8L21 8.6v6.8L15.4 21H8.6L3 15.4V8.6z'/%3E%3Cpath d='M12 7.9v5'/%3E%3Cpath d='M12 16.5h.01'/%3E%3C/svg%3E") center/contain no-repeat;color:var(--danger)}
 .callout.insight{border-color:color-mix(in srgb,var(--accent-2) 40%,var(--border));background:var(--info-bg)}
-.callout.insight::before{-webkit-mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='2.4' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M12 2v6m0 8v6M4.9 4.9l4.2 4.2m5.8 5.8l4.2 4.2M2 12h6m8 0h6M4.9 19.1l4.2-4.2m5.8-5.8l4.2-4.2'/%3E%3C/svg%3E") center/contain no-repeat;mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='2.4' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M12 2v6m0 8v6M4.9 4.9l4.2 4.2m5.8 5.8l4.2 4.2M2 12h6m8 0h6M4.9 19.1l4.2-4.2m5.8-5.8l4.2-4.2'/%3E%3C/svg%3E") center/contain no-repeat;color:var(--accent-2)}
+.callout.insight{padding-left:18px}
+.callout.insight::before{content:none}
 
 /* COMPONENT: Comparison grid (do / don't, novice / power-user) */
 .compare{display:grid;grid-template-columns:1fr 1fr;gap:14px}
@@ -319,7 +312,6 @@ code{font-family:var(--font-mono);font-size:.86em;background:var(--surface-2);
 /* COMPONENT: Mental model / concept box */
 .concept{background:var(--surface-2);border:1px solid var(--border);border-radius:var(--radius);padding:20px 22px}
 .concept .eyebrow{margin-bottom:8px;display:flex;align-items:center;gap:8px}
-.concept .eyebrow::before{content:"";width:8px;height:8px;border-radius:99px;background:var(--accent-2)}
 .concept h4{margin-bottom:6px}
 
 /* COMPONENT: Figure + SVG diagram (or optimized raster image — see reference §3) */
@@ -390,10 +382,10 @@ tbody tr:last-child td{border-bottom:none}
 tbody tr:hover{background:var(--surface-2)}
 
 /* COMPONENT: Takeaway (mandatory, once per lesson) */
-.takeaway{background:var(--grad);color:#fff;border-radius:var(--radius);padding:22px 26px;position:relative;overflow:hidden}
-.takeaway .eyebrow{color:color-mix(in srgb,var(--brand-gold) 90%,#fff);margin-bottom:8px;display:flex;align-items:center;gap:8px}
-.takeaway p{color:#fff;font-size:1.12rem;font-weight:600;line-height:1.5}
-.takeaway .hl{color:var(--brand-gold)}
+.takeaway{background:var(--surface-2);border-left:3px solid var(--accent-2);color:var(--ink);border-radius:var(--radius);padding:22px 26px;position:relative;overflow:hidden}
+.takeaway .eyebrow{color:var(--ink-2);margin-bottom:8px;display:flex;align-items:center;gap:8px}
+.takeaway p{color:var(--ink);font-size:1.12rem;font-weight:600;line-height:1.5}
+.takeaway .hl{font-weight:700}
 
 /* COMPONENT: Quiz (mandatory, once per lesson) */
 .quiz{border:1px solid var(--border);border-radius:var(--radius);padding:20px 22px;background:var(--surface-2)}
@@ -435,8 +427,6 @@ tbody tr:hover{background:var(--surface-2)}
 
 /* COMPONENT: Completion screen */
 .complete{text-align:center;padding:70px 24px}
-.complete-badge{width:76px;height:76px;border-radius:99px;background:var(--grad);
-  display:flex;align-items:center;justify-content:center;margin:0 auto 22px;color:#fff;font-size:34px}
 .complete h2{font-size:2.2rem}
 .complete p{color:var(--ink-2);max-width:52ch;margin:14px auto 0}
 
@@ -495,8 +485,8 @@ footer.site{border-top:1px solid var(--border);padding:26px 24px;text-align:cent
     <section class="pane" id="overview" data-pane>
       <div class="hero">
         <div class="hero-inner">
-          <h1><span class="grad-text">Hệ quyết định có học.</span> Quyền và phép kiểm rõ ràng.</h1>
-          <p class="hero-sub">Cho kiến trúc sư, tech lead và data lead sắp dựng một hệ ra quyết định có học cho vận hành kinh doanh. Từ decision contract và hai thang L0–L5 / A0–A4, qua kiến trúc 4 plane với kernel không thể bypass, rule receipts, Engine ⟂ LLM copilot, tới <strong>đo trước khi tin</strong> (credibility, calibration, forecast ≠ lift), chọn đúng công cụ causal, explore/exploit với propensity thật, uncertainty làm gate, và learning loop promote/rollback như một release. Hệ ví dụ xuyên suốt: một brand e-commerce quyết định mỗi tuần lever nào kéo sell-through. Ba bài tự chọn 4.4–4.6 thực hành phân bổ tài nguyên có ràng buộc chung bằng Python; chọn nhánh này khi nhiều phương án dùng chung ngân sách hoặc công suất.</p>
+          <h1>Thiết kế hệ thống ra quyết định có học</h1>
+          <p class="hero-sub">Mỗi tuần, một cửa hàng phải chọn mặt hàng để giảm giá trong một ngân sách cố định. Bạn sẽ xác định ai được duyệt, dữ liệu nào có sẵn khi chọn và cách đo tác động của đợt giảm giá. Các bài Python 4.4–4.6 cho bạn thử phân bổ cùng lúc ngân sách và công suất.</p>
           <div style="margin-top:28px;display:flex;gap:12px;flex-wrap:wrap">
             <a class="btn btn-primary" id="start-btn">Bắt đầu học →</a>
             <a class="btn btn-ghost" href="#curriculum">Xem chương trình</a>
@@ -529,7 +519,7 @@ footer.site{border-top:1px solid var(--border);padding:26px 24px;text-align:cent
             <tr><td><b>Thompson sampling</b></td><td>Chọn action bằng cách lấy mẫu từ posterior; cân bằng explore/exploit theo bằng chứng.</td></tr>
             <tr><td><b>Regret</b></td><td>Chênh lệch tích luỹ giữa outcome đạt được và outcome của action tốt nhất.</td></tr>
             <tr><td><b>Conformal prediction</b></td><td>Tập dự đoán có bảo đảm coverage dưới giả định exchangeability; bề rộng tập là tín hiệu abstain.</td></tr>
-            <tr><td><b>PSI</b></td><td>Population Stability Index; quy ước ngành 0,1 (theo dõi) / 0,25 (hành động).</td></tr>
+            <tr><td><b>PSI</b></td><td>Chỉ số so sánh tỷ lệ quan sát theo từng khoảng giữa hai tập dữ liệu. Bài 5.3 dùng 0,10 và 0,25 làm ngưỡng cảnh báo minh hoạ.</td></tr>
             <tr><td><b>Champion expiry</b></td><td>Hạn dùng của champion; hết hạn thì chạy lại evidence pack.</td></tr>
             <tr><td><b>Shadow / canary</b></td><td>Chạy song song không tác động / chạy trên một phần nhỏ traffic có rollback.</td></tr>
             <tr><td><b>Number-grounding fixture</b></td><td>Eval bắt buộc: mọi con số LLM phát ra phải resolve về một receipt của kernel.</td></tr>
@@ -537,7 +527,7 @@ footer.site{border-top:1px solid var(--border);padding:26px 24px;text-align:cent
             <tr><td><b>Blast radius</b></td><td>Thiệt hại thực tế xấu nhất một lever có thể gây ra: tiền, khả năng đảo ngược, số khách bị chạm.</td></tr>
             <tr><td><b>Attribution window</b></td><td>Khoảng thời gian mà thay đổi outcome còn được tính cho lever vừa kéo; chốt trước khi chạy.</td></tr>
             <tr><td><b>Estimand</b></td><td>Đại lượng bạn thật sự muốn ước lượng, viết ra trước khi chọn estimator.</td></tr>
-            <tr><td><b>Interference / SUTVA</b></td><td>Đơn vị này bị ảnh hưởng bởi treatment của đơn vị khác; khi có, «tác động lên đơn vị i» không còn xác định.</td></tr>
+            <tr><td><b>Interference / SUTVA</b></td><td>Khi có tác động lan sang đơn vị khác, kết quả của một đơn vị còn phụ thuộc vào cách nhóm xung quanh được phân bổ. Cần xác định hiệu ứng trực tiếp, lan truyền hoặc toàn nhóm muốn đo.</td></tr>
             <tr><td><b>CUPED</b></td><td>Giảm phương sai bằng dữ liệu tiền thí nghiệm theo hệ số (1 − ρ²); rút ngắn thời gian, không đổi giả định.</td></tr>
             <tr><td><b>Exchangeability</b></td><td>Điểm test là «một điểm calibration nữa»; giả định đỡ toàn bộ bảo đảm của conformal.</td></tr>
           <tr><td>Binary allocation</td><td>Chọn hoặc không chọn từng việc, đồng thời kiểm ngân sách và công suất của cả tập.</td></tr><tr><td>Slack / solver status</td><td>Lượng thiếu được cho phép trong bản mềm / trạng thái chứng minh của solver; cả hai cần hợp đồng riêng trước khi dùng kết quả.</td></tr></tbody>
@@ -548,7 +538,7 @@ footer.site{border-top:1px solid var(--border);padding:26px 24px;text-align:cent
     <!-- ============ MODULE 1 ============ -->
     <div class="container">
       <header class="module-header" data-module="1">
-        <span class="eyebrow">Module 01 · Phần I</span>
+        <span class="eyebrow">Phần I</span>
         <h2>Đặt đúng bài toán trước khi đặt model</h2>
         <p>Trước khi có model nào, phải rõ quyết định là gì, ai được kéo lever nào, và bằng chứng ở mức nào cho phép tự chủ ở mức nào. Ba bài: decision system khác chatbot ở chỗ nào, hai thang L0–L5 và A0–A4 độc lập ra sao, và decision contract viết trước mọi thứ.</p>
       </header>
@@ -577,7 +567,6 @@ footer.site{border-top:1px solid var(--border);padding:26px 24px;text-align:cent
           <p>Câu hỏi đó không hỏi về chất lượng của model. Nó hỏi hệ này thuộc loại nào, vì ba loại hệ hay bị gọi chung một tên lại tự đo mình bằng ba thứ khác nhau.</p>
 
           <div class="concept">
-            <span class="eyebrow">Khái niệm</span>
             <h4>Ba loại hệ, ba thang đo</h4>
             <p>Một <strong>chatbot</strong> đo mình bằng câu trả lời: prompt vào, answer ra, thang đo là helpfulness, và không có side effect nào ngoài màn hình. Một <strong>agent workflow</strong> đo mình bằng tác vụ: plan, gọi tool, trả result, thang đo là task success, side effect có nhưng nằm trong phạm vi tác vụ. Một <strong>agentic decision system</strong> (từ đây gọi tắt là decision system) đo mình bằng <strong>outcome</strong>: chọn trong một tập hành động, xin quyền, thực thi bền vững, đo kết quả sau cutoff, và chỉ học khi bằng chứng đủ. Outcome ở đây là kết quả kinh doanh quan sát được sau một cửa sổ quy kết, ví dụ sell-through 14 ngày kể từ lúc lever đổi, không phải phản hồi của người dùng ngay lúc bấm nút.</p>
           </div>
@@ -642,14 +631,10 @@ footer.site{border-top:1px solid var(--border);padding:26px 24px;text-align:cent
             <div class="compare-col good"><span class="eyebrow">Cách đọc đúng</span><ul><li>Task success là một điều kiện; outcome sau cửa sổ quy kết mới là thang đo.</li><li>Feedback là dữ liệu vào ledger; đổi policy cần candidate qua gate.</li><li>Đổi hành vi production là một release, có owner và có rollback.</li></ul></div>
           </div>
 
-          <p>Lớp hệ này đã có tên trên thị trường: Gartner công bố Magic Quadrant cho Decision Intelligence Platforms ngày 26/01/2026. Phân loại thị trường này không chứng minh kiến trúc hay mức độ tin cậy của một hệ cụ thể.</p>
-
           <p>Khoá này giả định bạn đã biết agent loop cơ bản và sẽ không dạy lại phần đó: harness và loop nằm ở «Context &amp; Harness Engineering» và «Loop Engineering», eval chi tiết ở «Agent Reliability &amp; Evaluation», retrieval ở «RAG &amp; Information Retrieval», nền data warehouse và DSS ở «DSS · Data Warehouse · IDSS».</p>
 
           <div class="takeaway">
-            <span class="eyebrow">
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true" focusable="false"><path d="M12 2v6m0 8v6M4.9 4.9l4.2 4.2m5.8 5.8l4.2 4.2M2 12h6m8 0h6M4.9 19.1l4.2-4.2m5.8-5.8l4.2-4.2"/></svg>
-              Điều cần nhớ
+            <span class="eyebrow">Điều cần nhớ
             </span>
             <p>Feedback chỉ là dữ liệu. Self-improvement chỉ xuất hiện khi <span class="hl">candidate được đánh giá và promotion đi qua gate</span>.</p>
           </div>
@@ -692,7 +677,6 @@ footer.site{border-top:1px solid var(--border);padding:26px 24px;text-align:cent
           <p>Hai câu hỏi đó cần hai thang khác nhau, và lỗi kiến trúc hay gặp là gộp chúng làm một. Dấu hiệu đã gộp: trong cùng một tài liệu, ai đó viết «L3 autonomy» trong khi L3 đang nói về causal evidence.</p>
 
           <div class="concept">
-            <span class="eyebrow">Khái niệm</span>
             <h4>Hai trục, hỏi hai câu khác nhau</h4>
             <p><strong>L0 tới L5</strong> là evidence maturity, trả lời «bằng chứng đáng tin tới đâu». <strong>A0 tới A4</strong> là action autonomy, trả lời «hệ được phép làm gì». Hai thang không dài bằng nhau và không có đường chéo bắt buộc nối chúng: một rule L1 vẫn có thể chạy A3 trong biên hẹp, còn evidence L4 vẫn phải dừng lại nếu action worker chưa chống gửi trùng.</p>
           </div>
@@ -757,17 +741,15 @@ footer.site{border-top:1px solid var(--border);padding:26px 24px;text-align:cent
 
           <p>Đọc ba dòng theo cột cuối: gate đỏ ở ba lý do khác nhau, và không lý do nào trong ba lý do đó là «bằng chứng còn yếu». Dòng thứ ba là slide ở đầu bài. Vì sao blast radius chặn được cả evidence L4 là nội dung bài tiếp theo.</p>
 
-          <p>Thang tự chủ còn có một ràng buộc pháp lý đi kèm. Điều 14 EU AI Act (human oversight) không cấm mức tự chủ nào; nó yêu cầu hệ high-risk phải có người hiểu được giới hạn của hệ, giám sát được, và dừng hoặc can thiệp được. Đọc theo lưới ở trên: quyền dừng và quyền đảo ngược phải tồn tại ở mọi ô, không riêng ô A4.</p>
+          <p>Điều 14 EU AI Act yêu cầu hệ thống rủi ro cao được thiết kế để con người có thể giám sát trong quá trình sử dụng. Với mỗi mức tự chủ ở bảng trên, hãy xác định ai có thể diễn giải kết quả, bỏ qua đề xuất hoặc dừng hệ thống. <a href="https://ai-act-service-desk.ec.europa.eu/en/ai-act/article-14">Điều 14 về giám sát của con người</a>.</p>
 
           <div class="callout warn">
-            <div class="callout-title">Lịch áp dụng đã đổi, kiểm lại trước khi dựa vào mốc nào</div>
-            <p><a href="https://eur-lex.europa.eu/legal-content/EN/TXT/?uri=OJ:L_202601744">Regulation (EU) 2026/1744</a> (<a href="https://ai-act-service-desk.ec.europa.eu/en/ai-act/article-113?full=1">lịch áp dụng tại EC Article 113</a>) ngày 08/07/2026 (Digital Omnibus on AI), đăng Official Journal 24/07/2026 và hiệu lực 27/07/2026, dời ngày áp dụng Chương III mục 1–3 sang 02/12/2027 cho hệ high-risk theo Article 6(2) và Annex III, và sang 02/08/2028 cho hệ high-risk theo Article 6(1) và Annex I. Phạm vi high-risk vẫn đang được sửa, nên đọc văn bản gốc trước khi gắn mốc vào roadmap; bài tổng kết cuối khoá giữ danh sách nguồn.</p>
+            <div class="callout-title">Khi nào quy định về hệ thống rủi ro cao được áp dụng?</div>
+            <p><a href="https://eur-lex.europa.eu/legal-content/EN/TXT/?uri=OJ:L_202601744">Regulation (EU) 2026/1744</a> (<a href="https://ai-act-service-desk.ec.europa.eu/en/ai-act/article-113?full=1">lịch áp dụng tại EC Article 113</a>) ngày 08/07/2026 (Digital Omnibus on AI), đăng Official Journal 24/07/2026 và hiệu lực 27/07/2026, dời ngày áp dụng Chương III mục 1–3 (trừ Điều 6(5)) sang 02/12/2027 cho hệ high-risk theo Article 6(2) và Annex III, và sang 02/08/2028 cho hệ high-risk theo Article 6(1) và Annex I.</p>
           </div>
 
           <div class="takeaway">
-            <span class="eyebrow">
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true" focusable="false"><path d="M12 2v6m0 8v6M4.9 4.9l4.2 4.2m5.8 5.8l4.2 4.2M2 12h6m8 0h6M4.9 19.1l4.2-4.2m5.8-5.8l4.2-4.2"/></svg>
-              Điều cần nhớ
+            <span class="eyebrow">Điều cần nhớ
             </span>
             <p>Evidence quyết định <span class="hl">điều hệ được phép tin</span>; autonomy quyết định <span class="hl">điều hệ được phép làm</span>.</p>
           </div>
@@ -810,7 +792,6 @@ footer.site{border-top:1px solid var(--border);padding:26px 24px;text-align:cent
           <p>Thứ đang thiếu ở đây là một hợp đồng viết trước mọi model. Hợp đồng cần nêu mục tiêu, bằng chứng, quyền và điều kiện dừng.</p>
 
           <div class="concept">
-            <span class="eyebrow">Khái niệm</span>
             <h4>Decision contract: bảy ô điền trước khi ai đó mở notebook</h4>
             <p>Một <strong>decision contract</strong> mô tả một quyết định lặp lại, không mô tả một dashboard. Nó có bảy ô, và mỗi ô bỏ trống sinh ra một kiểu hỏng riêng. Ô thứ tư chứa một khái niệm dễ bị bỏ qua: <strong>attribution window</strong> là khoảng thời gian mà thay đổi outcome còn được tính cho lever vừa kéo. Chọn cửa sổ đó sau khi đã nhìn kết quả là cách dễ nhất để tự chứng minh mình đúng.</p>
           </div>
@@ -913,9 +894,7 @@ escalation:    UNKNOWN, vượt trần tiền, hoặc lever ngoài lever_set →
           </div>
 
           <div class="takeaway">
-            <span class="eyebrow">
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true" focusable="false"><path d="M12 2v6m0 8v6M4.9 4.9l4.2 4.2m5.8 5.8l4.2 4.2M2 12h6m8 0h6M4.9 19.1l4.2-4.2m5.8-5.8l4.2-4.2"/></svg>
-              Điều cần nhớ
+            <span class="eyebrow">Điều cần nhớ
             </span>
             <p>Evidence nâng bạn lên trục L; chỉ <span class="hl">blast radius và khả năng đảo ngược</span> mới đẩy bạn sang phải trên trục A.</p>
           </div>
@@ -937,7 +916,7 @@ escalation:    UNKNOWN, vượt trần tiền, hoặc lever ngoài lever_set →
     <!-- ============ MODULE 2 ============ -->
     <div class="container">
       <header class="module-header" data-module="2">
-        <span class="eyebrow">Module 02 · Phần II</span>
+        <span class="eyebrow">Phần II</span>
         <h2>Kiến trúc tin cậy: plane, receipt, ranh giới và ledger</h2>
         <p>Kiến trúc để tin được: bốn plane với hai đồng hồ và một kernel không thể bypass; rule trả receipt bằng số và xử lý UNKNOWN đúng cách; LLM đề xuất nhưng kernel định đoạt; và decision episode ghi đủ để replay và để audit.</p>
       </header>
@@ -966,7 +945,6 @@ escalation:    UNKNOWN, vượt trần tiền, hoặc lever ngoài lever_set →
     <p>Kiến trúc đáng tin không bắt đầu bằng framework agent. Nó bắt đầu bằng danh sách các owner không thể bypass: governed facts, canonical signal, deterministic kernel, episode ledger, approval, durable action và evaluation. Bảy lớp đó, khi triển khai thật, được bố trí thành <strong>bốn plane</strong>.</p>
 
     <div class="concept">
-      <span class="eyebrow">Khái niệm then chốt</span>
       <h4>Bốn plane và hai đồng hồ</h4>
       <p><strong>Serving plane</strong> ra quyết định dưới budget độ trễ. <strong>Episode + outcome plane</strong> ghi flight recorder dạng append-only. <strong>Learning plane</strong> chỉ chạy sau khi reward đủ chín. <strong>Control plane</strong> giữ version, quyền và rollout. Hai đồng hồ phải tách nhau: <strong>decision-time</strong> đóng băng đúng dữ liệu đã thấy tại thời điểm quyết định, còn <strong>learning-time</strong> chờ late event và cutoff rồi mới ghép outcome. Trộn hai đồng hồ là cách tạo ra data leakage, nghĩa là “học” từ dữ liệu chưa tồn tại lúc quyết định.</p>
     </div>
@@ -1129,9 +1107,7 @@ outcome  = action_worker.dispatch(command, idempotency_key)</pre>
     </div>
 
     <div class="takeaway">
-      <span class="eyebrow">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true" focusable="false"><path d="M12 2v6m0 8v6M4.9 4.9l4.2 4.2m5.8 5.8l4.2 4.2M2 12h6m8 0h6M4.9 19.1l4.2-4.2m5.8-5.8l4.2-4.2"/></svg>
-        Điều cần nhớ
+      <span class="eyebrow">Điều cần nhớ
       </span>
       <p>Hệ đáng tin không phải nhiều agent hơn; là <span class="hl">mọi side effect đi qua owner, contract và receipt rõ ràng</span>.</p>
     </div>
@@ -1172,7 +1148,6 @@ outcome  = action_worker.dispatch(command, idempotency_key)</pre>
     <p>02:00 sáng thứ Hai, kernel chạy rule <code>reorder_v7</code> cho một SKU son (mọi con số trong bài là số minh hoạ). Toán hạng thứ nhất, <code>stock_cover_days = 11,4</code> so với ngưỡng 14, cho TRUE, lấy từ Tier 1 với <code>as_of</code> là 23:00 Chủ nhật. Toán hạng thứ hai, <code>social_mentions_wow</code> so với ngưỡng 30%, không có dòng nào suốt ba ngày vì nguồn Tier 3 đứt. Engine đọc chỗ thiếu thành 0%, ra FALSE, kết luận “rule không bắn”. Không có ledger row, không ai được báo. Chín ngày sau hàng hết, và không ai truy được sự cố đó về một quyết định nào.</p>
 
     <div class="concept">
-      <span class="eyebrow">Khái niệm then chốt</span>
       <h4>Logic ba giá trị Kleene, thứ SQL vẫn dùng mỗi ngày</h4>
       <p>Kleene strong three-valued logic (K3) thêm một giá trị thứ ba, <strong>UNKNOWN</strong>, bên cạnh TRUE và FALSE. Đây không phải lý thuyết xa lạ: bài <em>Three-valued logic</em> (Wikipedia) ghi “The database query language SQL implements ternary logic as a means of handling comparisons with NULL field content. SQL uses a common fragment of the Kleene K3 logic, restricted to AND, OR, and NOT tables.” Tài liệu PostgreSQL nói cùng một điều ở tầng engine: “Ordinary comparison operators yield null (signifying ‘unknown’), not true or false, when either input is null. For example, <code>7 = NULL</code> yields null, as does <code>7 &lt;&gt; NULL</code>” (PostgreSQL docs).</p>
     </div>
@@ -1293,9 +1268,7 @@ outcome  = action_worker.dispatch(command, idempotency_key)</pre>
     </div>
 
     <div class="takeaway">
-      <span class="eyebrow">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true" focusable="false"><path d="M12 2v6m0 8v6M4.9 4.9l4.2 4.2m5.8 5.8l4.2 4.2M2 12h6m8 0h6M4.9 19.1l4.2-4.2m5.8-5.8l4.2-4.2"/></svg>
-        Điều cần nhớ
+      <span class="eyebrow">Điều cần nhớ
       </span>
       <p>Dữ liệu thiếu là <span class="hl">UNKNOWN chứ không phải FALSE</span>: rule trả về receipt kèm đúng con số nó đã thấy, và UNKNOWN thì abstain rồi escalate, không bao giờ im lặng.</p>
     </div>
@@ -1336,9 +1309,8 @@ outcome  = action_worker.dispatch(command, idempotency_key)</pre>
     <p>Bản tóm tắt thứ Sáu của copilot có một câu: “chuyển ₫200M sang Creator, lift dự kiến +12%” (số minh hoạ). Owner đọc, thấy con số, duyệt. Ba tuần sau kết quả không tới, và không ai dò lại được +12% từ đâu ra. Không receipt nào của kernel chứa nó, không dataset nào sinh ra nó, không eval nào ước lượng nó. Câu văn đọc như một kết quả tính toán, nên nó được duyệt như một kết quả tính toán.</p>
 
     <div class="concept">
-      <span class="eyebrow">Khái niệm then chốt</span>
       <h4>Belief nằm ở code tất định, LLM chỉ nộp typed proposal</h4>
-      <p>Bài <em>The LLM Proposes, the Executive Disposes</em> (Mohsen Arjmandi, arXiv 2608.04066, nộp 04/08/2026) phát biểu cơ chế trong một câu: Executive tất định giữ belief; LLM chỉ nộp typed proposal; code đối chiếu dự đoán đã đăng ký trước với quan sát để tiếp nhận claim. Ba nước đi lấy được nguyên vẹn. Một, <strong>belief ownership</strong>: mọi state sống trong code tất định, LLM không có chỗ ghi. Hai, <strong>pre-registration</strong>: một claim chỉ được tính khi dự đoán đã đăng ký trước lúc hành động và được code đối chiếu với quan sát sau đó. Ba, <strong>self-invalidating run</strong>: chính bài đó báo “four of the first eight architecture runs were invalidated, each localizing a real defect”, tức run tự huỷ kết quả của mình khi vi phạm ngưỡng nội bộ.</p>
+      <p>Bài <a href="https://arxiv.org/abs/2608.04066">The LLM Proposes, the Executive Disposes</a> (Mohsen Arjmandi, arXiv 2608.04066, nộp 04/08/2026) phát biểu cơ chế trong một câu: Executive tất định giữ belief; LLM chỉ nộp typed proposal; code đối chiếu dự đoán đã đăng ký trước với quan sát để tiếp nhận claim. Trong thiết kế này có ba cơ chế. Một, <strong>belief ownership</strong>: mọi state sống trong code tất định, LLM không có chỗ ghi. Hai, <strong>pre-registration</strong>: một claim chỉ được tính khi dự đoán đã đăng ký trước lúc hành động và được code đối chiếu với quan sát sau đó. Ba, <strong>self-invalidating run</strong>: chính bài đó báo “four of the first eight architecture runs were invalidated, each localizing a real defect”, tức run tự huỷ kết quả của mình khi vi phạm ngưỡng nội bộ.</p>
     </div>
 
     <figure class="figure">
@@ -1383,7 +1355,7 @@ outcome  = action_worker.dispatch(command, idempotency_key)</pre>
     <p>Bài trên còn đáng lấy vì cách nó báo cáo kết quả. Cũng chính nó ghi “task efficacy is null (zero level completions across 52 gated runs on ARC-AGI-3), pre-registered as a structural defeater”. Nghĩa là mẫu thiết kế này chứng minh được tính kỷ luật của bằng chứng, và chưa chứng minh được rằng nó làm tăng tỉ lệ hoàn thành tác vụ. Bạn dùng nó cho phần đầu, và trích cả kết quả rỗng cho phần sau.</p>
 
     <h4>Number grounding: một fixture, không phải một lời nhắc trong prompt</h4>
-    <p>Quy tắc của khoá này: mọi con số trong output của copilot phải resolve về một <code>receipt_id</code> do kernel phát. Cách kiểm là một eval fixture chứ không phải một câu dặn trong system prompt. Nạp cho copilot một ngữ cảnh không có bất kỳ con số lift nào trong bất kỳ receipt nào, rồi assert output không chứa phần trăm. Mọi numeral không truy được là hard fail, cùng hạng với một test đỏ, chứ không phải cảnh báo văn phong. Loại lỗi này có thật và bắt được: báo cáo <em>Catching One in Five</em> (arXiv 2606.10315) ghi nhận judge thành công trên nhóm lỗi turn-local và nêu đích danh “fabricated statistics” trong nhóm đó.</p>
+    <p>Quy tắc của khoá này: mọi con số trong output của copilot phải resolve về một <code>receipt_id</code> do kernel phát. Cách kiểm là một eval fixture chứ không phải một câu dặn trong system prompt. Nạp cho copilot một ngữ cảnh không có bất kỳ con số lift nào trong bất kỳ receipt nào, rồi assert output không chứa phần trăm. Mọi numeral không truy được là hard fail, cùng hạng với một test đỏ, chứ không phải cảnh báo văn phong. Loại lỗi này có thật và bắt được: báo cáo <a href="https://arxiv.org/abs/2606.10315">Catching One in Five</a> (arXiv 2606.10315) ghi nhận judge thành công trên nhóm lỗi turn-local và nêu đích danh “fabricated statistics” trong nhóm đó.</p>
 
     <ol class="steps">
       <li><h4>LLM nộp typed proposal</h4><p>Một struct có schema: lever, size, window, evidence refs. Không văn xuôi tự do ở chỗ này.</p></li>
@@ -1394,13 +1366,11 @@ outcome  = action_worker.dispatch(command, idempotency_key)</pre>
 
     <div class="callout info">
       <div class="callout-title">Khi hai agent đề xuất hai thứ khác nhau</div>
-      <p>Arbiter chọn giữa các proposal xung đột là code tất định và có version, nằm trong control plane cùng chỗ với policy registry ở bài 2.1. Bài <em>Reaching Agreement Among Reasoning LLM Agents</em> (Ruan, Wang, Shi, Li, arXiv 2512.20184, 23/12/2025) mô tả đúng cái phải thay: các heuristic như giới hạn vòng lặp và barrier có thể chốt đồng thuận nhất thời, và đề xuất giao thức Aegean với “provable safety and liveness guarantees”, kèm số đo riêng của bài: trên bốn benchmark toán của bài, độ trễ giảm 1,2 tới 20 lần so với các baseline đối chứng, chất lượng câu trả lời lệch trong phạm vi 2,5%. Bảo đảm có điều kiện theo mô hình và giả định của giao thức, không chứng minh đồng thuận là sự thật trong mọi ứng dụng. Điều cần lấy là hình dạng: một giao thức có tính chất được phát biểu, thay cho một vòng lặp có giới hạn số lần.</p>
+      <p>Arbiter chọn giữa các proposal xung đột là code tất định và có version, nằm trong control plane cùng chỗ với policy registry ở bài 2.1. Bài <a href="https://arxiv.org/abs/2512.20184">Reaching Agreement Among Reasoning LLM Agents</a> (Ruan, Wang, Shi, Li, arXiv 2512.20184, 23/12/2025) mô tả đúng cái phải thay: các heuristic như giới hạn vòng lặp và barrier có thể chốt đồng thuận nhất thời, và đề xuất giao thức Aegean với “provable safety and liveness guarantees”, kèm số đo riêng của bài: trên bốn benchmark toán của bài, độ trễ giảm 1,2 tới 20 lần so với các baseline đối chứng, chất lượng câu trả lời lệch trong phạm vi 2,5%. Bảo đảm có điều kiện theo mô hình và giả định của giao thức, không chứng minh đồng thuận là sự thật trong mọi ứng dụng. Điều cần lấy là hình dạng: một giao thức có tính chất được phát biểu, thay cho một vòng lặp có giới hạn số lần.</p>
     </div>
 
     <div class="takeaway">
-      <span class="eyebrow">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true" focusable="false"><path d="M12 2v6m0 8v6M4.9 4.9l4.2 4.2m5.8 5.8l4.2 4.2M2 12h6m8 0h6M4.9 19.1l4.2-4.2m5.8-5.8l4.2-4.2"/></svg>
-        Điều cần nhớ
+      <span class="eyebrow">Điều cần nhớ
       </span>
       <p>LLM được quyền đề xuất và giải thích, không được quyền phát số: <span class="hl">mọi con số trong output phải resolve về một receipt id của kernel</span>, nếu không thì fixture chặn bản tóm tắt trước khi owner đọc.</p>
     </div>
@@ -1521,9 +1491,7 @@ provider_receipt=p_82 · outcome_window=+7d · reward=+₫3,1M</pre>
     <p><a href="https://ai-act-service-desk.ec.europa.eu/en/ai-act/article-12">AI Act, Article 12(1)</a> yêu cầu hệ high-risk có khả năng ghi log tự động trong vòng đời. <a href="https://ai-act-service-desk.ec.europa.eu/en/ai-act/article-19">Article 19(1)</a> đặt nghĩa vụ giữ log cho <b>provider</b>, còn <a href="https://ai-act-service-desk.ec.europa.eu/en/ai-act/article-26">Article 26(6)</a> cho <b>deployer</b>: chỉ trong phạm vi log họ kiểm soát, thời hạn phù hợp mục đích và ít nhất sáu tháng, trừ khi luật EU/quốc gia áp dụng quy định khác, nhất là luật bảo vệ dữ liệu. Không suy ra mọi nội dung trace phải giữ sáu tháng. <a href="https://ai-act-service-desk.ec.europa.eu/en/ai-act/article-113?full=1">Article 113</a> ghi lịch áp dụng Chương III mục 1–3 (trừ Article 6(5)): 02/12/2027 cho Article 6(2)/Annex III và 02/08/2028 cho Article 6(1)/Annex I. Xác định đúng vai trò, phân loại và luật áp dụng trước khi chốt retention.</p>
 
     <div class="takeaway">
-      <span class="eyebrow">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true" focusable="false"><path d="M12 2v6m0 8v6M4.9 4.9l4.2 4.2m5.8 5.8l4.2 4.2M2 12h6m8 0h6M4.9 19.1l4.2-4.2m5.8-5.8l4.2-4.2"/></svg>
-        Điều cần nhớ
+      <span class="eyebrow">Điều cần nhớ
       </span>
       <p>Audit trả lời ai làm gì; provenance trả lời từ đâu ra; <span class="hl">replay chứng minh cùng input và cùng version cho cùng một receipt</span>.</p>
     </div>
@@ -1545,7 +1513,7 @@ provider_receipt=p_82 · outcome_window=+7d · reward=+₫3,1M</pre>
     <!-- ============ MODULE 3 ============ -->
     <div class="container">
       <header class="module-header" data-module="3">
-        <span class="eyebrow">Module 03 · Phần III</span>
+        <span class="eyebrow">Phần III</span>
         <h2>Memory & Evidence: nhớ đúng, đo đúng, rồi mới tin</h2>
         <p>Bằng chứng và memory: năm lớp memory với vòng đời chống stale, conflict, poisoning; đo trước khi tin (credibility, calibration, forecast ≠ lift); thang evidence và Simpson; chọn đúng công cụ causal; policy learning và OPE với propensity, overlap, ESS.</p>
       </header>
@@ -1675,9 +1643,7 @@ provider_receipt=p_82 · outcome_window=+7d · reward=+₫3,1M</pre>
           <p>Embedding chỉ nên thêm sau khi có benchmark retrieval trên đúng năm tình huống của hệ quyết định: temporal update, conflict, abstention, multi-session reasoning và cross-tenant isolation. Nếu lexical cộng metadata filter thắng hoặc ngang, vector infra chỉ thêm chi phí và thêm attack surface.</p>
 
           <div class="takeaway">
-            <span class="eyebrow">
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true" focusable="false"><path d="M12 2v6m0 8v6M4.9 4.9l4.2 4.2m5.8 5.8l4.2 4.2M2 12h6m8 0h6M4.9 19.1l4.2-4.2m5.8-5.8l4.2-4.2"/></svg>
-              Điều cần nhớ
+            <span class="eyebrow">Điều cần nhớ
             </span>
             <p>Memory đáng tin nhờ <span class="hl">scope, provenance và lifecycle</span>; similarity chỉ là một ranking signal.</p>
           </div>
@@ -1718,7 +1684,6 @@ provider_receipt=p_82 · outcome_window=+7d · reward=+₫3,1M</pre>
           <p>Chiều thứ Năm, owner hỏi có nên chuyển ₫200M từ ads sang creator. Một bảng báo tương quan r = 0,82 trên ba tuần, bảng khác báo r = 0,41 trên 30 tuần (số tổng hợp minh hoạ, không phải một dataset đi kèm). Không thể chọn bằng cách nhân r với một “độ tin cậy”: tương quan, trọng số ước lượng và xác suất đúng là ba đại lượng khác nhau.</p>
 
           <div class="concept">
-            <span class="eyebrow">Khái niệm</span>
             <h4>Shrinkage: ước lượng trung bình, không cấp xác suất đúng</h4>
             <p>Mô hình Bühlmann kết hợp trung bình riêng với trung bình nhóm: <b>m̂ = Z × x̄ + (1 − Z) × μ</b>, với <b>Z = k/(k+K)</b>, <b>K = EPV/VHM</b>. EPV là phương sai kỳ vọng bên trong đối tượng; VHM là phương sai giữa các trung bình đối tượng. Giả định: các kỳ có cùng mức phơi nhiễm và độc lập, cùng phân phối khi đã biết đặc tính đối tượng. Chuỗi tuần tự tương quan hoặc mùa vụ cần mô hình khác. Z là trọng số của trung bình riêng, không phải xác suất đề xuất đúng.</p>
           </div>
@@ -1825,9 +1790,7 @@ provider_receipt=p_82 · outcome_window=+7d · reward=+₫3,1M</pre>
           </div>
 
           <div class="takeaway">
-            <span class="eyebrow">
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true" focusable="false"><path d="M12 2v6m0 8v6M4.9 4.9l4.2 4.2m5.8 5.8l4.2 4.2M2 12h6m8 0h6M4.9 19.1l4.2-4.2m5.8-5.8l4.2-4.2"/></svg>
-              Điều cần nhớ
+            <span class="eyebrow">Điều cần nhớ
             </span>
             <p><span class="hl">Trọng số không phải xác suất; dự báo không phải lift.</span> Chọn phép ước lượng theo đại lượng cần biết và giả định dữ liệu, rồi mới đặt gate quyết định.</p>
           </div>
@@ -1870,7 +1833,6 @@ provider_receipt=p_82 · outcome_window=+7d · reward=+₫3,1M</pre>
           <p>Tách ra thì phần can thiệp chỉ +5%, mùa vụ +12%, voucher +8% (số minh hoạ). Gọi cả +25% là causal sẽ dạy policy học sai reward, và tuần sau engine sẽ đề xuất đúng cái lever đã ăn theo mùa vụ.</p>
 
           <div class="concept">
-            <span class="eyebrow">Khái niệm</span>
             <h4>Potential outcomes: đại lượng bạn thật sự muốn</h4>
             <p><b>Potential outcome</b> (kết quả sẽ xảy ra dưới một treatment cụ thể) viết là Y<sup>a=1</sup> khi kéo lever và Y<sup>a=0</sup> khi không kéo. Tác động lên một đơn vị là hiệu của hai giá trị đó. Vấn đề nền tảng: mỗi đơn vị chỉ quan sát được một trong hai, nên tác động cấp cá nhân không bao giờ nhận dạng được từ dữ liệu quan sát (Hernán &amp; Robins, <i>Causal Inference: What If</i>, ch. 1, bản PDF 19/08/2026). Mọi công cụ trong khoá này ước lượng một tác động trung bình, và mỗi công cụ mua quyền đó bằng một giả định khác nhau.</p>
           </div>
@@ -1964,9 +1926,7 @@ provider_receipt=p_82 · outcome_window=+7d · reward=+₫3,1M</pre>
           <p>Để ước lượng <b>total effect trong các DAG minh hoạ</b>, chọn tập điều chỉnh chặn backdoor mà không mở collider path; không điều chỉnh mediator vì sẽ chặn một phần tác động cần đo. Quy tắc theo vai trò trong đồ thị, không chỉ theo thời điểm. Direct effect, mediation hay dữ liệu dọc cần phương pháp và giả định riêng, có thể xử lý biến post-treatment. Kèm theo là một field bắt buộc trong evidence record: <b>khoá gộp</b> (aggregation key, cấp gộp mà con số được tính trên đó). Một con số không kèm khoá gộp thì chưa phải bằng chứng. Bài 3.2 tách trọng số, xác suất và lift; thang này quyết định một kết quả được phép mang nhãn gì.</p>
 
           <div class="takeaway">
-            <span class="eyebrow">
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true" focusable="false"><path d="M12 2v6m0 8v6M4.9 4.9l4.2 4.2m5.8 5.8l4.2 4.2M2 12h6m8 0h6M4.9 19.1l4.2-4.2m5.8-5.8l4.2-4.2"/></svg>
-              Điều cần nhớ
+            <span class="eyebrow">Điều cần nhớ
             </span>
             <p>Estimator chỉ đáng tin khi <span class="hl">record hỗ trợ assumptions của estimator</span>.</p>
           </div>
@@ -2007,7 +1967,6 @@ provider_receipt=p_82 · outcome_window=+7d · reward=+₫3,1M</pre>
           <p>Thứ Sáu, ba đề xuất nằm trên bàn: giảm giá 10% toàn shop, đổi thumbnail cho 200 SKU, và đổi mức voucher của sàn (số minh hoạ). Cả ba đều được yêu cầu “đo bằng A/B, trả kết quả trước thứ Sáu tuần sau”. Chỉ một trong ba A/B được ở mức user. Giảm giá chạm vào một catalogue dùng chung nên hai nhánh cạnh tranh trên chính giỏ hàng của khách. Voucher toàn sàn thì không tồn tại nhóm control nào.</p>
 
           <div class="concept">
-            <span class="eyebrow">Khái niệm</span>
             <h4>Interference làm estimand biến mất</h4>
             <p><b>Interference</b> (đơn vị này bị ảnh hưởng bởi treatment của đơn vị khác) vừa làm ước lượng lệch, vừa làm “tác động của lever lên đơn vị i” không còn là một đại lượng xác định, cho tới khi bạn nói rõ mọi đơn vị khác nhận gì (Hernán &amp; Robins, <i>Causal Inference: What If</i>, Fine Point 1.1, bản PDF 19/08/2026). Đó là lý do cây quyết định bắt đầu bằng interference chứ không bằng cỡ mẫu.</p>
           </div>
@@ -2103,9 +2062,7 @@ provider_receipt=p_82 · outcome_window=+7d · reward=+₫3,1M</pre>
           <p>Nối lại với bài 1.3: thumbnail và giá có thể cùng ở một mức bằng chứng mà autonomy vẫn khác nhau. Thumbnail randomize được theo user, đảo ngược được, blast radius nhỏ, thời gian A/B phụ thuộc effect, traffic và power. Giá có thể vướng interference qua catalogue dùng chung và margin không lấy lại được; chi phí design phải ước lượng tại hệ đang xét. Công cụ đo là thứ nối hai thang đó với nhau.</p>
 
           <div class="takeaway">
-            <span class="eyebrow">
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true" focusable="false"><path d="M12 2v6m0 8v6M4.9 4.9l4.2 4.2m5.8 5.8l4.2 4.2M2 12h6m8 0h6M4.9 19.1l4.2-4.2m5.8-5.8l4.2-4.2"/></svg>
-              Điều cần nhớ
+            <span class="eyebrow">Điều cần nhớ
             </span>
             <p>Chọn design theo <span class="hl">estimand gần quyết định nhất</span>, và ghi vào record đúng cái giả định mà nhánh đó bắt bạn mua, kèm cách kiểm nó.</p>
           </div>
@@ -2232,9 +2189,7 @@ DR    = reward_model(x, π_new) + w × residual</pre>
           </div>
 
           <div class="takeaway">
-            <span class="eyebrow">
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true" focusable="false"><path d="M12 2v6m0 8v6M4.9 4.9l4.2 4.2m5.8 5.8l4.2 4.2M2 12h6m8 0h6M4.9 19.1l4.2-4.2m5.8-5.8l4.2-4.2"/></svg>
-              Điều cần nhớ
+            <span class="eyebrow">Điều cần nhớ
             </span>
             <p>OPE đáng tin nhờ <span class="hl">logging contract và overlap</span>, không nhờ tên thuật toán “DR”.</p>
           </div>
@@ -2256,7 +2211,7 @@ DR    = reward_model(x, π_new) + w × residual</pre>
     <!-- ============ MODULE 4 ============ -->
     <div class="container">
       <header class="module-header" data-module="4">
-        <span class="eyebrow">Module 04 · Phần IV · Learning & Action</span>
+        <span class="eyebrow">Phần IV</span>
         <h2>Học và hành động: explore/exploit, learning loop, typed action</h2>
         <p>Học và hành động: explore/exploit với Thompson sampling và propensity ghi tại draw; learning loop candidate → shadow → canary → promote/rollback; và typed action state machine với receipt, recovery và reviewer có FNR đo được. Các bài 4.4–4.6 là nhánh tự chọn về phân bổ chung, solver và độ nhạy; không bắt buộc với mọi hệ quyết định.</p>
       </header>
@@ -2285,7 +2240,6 @@ DR    = reward_model(x, π_new) + w × residual</pre>
           <p>Câu hỏi thật của tuần này: bạn sẵn sàng trả bao nhiêu tuần này để tuần sau vẫn biết lever nào tốt. Bandit trả lời câu đó bằng một con số đem đi duyệt được.</p>
 
           <div class="concept">
-            <span class="eyebrow">Khái niệm</span>
             <h4>Thompson sampling trên posterior Beta</h4>
             <p>Mỗi lever giữ một posterior <strong>Beta(α, β)</strong>: α là pseudo-count của conversion, β là pseudo-count của lượt không conversion, cộng prior. Mỗi lượt quyết định, engine <em>rút</em> một θ̂ từ posterior của từng lever rồi chọn lever có θ̂ lớn nhất (Russo, Van Roy, Kazerouni, Osband &amp; Wen, <em>A Tutorial on Thompson Sampling</em>, arXiv 1707.02038; bảo đảm regret cho trường hợp Bernoulli ở Agrawal &amp; Goyal, arXiv 1111.1797, 2011 và arXiv 1209.3353, 2012). Chỗ hay nhầm: θ̂ là một tỷ lệ conversion hợp lý, không phải một lượt mua giả lập.</p>
           </div>
@@ -2392,9 +2346,7 @@ DR    = reward_model(x, π_new) + w × residual</pre>
           </div>
 
           <div class="takeaway">
-            <span class="eyebrow">
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true" focusable="false"><path d="M12 2v6m0 8v6M4.9 4.9l4.2 4.2m5.8 5.8l4.2 4.2M2 12h6m8 0h6M4.9 19.1l4.2-4.2m5.8-5.8l4.2-4.2"/></svg>
-              Điều cần nhớ
+            <span class="eyebrow">Điều cần nhớ
             </span>
             <p>Exploration có chi phí; <span class="hl">ghi propensity tại lúc draw</span>: thiếu propensity hợp lệ thì chưa đủ dữ liệu cho đường IPS/SNIPS của bài.</p>
           </div>
@@ -2510,9 +2462,7 @@ DR    = reward_model(x, π_new) + w × residual</pre>
           <p>Cuối cùng, một điều phải nói thẳng: revert <code>policy_hash</code> không un-spend ₫200M đã tiêu (số minh hoạ). Rollback đảo ngược artifact đang chạy, không đảo ngược hậu quả của hành động đã thực thi. Với hành động irreversible, "rollback" duy nhất bạn từng có là cái approval gate đã đi qua trước đó. Vì vậy canary risk budget nên đo bằng đơn vị irreversible-effect: 5% traffic của một hành động không đảo ngược được vẫn có thể là toàn bộ thiệt hại bạn sẵn sàng chịu.</p>
 
           <div class="takeaway">
-            <span class="eyebrow">
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true" focusable="false"><path d="M12 2v6m0 8v6M4.9 4.9l4.2 4.2m5.8 5.8l4.2 4.2M2 12h6m8 0h6M4.9 19.1l4.2-4.2m5.8-5.8l4.2-4.2"/></svg>
-              Điều cần nhớ
+            <span class="eyebrow">Điều cần nhớ
             </span>
             <p>Self-improving production là <span class="hl">evidence-gated release management</span> cho policy, model, prompt và memory.</p>
           </div>
@@ -2555,7 +2505,6 @@ DR    = reward_model(x, π_new) + w × residual</pre>
           <p>Action path là một distributed system. "POST trả 500" là thiếu thông tin về phía provider, không phải bằng chứng rằng chưa có gì xảy ra. Vì vậy command mang một scoped idempotency key; mỗi lần thử là một attempt append-only; provider receipt được lưu riêng; và mọi transition dùng compare-and-set.</p>
 
           <div class="concept">
-            <span class="eyebrow">Khái niệm</span>
             <h4>Bốn định danh, mỗi cái trả lời một câu hỏi khác nhau</h4>
             <p><code>command_id</code> trả lời "đây là quyết định nào". <code>idempotency_key</code> trả lời "thế nào là cùng một hành động", và vì nó băm từ org, action kind, target và approved context nên đổi bất kỳ mảnh nào trong đó là một hành động khác. <code>attempt_id</code> trả lời "đây là lần thử thứ mấy". <code>provider_receipt</code> trả lời "phía kia đã làm gì". Gộp bốn thứ này vào một cột trạng thái là cách nhanh nhất để mất khả năng phân biệt "chưa làm" với "đã làm nhưng ta chưa biết".</p>
           </div>
@@ -2621,7 +2570,7 @@ transition       = UPDATE ... WHERE state = expected_state</pre>
             <p>Với campaign ₫200M ở trên, worker retry cùng idempotency_key hoặc query receipt, và không tạo campaign thứ hai. Khi provider không nhận idempotency key, adapter phải mang một reconciliation contract riêng: cách liệt kê object đã tạo trong cửa sổ thời gian, khoá tự nhiên để đối chiếu, và hành vi khi đối chiếu không kết luận được. Chưa có contract đó thì lever này còn ở mức tự chủ thấp và mỗi lần chạy vẫn cần người xác nhận.</p>
           </div>
 
-          <p>Gate duyệt cũng là một artifact có tỷ lệ lỗi đo được, không phải một bảo đảm. Anthropic báo cáo người dùng Claude Code bấm đồng ý 93% số permission prompt (<a href="https://www.anthropic.com/engineering/claude-code-auto-mode">Anthropic, 25/03/2026</a>). Một cổng mà gần như ai cũng bấm đồng ý đã thôi làm chức năng kiểm soát; chữ ký ở đó mất dần giá trị bằng chứng.</p>
+          <p>Gate duyệt cũng là một artifact có tỷ lệ lỗi đo được, không phải một bảo đảm. Anthropic báo cáo người dùng Claude Code bấm đồng ý 93% số permission prompt (<a href="https://www.anthropic.com/research/claude-code-auto-mode">Anthropic, 25/03/2026</a>). Tỷ lệ đồng ý chưa cho biết người dùng bỏ sót bao nhiêu yêu cầu ngoài quyền. Muốn đo khả năng phát hiện, lấy mẫu cả yêu cầu được duyệt lẫn bị từ chối rồi đối chiếu với quyền thực tế.</p>
 
           <figure class="figure">
             <div class="diagram-viewport" role="region" tabindex="0" aria-label="Sơ đồ; cuộn ngang để đọc đầy đủ nhãn" style="--diagram-width:640px"><svg viewBox="0 0 640 300" role="img" aria-label="Mặt phẳng FNR theo FPR với hai điểm: stage 1 có FNR 6,6 phần trăm và FPR 8,5 phần trăm, full pipeline có FNR 17 phần trăm và FPR 0,4 phần trăm, nối bằng mũi tên thêm stage 2">
@@ -2651,10 +2600,10 @@ transition       = UPDATE ... WHERE state = expected_state</pre>
               <text class="dgm-ink2" x="26" y="150" font-size="11" text-anchor="middle" transform="rotate(-90 26 150)">FNR: bỏ sót hành động nguy hiểm (%)</text>
               <defs><marker id="m4l3b-ah" markerWidth="9" markerHeight="9" refX="7" refY="4.5" orient="auto"><path d="M0 0 L9 4.5 L0 9 z" fill="var(--accent-2)"/></marker></defs>
             </svg></div>
-            <figcaption><b>Hình 4.5</b> · Thêm một tầng reasoning kéo FPR từ 8,5% xuống 0,4%, và kéo FNR từ 6,6% lên 17%. Reviewer là một điểm ai đó đã chọn trên đường cong này, nên chọn điểm là việc của owner. Số đo trên 52 hành động overeager thật và 10.000 request nội bộ thật (<a href="https://www.anthropic.com/engineering/claude-code-auto-mode">Anthropic, 25/03/2026</a>).</figcaption>
+            <figcaption><b>Hình 4.5</b> · Thêm một tầng reasoning kéo FPR từ 8,5% xuống 0,4%, và kéo FNR từ 6,6% lên 17%. Reviewer là một điểm ai đó đã chọn trên đường cong này, nên chọn điểm là việc của owner. Số đo trên 52 hành động overeager thật và 10.000 request nội bộ thật (<a href="https://www.anthropic.com/research/claude-code-auto-mode">Anthropic, 25/03/2026</a>).</figcaption>
           </figure>
 
-          <p>Thay người bằng classifier không xoá được câu hỏi, nó chỉ đổi chỗ đặt câu hỏi. Cùng báo cáo đó đo hai cấu hình: stage 1 là bộ lọc một token, bỏ sót 6,6% và chặn nhầm 8,5%; thêm stage 2 chain-of-thought thì bỏ sót lên 17% còn chặn nhầm xuống 0,4% (<a href="https://www.anthropic.com/engineering/claude-code-auto-mode">Anthropic, 25/03/2026</a>). Pipeline "tốt hơn" bỏ sót nhiều hơn 2,6 lần. Đây là số do nhà cung cấp tự báo cáo và chưa có bên thứ ba lặp lại, nên đọc nó như bằng chứng có hướng.</p>
+          <p>Trong thử nghiệm của Anthropic, với 10.000 lệnh gọi công cụ nội bộ và 52 hành động bị gắn nhãn vượt quyền, bước kiểm tra thứ hai giảm tỷ lệ chặn nhầm từ 8,5% xuống 0,4%. Tỷ lệ bỏ sót hành động vượt quyền tăng từ 6,6% lên 17%. Khi chọn cấu hình cho hệ thống của mình, đo lại cả hai tỷ lệ trên các hành động mà hệ thống thực sự xử lý. <a href="https://www.anthropic.com/research/claude-code-auto-mode">Thiết kế và đánh giá của Anthropic</a>.</p>
 
           <p>Khuyến nghị mặc định rút ra từ đó: đặt gate ở nơi blast radius lớn và khó đảo ngược, ít lần nhưng thật; những chỗ còn lại siết bằng biên (trần tiền, trần số lượng, allowlist target) và bằng khả năng đảo ngược, thay vì thêm một pop-up nữa. Và dù gate đặt ở đâu, ghi lại operating point đã chọn: FNR bao nhiêu, FPR bao nhiêu, đo trên tập nào, ngày nào.</p>
 
@@ -2666,9 +2615,7 @@ transition       = UPDATE ... WHERE state = expected_state</pre>
           </div>
 
           <div class="takeaway">
-            <span class="eyebrow">
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true" focusable="false"><path d="M12 2v6m0 8v6M4.9 4.9l4.2 4.2m5.8 5.8l4.2 4.2M2 12h6m8 0h6M4.9 19.1l4.2-4.2m5.8-5.8l4.2-4.2"/></svg>
-              Điều cần nhớ
+            <span class="eyebrow">Điều cần nhớ
             </span>
             <p>Exactly-once là <span class="hl">mục tiêu nghiệp vụ đạt bằng idempotency cộng reconciliation</span>, không phải bảo đảm mặc định của queue.</p>
           </div>
@@ -2731,7 +2678,7 @@ transition       = UPDATE ... WHERE state = expected_state</pre>
     <!-- ============ MODULE 5 ============ -->
     <div class="container">
       <header class="module-header" data-module="5">
-        <span class="eyebrow">Module 05 · Phần V · Evals & Operations</span>
+        <span class="eyebrow">Phần V</span>
         <h2>Vận hành: eval, trace và uncertainty làm gate</h2>
         <p>Vận hành: agent evals theo outcome lẫn trajectory, trace thống nhất mặc định không log nội dung, và uncertainty làm gate: conformal, drift, champion expiry.</p>
       </header>
@@ -2760,7 +2707,6 @@ transition       = UPDATE ... WHERE state = expected_state</pre>
     <p>Chiều thứ Năm, bảng eval của candidate policy hiện 40/40 fixture pass. Người trực release đề nghị promote luôn cho kịp chu kỳ quyết định sáng thứ Hai. Bạn mở replay của một fixture: agent được hỏi sell-through của dòng SKU son, nó trả <b>41,2%</b>, khớp ground truth. Trace kể chuyện khác. Ở bước 2 nó đọc bảng đơn hàng của một tenant khác, thấy con số lệch, rồi gọi lại tool đúng ở bước cuối và sửa thành 41,2%. Đáp số đúng, đường đi thì đã băng qua ranh giới tenant. Suite hiện tại chỉ chấm ô cuối cùng, nên nó báo pass và mở gate.</p>
 
     <div class="concept">
-      <span class="eyebrow">Khái niệm</span>
       <h4>Bốn trục của một eval suite cho agent có side effect</h4>
       <p>Một agent có thể ra đáp án đúng bằng dữ liệu sai, tool sai hoặc privilege bypass. Suite phải chấm <strong>outcome</strong> (kết quả có đúng), <strong>trajectory</strong> (chuỗi bước có hợp lệ), <strong>safety</strong> (có vượt ranh giới nào), và <strong>operations</strong> (latency, cost, duplicate). Vì hành vi là stochastic, mỗi fixture chạy nhiều trial và kết quả đi kèm khoảng tin cậy.</p>
     </div>
@@ -2841,7 +2787,7 @@ transition       = UPDATE ... WHERE state = expected_state</pre>
 
     <div class="callout warn">
       <div class="callout-title">LLM judge là sàn regression, không phải người duyệt cuối</div>
-      <p>Một agent giao dịch nhiều lượt đã chạy production được đối chiếu với review thủ công toàn bộ transcript (arXiv 2606.10315, 09/06/2026). Judge chỉ nêu được 2 trên 9 pattern lỗi có thật ở một batch, tức 22%; ở một batch khác, gate vận hành gắn với judge bắn 0 trên 100 round trong khi người xác nhận 23 lỗi riêng biệt. Điểm đắt nhất: 113 trên 114 round mà chính ghi chú thô của judge đã mô tả đúng lỗi confirm-gate lại bị chấm thành «brand voice». Tác giả gọi đó là lỗi định tuyến, không phải lỗi nhận thức: rubric chỉ có ba trục (intent, brand-voice, personalization) và không có trục nào cho state-tracking, guardrail hay recovery, còn gate thì nối vào crash và assertion cứng chứ không nối vào rubric.</p>
+      <p>Một agent giao dịch nhiều lượt đã chạy production được đối chiếu với review thủ công toàn bộ transcript (arXiv 2606.10315, 09/06/2026). Judge chỉ nêu được 2 trên 9 pattern lỗi có thật ở một batch, tức 22%; ở một batch khác, gate vận hành gắn với judge bắn 0 trên 100 round trong khi người xác nhận 23 lỗi riêng biệt. Trong 113 trên 114 lượt, ghi chú của judge mô tả đúng lỗi ở bước xác nhận nhưng nhãn cuối cùng lại là «brand voice». Tác giả gọi đó là lỗi định tuyến, không phải lỗi nhận thức: rubric chỉ có ba trục (intent, brand-voice, personalization) và không có trục nào cho state-tracking, guardrail hay recovery, còn gate thì nối vào crash và assertion cứng chứ không nối vào rubric.</p>
     </div>
 
     <p>Hai luật rút thẳng ra từ đó, và cả hai đều rẻ: <b>rubric phải có một trục cho mọi failure class bạn quan tâm</b>, và <b>gate phải đọc rubric</b>, chứ không dừng ở timeout. Luật thứ ba là điều kiện biên: judge được quyền chặn regression, không được quyền thay human review cho action high-risk.</p>
@@ -2872,9 +2818,7 @@ transition       = UPDATE ... WHERE state = expected_state</pre>
     </div>
 
     <div class="takeaway">
-      <span class="eyebrow">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true" focusable="false"><path d="M12 2v6m0 8v6M4.9 4.9l4.2 4.2m5.8 5.8l4.2 4.2M2 12h6m8 0h6M4.9 19.1l4.2-4.2m5.8-5.8l4.2-4.2"/></svg>
-        Takeaway
+      <span class="eyebrow">Takeaway
       </span>
       <p>Gate promotion bằng pass^k trên cả bốn trục outcome, trajectory, safety và operations, vì <span class="hl">một agent đi sai đường vẫn nói đúng câu ở lượt cuối</span>.</p>
     </div>
@@ -2915,7 +2859,6 @@ transition       = UPDATE ... WHERE state = expected_state</pre>
     <p>Sáng thứ Ba, một nhóm khách nhận hai email khuyến mãi giống hệt nhau cách nhau bốn phút. Team mở log. Service gửi mail có log, kernel có log, copilot có log, cả ba đều đầy đủ và không cái nào nối được với cái nào: mỗi tầng sinh id riêng và không tầng nào mang id của tầng trên. Sau hai giờ, câu trả lời «vì sao hệ gửi hai lần» vẫn là một giả thuyết. Đây là hình dạng quen thuộc của một hệ có nhiều log mà không có trace.</p>
 
     <div class="concept">
-      <span class="eyebrow">Khái niệm</span>
       <h4>Correlation contract: chuỗi id phải nối liền từ câu hỏi tới outcome</h4>
       <p><strong>Correlation contract</strong> (hợp đồng nối id) là danh sách id mà mọi span phải mang, viết ra và version hoá như schema. Không có nó, telemetry chỉ là các đống rời.</p>
       <div class="code-card"><pre>trace_id → run_id → step_id / parent_step_id → decision_episode_id
@@ -2986,9 +2929,7 @@ transition       = UPDATE ... WHERE state = expected_state</pre>
     <p>Ví dụ trở lại vụ email gửi trùng. Khi trace đã nối liền, câu trả lời hiện ra trong vài phút: hai attempt khác nhau dùng hai idempotency key khác nhau, vì hai đường code chuẩn hoá target theo hai cách. Việc phải làm là giao quyền sở hữu canonical key cho một chỗ duy nhất, không phải thêm retry ngẫu nhiên hay tăng thời gian chờ.</p>
 
     <div class="takeaway">
-      <span class="eyebrow">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true" focusable="false"><path d="M12 2v6m0 8v6M4.9 4.9l4.2 4.2m5.8 5.8l4.2 4.2M2 12h6m8 0h6M4.9 19.1l4.2-4.2m5.8-5.8l4.2-4.2"/></svg>
-        Takeaway
+      <span class="eyebrow">Takeaway
       </span>
       <p>Trace mặc định lưu đủ id, version, timing, cost và hash để điều tra được, và <span class="hl">lưu càng ít nội dung càng tốt</span>.</p>
     </div>
@@ -3029,7 +2970,6 @@ transition       = UPDATE ... WHERE state = expected_state</pre>
     <p>Google kể một chuyện trong «Rules of Machine Learning» (Rule #10): Google Play từng có một bảng dữ liệu đứng yên suốt sáu tháng, và chỉ refresh bảng đó đã kéo install rate lên 2%. Không alert nào bắn. Hệ machine learning không gãy khi thế giới đổi, nó chỉnh theo rồi xuống cấp dần. Brand ví dụ của khoá này gặp đúng hình dạng đó: sàn đổi thuật toán xếp hạng mà không báo ai, MAPE nhích từ 6,1% lên 7,4%, dashboard vẫn xanh, còn bề rộng khoảng dự đoán đã gấp đôi (số minh hoạ).</p>
 
     <div class="concept">
-      <span class="eyebrow">Khái niệm</span>
       <h4>Conformal prediction: khoảng dự báo outcome có bảo đảm marginal</h4>
       <p><strong>Conformal prediction</strong> bọc quanh một model đã train sẵn và trả về một <em>prediction set</em> thay cho một điểm. Theo <a href="https://arxiv.org/html/2107.07511v6">Angelopoulos &amp; Bates, v6</a>: chọn score function <code>s(x,y)</code>, score càng lớn càng lệch; tính <code>q̂</code> là phân vị <code>⌈(n+1)(1−α)⌉/n</code> của score trên calibration set giữ riêng; lấy <code>C(x) = { y : s(x,y) ≤ q̂ }</code>. với bảo đảm <code>P(Y ∈ C(X)) ≥ 1 − α</code>.</p>
       <p>Số worked: <code>n = 500</code>, <code>α = 0,10</code> cho <code>⌈501 × 0,9⌉ / 500 = 451/500 = 0,902</code>, tức phân vị 90,2% chứ không phải 90%. Đọc bằng lời: cái <code>+1</code> và phần làm tròn lên là hiệu chỉnh hữu hạn mẫu, ai gõ <code>quantile(scores, 0.9)</code> đã vứt bảo đảm đi.</p>
@@ -3182,9 +3122,7 @@ transition       = UPDATE ... WHERE state = expected_state</pre>
     </div>
 
     <div class="takeaway">
-      <span class="eyebrow">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true" focusable="false"><path d="M12 2v6m0 8v6M4.9 4.9l4.2 4.2m5.8 5.8l4.2 4.2M2 12h6m8 0h6M4.9 19.1l4.2-4.2m5.8-5.8l4.2-4.2"/></svg>
-        Takeaway
+      <span class="eyebrow">Takeaway
       </span>
       <p><span class="hl">Khoảng dự báo outcome không phải khoảng tác động can thiệp.</span> Bảo đảm marginal cần exchangeability; gate dự báo, drift và quyền hành động phải được kiểm riêng.</p>
     </div>
@@ -3206,7 +3144,7 @@ transition       = UPDATE ... WHERE state = expected_state</pre>
     <!-- ============ MODULE 6 ============ -->
     <div class="container">
       <header class="module-header" data-module="6">
-        <span class="eyebrow">Module 06 · Phần VI</span>
+        <span class="eyebrow">Phần VI</span>
         <h2>Blueprint: một tuần ví dụ và checklist</h2>
         <p>Blueprint: một tuần của brand ví dụ đi qua đủ 10 bước, rồi checklist kiến trúc và nguồn đọc tiếp.</p>
       </header>
@@ -3340,9 +3278,7 @@ transition       = UPDATE ... WHERE state = expected_state</pre>
           </div>
 
           <div class="takeaway">
-            <span class="eyebrow">
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true" focusable="false"><path d="M12 2v6m0 8v6M4.9 4.9l4.2 4.2m5.8 5.8l4.2 4.2M2 12h6m8 0h6M4.9 19.1l4.2-4.2m5.8-5.8l4.2-4.2"/></svg>
-              Takeaway
+            <span class="eyebrow">Takeaway
             </span>
             <p><span class="hl">Thiết kế từ evidence contract và failure recovery</span>; model hay agent framework là lựa chọn sau cùng, không phải bước đầu tiên của tuần.</p>
           </div>
@@ -3376,7 +3312,7 @@ transition       = UPDATE ... WHERE state = expected_state</pre>
             <ul>
               <li>Chạy một buổi architecture review bằng 12 dòng checklist, mỗi dòng một câu hỏi bắt buộc.</li>
               <li>Nhắc lại điều phải nhớ của cả 23 bài trong một bảng.</li>
-              <li>Trỏ đúng nguồn primary cho từng miền khi cần kiểm lại một con số.</li>
+              <li>Tìm tài liệu gốc theo chủ đề khi cần kiểm lại một con số.</li>
             </ul>
           </div>
 
@@ -3429,7 +3365,7 @@ transition       = UPDATE ... WHERE state = expected_state</pre>
 
           <div class="callout warn">
             <div class="callout-title">Quy định · EU AI Act</div>
-            <p>Điều 12(1) EU AI Act yêu cầu hệ high-risk cho phép tự động ghi log trong suốt vòng đời của hệ. Nghĩa vụ minh bạch tại Điều 50 có mốc áp dụng 02/08/2026; riêng phần machine-readable marking ở Điều 50(2), hệ đưa ra thị trường trước 02/08/2026 được gia hạn tới 02/12/2026. <a href="https://eur-lex.europa.eu/legal-content/EN/TXT/?uri=OJ:L_202601744">Regulation (EU) 2026/1744</a> (<a href="https://ai-act-service-desk.ec.europa.eu/en/ai-act/article-113?full=1">EC Article 113</a>) ngày 08/07/2026 (Digital Omnibus on AI) lùi ngày áp dụng cho hệ high-risk theo Điều 6(2) và Annex III sang 02/12/2027, theo Điều 6(1) và Annex I sang 02/08/2028; văn bản đăng Official Journal 24/07/2026, hiệu lực 27/07/2026. Mốc và cách diễn giải vẫn đổi: kiểm Official Journal trước khi dựa vào bất kỳ mốc nào, và coi đoạn này là điểm bắt đầu để hỏi pháp chế chứ không phải kết luận pháp lý.</p>
+            <p>Điều 12(1) EU AI Act yêu cầu hệ high-risk cho phép tự động ghi log trong suốt vòng đời của hệ. Nghĩa vụ minh bạch tại Điều 50 có mốc áp dụng 02/08/2026; riêng phần machine-readable marking ở Điều 50(2), hệ đưa ra thị trường trước 02/08/2026 được gia hạn tới 02/12/2026. <a href="https://eur-lex.europa.eu/legal-content/EN/TXT/?uri=OJ:L_202601744">Regulation (EU) 2026/1744</a> (<a href="https://ai-act-service-desk.ec.europa.eu/en/ai-act/article-113?full=1">EC Article 113</a>) ngày 08/07/2026 (Digital Omnibus on AI) lùi ngày áp dụng Chương III mục 1–3 (trừ Điều 6(5)) cho hệ high-risk theo Điều 6(2) và Annex III sang 02/12/2027, theo Điều 6(1) và Annex I sang 02/08/2028; văn bản đăng Official Journal 24/07/2026, hiệu lực 27/07/2026.</p>
           </div>
 
           <p>Điều 14 về human oversight ánh xạ khá thẳng lên thang A0–A4 ở bài 1.2: hệ high-risk phải có người hiểu được năng lực và giới hạn của hệ, theo dõi được vận hành, và can thiệp hoặc dừng được. Đọc theo ngôn ngữ của khoá này, kill switch, rollback target và approval context hash là điều kiện để bất kỳ mức tự chủ nào được coi là có giám sát, chứ không phải phần thêm dành riêng cho A4.</p>
@@ -3437,10 +3373,10 @@ transition       = UPDATE ... WHERE state = expected_state</pre>
           <figure class="figure">
             <div class="table-wrap" style="border:0;border-radius:0">
               <table>
-                <thead><tr><th style="width:190px">Miền</th><th>Nguồn primary</th></tr></thead>
+                <thead><tr><th style="width:190px">Miền</th><th>Tài liệu gốc</th></tr></thead>
                 <tbody>
                   <tr><td>Provenance</td><td><a href="https://www.w3.org/TR/prov-o/">W3C PROV-O</a></td></tr>
-                  <tr><td>Risk</td><td><a href="https://www.nist.gov/publications/artificial-intelligence-risk-management-framework-generative-artificial-intelligence">NIST AI 600-1</a> · <a href="https://csrc.nist.gov/projects/cosis">NIST COSIS (trước là COSAiS)</a>: đổi tên 20/10/2026; trang dự án liệt kê concept paper 14/08/2025 và annotated outline thảo luận 08/01/2026. Đây là công việc đang phát triển, không phải overlay cuối cùng để tuyên bố tuân thủ. NIST: “Previously issued documents and publications have not been altered.”</td></tr>
+                  <tr><td>Risk</td><td><a href="https://www.nist.gov/publications/artificial-intelligence-risk-management-framework-generative-artificial-intelligence">NIST AI 600-1</a> · <a href="https://csrc.nist.gov/projects/cosis">NIST COSIS (trước là COSAiS)</a>: đổi tên 20/10/2026; trang dự án liệt kê concept paper 14/08/2025 và annotated outline thảo luận 08/01/2026. Đây là công việc đang phát triển, không phải overlay cuối cùng để tuyên bố tuân thủ.</td></tr>
                   <tr><td>Memory</td><td><a href="https://arxiv.org/abs/2309.02427">CoALA</a> · <a href="https://arxiv.org/abs/2410.10813">LongMemEval</a></td></tr>
                   <tr><td>Credibility</td><td><a href="https://openacttextdev.github.io/LDA_Ed2/ChapCredibility.html">Loss Data Analytics</a>, bản 2, ch. 12 «Experience Rating Using Credibility Theory»</td></tr>
                   <tr><td>Causal</td><td>Brodersen, Gallusser, Koehler, Remy &amp; Scott (2015), <a href="https://projecteuclid.org/journals/annals-of-applied-statistics/volume-9/issue-1/Inferring-causal-impact-using-Bayesian-structural-time-series-models/10.1214/14-AOAS788.full">Inferring causal impact using Bayesian structural time-series models</a>, <i>Annals of Applied Statistics</i> 9(1):247–274 · <a href="https://developers.google.com/meridian">Meridian docs</a> · <a href="https://docs.doubleml.org/stable/guide/basics.html">DoubleML docs</a></td></tr>
@@ -3453,7 +3389,7 @@ transition       = UPDATE ... WHERE state = expected_state</pre>
                 </tbody>
               </table>
             </div>
-            <figcaption><b>Bảng 6.1.</b> Nguồn primary là điểm bắt đầu, không phải công thức promote. Research frontier ở dòng cuối chưa tự trở thành recipe production, và mọi claim về implementation vẫn cần code, test và evidence của chính hệ.</figcaption>
+            <figcaption><b>Bảng 6.1.</b> Tài liệu theo chủ đề. Hai bài ở dòng cuối mô tả phương pháp thử nghiệm để agent tự điều chỉnh.</figcaption>
           </figure>
 
           <div class="prompt-card">
@@ -3465,9 +3401,7 @@ Estimand + giả định đã mượn · limitations · rollback plan</pre>
           </div>
 
           <div class="takeaway">
-            <span class="eyebrow">
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true" focusable="false"><path d="M12 2v6m0 8v6M4.9 4.9l4.2 4.2m5.8 5.8l4.2 4.2M2 12h6m8 0h6M4.9 19.1l4.2-4.2m5.8-5.8l4.2-4.2"/></svg>
-              Takeaway
+            <span class="eyebrow">Takeaway
             </span>
             <p>Mỗi claim cần <span class="hl">bằng chứng và cơ chế vận hành fail-safe</span>.</p>
           </div>
@@ -3489,9 +3423,8 @@ Estimand + giả định đã mượn · limitations · rollback plan</pre>
     <!-- ---- COMPLETION PANE ---- -->
     <section class="pane" id="complete" data-pane>
       <div class="complete">
-        <div class="complete-badge">✓</div>
         <h2>Hoàn thành khoá học</h2>
-        <p>Bạn đã đi từ «self-improving ≠ self-editing» → decision contract và decision rights → 4 plane với kernel không thể bypass, rule receipts, LLM đề xuất và kernel định đoạt → đo trước khi tin và chọn đúng công cụ causal → explore/exploit và OPE có propensity thật → uncertainty làm gate và learning loop promote/rollback như release → evals và trace đủ để audit. Muốn đi sâu agent loop và harness, xem «Context &amp; Harness Engineering» và «Loop Engineering»; eval chi tiết ở «Agent Reliability &amp; Evaluation».</p>
+        <p>Dùng bảng kiểm ở <a href="#m6-l2">bài 6.2</a> để rà một quyết định của đội bạn. Để thiết kế phép thử cho agent, học tiếp <a href="agent-reliability-evaluation.html">Agent Reliability &amp; Evaluation</a>.</p>
         <div style="margin-top:26px"><a class="btn btn-primary" href="#overview">Về trang đầu</a></div>
       </div>
     </section>
@@ -3533,7 +3466,7 @@ const LESSONS = [
   {id:'m5-l2', mod:5, part:'Phần V · Evals & Operations', title:'Unified trace: từ retrieval tới provider receipt, mặc định không log nội dung', desc:'Correlation contract nối trace_id tới outcome_id, pin instrumentation theo commit, redaction làm mặc định.'},
   {id:'m5-l3', mod:5, part:'Phần V · Evals & Operations', title:'Uncertainty là một gate: conformal prediction, drift PSI/KS, champion expiry', desc:'Bề rộng conformal set làm ngưỡng abstain, PSI và KS làm báo động, champion expiry và guardrail auto-rollback có bound và persistence.'},
   {id:'m6-l1', mod:6, part:'Phần VI · Blueprint', title:'Capstone: lever nào tuần này?', desc:'Trace một tuần của brand ví dụ qua mười bước, bốn gate có quyền dừng, cạm bẫy spillover của cú chuyển ₫200M, và roadmap NOW / NEXT / LATER.'},
-  {id:'m6-l2', mod:6, part:'Phần VI · Blueprint', title:'Tóm tắt: checklist kiến trúc và nguồn đọc tiếp', desc:'Điều phải nhớ của cả 23 bài trong một bảng, 12 dòng checklist cho architecture review, mốc quy định 2026 và nguồn primary theo từng miền.'},
+  {id:'m6-l2', mod:6, part:'Phần VI · Blueprint', title:'Tóm tắt: checklist kiến trúc và nguồn đọc tiếp', desc:'Điều phải nhớ của cả 23 bài trong một bảng, 12 dòng checklist cho architecture review, mốc quy định 2026 và tài liệu gốc theo chủ đề.'},
 ];
 
 const PANES = ['overview','complete'];
@@ -3616,6 +3549,7 @@ function markUI(id,done){
 
 /* ---- pagination ---- */
 function show(id){
+  const curriculum = id === 'curriculum' ? document.getElementById('curriculum') : null;
   const valid = PANES.includes(id) || LESSONS.some(l=>l.id===id);
   if(!valid) id='overview';
   document.querySelectorAll('[data-pane],[data-lesson],.module-header').forEach(el=>el.classList.remove('active'));
@@ -3635,7 +3569,8 @@ function show(id){
   if(an&&ns){ns.scrollTo({top:Math.max(0,an.offsetTop-ns.clientHeight/2),behavior:'auto'})}
   sSet(LAST_KEY,id);
   if(window.innerWidth<1024){document.getElementById('sidebar').classList.remove('open');document.getElementById('backdrop').classList.remove('show')}
-  window.scrollTo({top:0,behavior:'instant'});
+  if(curriculum) curriculum.scrollIntoView({behavior:'instant'});
+  else window.scrollTo({top:0,behavior:'instant'});
   document.getElementById('main').focus({preventScroll:true}); // screen readers announce from the top of the new lesson
   try{window.parent.postMessage({type:'lms:lesson-change',course:COURSE_SLUG,lessonId:id},'*')}catch(e){}
 }

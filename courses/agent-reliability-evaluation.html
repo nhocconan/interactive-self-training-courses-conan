@@ -28,7 +28,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Agent Reliability & Evaluation · Đo agent có đáng tin trước khi ship</title>
-<meta name="description" content="Khoá học tương tác tiếng Việt cho kỹ sư AI: đo độ tin cậy của agent trước khi ship — outcome vs trajectory eval, LLM-as-judge và bias của nó, pass@k vs pass^k, tracing OpenTelemetry GenAI, eval-driven CI gate, guardrails, và progressive rollout shadow→canary. Ba trụ eval · observability · gate nối thành một flywheel, minh hoạ trên một hệ agent ví dụ.">
+<meta name="description" content="Dựng bộ kiểm thử từ lỗi thực tế, chấm kết quả agent và quyết định khi nào có thể mở rộng triển khai. Các bài tính dùng dữ liệu giả lập để bạn tự đối chiếu kết quả.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
@@ -134,7 +134,7 @@ code{font-family:var(--font-mono);font-size:.86em;background:var(--surface-2);
 .mono{font-family:var(--font-mono)}
 .eyebrow{font-family:var(--font-mono);font-size:11px;letter-spacing:.22em;
   text-transform:uppercase;color:var(--accent-2);font-weight:600}
-.grad-text{background:var(--grad);-webkit-background-clip:text;background-clip:text;color:transparent}
+
 
 /* Skip link (a11y) */
 .skip-link{position:fixed;top:-60px;left:12px;z-index:200;background:var(--accent);
@@ -214,11 +214,7 @@ code{font-family:var(--font-mono);font-size:.86em;background:var(--surface-2);
    5 · HERO / COVER
    ============================================================================ */
 .hero{position:relative;overflow:hidden;border-bottom:1px solid var(--border);
-  background:var(--surface);
-  background-image:
-    radial-gradient(760px 300px at 88% -12%,color-mix(in srgb,var(--brand-gold) 24%,transparent),transparent 60%),
-    radial-gradient(640px 380px at 6% 112%,color-mix(in srgb,var(--accent-2) 14%,transparent),transparent 60%),
-    radial-gradient(560px 340px at 50% 0%,color-mix(in srgb,var(--accent) 8%,transparent),transparent 65%)}
+  background:var(--surface)}
 .hero-inner{max-width:var(--maxw);margin:0 auto;padding:72px 24px 60px}
 .hero h1{font-size:clamp(2.1rem,5vw,3.4rem);font-weight:800;margin:20px 0 0;letter-spacing:-.03em}
 .hero-sub{font-size:clamp(1rem,2vw,1.2rem);color:var(--ink-2);margin-top:18px}
@@ -234,7 +230,8 @@ code{font-family:var(--font-mono);font-size:.86em;background:var(--surface-2);
 /* ============================================================================
    6 · TOC / CURRICULUM
    ============================================================================ */
-.section-pad{padding:56px 0}
+.section-pad{padding-block:56px}
+#curriculum{scroll-margin-block-start:1rem}
 .section-head{display:flex;align-items:baseline;gap:14px;margin-bottom:28px}
 .section-head h2{font-size:1.9rem}
 .section-head .line{flex:1;height:1px;background:var(--border)}
@@ -243,7 +240,7 @@ code{font-family:var(--font-mono);font-size:.86em;background:var(--surface-2);
 .toc-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:12px}
 .toc-card{display:flex;gap:14px;align-items:flex-start;padding:16px;border:1px solid var(--border);
   border-radius:var(--radius);background:var(--surface);cursor:pointer;transition:transform .15s,box-shadow .15s,border-color .15s}
-.toc-card:hover{transform:translateY(-2px);box-shadow:var(--shadow-md);border-color:var(--accent);text-decoration:none}
+.toc-card:hover{box-shadow:var(--shadow-md);border-color:var(--accent);text-decoration:none}
 .toc-card-num{font-family:var(--font-mono);font-size:20px;font-weight:700;color:var(--accent-2);line-height:1}
 .toc-card-title{display:block;font-weight:700;font-size:15px;color:var(--ink)}
 .toc-card-desc{display:block;font-size:12.5px;color:var(--ink-2);margin-top:4px;line-height:1.5}
@@ -266,8 +263,8 @@ code{font-family:var(--font-mono);font-size:.86em;background:var(--surface-2);
 .lesson-head .eyebrow{color:color-mix(in srgb,var(--brand-gold) 90%,#fff)}
 .lesson-head h3{color:#fff;font-size:clamp(1.4rem,3vw,1.9rem);margin-top:4px}
 .lesson-body{padding:26px 30px 6px;font-size:16px}
-.lesson-body>*+*{margin-top:18px}
-.lesson-body>p,.lesson-body>ul,.lesson-body>ol{max-width:75ch}
+.lesson-body>*+*,.course-case>*+*{margin-top:18px}
+.lesson-body>p,.lesson-body>ul,.lesson-body>ol,.course-case>p{max-width:75ch}
 .lesson-body p{color:var(--ink)}
 .lesson-body ul,.lesson-body ol{padding-left:22px;color:var(--ink)}
 .lesson-body li+li{margin-top:6px}
@@ -433,8 +430,7 @@ tbody tr:hover{background:var(--surface-2)}
 
 /* COMPONENT: Completion screen */
 .complete{text-align:center;padding:70px 24px}
-.complete-badge{width:76px;height:76px;border-radius:99px;background:var(--grad);
-  display:flex;align-items:center;justify-content:center;margin:0 auto 22px;color:#fff;font-size:34px}
+
 .complete h2{font-size:2.2rem}
 .complete p{color:var(--ink-2);max-width:52ch;margin:14px auto 0}
 
@@ -491,8 +487,8 @@ footer.site{border-top:1px solid var(--border);padding:26px 24px;text-align:cent
     <section class="pane" id="overview" data-pane>
       <div class="hero">
         <div class="hero-inner">
-          <h1><span class="grad-text">Agent Reliability & Evaluation</span> — đo agent có đáng tin trước khi ship</h1>
-          <p class="hero-sub">Khóa thực hành eval, observability và gate cho agent. Các số trong bài tập là fixture tổng hợp có mẫu số/công thức, không phải benchmark model. Kiểm cả outcome, policy, oracle, uncertainty và đường dừng trước khi tăng exposure.</p>
+          <h1>Agent Reliability &amp; Evaluation</h1>
+          <p class="hero-sub">Dựng bộ kiểm thử từ lỗi thực tế, chấm kết quả agent và quyết định khi nào có thể mở rộng triển khai. Các bài tính dùng dữ liệu giả lập để bạn tự đối chiếu kết quả.</p>
           <div style="margin-top:28px;display:flex;gap:12px;flex-wrap:wrap">
             <a class="btn btn-primary" id="start-btn">Bắt đầu học →</a>
             <a class="btn btn-ghost" href="#curriculum">Xem chương trình</a>
@@ -563,7 +559,6 @@ footer.site{border-top:1px solid var(--border);padding:26px 24px;text-align:cent
     <p>Bạn ship một agent hỗ trợ khách hàng. CI xanh, mọi unit test pass. Sáng hôm sau, một user báo: "con bot bảo đã hủy đơn của tôi nhưng đơn vẫn còn." Bạn chạy lại đúng câu hỏi đó trên máy mình: agent làm <em>đúng</em>. Chạy lần nữa, nó gọi thêm một tool khác, rẽ một nhánh khác, và lần này lại đúng. Bạn không tài nào tái hiện được lỗi. Test của bạn vẫn xanh, mà user vẫn gặp lỗi.</p>
 
     <div class="concept">
-      <span class="eyebrow">Khái niệm</span>
       <h4>Non-determinism (phi tất định)</h4>
       <p><strong>Phi tất định</strong> nghĩa là cùng yêu cầu có thể tạo ra đường gọi model/tool khác nhau do sampling, state, tool hoặc môi trường. Phần mềm phân tán cũng có concurrency, thời gian và dependency biến động; một test input/output duy nhất chưa bao giờ đủ chứng minh toàn hệ đúng. Với agent, cần kiểm outcome, các bất biến và nhiều lần thử trong môi trường reset được; một lần pass là một quan sát, chưa phải bảo đảm cho lần sau.</p>
     </div>
@@ -623,11 +618,9 @@ footer.site{border-top:1px solid var(--border);padding:26px 24px;text-align:cent
       </details>
     </div>
 
-    <p class="muted"><b>Nguồn case nghiên cứu:</b> <a href="https://www.anthropic.com/research/multi-agent-research-system" target="_blank" rel="noopener noreferrer">Anthropic: Multi-agent research system, Prompt engineering</a>: “spawning 50 subagents for simple queries”.</p>
+    <p class="muted"><b>Nguồn case nghiên cứu:</b> <a href="https://www.anthropic.com/research/multi-agent-research-system" target="_blank" rel="noopener noreferrer">Anthropic: Multi-agent research system, Prompt engineering</a>.</p>
 <div class="takeaway">
-      <span class="eyebrow">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true" focusable="false"><path d="M12 2v6m0 8v6M4.9 4.9l4.2 4.2m5.8 5.8l4.2 4.2M2 12h6m8 0h6M4.9 19.1l4.2-4.2m5.8-5.8l4.2-4.2"/></svg>
-        Takeaway
+      <span class="eyebrow">Takeaway
       </span>
       <p><span class="hl">Một lần pass là quan sát;</span> kiểm outcome, bất biến và nhiều lần thử. Phần mềm thường cũng có nhiễu; trace chỉ chứa những gì instrument và được phép ghi.</p>
     </div>
@@ -667,7 +660,6 @@ footer.site{border-top:1px solid var(--border);padding:26px 24px;text-align:cent
     <p>Một agent đặt vé máy bay kết thúc phiên bằng câu: "Đã đặt vé cho bạn! Mã đặt chỗ sẽ gửi qua email." Nghe như đã xong. Nhưng khi bạn mở bảng SQL của hệ đặt chỗ, không có <em>reservation</em> nào được tạo. Agent tự tin tường thuật thành công, trong khi trạng thái thật của hệ thống nói thất bại.</p>
 
     <div class="concept">
-      <span class="eyebrow">Khái niệm</span>
       <h4>Outcome vs trajectory</h4>
       <p>Anthropic tách hai thứ (<a href="https://www.anthropic.com/engineering/demystifying-evals-for-ai-agents" target="_blank" rel="noreferrer">«Demystifying evals for AI agents», 09/01/2026</a>), và đây là phân biệt trung tâm của đánh giá agent:</p>
       <p><strong>Trajectory</strong> ghi các tương tác quan sát được; <strong>outcome</strong> là trạng thái cuối liên quan mục tiêu, ví dụ reservation đúng khách và chuyến trong DB. Lời tự báo thành công không chứng minh giao dịch đã commit. Ngược lại, row tồn tại cũng chưa chứng minh đủ quyền hay đã có xác nhận: kiểm thêm policy và các tác dụng phụ cấm.</p>
@@ -715,11 +707,9 @@ footer.site{border-top:1px solid var(--border);padding:26px 24px;text-align:cent
       <p><strong>Accuracy</strong> thường là tỷ lệ đúng trên một tập quan sát, không chỉ verdict của một lần. Trong khoá này, p/pass@1 đo thành công một lần trên tập task và trọng số đã nêu; pass^k đo việc cả k lần đạt. Đây là các chiều của reliability, cùng với quyền, recovery, latency và chi phí. Agent luôn sai vẫn có thể rất nhất quán; nhất quán không đồng nghĩa đúng.</p>
     </div>
 
-    <p class="muted"><b>Nguồn gốc:</b> <a href="https://www.anthropic.com/research/demystifying-evals-for-ai-agents" target="_blank" rel="noopener noreferrer">Anthropic: Demystifying evals for AI agents</a>: “The outcome is the final state in the environment”.</p>
+    <p class="muted"><b>Nguồn gốc:</b> <a href="https://www.anthropic.com/research/demystifying-evals-for-ai-agents" target="_blank" rel="noopener noreferrer">Anthropic: Demystifying evals for AI agents</a>.</p>
 <div class="takeaway">
-      <span class="eyebrow">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true" focusable="false"><path d="M12 2v6m0 8v6M4.9 4.9l4.2 4.2m5.8 5.8l4.2 4.2M2 12h6m8 0h6M4.9 19.1l4.2-4.2m5.8-5.8l4.2-4.2"/></svg>
-        Takeaway
+      <span class="eyebrow">Takeaway
       </span>
       <p><span class="hl">Đối soát outcome độc lập cùng</span> policy và tác dụng phụ; lời tự báo không chứng minh commit. Nhất quán không đồng nghĩa đúng.</p>
     </div>
@@ -759,8 +749,7 @@ footer.site{border-top:1px solid var(--border);padding:26px 24px;text-align:cent
     <p>Bạn đã tin agent thỉnh thoảng hỏng (bài 1.1) và biết transcript có thể lừa (bài 1.2). Câu hỏi thực dụng: bắt đầu vá từ đâu? Đổ hết vào viết prompt tốt hơn? Thêm log? Chặn ở đâu đó? Không có bản đồ, mỗi nhóm chọn một chỗ ngẫu nhiên và ngạc nhiên khi lỗi vẫn lọt.</p>
 
     <div class="concept">
-      <span class="eyebrow">Khái niệm</span>
-      <h4>Ba trụ nối thành một flywheel</h4>
+      <h4>Eval, trace và quyết định triển khai</h4>
       <p><strong>Eval</strong> kiểm hành vi theo tiêu chí và oracle đã định. Observability thu tín hiệu vận hành theo policy/sampling để chẩn đoán; gate quyết định có tiếp tục hay dừng theo bằng chứng. Đây là bản đồ thực hành, không phải bảo đảm không còn regression. Bug report, expert review và adversarial fixture cũng bổ sung eval; trace không nhất thiết chứa mọi tương tác.</p>
     </div>
 
@@ -808,9 +797,7 @@ footer.site{border-top:1px solid var(--border);padding:26px 24px;text-align:cent
     </div>
 
     <div class="takeaway">
-      <span class="eyebrow">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true" focusable="false"><path d="M12 2v6m0 8v6M4.9 4.9l4.2 4.2m5.8 5.8l4.2 4.2M2 12h6m8 0h6M4.9 19.1l4.2-4.2m5.8-5.8l4.2-4.2"/></svg>
-        Takeaway
+      <span class="eyebrow">Takeaway
       </span>
       <p><span class="hl">Eval, observability và gate bổ sung</span> nhau; trace có chọn lọc và provenance giúp biến lỗi thành regression kiểm được.</p>
     </div>
@@ -863,7 +850,6 @@ footer.site{border-top:1px solid var(--border);padding:26px 24px;text-align:cent
     </div>
 
     <div class="concept">
-      <span class="eyebrow">Khái niệm</span>
       <h4>Error analysis: derive eval từ lỗi quan sát được</h4>
       <p>Bắt đầu bằng trace đã được phép dùng: <strong>open coding</strong> là ghi tự do lỗi quan sát; <strong>axial coding</strong> là gom lỗi thành nhóm có tiêu chí rõ. Theo dõi tỷ lệ xuất hiện nhóm mới và coverage theo segment. Không có số trace đảm bảo saturation; “chưa thấy lỗi mới” chỉ nói về mẫu đã đọc. Trước production, dùng fixture tổng hợp có oracle độc lập, cả happy path, từ chối đúng, lỗi tool và hành động bị cấm.</p>
     </div>
@@ -911,11 +897,9 @@ footer.site{border-top:1px solid var(--border);padding:26px 24px;text-align:cent
       </details>
     </div>
 
-    <p class="muted"><b>Nguồn gốc:</b> <a href="https://hamel.dev/blog/posts/evals/" target="_blank" rel="noopener noreferrer">Hamel Husain: Your AI Product Needs Evals</a>: “You don’t need to wait for production data”.</p>
+    <p class="muted"><b>Nguồn gốc:</b> <a href="https://hamel.dev/blog/posts/evals/" target="_blank" rel="noopener noreferrer">Hamel Husain: Your AI Product Needs Evals</a>.</p>
 <div class="takeaway">
-      <span class="eyebrow">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true" focusable="false"><path d="M12 2v6m0 8v6M4.9 4.9l4.2 4.2m5.8 5.8l4.2 4.2M2 12h6m8 0h6M4.9 19.1l4.2-4.2m5.8-5.8l4.2-4.2"/></svg>
-        Takeaway
+      <span class="eyebrow">Takeaway
       </span>
       <p><span class="hl">Dùng lỗi quan sát lẫn fixture</span> rủi ro và case bình thường; coverage quan trọng hơn một số trace “đủ saturation”.</p>
     </div>
@@ -955,7 +939,6 @@ footer.site{border-top:1px solid var(--border);padding:26px 24px;text-align:cent
     <p>Bộ eval của bạn báo "70% pass". Tốt hơn tuần trước. Nhưng khi sếp hỏi "30% fail hỏng ở đâu?", bạn im lặng: con số tổng nói <em>rằng</em> nó hỏng, không nói <em>ở đâu</em>. Bạn không sửa được cái mình không định vị được.</p>
 
     <div class="concept">
-      <span class="eyebrow">Khái niệm</span>
       <h4>Hai tầng: end-to-end + step-level</h4>
       <p>Khoá chia hai tầng chẩn đoán: end-to-end đo mục tiêu có đạt và policy có bị vi phạm; step-level kiểm tool choice, arguments, error handling, context và budget. Một bước khác chuỗi mẫu có thể vẫn hợp lệ. Kết quả theo bước gợi ý nơi điều tra, không tự chứng minh nguyên nhân gốc.</p>
     </div>
@@ -1003,9 +986,7 @@ footer.site{border-top:1px solid var(--border);padding:26px 24px;text-align:cent
     </div>
 
     <div class="takeaway">
-      <span class="eyebrow">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true" focusable="false"><path d="M12 2v6m0 8v6M4.9 4.9l4.2 4.2m5.8 5.8l4.2 4.2M2 12h6m8 0h6M4.9 19.1l4.2-4.2m5.8-5.8l4.2-4.2"/></svg>
-        Takeaway
+      <span class="eyebrow">Takeaway
       </span>
       <p><span class="hl">Triage lỗi quan sát đầu tiên</span> rồi rà lỗi độc lập; hotspot cần mẫu số và kiểm nguyên nhân, không chỉ đếm triệu chứng.</p>
     </div>
@@ -1045,7 +1026,6 @@ footer.site{border-top:1px solid var(--border);padding:26px 24px;text-align:cent
     <p>Bạn cần kiểm "agent có gọi đúng tool <code>book_flight</code> không". Bạn với tay lấy LLM judge: vừa tốn tiền mỗi lần chạy, vừa non-deterministic (bài 1.1), trong khi <code>assert tool_called == "book_flight"</code> có thể kiểm trực tiếp tên tool đã ghi nhận. Vẫn cần kiểm arguments, quyền và outcome.</p>
 
     <div class="concept">
-      <span class="eyebrow">Khái niệm</span>
       <h4>Ba họ grader (Anthropic + OpenAI)</h4>
       <p><strong>Code-based</strong>: assertion, schema, static analysis, query trạng thái hoặc tool-call check; chi phí và tính tất định phụ thuộc code/dependency. <strong>Model-based</strong>: rubric hoặc pairwise cho tiêu chí ngữ nghĩa, có thể nhiễu và bị bias. <strong>Human</strong>: chuyên gia phân xử/hiệu chuẩn, cũng có thể bất đồng; cần hướng dẫn, nhiều người chấm các case khó và đường abstain.</p>
     </div>
@@ -1095,9 +1075,7 @@ footer.site{border-top:1px solid var(--border);padding:26px 24px;text-align:cent
     </div>
 
     <div class="takeaway">
-      <span class="eyebrow">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true" focusable="false"><path d="M12 2v6m0 8v6M4.9 4.9l4.2 4.2m5.8 5.8l4.2 4.2M2 12h6m8 0h6M4.9 19.1l4.2-4.2m5.8-5.8l4.2-4.2"/></svg>
-        Takeaway
+      <span class="eyebrow">Takeaway
       </span>
       <p><span class="hl">Code grader cần oracle đúng; parse</span> JSON và so ID/quyền/amount theo hợp đồng, không dùng độ giống text để cấp quyền.</p>
     </div>
@@ -1145,7 +1123,6 @@ footer.site{border-top:1px solid var(--border);padding:26px 24px;text-align:cent
     <p>Với tiêu chí như “đủ thông tin cần thiết cho khách”, một assertion đơn giản có thể chưa đủ. Nhưng prompt chấm gộp “đúng + mạch lạc + đủ ý, 1–10” khó chẩn đoán. Bắt đầu bằng rubric có ví dụ pass/fail cho từng chiều; có thể tách lời gọi judge hoặc yêu cầu verdict tách chiều trong một lời gọi rồi đo độ hiệu quả và chi phí.</p>
 
     <div class="concept">
-      <span class="eyebrow">Khái niệm</span>
       <h4>LLM-as-judge và cách làm nó đáng tin</h4>
       <p><strong>LLM-as-judge</strong> chấm theo rubric. Pointwise đánh giá một output theo tiêu chí; pairwise so hai output, có thể hòa hoặc không đủ bằng chứng. Tách chiều giúp biết cần sửa gì; judge riêng mỗi chiều là một lựa chọn triển khai, không phải bảo đảm tin cậy. Hiệu chuẩn bằng tập chuyên gia giữ riêng, ghi evidence ngắn và cho phép Unknown khi thiếu thông tin.</p>
     </div>
@@ -1174,7 +1151,7 @@ footer.site{border-top:1px solid var(--border);padding:26px 24px;text-align:cent
 
     <div class="callout insight">
       <div class="callout-title">Mô hình tư duy</div>
-      <p>Người chấm lẫn model đều có thể bị thứ tự, độ dài và kỳ vọng chi phối. Tách rubric làm kết quả dễ chẩn đoán hơn; vẫn phải kiểm agreement với nhãn độc lập và lỗi trên từng segment.</p>
+      <p>Cho hai người chấm độc lập cùng một mẫu và giấu điểm của judge. So mức đồng thuận giữa hai người với mức đồng thuận giữa judge và từng người. Với nhãn phân loại, có thể báo thêm Cohen’s κ để hiệu chỉnh phần trùng do ngẫu nhiên. Nếu hai người thường bất đồng ở ca sát ngưỡng, hãy làm rõ tiêu chí rồi chấm lại. Nếu họ đồng ý nhưng judge lệch, hãy kiểm lỗi của judge trên nhóm đó. <a href="https://www.anthropic.com/research/building-strong-safety-evaluations" target="_blank" rel="noopener noreferrer">Anthropic, Building strong safety evaluations</a>.</p>
     </div>
 
     <div class="callout info">
@@ -1183,9 +1160,7 @@ footer.site{border-top:1px solid var(--border);padding:26px 24px;text-align:cent
     </div>
 
     <div class="takeaway">
-      <span class="eyebrow">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true" focusable="false"><path d="M12 2v6m0 8v6M4.9 4.9l4.2 4.2m5.8 5.8l4.2 4.2M2 12h6m8 0h6M4.9 19.1l4.2-4.2m5.8-5.8l4.2-4.2"/></svg>
-        Takeaway
+      <span class="eyebrow">Takeaway
       </span>
       <p><span class="hl">Rubric tách chiều, reference độc lập</span> và đường Unknown giúp chẩn đoán; judge riêng mỗi chiều là lựa chọn cần đo, không bảo đảm.</p>
     </div>
@@ -1225,7 +1200,6 @@ footer.site{border-top:1px solid var(--border);padding:26px 24px;text-align:cent
     <p>Bạn dùng judge chọn giữa hai câu trả lời A và B. Đổi thứ tự trình bày (cùng nội dung, chỉ hoán vị) và judge đổi luôn kết luận. Rồi bạn thấy một câu ngắn gọn đúng lại thua một câu dài lê thê chỉ vì dài. Judge của bạn không phải trọng tài; nó có thiên lệch hệ thống, đo được.</p>
 
     <div class="concept">
-      <span class="eyebrow">Khái niệm</span>
       <h4>Ba bias đo được (<a href="https://arxiv.org/abs/2306.05685" target="_blank" rel="noreferrer">MT-Bench, Zheng et al. 2023</a>)</h4>
       <p><strong>Position bias</strong>: thứ tự trình bày làm đổi verdict. <strong>Verbosity bias</strong>: ưu ái độ dài dù không thêm chất. <strong>Self-preference</strong>: nghi ngờ ưu ái output của chính model; MT-Bench lưu ý dữ liệu của họ chưa đủ kết luận cơ chế này. Đổi họ judge hoặc dùng panel chỉ là biện pháp cần đo lại, không tự xóa bias. Dùng nhãn chuyên gia giữ riêng, randomize thứ tự và kiểm các câu ngắn đúng/câu dài sai.</p>
     </div>
@@ -1260,7 +1234,6 @@ footer.site{border-top:1px solid var(--border);padding:26px 24px;text-align:cent
     </div>
 
     <div class="concept">
-      <span class="eyebrow">Khái niệm</span>
       <h4>Calibrate bằng TPR/TNR, và thích binary hơn Likert</h4>
       <p>Chọn nhãn pass/fail khi quyết định vận hành là nhị phân, với rubric và positive class rõ. Thang nhiều mức vẫn hữu ích cho construct nhiều mức nếu đã hiệu chuẩn. Đo TPR/TNR trên holdout; khi đổi rubric/model phải hiệu chuẩn lại, không chỉnh tới khớp holdout rồi vẫn gọi nó độc lập.</p>
       <p>Quy ước <strong>positive = lỗi thật</strong>. Fixture 100 ca có nhãn chuyên gia: 40 fail, judge bắt 34 và bỏ sót 6; 60 pass, judge báo lỗi nhầm 9 và để đúng 51. TPR = 34/40 = 85%; TNR = 51/60 = 85%; precision = 34/(34+9) ≈ 79,07%. Không có abstain trong fixture này; khi có, báo riêng và nêu mẫu số/coverage. Tỷ lệ này có bất định và chưa suy ra tỷ lệ production nếu prevalence khác.</p>
@@ -1288,11 +1261,9 @@ footer.site{border-top:1px solid var(--border);padding:26px 24px;text-align:cent
       <p>Bài tập: lấy 20 cặp gần nhất, chạy cả hai thứ tự với cùng config, ghi ca hòa, Unknown và đổi verdict. Đây là swap disagreement trong mẫu; lặp mỗi thứ tự và randomize tên/nhãn để phân biệt sampling noise với bias vị trí, không gọi một lần đổi verdict là bằng chứng causal của position bias.</p>
     </div>
 
-    <p class="muted"><b>Nguồn gốc:</b> <a href="https://arxiv.org/html/2306.05685v4" target="_blank" rel="noopener noreferrer">Zheng et al.: MT-Bench, §3.3–3.4</a>: “high consistency may not imply high accuracy”.</p>
+    <p class="muted"><b>Nguồn gốc:</b> <a href="https://arxiv.org/html/2306.05685v4" target="_blank" rel="noopener noreferrer">Zheng et al.: MT-Bench, §3.3–3.4</a>.</p>
 <div class="takeaway">
-      <span class="eyebrow">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true" focusable="false"><path d="M12 2v6m0 8v6M4.9 4.9l4.2 4.2m5.8 5.8l4.2 4.2M2 12h6m8 0h6M4.9 19.1l4.2-4.2m5.8-5.8l4.2-4.2"/></svg>
-        Takeaway
+      <span class="eyebrow">Takeaway
       </span>
       <p><span class="hl">Swap phát hiện không nhất quán,</span> không chứng minh đúng. Hiệu chuẩn positive class, TPR/TNR, precision và abstention trên holdout.</p>
     </div>
@@ -1332,7 +1303,6 @@ footer.site{border-top:1px solid var(--border);padding:26px 24px;text-align:cent
     <p>Team khoe: "agent giải 95% task!". Nghe tuyệt cho tới khi bạn hỏi họ đo thế nào. Best-of-k: chạy mỗi task nhiều lần, tính đúng nếu <em>ít nhất một lần</em> đúng. Nếu production chỉ chạy một lần, best-of-k chưa xác định tỷ lệ mà user sẽ gặp; cần p/pass@1 và task mix phù hợp.</p>
 
     <div class="concept">
-      <span class="eyebrow">Khái niệm</span>
       <h4>pass@k vs pass^k (τ-bench, Yao et al.)</h4>
       <p>Với một task có xác suất thành công p và các lần thử độc lập, cùng điều kiện: <strong>pass@k = 1 − (1 − p)ᵏ</strong> là ít nhất một lần đạt; <strong>pass^k = pᵏ</strong> là cả k lần đạt. Cần verifier/bộ chọn để dùng lợi ích best-of-k. Trên nhiều task, lấy trung bình theo task: E[pᵢᵏ] thường khác (E[pᵢ])ᵏ. Nếu các lần phụ thuộc do cache/state/user simulator, đo chuỗi thực tế và báo giả định thay vì nhân xác suất.</p>
       <p>Ví dụ tổng hợp cùng p = 0,75: pass@3 = 1 − 0,25³ = 98,4375%; pass^3 = 0,75³ = 42,1875%. Với hai task p₁ = 0,5 và p₂ = 1, mean p = 0,75 nhưng mean pass^3 = (0,125 + 1)/2 = 56,25%. Đây là công thức minh hoạ có giả định, không phải kết quả model/benchmark.</p>
@@ -1356,11 +1326,9 @@ footer.site{border-top:1px solid var(--border);padding:26px 24px;text-align:cent
       <p>Accuracy không phải pass@k mặc định. p/pass@1 là tỷ lệ thành công một lượt trên phân phối đã nêu; pass@k là best-of-k, pass^k là cả k lượt đạt. Kết quả offline chỉ đại diện production khi task mix, quyền, tool, prompt, model và grader phù hợp; báo uncertainty theo task hoặc cụm thay vì coi 400 run đều độc lập.</p>
     </div>
 
-    <p class="muted"><b>Nguồn gốc:</b> <a href="https://arxiv.org/html/2406.12045v1" target="_blank" rel="noopener noreferrer">Yao et al.: τ-bench, §3</a>: “the chance that all”.</p>
+    <p class="muted"><b>Nguồn gốc:</b> <a href="https://arxiv.org/html/2406.12045v1" target="_blank" rel="noopener noreferrer">Yao et al.: τ-bench, §3</a>.</p>
 <div class="takeaway">
-      <span class="eyebrow">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true" focusable="false"><path d="M12 2v6m0 8v6M4.9 4.9l4.2 4.2m5.8 5.8l4.2 4.2M2 12h6m8 0h6M4.9 19.1l4.2-4.2m5.8-5.8l4.2-4.2"/></svg>
-        Takeaway
+      <span class="eyebrow">Takeaway
       </span>
       <p><span class="hl">p/pass@1, pass@k và pass^k trả lời</span> ba câu khác nhau; pᵏ cần cùng p và độc lập. Fixed-k gate được phép khi định rõ mục tiêu và uncertainty.</p>
     </div>
@@ -1408,7 +1376,6 @@ footer.site{border-top:1px solid var(--border);padding:26px 24px;text-align:cent
     <p>Agent "chậm 45 giây", nhưng log của bạn chỉ có một dòng "request hoàn tất 45s". Do model chậm? Do một tool call? Do retry loop? (Bạn đã thấy vấn đề này ở bài 1.1.) Không có cách tách chuỗi thao tác ra, bạn chỉ đoán.</p>
 
     <div class="concept">
-      <span class="eyebrow">Khái niệm</span>
       <h4>Trace = một lần chạy; span = một đơn vị việc</h4>
       <p>Trace nối các operation bằng trace/span ID và quan hệ cha–con hoặc link. Một run có thể được thiết kế là một trace, nhưng workflow bất đồng bộ dài có thể nối nhiều trace. <strong>Span</strong> là một đơn vị việc với start/end, status và thuộc tính; model call, tool và retrieval có thể được instrument thành span con. Generation là tên một số backend dùng cho model call, không phải primitive bắt buộc của mọi hệ.</p>
     </div>
@@ -1448,11 +1415,9 @@ footer.site{border-top:1px solid var(--border);padding:26px 24px;text-align:cent
       <p>Fixture hình: 12 + 30 + 1,5 + 1 = 44,5 giây span con tuần tự; 0,5 giây overhead không tách span → root 45 giây. Nếu span chạy song song hoặc lồng nhau thì không cộng duration để suy wall-clock: tìm critical path, thời gian chờ và span thiếu. Token có thể được ghi nhiều tầng; xác định billing boundary để tránh cộng trùng.</p>
     </div>
 
-    <p class="muted"><b>Nguồn gốc:</b> <a href="https://opentelemetry.io/docs/concepts/signals/traces/" target="_blank" rel="noopener noreferrer">OpenTelemetry: Traces</a>: “A span represents a unit of work or operation”.</p>
+    <p class="muted"><b>Nguồn gốc:</b> <a href="https://opentelemetry.io/docs/concepts/signals/traces/" target="_blank" rel="noopener noreferrer">OpenTelemetry: Traces</a>.</p>
 <div class="takeaway">
-      <span class="eyebrow">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true" focusable="false"><path d="M12 2v6m0 8v6M4.9 4.9l4.2 4.2m5.8 5.8l4.2 4.2M2 12h6m8 0h6M4.9 19.1l4.2-4.2m5.8-5.8l4.2-4.2"/></svg>
-        Takeaway
+      <span class="eyebrow">Takeaway
       </span>
       <p><span class="hl">Span biểu diễn operation, trace nối</span> chúng; không cộng duration chồng lấn hay token bị ghi trùng, và không mặc định một run luôn một trace.</p>
     </div>
@@ -1492,7 +1457,6 @@ footer.site{border-top:1px solid var(--border);padding:26px 24px;text-align:cent
     <p>Bạn bật full-trace để gỡ một lỗi, rồi vài ngày sau nhận ra tracing backend của mình chứa nguyên văn tin nhắn người dùng, kèm số thẻ, địa chỉ, secret. Một quyết định log vô ý vừa biến hệ observability thành một kho rò rỉ PII.</p>
 
     <div class="concept">
-      <span class="eyebrow">Khái niệm</span>
       <h4>Quy ước <code>gen_ai.*</code>: hữu ích nhưng chưa đóng băng</h4>
       <p>Các convention GenAI đang ở mức <strong>Development</strong>. Tài liệu hiện tại tách client inference và execute tool; ví dụ thuộc tính gồm gen_ai.operation.name, gen_ai.request.model và gen_ai.usage.input_tokens/output_tokens. Hình là bản đồ nhóm thông tin, không phải một schema đầy đủ có thể copy. Pin commit/schema và version instrumentation đã kiểm, rồi test adapter trên fixture trước migration.</p>
       <p>Đừng trộn span attribute, tên metric và trường riêng của backend. Đo duration/token ở ranh giới đã định; kiểm đơn vị, cache/reasoning token và quy tắc cộng span cha/con. Chi phí tiền cần đối soát với usage/billing và đơn giá áp dụng; token count tự nó không phải giá tiền.</p>
@@ -1504,7 +1468,7 @@ footer.site{border-top:1px solid var(--border);padding:26px 24px;text-align:cent
       <p>Bài tập migration: fixture cũ có usage.prompt_tokens = 100, fixture mới có usage.input_tokens = 100. Adapter phiên bản phải map về internal.input_tokens = 100 cho cả hai; nếu có cả hai thì không cộng thành 200, và xung đột phải được gắn cờ. Đây là fixture tương thích do khoá đặt, không tuyên bố hai key đều hợp lệ trong mọi version hiện tại.</p>
     </div>
 
-    <p>Phần content giữ nguyên nguyên tắc an toàn: prompt, output và tool arguments là dữ liệu nhạy cảm. Chỉ ghi <code>gen_ai.input.messages</code>/<code>output.messages</code> khi đã bật có chủ đích qua policy, sampling và redaction; metadata như model, token, latency, finish reason là baseline quan sát rẻ hơn.</p>
+    <p>Phần content giữ nguyên nguyên tắc an toàn: prompt, output và tool arguments là dữ liệu nhạy cảm. Chỉ ghi <code>gen_ai.input.messages</code> và <code>gen_ai.output.messages</code> khi đã bật có chủ đích qua policy, sampling và redaction; metadata như model, token, latency, finish reason là baseline quan sát rẻ hơn.</p>
 
     <figure class="figure">
       <div class="diagram-viewport" role="region" tabindex="0" aria-label="Sơ đồ; cuộn ngang để đọc đầy đủ nhãn" style="--diagram-width:640px"><svg viewBox="0 0 640 250" role="img" aria-label="Một span box chat model-fixture với các nhóm thuộc tính tỏa ra: Identity, Params, Usage, Content opt-in viền đứt, Outcome">
@@ -1548,7 +1512,7 @@ footer.site{border-top:1px solid var(--border);padding:26px 24px;text-align:cent
     <div class="callout success">
       <div class="callout-title">Nguyên tắc log an toàn</div>
       <p>Allowlist metadata cần thiết, giới hạn cardinality, quyền đọc, retention và sampling; metadata vẫn có thể chứa ID nhạy cảm hoặc thông tin môi trường. Content capture tắt theo policy của bài tập; khi cần bật, kiểm quyền, redaction ở nơi phát sinh và backend thực nhận, không chỉ đặt cờ rồi giả định sạch.</p>
-      <p>Cờ capture và mặc định phụ thuộc instrumentation/language/version, không có một biến môi trường bảo đảm mọi backend không ghi nội dung. Dùng secret sentinel giả trong prompt, tool args/result và error message trên staging; kiểm raw export lẫn backend, xác nhận nội dung bị loại hoặc redact và quyền truy cập đúng. Không dùng dữ liệu bí mật thật làm probe.</p>
+      <p>Khi instrumentation triển khai cấu hình capture nội dung qua biến môi trường theo quy ước GenAI, tên biến là <code>OTEL_INSTRUMENTATION_GENAI_CAPTURE_CONTENT</code>; mặc định là <code>NO_CONTENT</code>. Kiểm tra phiên bản thư viện có hỗ trợ cấu hình này. Đưa chuỗi giả dễ nhận biết vào prompt, kết quả tool và lỗi trên staging, rồi tìm chuỗi đó ở cả bản export lẫn backend. Kiểm tra riêng các logger và hook ghi ra kho khác.</p>
     </div>
 
     <div class="callout success">
@@ -1561,12 +1525,10 @@ footer.site{border-top:1px solid var(--border);padding:26px 24px;text-align:cent
       <p>Usage trên model span hỗ trợ đối soát token; trường tool name/arguments hỗ trợ chẩn đoán khi policy cho phép ghi. Không cần lưu raw args nhạy cảm để kiểm ID/scope: có thể ghi verdict, schema version và reference đã pseudonymize. Kiểm đúng tên key ở convention/instrumentation đã pin; không mặc định một suffix dùng được ở mọi backend.</p>
     </div>
 
-    <p class="muted"><b>Nguồn gốc:</b> <a href="https://raw.githubusercontent.com/open-telemetry/semantic-conventions-genai/main/docs/gen-ai/README.md" target="_blank" rel="noopener noreferrer">OpenTelemetry GenAI conventions</a>: “Semantic conventions for generative AI systems”.</p>
-<p class="muted"><b>Nguồn trường và content:</b> <a href="https://raw.githubusercontent.com/open-telemetry/semantic-conventions-genai/main/docs/gen-ai/client-inference.md" target="_blank" rel="noopener noreferrer">Client inference</a>; <a href="https://raw.githubusercontent.com/open-telemetry/semantic-conventions-genai/main/docs/gen-ai/gen-ai-spans.md" target="_blank" rel="noopener noreferrer">GenAI spans, Content capture</a>: “gated by an explicit user opt-in”.</p>
+    <p class="muted"><b>Nguồn gốc:</b> <a href="https://github.com/open-telemetry/semantic-conventions-genai/blob/main/docs/gen-ai/README.md" target="_blank" rel="noopener noreferrer">OpenTelemetry GenAI conventions</a>.</p>
+<p class="muted"><b>Nguồn trường và content:</b> <a href="https://github.com/open-telemetry/semantic-conventions-genai/blob/main/docs/gen-ai/client-inference.md" target="_blank" rel="noopener noreferrer">Client inference</a>; <a href="https://github.com/open-telemetry/semantic-conventions-genai/blob/main/docs/gen-ai/gen-ai-spans.md" target="_blank" rel="noopener noreferrer">GenAI spans, Content capture</a>.</p>
 <div class="takeaway">
-      <span class="eyebrow">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true" focusable="false"><path d="M12 2v6m0 8v6M4.9 4.9l4.2 4.2m5.8 5.8l4.2 4.2M2 12h6m8 0h6M4.9 19.1l4.2-4.2m5.8-5.8l4.2-4.2"/></svg>
-        Takeaway
+      <span class="eyebrow">Takeaway
       </span>
       <p><span class="hl">Pin convention/instrumentation đã kiểm; allowlist cả</span> metadata, kiểm capture bằng sentinel và adapter bằng fixture schema.</p>
     </div>
@@ -1606,7 +1568,6 @@ footer.site{border-top:1px solid var(--border);padding:26px 24px;text-align:cent
     <p>"Eval đã pass lúc ship". Nhưng vài tuần sau, điểm chất lượng tụt dần trong khi error rate không hề tăng, không có crash, không có input lạ. Bộ eval offline lúc ship có thể chưa đại diện điều kiện hiện tại; cần replay theo lịch và mẫu online để kiểm coverage và các thay đổi.</p>
 
     <div class="concept">
-      <span class="eyebrow">Khái niệm</span>
       <h4>Ba làn, ba ràng buộc latency</h4>
       <p><strong>Offline</strong>: task fixture/holdout trước release hoặc chạy lại theo lịch để so phiên bản. <strong>Guardrail inline</strong>: kiểm một failure mode trước hành động hoặc phát output, với latency budget phù hợp tác động; không mặc định phải millisecond. <strong>Online eval</strong>: chấm mẫu traffic hoặc lấy feedback sau khi chạy; thường async. Các làn bổ sung nhau, và lane nào phát hiện sớm tùy coverage, nhịp chạy và tín hiệu.</p>
     </div>
@@ -1657,9 +1618,7 @@ footer.site{border-top:1px solid var(--border);padding:26px 24px;text-align:cent
     </div>
 
     <div class="takeaway">
-      <span class="eyebrow">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true" focusable="false"><path d="M12 2v6m0 8v6M4.9 4.9l4.2 4.2m5.8 5.8l4.2 4.2M2 12h6m8 0h6M4.9 19.1l4.2-4.2m5.8-5.8l4.2-4.2"/></svg>
-        Takeaway
+      <span class="eyebrow">Takeaway
       </span>
       <p><span class="hl">Replay và online cùng giúp phát</span> hiện drift. Shape không xác định task mix; tín hiệu hành vi không phải nhãn lỗi, sample lệch cần trọng số.</p>
     </div>
@@ -1707,7 +1666,6 @@ footer.site{border-top:1px solid var(--border);padding:26px 24px;text-align:cent
     <p>Bạn sửa prompt để vá một bug user báo. Deploy. Hai ngày sau, một case <em>khác</em> (từng chạy tốt) giờ hỏng, vì sửa prompt cho case này làm lệch case kia. Không có lưới an toàn nào bắt được sự đánh đổi đó trước khi user gặp.</p>
 
     <div class="concept">
-      <span class="eyebrow">Khái niệm</span>
       <h4>Eval-driven development</h4>
       <p>Vòng làm việc: tái hiện một failure bằng case có oracle → xác nhận fail → sửa → chạy regression lẫn holdout phù hợp → review và rollout theo rủi ro. Một case bắt đầu được vòng học, nhưng không ước lượng tỷ lệ lỗi hiếm hay chứng minh effect size lớn. Bài tập dùng 20 case khởi đầu, sau đó bổ sung case bình thường, vi phạm độc lập và segment quan trọng.</p>
     </div>
@@ -1766,9 +1724,7 @@ footer.site{border-top:1px solid var(--border);padding:26px 24px;text-align:cent
     </div>
 
     <div class="takeaway">
-      <span class="eyebrow">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true" focusable="false"><path d="M12 2v6m0 8v6M4.9 4.9l4.2 4.2m5.8 5.8l4.2 4.2M2 12h6m8 0h6M4.9 19.1l4.2-4.2m5.8-5.8l4.2-4.2"/></svg>
-        Takeaway
+      <span class="eyebrow">Takeaway
       </span>
       <p><span class="hl">Tái hiện lỗi thành regression có</span> owner/version; giữ holdout độc lập và retire công khai khi contract đổi. Một case khởi đầu chưa chứng nhận reliability.</p>
     </div>
@@ -1815,7 +1771,6 @@ footer.site{border-top:1px solid var(--border);padding:26px 24px;text-align:cent
     </div>
 
     <div class="concept">
-      <span class="eyebrow">Khái niệm</span>
       <h4>Thang trưởng thành của gate</h4>
       <p>Với metric/judge mới, pilot reporting để thu lỗi đo, hiệu chuẩn trên nhãn độc lập rồi mới bật blocking theo mục tiêu/rủi ro. Đây là quy trình đề xuất của khoá, không phải một thang bắt buộc cho mọi check. Hard invariants vẫn chặn ở runtime ngay; khi gate đọc noisy metric cần định trước sample size, mức giảm chấp nhận và uncertainty. Gate đã hiệu chuẩn vẫn có false positive/negative nên cần owner và cơ chế điều tra.</p>
       <p><strong>Rule tất định không đồng nghĩa measurement không nhiễu hoặc oracle đúng.</strong> Schema và “không ghi ngoài scope” là hard invariants nên chặn ngay khi vi phạm, đồng thời kiểm chính verifier bằng case đúng/sai. Latency, cost và tỷ lệ success vẫn có thể dao động dù phép so ngưỡng chạy bằng code; cần cùng workload, ranh giới đo, nhiều quan sát và uncertainty. Oracle query DB sai cũng có thể pass/fail oan.</p>
@@ -1855,11 +1810,9 @@ footer.site{border-top:1px solid var(--border);padding:26px 24px;text-align:cent
     </div>
 
     <h4>Fixture ghép cặp có cụm chung</h4><div class="table-wrap"><table><thead><tr><th>Task / nguồn</th><th>Baseline</th><th>Candidate</th><th>Delta</th></tr></thead><tbody><tr><td>A1 / doc A</td><td>0</td><td>1</td><td>1</td></tr><tr><td>A2 / doc A</td><td>0</td><td>1</td><td>1</td></tr><tr><td>A3 / doc A</td><td>0</td><td>1</td><td>1</td></tr><tr><td>B1 / doc B</td><td>1</td><td>1</td><td>0</td></tr><tr><td>B2 / doc B</td><td>1</td><td>1</td><td>0</td></tr><tr><td>B3 / doc B</td><td>1</td><td>1</td><td>0</td></tr><tr><td>C1 / doc C</td><td>0</td><td>0</td><td>0</td></tr><tr><td>D1 / doc D</td><td>1</td><td>0</td><td>-1</td></tr></tbody></table></div><p>Fixture tổng hợp: baseline 4/8, candidate 6/8, mean delta = 2/8 = +25 điểm phần trăm. Ba gain cùng doc A là một cụm; một loss ở D. Có 8 task nhưng chỉ 4 cụm nguồn, quá ít để khẳng định cải thiện tổng quát với CI hẹp. Giữ cặp task khi resample, và resample cụm nguồn nếu muốn suy ra nguồn mới; cần thêm cụm đại diện trước quyết định rộng.</p>
-<p class="muted"><b>Nguồn gốc:</b> <a href="https://arxiv.org/html/2411.00640v1" target="_blank" rel="noopener noreferrer">Miller: Adding Error Bars to Evals, §2.2/4.2</a>: “conducting statistical inference on the question-level paired differences”.</p>
+<p class="muted"><b>Nguồn gốc:</b> <a href="https://arxiv.org/html/2411.00640v1" target="_blank" rel="noopener noreferrer">Miller: Adding Error Bars to Evals, §2.2/4.2</a>.</p>
 <div class="takeaway">
-      <span class="eyebrow">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true" focusable="false"><path d="M12 2v6m0 8v6M4.9 4.9l4.2 4.2m5.8 5.8l4.2 4.2M2 12h6m8 0h6M4.9 19.1l4.2-4.2m5.8-5.8l4.2-4.2"/></svg>
-        Takeaway
+      <span class="eyebrow">Takeaway
       </span>
       <p><span class="hl">Rule tất định có thể đọc</span> measurement nhiễu hoặc oracle sai. Hard invariant chặn ngay; metric cần paired/cluster-aware uncertainty, không lấy min/max 5 run làm CI.</p>
     </div>
@@ -1899,7 +1852,6 @@ footer.site{border-top:1px solid var(--border);padding:26px 24px;text-align:cent
     <p>Bạn viết trong prompt "đừng bao giờ gọi tool xóa dữ liệu khi chưa xác nhận". Agent vẫn gọi <code>delete_records()</code> với tham số sai trong một nhánh bạn không lường. Một lời dặn trong prompt là gợi ý, không phải một cái chặn, và model phi tất định không luôn nghe.</p>
 
     <div class="concept">
-      <span class="eyebrow">Khái niệm</span>
       <h4>Ba loại guardrail + tripwire (<a href="https://openai.github.io/openai-agents-python/guardrails/" target="_blank" rel="noreferrer">OpenAI Agents SDK</a>)</h4>
       <p>Đặt kiểm ở ba điểm: <strong>input</strong> trước khi bắt đầu nếu cần chặn sớm, <strong>tool</strong> trước hành động để kiểm schema/quyền/đối tượng, và <strong>output</strong> trước khi phát để kiểm nội dung. Tripwire là tín hiệu runtime phải xử lý bằng stop/reject thích hợp; nó không tự rollback việc đã xảy ra. Nếu guardrail chạy song song, agent có thể đã gọi model/tool trước khi tín hiệu tới. Kiểm contract của SDK và tool thực tế, không giả định mọi tool đều được bọc.</p>
     </div>
@@ -1947,11 +1899,9 @@ footer.site{border-top:1px solid var(--border);padding:26px 24px;text-align:cent
       <p>Trong sandbox, thử hai request cùng intent song song và timeout sau commit. Xác nhận đúng số hiệu ứng, reject payload đổi và đường thu hồi credential/stop có hiệu lực. Không chạy probe phá huỷ trên dữ liệu thật.</p>
     </div>
 
-    <p class="muted"><b>Nguồn gốc:</b> <a href="https://developers.openai.com/api/docs/guides/agent-builder-safety" target="_blank" rel="noopener noreferrer">OpenAI: Safety in building agents (Agent Builder scope)</a>: “guardrails nodes in Agent Builder alone are not foolproof”.</p>
+    <p class="muted"><b>Nguồn gốc:</b> <a href="https://developers.openai.com/api/docs/guides/agent-builder-safety" target="_blank" rel="noopener noreferrer">OpenAI: Safety in building agents (Agent Builder scope)</a>.</p>
 <div class="takeaway">
-      <span class="eyebrow">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true" focusable="false"><path d="M12 2v6m0 8v6M4.9 4.9l4.2 4.2m5.8 5.8l4.2 4.2M2 12h6m8 0h6M4.9 19.1l4.2-4.2m5.8-5.8l4.2-4.2"/></svg>
-        Takeaway
+      <span class="eyebrow">Takeaway
       </span>
       <p><span class="hl">Kiểm trước tác dụng phụ tại</span> service và runtime; stop không rollback. Approval bind payload/state, retry dùng intent key và recovery đúng contract.</p>
     </div>
@@ -1991,7 +1941,6 @@ footer.site{border-top:1px solid var(--border);padding:26px 24px;text-align:cent
     <p>Fixture tổng hợp: eval có 180 task phổ biến, 171 đạt; 20 task route hiếm, 11 đạt. Tổng 182/200 = 91%, nhưng route hiếm chỉ 11/20 = 55%. Điểm tổng che segment yếu dù ngay trong offline đã thấy nếu tách đúng mẫu số. Không lấy hai điểm này làm phép đo production hay groundedness thực nghiệm.</p>
 
     <div class="concept">
-      <span class="eyebrow">Khái niệm</span>
       <h4>Bốn tầng, mỗi tầng một câu hỏi</h4>
       <p>Shadow gửi bản sao request tới candidate và giữ output khỏi user; phải tắt tác dụng phụ hoặc dùng sandbox, không mirror credential ghi dữ liệu thật. Canary giới hạn exposure và so segment; ramp tăng dần khi đạt tiêu chí đã định; full vẫn cần monitoring/recovery. Các tỷ lệ trong hình là một lịch pilot, không phải bắt buộc. Load test có thể cần trước full. Muốn suy causal effect, cần thiết kế phân bổ và so sánh hợp lệ; canary tuần tự tự nó chưa chứng minh delta.</p>
     </div>
@@ -2031,9 +1980,7 @@ footer.site{border-top:1px solid var(--border);padding:26px 24px;text-align:cent
     </div>
 
     <div class="takeaway">
-      <span class="eyebrow">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true" focusable="false"><path d="M12 2v6m0 8v6M4.9 4.9l4.2 4.2m5.8 5.8l4.2 4.2M2 12h6m8 0h6M4.9 19.1l4.2-4.2m5.8-5.8l4.2-4.2"/></svg>
-        Takeaway
+      <span class="eyebrow">Takeaway
       </span>
       <p><span class="hl">Rollout giới hạn exposure, không tự</span> chứng minh causal uplift. Shadow phải cô lập write; tách segment offline/online và test drain, rollback, recovery.</p>
     </div>
@@ -2081,7 +2028,6 @@ footer.site{border-top:1px solid var(--border);padding:26px 24px;text-align:cent
     <p>Thêm câu “hãy tự kiểm lại” có thể giúp một số task, nhưng chưa chỉ ra lớp lỗi đang gặp. Nếu run fail giữa chừng, kiểm checkpoint, tool commit và retry contract; model/prompt đúng vẫn có thể gặp lỗi state hoặc quyền. Chọn fix theo bằng chứng thay vì mặc định thêm self-critique hoặc đổi model.</p>
 
     <div class="concept">
-      <span class="eyebrow">Khái niệm</span>
       <h4>Harness = tám cơ chế quanh model</h4>
       <p>Khoá dùng tám nhóm cơ chế quanh model: orchestration, tool boundaries, state persistence, retries/fallbacks, validation, reflection, observability và human review. Đây là taxonomy để kiểm coverage, không phải tiêu chuẩn bắt buộc hay bảo đảm. Độ tin cậy còn phụ thuộc model, prompt, dữ liệu, oracle và môi trường; sửa prompt có thể hữu ích khi bằng chứng chỉ tới lỗi hướng dẫn.</p>
     </div>
@@ -2115,7 +2061,6 @@ footer.site{border-top:1px solid var(--border);padding:26px 24px;text-align:cent
     </figure>
 
     <div class="concept">
-      <span class="eyebrow">Khái niệm</span>
       <h4>Ba reflection loop, mỗi loại một lỗi</h4>
       <p>Tách reflection thành ba, không gộp thành một "critique chung": <strong>(1) Process reflection</strong> — soi cách làm và tiến độ ("đang đi đúng hướng chưa?"); <strong>(2) Data reflection</strong> — trước khi tổng hợp, đối chiếu context đã lấy được với yêu cầu gốc để tìm chỗ còn thiếu; <strong>(3) Draft reflection</strong> — soi bản nháp đầu ra tìm phần thiếu hoặc số liệu lệch. Mỗi loại kiểm một lớp lỗi khác nhau, nên đặt đúng ở chỗ lớp lỗi đó xảy ra thay vì rải một câu "tự kiểm lại" khắp nơi.</p>
     </div>
@@ -2130,10 +2075,26 @@ footer.site{border-top:1px solid var(--border);padding:26px 24px;text-align:cent
       <p>Tìm vòng lặp dài nhất trong agent của bạn (retry, re-plan, sinh lại query) và đặt cho nó một trần cứng.</p>
     </div>
 
-    <div class="takeaway">
-      <span class="eyebrow">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true" focusable="false"><path d="M12 2v6m0 8v6M4.9 4.9l4.2 4.2m5.8 5.8l4.2 4.2M2 12h6m8 0h6M4.9 19.1l4.2-4.2m5.8-5.8l4.2-4.2"/></svg>
-        Takeaway
+    <div class="course-case" id="deepseek-streaming">
+<h4>DeepSeek chat-demo: thử lỗi ngay trong stream</h4>
+<p>Câu trả lời đã hiện vài dòng rồi kết nối đóng. Đánh dấu “xong” chỉ vì hết byte sẽ che mất đáp án bị cắt. Demo tách bộ giải mã SSE (sự kiện truyền từ server), bộ cập nhật reply theo event và bước chốt trạng thái. <code>text</code>, <code>thinking</code>, tool và citation được giữ thành các block riêng.</p>
+<div class="table-wrap" role="region" tabindex="0" aria-label="Ma trận thử lỗi stream"><table><thead><tr><th scope="col">Đầu vào thử</th><th scope="col">Kết quả theo code demo</th><th scope="col">Điều cần bắt</th></tr></thead><tbody>
+<tr><td>Cắt byte giữa chữ “Việt”, giữa CR/LF hoặc giữa JSON</td><td>Ghép lại cùng event và text như luồng không chia</td><td>Một chunk mạng chưa chắc là một event</td></tr>
+<tr><td>EOF, chưa có <code>stop_reason</code> và <code>message_stop</code></td><td><code>error / interrupted</code></td><td>Text dở dang không được thành công</td></tr>
+<tr><td>Có <code>message_delta.stop_reason</code>, thiếu <code>message_stop</code></td><td>Client báo interrupted; store chấp nhận <code>done</code></td><td>Ngoại lệ tương thích được viết rõ trong store</td></tr>
+<tr><td>Người dùng bấm Stop</td><td><code>stopped</code>, chốt phần đã nhận</td><td>Không đổi thành lỗi mạng hoặc tự gửi lại</td></tr>
+<tr><td>Reply chứa server tool rồi bị dừng</td><td>Không cho Continue</td><td>Text còn dở chưa đủ điều kiện nối tiếp</td></tr>
+</tbody></table></div>
+<p><code>canContinueReply()</code> còn yêu cầu prefix hợp lệ: chỉ reply bị dừng hoặc <code>done + max_tokens</code> mới có thể nối tiếp; refusal, tool call/result, template và reply lỗi bị chặn. Caller kiểm thêm đó là message cuối. Đây là contract của demo, không phải quy tắc chung cho mọi API.</p>
+<details class="accordion"><summary><span class="chev">▶</span><span class="accordion-tag">Thực hành</span><span>Chọn trạng thái rồi mở đáp án</span></summary><div class="accordion-body">
+<p>Ba fixture chỉ có text, prefix hợp lệ, là reply cuối: A có text rồi EOF, không có stop reason; B nhận <code>max_tokens</code> rồi EOF; C người dùng bấm Stop. Ghi trạng thái và có cho Continue hay không trước khi mở.</p>
+<details><summary style="min-height:44px;padding:10px 0;cursor:pointer">Mở kết quả mong đợi</summary><p>A: <code>error</code>, không Continue. B: <code>done</code> theo ngoại lệ của store, được Continue. C: <code>stopped</code>, được Continue. Thêm server-tool block vào B hoặc C thì Continue bị chặn. Khi viết test, đưa cùng chuỗi byte qua các cách chia chunk, so event/text với bản chuẩn; thêm ca lỗi sau khi đã nhận content để bắt tự phát lại. Những fixture này kiểm harness, không cần gọi model.</p></details>
+</div></details>
+<p>Nguồn: <a href="https://github.com/deepseek-ai/chat-demo/blob/5d5dd754ebc1948e977ddb880a9eb5aa25f37b4c/src/services/api/sse.ts" target="_blank" rel="noopener noreferrer">giải mã SSE</a> · <a href="https://github.com/deepseek-ai/chat-demo/blob/5d5dd754ebc1948e977ddb880a9eb5aa25f37b4c/src/services/api/client.ts" target="_blank" rel="noopener noreferrer">kết thúc giao thức</a> · <a href="https://github.com/deepseek-ai/chat-demo/blob/5d5dd754ebc1948e977ddb880a9eb5aa25f37b4c/src/services/chat/reply.ts" target="_blank" rel="noopener noreferrer">cập nhật và Continue</a> · <a href="https://github.com/deepseek-ai/chat-demo/blob/5d5dd754ebc1948e977ddb880a9eb5aa25f37b4c/src/services/chat/store.ts" target="_blank" rel="noopener noreferrer">chốt trạng thái, lưu và retry</a>.</p>
+</div>
+
+<div class="takeaway">
+      <span class="eyebrow">Takeaway
       </span>
       <p><span class="hl">Reliability phụ thuộc cả model, prompt,</span> dữ liệu và harness. Checkpoint không exactly-once; retry/fallback giữ quyền, deadline và cap ngoài agent.</p>
     </div>
@@ -2209,7 +2170,6 @@ footer.site{border-top:1px solid var(--border);padding:26px 24px;text-align:cent
     </figure>
 
     <div class="concept">
-      <span class="eyebrow">Khái niệm</span>
       <h4>Mỗi con số treo vào một quyết định</h4>
       <p>Bảng dưới là fixture tổng hợp tái tính được, không phải phép đo từ tổ chức nào. Hai cấu hình được thử trên 100 task cùng bộ và rubric; dữ liệu gộp chưa đủ suy khác biệt có ý nghĩa. B đạt nhiều task hơn nhưng dùng nhiều tiền và giờ người hơn; chọn theo mức chất lượng/rủi ro và budget, không từ một headline architecture.</p>
     </div>
@@ -2246,9 +2206,7 @@ footer.site{border-top:1px solid var(--border);padding:26px 24px;text-align:cent
     </div>
 
     <div class="takeaway">
-      <span class="eyebrow">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true" focusable="false"><path d="M12 2v6m0 8v6M4.9 4.9l4.2 4.2m5.8 5.8l4.2 4.2M2 12h6m8 0h6M4.9 19.1l4.2-4.2m5.8-5.8l4.2-4.2"/></svg>
-        Takeaway
+      <span class="eyebrow">Takeaway
       </span>
       <p><span class="hl">So task đạt cùng tổng tiền/giờ</span> người và uncertainty; bảng fixture cho thấy quality–cost tradeoff, không có kiến trúc thắng mặc định.</p>
     </div>
@@ -2347,9 +2305,7 @@ footer.site{border-top:1px solid var(--border);padding:26px 24px;text-align:cent
     </ol>
 
     <div class="takeaway">
-      <span class="eyebrow">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true" focusable="false"><path d="M12 2v6m0 8v6M4.9 4.9l4.2 4.2m5.8 5.8l4.2 4.2M2 12h6m8 0h6M4.9 19.1l4.2-4.2m5.8-5.8l4.2-4.2"/></svg>
-        Takeaway
+      <span class="eyebrow">Takeaway
       </span>
       <p><span class="hl">Dùng bản đồ để chọn một</span> failure, outcome oracle và policy gate; giữ bằng chứng, uncertainty, owner và đường dừng trước khi tăng exposure.</p>
     </div>
@@ -2379,9 +2335,9 @@ footer.site{border-top:1px solid var(--border);padding:26px 24px;text-align:cent
     <!-- ---- COMPLETION PANE ---- -->
     <section class="pane" id="complete" data-pane>
       <div class="complete">
-        <div class="complete-badge">✓</div>
+
         <h2>Hoàn thành khoá học</h2>
-        <p>Bạn đã đi từ «vì sao agent phi tất định cần đo khác» → dựng bộ eval từ lỗi thật → outcome/trajectory + code grader → LLM-as-judge và cách trị bias → pass@k vs pass^k → tracing OpenTelemetry GenAI → ba làn offline/guardrail/online → eval-driven CI gate → guardrails hard-stop → progressive rollout, và ghép tất cả trên một hệ agent ví dụ. Việc đáng làm tiếp theo: mở sản phẩm AI của bạn, chọn MỘT lỗi thật gần đây, biến nó thành eval case, và thêm một outcome check truy trạng thái hệ thống thật. Đây là phần nền về độ tin cậy; các chuyên đề khác chỉ cần mở khi đúng bài toán.</p>
+        <p>Chọn một lỗi agent vừa gặp, viết ca kiểm thử từ lỗi đó và xác minh kết quả bằng trạng thái của hệ thống.</p>
         <div style="margin-top:26px"><a class="btn btn-primary" href="#overview">Về trang đầu</a></div>
       </div>
     </section>
@@ -2502,6 +2458,7 @@ function markUI(id,done){
 
 /* ---- pagination ---- */
 function show(id){
+  const curriculum = id === 'curriculum' ? document.getElementById('curriculum') : null;
   const valid = PANES.includes(id) || LESSONS.some(l=>l.id===id);
   if(!valid) id='overview';
   document.querySelectorAll('[data-pane],[data-lesson],.module-header').forEach(el=>el.classList.remove('active'));
@@ -2521,7 +2478,8 @@ function show(id){
   if(an&&ns){ns.scrollTo({top:Math.max(0,an.offsetTop-ns.clientHeight/2),behavior:'auto'})}
   sSet(LAST_KEY,id);
   if(window.innerWidth<1024){document.getElementById('sidebar').classList.remove('open');document.getElementById('backdrop').classList.remove('show')}
-  window.scrollTo({top:0,behavior:'instant'});
+  if (curriculum) curriculum.scrollIntoView({behavior: 'instant'});
+  else window.scrollTo({top:0,behavior:'instant'});
   document.getElementById('main').focus({preventScroll:true}); // screen readers announce from the top of the new lesson
   try{window.parent.postMessage({type:'lms:lesson-change',course:COURSE_SLUG,lessonId:id},'*')}catch(e){}
 }
