@@ -2,6 +2,42 @@
 export function probeLessonText() {
   document.querySelectorAll('article[data-lesson] details').forEach(details => { details.open = true; });
   const issues = [];
+  // A paragraph can fit its own box perfectly yet wrap early inside the lesson.
+  // Compare single-column blocks to the body content box, excluding its gutters.
+  for (const body of document.querySelectorAll('article[data-lesson] .lesson-body, .hero-inner, .module-header, .complete')) {
+    const style = getComputedStyle(body);
+    if (style.display !== 'block') continue;
+    const available = body.clientWidth - parseFloat(style.paddingLeft) - parseFloat(style.paddingRight);
+    for (const child of body.children) {
+      if (!child.matches('p, ul, ol, .note, .objectives, .concept, .callout, .takeaway, .quiz, .accordion, .steps, .checklist')) continue;
+      const bounds = child.getBoundingClientRect();
+      if (!bounds.width || available - bounds.width < 96 || bounds.width >= available * 0.85) continue;
+      const leaves = child.matches('p') ? [child] : child.querySelectorAll('p, li, summary, button');
+      for (const leaf of leaves) {
+        if (leaf.querySelector('ul, ol, p, br, pre, table, svg')) continue;
+        const nodes = document.createTreeWalker(leaf, NodeFilter.SHOW_TEXT);
+        const range = document.createRange();
+        const halfLine = (parseFloat(getComputedStyle(leaf).lineHeight) || 16) / 2;
+        let top = Infinity, bottom = -Infinity;
+        while (nodes.nextNode()) {
+          if (!nodes.currentNode.textContent.trim()) continue;
+          range.selectNodeContents(nodes.currentNode);
+          for (const rect of range.getClientRects()) {
+            if (!rect.width) continue;
+            top = Math.min(top, rect.top);
+            bottom = Math.max(bottom, rect.top);
+          }
+        }
+        if (bottom - top <= halfLine) continue;
+        issues.push({
+          lesson: body.closest('article, [data-pane]')?.id || `module ${body.dataset.module}`,
+          text: leaf.textContent.trim().replace(/\s+/g, ' ').slice(0, 70),
+          problem: `wrapped prose uses ${Math.round(bounds.width)}px of ${Math.round(available)}px available`,
+        });
+        break;
+      }
+    }
+  }
   for (const title of document.querySelectorAll('.nav-link[data-lesson] .nav-title')) {
     if (!title.clientWidth) continue;
     if (title.scrollWidth <= title.clientWidth + 1 && title.scrollHeight <= title.clientHeight + 1) continue;

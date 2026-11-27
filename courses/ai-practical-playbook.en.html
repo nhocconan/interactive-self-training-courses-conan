@@ -206,7 +206,7 @@ code{font-family:var(--font-mono);font-size:.86em;background:var(--surface-2);
 .hero{border-bottom:1px solid var(--border);background:var(--surface)}
 .hero-inner{max-width:var(--maxw);margin:0 auto;padding:48px 24px}
 .hero h1{font-size:clamp(2rem,3.5vw,3rem);font-weight:700;margin:0;letter-spacing:-.025em;line-height:1.14;text-wrap:balance}
-.hero-sub{font-size:clamp(1rem,1.4vw,1.125rem);color:var(--ink-2);max-width:72ch;margin-top:14px;line-height:1.6}
+.hero-sub{font-size:clamp(1rem,1.4vw,1.125rem);color:var(--ink-2);margin-top:14px;line-height:1.6}
 .btn{display:inline-flex;align-items:center;gap:8px;font-weight:600;font-size:14px;
   padding:12px 22px;border-radius:12px;cursor:pointer;border:1px solid transparent;transition:transform .15s,box-shadow .15s}
 .btn-primary{background:var(--accent);color:var(--on-accent)}
@@ -239,7 +239,7 @@ code{font-family:var(--font-mono);font-size:.86em;background:var(--surface-2);
 .module-header{padding:28px 0 4px}
 .module-header .eyebrow{display:block;font:inherit;font-size:13px;letter-spacing:normal;text-transform:none;color:var(--ink-2);margin-bottom:6px}
 .module-header h2{font-size:clamp(1.35rem,2vw,1.75rem);line-height:1.25;text-wrap:balance;font-weight:650}
-.module-header p{color:var(--ink-2);margin-top:8px;font-size:1rem;max-width:72ch}
+.module-header p{color:var(--ink-2);margin-top:8px;font-size:1rem}
 
 .lesson{margin:22px 0 40px;background:var(--surface);border:1px solid var(--border);
   border-radius:var(--radius-lg);overflow:hidden;box-shadow:var(--shadow-sm)}
@@ -248,7 +248,6 @@ code{font-family:var(--font-mono);font-size:.86em;background:var(--surface-2);
 .lesson-head h3{color:var(--ink);font-size:clamp(1.4rem,2.3vw,1.85rem);margin:4px 0 0;line-height:1.25;text-wrap:balance}
 .lesson-body{padding:26px 30px 6px;font-size:16px}
 .lesson-body>*+*{margin-top:18px}
-.lesson-body>p,.lesson-body>ul,.lesson-body>ol{max-width:75ch}
 .lesson-body p{color:var(--ink)}
 .lesson-body ul,.lesson-body ol{padding-left:22px;color:var(--ink)}
 .lesson-body li+li{margin-top:6px}
@@ -465,7 +464,6 @@ footer.site{border-top:1px solid var(--border);padding:26px 24px;text-align:cent
 
 .lesson-body,.pane{overflow-wrap:break-word}
 .lesson-body :where(p,li,summary,button,pre),.pane :where(p,li,summary,button){overflow-wrap:anywhere}
-.lesson-body :where(.objectives,.concept,.callout,.takeaway,.quiz,.accordion,.steps,.checklist){max-inline-size:76ch}
 .lesson-body .eyebrow,.quiz .eyebrow{font:600 14px/1.45 var(--font-body);letter-spacing:normal;text-transform:none;color:var(--ink-2)}
 .lesson-body .objectives ul{margin-block:0}
 .lesson-body .checklist{padding:0}
@@ -836,7 +834,7 @@ You may answer "I don't know". Don't keep a number just because it sounds plausi
           <div>
             <span class="eyebrow" style="display:block;margin-bottom:10px">Apply it by team</span>
             <details class="accordion"><summary><span class="chev">▶</span><span class="accordion-tag">Research</span><span>Writing observations from a brand health table</span></summary>
-              <div class="accordion-body">B, Research Manager, asks the AI to interpret a buzz and sentiment table. The AI often adds “15% above the industry average” though the table has no benchmark. Add to your prompt: “only compare with numbers in the table; no benchmark, no comparison”.</div>
+              <div class="accordion-body">The table gives mention counts and sentiment by category. If the draft says “15% above the industry average,” ask which figures support the comparison. Remove the claim if the table has no industry figures.</div>
             </details>
             <details class="accordion"><summary><span class="chev">▶</span><span class="accordion-tag">HR</span><span>Asking about a new labor rule</span></summary>
               <div class="accordion-body">F, HR, needs article numbers and effective dates: the AI easily gets these wrong. Get the original text from an official source, put it into the chat and require verbatim quotes.</div>
@@ -995,14 +993,13 @@ Only include what we actually agreed on. Wherever you are not sure whether somet
           <div class="objectives">
             <span class="eyebrow">By the end you can</span>
             <ul>
-              <li>Tell the model, the app and the tools apart.</li>
-              <li>Call on the right layer: code for calculations, web search for recent news, reasoning for tasks with many constraints.</li>
-              <li>Pick a mode with the “difficulty × freshness” grid.</li>
+              <li>Identify what the model, the app and its tools each do.</li>
+              <li>Use a calculation tool for numbers and search the web for recent information.</li>
+              <li>Choose fast or reasoning mode according to the complexity of the task.</li>
             </ul>
           </div>
 
-          <p>B, Research Manager, pastes a 40-row GMV table and asks the AI for totals by category. Against Excel: two categories are wrong, one off by 38 million VND.</p>
-          <p>B asks again, adding: “Use the code tool to calculate this, and show me the result table.” This time it matches Excel exactly, because the AI got to use a tool.</p>
+          <p>For a 40-row table, ask the AI to run code that sums GMV by product category. Check each category total against Excel.</p>
 
           <figure class="figure">
             <div class="diagram-viewport" role="region" tabindex="0" aria-label="Diagram; scroll horizontally to read all labels" style="--diagram-width:740px"><svg viewBox="0 0 740 392" role="img" aria-label="Three nested layers: the outermost is the App (ChatGPT, Claude, Gemini, Copilot), the middle is the Model with two modes, reasoning and fast, and the innermost is Tools, including web search, running code, reading files, creating images and connectors. On the right, four tasks have arrows pointing to the layer that decides the result: comparing 3 options goes to reasoning, rewriting an email goes to fast mode, recent news about a client and totaling 40 rows of sales go to the tools layer.">
@@ -1810,7 +1807,7 @@ Output: a table Day | Time | New hire | Mentor | Room. After the table: assumpti
 
           <div class="quiz" data-correct="0">
             <span class="eyebrow">Quick check</span>
-            <p class="quiz-q">B, Research Manager, needs the AI to compare 3 survey vendors on 5 weighted criteria (price, turnaround time, sample size, panel quality, data terms). Which approach gives a usable result?</p>
+            <p class="quiz-q">You need to compare three survey vendors on five weighted criteria: price, turnaround time, sample size, panel quality and data terms. What would you ask the AI to do?</p>
             <button class="quiz-opt" onclick="quizPick(this,0)"><span class="quiz-letter">A</span><span>Pick a reasoning level, state the 5 criteria and weights, and ask for a scorecard with assumptions and missing data.</span></button>
             <button class="quiz-opt" onclick="quizPick(this,1)"><span class="quiz-letter">B</span><span>Keep Instant for speed and add “think very carefully, step by step” at the end of the prompt.</span></button>
             <button class="quiz-opt" onclick="quizPick(this,2)"><span class="quiz-letter">C</span><span>Pick a reasoning level and ask it to “present your entire thought process” so you can review it.</span></button>
@@ -1998,7 +1995,7 @@ Step 1: propose an outline and the source types you plan to look for. Wait for m
             </ul>
           </div>
 
-          <p>B, Research Manager, presents a report to a brand. A slide says “42% of consumers prioritize same-day delivery”, and the client asks: “42% of whom?”</p>
+          <p>A slide says “42% of consumers prioritize same-day delivery.” The client asks which consumers the figure represents.</p>
 
           <p>The source is a survey of 800 people in two cities, and the original line says: “ranked same-day delivery among the top 3 factors”. Real link, real number, but the slide claims more.</p>
 
@@ -2552,7 +2549,7 @@ Step 3. Flag every violation and every sentence with no fact.</pre>
             </details>
             <details class="accordion"><summary><span class="chev">▶</span><span class="accordion-tag">Research</span><span>500 comments on a TVC grouped into topics</span></summary>
               <div class="accordion-body"><ol class="steps">
-                <li>B, Research Manager, asks for each topic with a comment count and 3 IDs with the exact text.</li>
+                <li>For each topic, ask for the comment count and three verbatim comments with their IDs so you can check the source.</li>
                 <li>Add a "groups under 5%" section so minority views are not merged away.</li>
                 <li>Open a few random IDs in the original file. If an ID is wrong or missing, keep that topic out of the report for now.</li>
               </ol></div>
@@ -2599,7 +2596,7 @@ Step 3. Flag every violation and every sentence with no fact.</pre>
             </ul>
           </div>
 
-          <p>B, Research Manager, compares two weeks on a marketplace: week A 1,000 views, 100 orders; week B 1,200 views, 120 orders. The AI writes for the slide: "Orders rose 20%, conversion rate improved sharply."</p>
+          <p>The store had 100 orders from 1,000 views in week one and 120 orders from 1,200 views in week two. The AI drafts a slide that reads, “Orders rose 20% and the conversion rate improved sharply.”</p>
           <p>The second half is wrong: conversion was 10% in both weeks (100 ÷ 1,000, 120 ÷ 1,200). Arithmetically, orders rose in proportion to views in this example. This table does not establish the cause or page quality.</p>
 
           <ul>
@@ -2714,7 +2711,7 @@ Use a calculation tool (run code), no mental math:
             <details class="accordion"><summary><span class="chev">▶</span><span class="accordion-tag">Account</span><span>A writes a weekly email from a social listening export</span></summary>
               <div class="accordion-body"><ul><li>Have the tool calculate buzz by day and add the days up against the total in the export; if they don’t match, stop.</li><li>State clearly "percentage points" or "%".</li><li>Replace client names with codes before pasting.</li></ul></div>
             </details>
-            <details class="accordion"><summary><span class="chev">▶</span><span class="accordion-tag">Research</span><span>B compares two weeks of GMV on two marketplaces</span></summary>
+            <details class="accordion"><summary><span class="chev">▶</span><span class="accordion-tag">Research</span><span>Compare two weeks of GMV on two marketplaces</span></summary>
               <div class="accordion-body"><ul><li>Make the AI list the unit of each column and convert to million VND before calculating; ask whether GMV already excludes fake orders.</li><li>No promotion data: tell the AI to say only how much GMV rose, without guessing why.</li></ul></div>
             </details>
           </div>
@@ -2968,7 +2965,7 @@ Banned: text, logos, brand names, people, hands.</pre>
             </ul>
           </div>
 
-          <p>B, Research Manager, needs to QC sentiment labels on 3,000 mentions that still carry posters' names and the client's brand names. B pastes the whole file into a personal ChatGPT account: done in 20 minutes, but identifiable data has left anything the company controls.</p>
+          <p>To check the sentiment labels on 3,000 posts, a researcher uploads the full file to a personal ChatGPT account. The file still contains the authors’ names and the client’s brand names.</p>
 
           <p>Replacing names with codes does not establish permission to process the file. Even a work account needs an approved purpose, minimum necessary data and the organization’s procedure. The risk sits in the pairing: <strong>which kind of data, which kind of account</strong>.</p>
 
@@ -3590,7 +3587,7 @@ const LESSONS = [
   {id:'m1-l1', mod:1, part:'Part I · How AI works', title:'Where AI’s answers come from', desc:'Numbers need traceable sources.'},
   {id:'m1-l2', mod:1, part:'Part I · How AI works', title:'Why AI makes things up, and where', desc:'Numbers, names, quotes, laws are easiest to invent.'},
   {id:'m1-l3', mod:1, part:'Part I · How AI works', title:'Why AI forgets more as a chat gets longer', desc:'Long chats may miss constraints; check the decision record and sources.'},
-  {id:'m1-l4', mod:1, part:'Part I · How AI works', title:'How model, app and tools differ', desc:'Wrong sum? Turn on a calculation tool, don\'t switch models.'},
+  {id:'m1-l4', mod:1, part:'Part I · How AI works', title:'How model, app and tools differ', desc:'Calculate totals with code and check the results by category.'},
   {id:'m2-l1', mod:2, part:'Part II · Handing work to AI', title:'Write a 5-part brief instead of a one-line prompt', desc:'State sources and limits for reasons, dates and commitments.'},
   {id:'m2-l2', mod:2, part:'Part II · Handing work to AI', title:'Give AI the right context', desc:'Right documents, which one wins, store in a Project.'},
   {id:'m2-l3', mod:2, part:'Part II · Handing work to AI', title:'Find the real cause before fixing', desc:'A four-branch diagnosis, and when to open a new chat.'},

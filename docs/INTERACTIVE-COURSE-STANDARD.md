@@ -130,7 +130,9 @@ Run `node scripts/audit-svg-clip.mjs --self-test` to exercise the detector again
 clipped shapes/wrappers, accessible scroll regions and transformed geometry. The local regression floor is 8 CSS px; this is
 not a WCAG font-size certification. Dense diagrams can retain their native scale
 inside a labelled, focusable horizontal scroll region; captions stay at page
-width. The shared course canvas is 1280px; direct prose keeps a 75ch measure. Dense
+width. The shared course canvas is 1280px. Lesson paragraphs, objectives and lists use
+the available column up to the same right edge as figures and tables. On narrow
+screens, text wraps naturally inside the page gutters. Dense
 figures show a scroll cue only when needed. Manual inspection still checks
 meaning, contrast, labels and arrows.
 The audit runs in `scripts/verify.sh` and the versioned pre-push hook. Enable the
