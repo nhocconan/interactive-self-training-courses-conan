@@ -1,10 +1,10 @@
-PUBLIC
+# Đề cương lưu trữ · ChatGPT Work & Claude Cowork (05/09/2026)
 
-# Curriculum contract · ChatGPT Work & Claude Cowork thực chiến
+Khoá công khai hiện có 14 bài, gồm cả Gemini. Bản đề cương dưới đây ghi lại ấn bản tháng 9/2026. [Mở khoá hiện hành](./ai-work-agents-practical-guide.html).
 
 ## Course identity
 
-- Final file: `courses/ai-work-agents-practical-guide.html`
+- Ấn bản lưu trữ: hợp đồng JSON và các tệp trong `chatgpt-work-claude-cowork-fragments/`.
 - Title: `ChatGPT Work & Claude Cowork thực chiến`
 - Audience: nhân sự văn phòng/knowledge worker không cần biết code.
 - Promise: sau khoá học, người học chọn đúng chế độ, giao một task nhiều bước
@@ -32,15 +32,9 @@ PUBLIC
   the intro line inside the accordion states that all eight files are
   illustrative.
 
-## Rebuild
+## Bảo trì khoá công khai
 
-Assembler tạo HTML từ contract + fragments; bước thứ hai nhúng source asset
-`assets/ai-work-agent-desk.webp` để output vẫn là một file standalone:
-
-```bash
-python3 /Users/tienle/.claude/skills/interactive-course-builder/scripts/assemble_course.py courses/chatgpt-work-claude-cowork-contract.json
-node courses/embed-chatgpt-work-claude-cowork-hero.mjs
-```
+Trong kho mã công khai, cập nhật nội dung ở `courses/ai-work-agents-practical-guide.html`. Hợp đồng JSON, các fragment và bước nhúng hình đi cùng đề cương này chỉ dùng để tái hiện bản lưu trữ.
 
 ## Shared quality contract
 

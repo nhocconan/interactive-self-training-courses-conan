@@ -28,7 +28,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>MCP & Tool Layer · Chuẩn kết nối agent với tool và dữ liệu</title>
-<meta name="description" content="Khoá học tương tác tiếng Việt cho kỹ sư AI: Model Context Protocol từ kiến trúc host·client·server, core hiện hành và primitive legacy, JSON-RPC metadata hiện hành và legacy compatibility, structured output, transport stdio/Streamable HTTP, OAuth 2.1 resource server, các PoC/lỗi đã được công bố (tool poisoning, rug pull, confused deputy) và cách phòng thủ, thiết kế tool description/granularity theo chuẩn Anthropic engineering, progressive disclosure và code execution, khi nào không cần MCP, adoption và governance 2024→2026.">
+<meta name="description" content="Thiết kế kết nối giữa agent, công cụ và dữ liệu. Đọc request theo MCP 2026-07-28, nhận diện client cũ dùng bản 2025-11-25, kiểm tra quyền gọi tool và chọn khi nào nên dùng API trực tiếp.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
@@ -134,7 +134,7 @@ code{font-family:var(--font-mono);font-size:.86em;background:var(--surface-2);
 .mono{font-family:var(--font-mono)}
 .eyebrow{font-family:var(--font-mono);font-size:11px;letter-spacing:.22em;
   text-transform:uppercase;color:var(--accent-2);font-weight:600}
-.grad-text{background:var(--grad);-webkit-background-clip:text;background-clip:text;color:transparent}
+
 
 /* Skip link (a11y) */
 .skip-link{position:fixed;top:-60px;left:12px;z-index:200;background:var(--accent);
@@ -214,11 +214,7 @@ code{font-family:var(--font-mono);font-size:.86em;background:var(--surface-2);
    5 · HERO / COVER
    ============================================================================ */
 .hero{position:relative;overflow:hidden;border-bottom:1px solid var(--border);
-  background:var(--surface);
-  background-image:
-    radial-gradient(760px 300px at 88% -12%,color-mix(in srgb,var(--brand-gold) 24%,transparent),transparent 60%),
-    radial-gradient(640px 380px at 6% 112%,color-mix(in srgb,var(--accent-2) 14%,transparent),transparent 60%),
-    radial-gradient(560px 340px at 50% 0%,color-mix(in srgb,var(--accent) 8%,transparent),transparent 65%)}
+  background:var(--surface)}
 .hero-inner{max-width:var(--maxw);margin:0 auto;padding:72px 24px 60px}
 .hero h1{font-size:clamp(2.1rem,5vw,3.4rem);font-weight:800;margin:20px 0 0;letter-spacing:-.03em}
 .hero-sub{font-size:clamp(1rem,2vw,1.2rem);color:var(--ink-2);margin-top:18px}
@@ -234,7 +230,8 @@ code{font-family:var(--font-mono);font-size:.86em;background:var(--surface-2);
 /* ============================================================================
    6 · TOC / CURRICULUM
    ============================================================================ */
-.section-pad{padding:56px 0}
+.section-pad{padding-block:56px}
+#curriculum{scroll-margin-block-start:1rem}
 .section-head{display:flex;align-items:baseline;gap:14px;margin-bottom:28px}
 .section-head h2{font-size:1.9rem}
 .section-head .line{flex:1;height:1px;background:var(--border)}
@@ -243,7 +240,7 @@ code{font-family:var(--font-mono);font-size:.86em;background:var(--surface-2);
 .toc-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:12px}
 .toc-card{display:flex;gap:14px;align-items:flex-start;padding:16px;border:1px solid var(--border);
   border-radius:var(--radius);background:var(--surface);cursor:pointer;transition:transform .15s,box-shadow .15s,border-color .15s}
-.toc-card:hover{transform:translateY(-2px);box-shadow:var(--shadow-md);border-color:var(--accent);text-decoration:none}
+.toc-card:hover{box-shadow:var(--shadow-md);border-color:var(--accent);text-decoration:none}
 .toc-card-num{font-family:var(--font-mono);font-size:20px;font-weight:700;color:var(--accent-2);line-height:1}
 .toc-card-title{display:block;font-weight:700;font-size:15px;color:var(--ink)}
 .toc-card-desc{display:block;font-size:12.5px;color:var(--ink-2);margin-top:4px;line-height:1.5}
@@ -433,8 +430,7 @@ tbody tr:hover{background:var(--surface-2)}
 
 /* COMPONENT: Completion screen */
 .complete{text-align:center;padding:70px 24px}
-.complete-badge{width:76px;height:76px;border-radius:99px;background:var(--grad);
-  display:flex;align-items:center;justify-content:center;margin:0 auto 22px;color:#fff;font-size:34px}
+
 .complete h2{font-size:2.2rem}
 .complete p{color:var(--ink-2);max-width:52ch;margin:14px auto 0}
 
@@ -491,8 +487,8 @@ footer.site{border-top:1px solid var(--border);padding:26px 24px;text-align:cent
     <section class="pane" id="overview" data-pane>
       <div class="hero">
         <div class="hero-inner">
-          <h1><span class="grad-text">MCP &amp; Tool Layer</span> — chuẩn kết nối agent với tool và dữ liệu</h1>
-          <p class="hero-sub">Cho kỹ sư đã xây được agent và giờ cần một tầng tool/integration chuẩn hoá thay vì N×M adapter viết tay. Đi từ kiến trúc <strong>host · client · server</strong>, core hiện hành, primitive deprecated và JSON-RPC theo từng request, tới transport, OAuth 2.1 resource server, ba đòn tấn công đã có case thật và cách phòng thủ, thiết kế tool phù hợp tác vụ của agent (description-as-prompt, progressive disclosure, code execution), và cả câu hỏi ngược: khi nào KHÔNG cần MCP. Bám bản spec <strong>CURRENT 2026-07-28</strong> (final ngày 28/07/2026) mà không bỏ rơi <strong>2025-11-25</strong>, một revision legacy cần đọc khi tương tác với implementation cũ.</p>
+          <h1>MCP &amp; Tool Layer</h1>
+          <p class="hero-sub">Thiết kế kết nối giữa agent, công cụ và dữ liệu. Đọc request theo MCP 2026-07-28, nhận diện client cũ dùng bản 2025-11-25, kiểm tra quyền gọi tool và chọn khi nào nên dùng API trực tiếp.</p>
           <div style="margin-top:28px;display:flex;gap:12px;flex-wrap:wrap">
             <a class="btn btn-primary" id="start-btn">Bắt đầu học →</a>
             <a class="btn btn-ghost" href="#curriculum">Xem chương trình</a>
@@ -555,7 +551,7 @@ footer.site{border-top:1px solid var(--border);padding:26px 24px;text-align:cent
     </div>
   </div>
   <div class="lesson-body">
-    <p class="muted"><small>Nguồn: <a href="https://www.anthropic.com/news/model-context-protocol" target="_blank" rel="noopener noreferrer">tài liệu gốc</a></small></p>
+    <p class="muted"><small>Nguồn: <a href="https://www.anthropic.com/news/model-context-protocol" target="_blank" rel="noopener noreferrer">Anthropic, Introducing the Model Context Protocol</a></small></p>
 
     <div class="objectives">
       <span class="eyebrow">Học xong bài này bạn có thể</span>
@@ -568,10 +564,9 @@ footer.site{border-top:1px solid var(--border);padding:26px 24px;text-align:cent
 
     <p>Đội bạn có một agent chạy tốt. Tuần này nó cần đọc <strong>Slack</strong>, tra <strong>GitHub</strong> và query <strong>Postgres</strong>. Bạn viết ba adapter riêng, mỗi cái một kiểu auth, một kiểu trả kết quả. Tháng sau sếp muốn thử con agent đó trên một model khác của hãng khác; SDK khác, cách gọi tool khác, thế là ba adapter viết lại gần như từ đầu. Rồi đội data muốn agent <em>của họ</em> cũng nối vào đúng ba nguồn ấy, và họ lại viết ba adapter nữa vì code của bạn dính chặt vào runtime của bạn. Chưa ai làm gì sai; chỉ là mỗi cặp <em>(một bên gọi × một nguồn dữ liệu)</em> đang đòi một mẩu code dán tay riêng.</p>
 
-    <p>Thông báo MCP của Anthropic25/11/2024 nêu chi phí viết tích hợp riêng cho từng nguồn và đề xuất chuẩn mở kết nối AI app với hệ dữ liệu. Tính tái sử dụng phụ thuộc khả năng tương tác và quyền thực tế của các client/server, không chỉ nhãn “có MCP”.</p>
+    <p>Thông báo MCP của Anthropic 25/11/2024 nêu chi phí viết tích hợp riêng cho từng nguồn và đề xuất chuẩn mở kết nối AI app với hệ dữ liệu. Tính tái sử dụng phụ thuộc khả năng tương tác và quyền thực tế của các client/server, không chỉ nhãn “có MCP”.</p>
 
     <div class="concept">
-      <span class="eyebrow">Đặt tên cho nó</span>
       <h4>Bài toán N×M và tầng tích hợp (integration layer)</h4>
       <p>Gọi N là số ứng dụng gọi và M là số nguồn dữ liệu. <strong>Trong mô hình adapter lý tưởng</strong>, custom integration từng cặp cần N×M adapter; chuẩn chung cho phép mỗi ứng dụng tích hợp MCP một lần, mỗi nguồn expose server một lần: N+M đầu tích hợp. Đây không phải công thức tổng chi phí: auth, revision, capability, deployment và provider tool mapping vẫn cần công sức, và client/server phải hỗ trợ hợp đồng tương thích.</p>
     </div>
@@ -637,9 +632,7 @@ footer.site{border-top:1px solid var(--border);padding:26px 24px;text-align:cent
     <p class="mono" style="font-size:12.5px;color:var(--ink-3)">Khoá này giả định bạn đã có một agent gọi được tool. Muốn học xây vòng lặp agent, xem «Loop Engineering»; kỹ nghệ ngữ cảnh và harness, xem «Context &amp; Harness Engineering»; đo độ tin cậy, xem «Agent Reliability &amp; Evaluation».</p>
 
     <div class="takeaway">
-      <span class="eyebrow">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true" focusable="false"><path d="M12 2v6m0 8v6M4.9 4.9l4.2 4.2m5.8 5.8l4.2 4.2M2 12h6m8 0h6M4.9 19.1l4.2-4.2m5.8-5.8l4.2-4.2"/></svg>
-        Takeaway
+      <span class="eyebrow">Takeaway
       </span>
       <p><span class="hl">N×M→N+M là mô hình đếm đầu adapter lý tưởng</span>, không hứa tổng chi phí tích hợp tuyến tính hay mọi client gọi được mọi feature. Kiểm revision, transport, quyền và hỗ trợ capability khi cân reuse.</p>
     </div>
@@ -667,7 +660,7 @@ footer.site{border-top:1px solid var(--border);padding:26px 24px;text-align:cent
     </div>
   </div>
   <div class="lesson-body">
-    <p class="muted"><small>Nguồn: <a href="https://modelcontextprotocol.io/specification/2026-07-28/architecture" target="_blank" rel="noopener noreferrer">tài liệu gốc</a></small></p>
+    <p class="muted"><small>Nguồn: <a href="https://modelcontextprotocol.io/specification/2026-07-28/architecture" target="_blank" rel="noopener noreferrer">MCP 2026-07-28, Architecture</a></small></p>
 
     <div class="objectives">
       <span class="eyebrow">Học xong bài này bạn có thể</span>
@@ -683,7 +676,6 @@ footer.site{border-top:1px solid var(--border);padding:26px 24px;text-align:cent
     <p>MCP trả lời câu này bằng kiến trúc <strong>client–host–server</strong>, và câu trả lời nằm ở <em>ai được thấy gì</em>.</p>
 
     <div class="concept">
-      <span class="eyebrow">Đặt tên cho nó</span>
       <h4>Ba vai: host, client, server</h4>
       <ul>
         <li><strong>Host</strong>: tiến trình điều phối (ví dụ app chat, IDE). Nó tạo và quản lý các client, thực thi <em>chính sách bảo mật và consent</em>, và là <em>nơi duy nhất</em> tổng hợp toàn bộ ngữ cảnh hội thoại.</li>
@@ -746,9 +738,7 @@ footer.site{border-top:1px solid var(--border);padding:26px 24px;text-align:cent
     </div>
 
     <div class="takeaway">
-      <span class="eyebrow">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true" focusable="false"><path d="M12 2v6m0 8v6M4.9 4.9l4.2 4.2m5.8 5.8l4.2 4.2M2 12h6m8 0h6M4.9 19.1l4.2-4.2m5.8-5.8l4.2-4.2"/></svg>
-        Takeaway
+      <span class="eyebrow">Takeaway
       </span>
       <p><span class="hl">Host điều phối chia sẻ dữ liệu; client–server 1:1 không tự cô lập server.</span> Giới hạn tham số/output được phép chuyển, credential, filesystem và egress; server phải tự kiểm tra xác thực và phân quyền.</p>
     </div>
@@ -776,7 +766,7 @@ footer.site{border-top:1px solid var(--border);padding:26px 24px;text-align:cent
     </div>
   </div>
   <div class="lesson-body">
-    <p class="muted"><small>Nguồn: <a href="https://modelcontextprotocol.io/specification/2026-07-28/client/elicitation" target="_blank" rel="noopener noreferrer">tài liệu gốc</a></small></p>
+    <p class="muted"><small>Nguồn: <a href="https://modelcontextprotocol.io/specification/2026-07-28/client/elicitation" target="_blank" rel="noopener noreferrer">MCP 2026-07-28, Elicitation</a></small></p>
 
     <div class="objectives">
       <span class="eyebrow">Học xong bài này bạn có thể</span>
@@ -790,7 +780,6 @@ footer.site{border-top:1px solid var(--border);padding:26px 24px;text-align:cent
     <p>Đội bạn build một MCP client. Có một tính năng tiện: server cung cấp vài <em>prompt</em> dựng sẵn (kiểu “tóm tắt ticket theo mẫu công ty”), hiển thị như slash-command. Để cho “thông minh”, một bạn cho model tự động kích hoạt các prompt đó khi nó <em>đoán</em> là hợp. Kết quả: giữa chừng hội thoại model tự nhét một mẫu prompt của server vào, user không hề chọn, và mất kiểm soát cái mình tưởng mình đang lái. Trong UI đã hứa slash-command do user chọn, việc tự chèn mà không thông báo phá vỡ contract đó. Đây là lỗi UX cụ thể, không phải protocol cấm mọi cách tự động sử dụng prompt.</p>
 
     <div class="concept">
-      <span class="eyebrow">Đặt tên cho nó</span>
       <h4>Primitive và ba kiểu “người cầm lái”</h4>
       <p>Theo core <strong>2026-07-28</strong>, server cung cấp <strong>tools, resources, prompts</strong>; client có <strong>elicitation</strong> để thu thêm input. <strong>Sampling và roots vẫn còn nhưng đã deprecated</strong>, không phải nền cho thiết kế mới. Các nhãn model-controlled, user-controlled, application-driven là mô hình tương tác hướng dẫn thiết kế; protocol cho phép client chọn UX phù hợp, không bắt một giao diện duy nhất.</p>
       <ul>
@@ -850,9 +839,7 @@ footer.site{border-top:1px solid var(--border);padding:26px 24px;text-align:cent
     </div>
 
     <div class="takeaway">
-      <span class="eyebrow">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true" focusable="false"><path d="M12 2v6m0 8v6M4.9 4.9l4.2 4.2m5.8 5.8l4.2 4.2M2 12h6m8 0h6M4.9 19.1l4.2-4.2m5.8-5.8l4.2-4.2"/></svg>
-        Takeaway
+      <span class="eyebrow">Takeaway
       </span>
       <p>Thiết kế mới ưu tiên <span class="hl">tools/resources/prompts và elicitation</span>; nhận diện sampling/roots deprecated. Chọn UX rõ quyền người dùng; form không thu secret, URL mode xử lý tương tác nhạy cảm ngoài client.</p>
     </div>
@@ -887,7 +874,7 @@ footer.site{border-top:1px solid var(--border);padding:26px 24px;text-align:cent
     </div>
   </div>
   <div class="lesson-body">
-    <p class="muted"><small>Nguồn: <a href="https://modelcontextprotocol.io/specification/2026-07-28/basic/versioning" target="_blank" rel="noopener noreferrer">tài liệu gốc</a></small></p>
+    <p class="muted"><small>Nguồn: <a href="https://modelcontextprotocol.io/specification/2026-07-28/basic/versioning" target="_blank" rel="noopener noreferrer">MCP 2026-07-28, Versioning and Compatibility</a></small></p>
 
     <div class="objectives"><span class="eyebrow">Học xong bài này bạn có thể</span><ul>
       <li>Phân biệt request, response và notification JSON-RPC 2.0.</li>
@@ -895,7 +882,7 @@ footer.site{border-top:1px solid var(--border);padding:26px 24px;text-align:cent
       <li>Phân biệt discovery, subscription và backward compatibility với initialize của bản cũ.</li>
     </ul></div>
     <p>Bạn chuyển một server từ revision 2025-11-25 lên 2026-07-28 nhưng client vẫn chờ <code>notifications/initialized</code>. Đó là nhầm hợp đồng: core mới <strong>stateless, không có negotiation handshake hay protocol session</strong>. Trước khi sửa code gửi, đọc revision trên request và trace thực tế.</p>
-    <div class="concept"><span class="eyebrow">Ngôn ngữ trên dây</span><h4>JSON-RPC 2.0 và metadata trên từng request</h4>
+    <div class="concept"><h4>JSON-RPC 2.0 và metadata trên từng request</h4>
       <ul><li><strong>Request</strong> có method và id là string hoặc integer, không null; id không được trùng request <em>đang chờ</em>. Id tương quan response, không phải khóa idempotency của nghiệp vụ.</li>
       <li><strong>Response</strong> dùng cùng id và đúng một trong result/error. Result hiện hành mang <code>resultType: "complete"</code> hoặc <code>"input_required"</code>; thiếu field ở server legacy được đọc là complete để tương thích.</li>
       <li><strong>Notification</strong> không có id và không nhận JSON-RPC response. Im lặng không đủ kết luận server/client đã bỏ qua do thiếu capability: còn phải kiểm đường truyền, subscription, filter và log xử lý.</li></ul>
@@ -948,7 +935,7 @@ footer.site{border-top:1px solid var(--border);padding:26px 24px;text-align:cent
     </div>
   </div>
   <div class="lesson-body">
-    <p class="muted"><small>Nguồn: <a href="https://modelcontextprotocol.io/specification/2026-07-28/server/tools" target="_blank" rel="noopener noreferrer">tài liệu gốc</a></small></p>
+    <p class="muted"><small>Nguồn: <a href="https://modelcontextprotocol.io/specification/2026-07-28/server/tools" target="_blank" rel="noopener noreferrer">MCP 2026-07-28, Tools</a></small></p>
 
     <div class="objectives">
       <span class="eyebrow">Học xong bài này bạn có thể</span>
@@ -965,7 +952,6 @@ footer.site{border-top:1px solid var(--border);padding:26px 24px;text-align:cent
     <p>Nhớ ở Module 1: <strong>tools</strong> là primitive <strong>model-controlled</strong>, tức model tự quyết khi nào gọi. Nhưng model chọn đúng tool chưa đủ; <em>kết quả trả về</em> cũng phải ở dạng code hạ nguồn dùng được mà không phải đoán. Đây là chỗ tool schema vào cuộc.</p>
 
     <div class="concept">
-      <span class="eyebrow">Đặt tên · Hai đầu của schema</span>
       <h4>inputSchema (bắt buộc) và outputSchema (từ 2025-06-18)</h4>
       <p>Core 2026-07-28 dùng <strong>JSON Schema 2020-12</strong> cho inputSchema và outputSchema tùy chọn; structuredContent có thể là bất kỳ JSON value phù hợp schema, không chỉ object. inputSchema là object schema hợp lệ; server phải hỗ trợ các quy tắc resolve reference của spec. Schema giúp kiểm hình dạng dữ liệu, không chứng minh con số hay quyền truy cập là đúng.</p>
       <p>Kết quả có kiểu nằm trong <code>structuredContent</code>. Result hiện hành có <code>resultType: "complete"</code> khi hoàn tất. Spec khuyến nghị kèm JSON serialized trong TextContent để client legacy vẫn đọc đủ dữ liệu; đây là SHOULD, không phải MUST. Chọn hợp đồng tiêu thụ rõ cho client mục tiêu, không mặc định mọi client sẽ đưa cả hai dạng vào model.</p>
@@ -1035,7 +1021,6 @@ footer.site{border-top:1px solid var(--border);padding:26px 24px;text-align:cent
     <p>Nãy giờ ta lo đầu <em>ra</em>. Nhưng đầu <em>vào</em> cũng hỏng theo đúng một kiểu: model đọc <code>inputSchema</code>, hiểu gần đúng, rồi gửi <code>passengers: "2"</code> thay vì <code>2</code>, hoặc quên hẳn một field mà schema đã đánh dấu required. Hai cơ chế ở tầng API model hỗ trợ xử lý lỗi đầu vào; chúng thuộc <em>schema tooling</em>.</p>
 
     <div class="concept">
-      <span class="eyebrow">Đặt tên · Hai cần gạt ở đầu vào</span>
       <h4><code>input_examples</code> (dạy hình dáng) và <code>strict: true</code> (ép hình dáng)</h4>
       <p>Chúng giải hai bài toán <em>khác nhau</em>, đừng dùng cái này thay cái kia. <strong><code>input_examples</code></strong> đính vài lời gọi mẫu vào định nghĩa tool, thứ mà một đoạn văn mô tả không diễn đạt nổi: field nào đi cùng field nào, khi nào bỏ trống nhánh nào, nested object trông ra sao. Anthropic báo cáo nó nâng độ chính xác từ <strong>72% lên 90%</strong> trên eval nội bộ về xử lý tham số phức tạp. <strong><code>strict: true</code></strong> thì không dạy gì cả, nó <em>chặn</em>: API ràng buộc quá trình sampling theo grammar dựng từ chính JSON Schema của bạn, nên <code>tool_use.input</code> <em>luôn</em> khớp schema, và <code>tool_use.name</code> luôn là một tool có thật. Dùng subset schema provider hỗ trợ; schema tùy chọn/required phải phản ánh đúng input thực, không biến mọi field thành bắt buộc chỉ để bật strict.</p>
       <p><code>strict: true</code> ràng buộc input model theo subset JSON Schema mà provider hỗ trợ; <code>input_examples</code> minh hoạ cách dùng. <strong>Không bỏ validation ở host/server</strong>: schema-valid vẫn có thể sai đối tượng, sai quyền, sai giá trị nghiệp vụ hoặc đến từ client khác không dùng strict. Ví dụ không bảo đảm chọn đúng tham số; cần eval và kiểm tra quyền độc lập.</p>
@@ -1080,9 +1065,7 @@ footer.site{border-top:1px solid var(--border);padding:26px 24px;text-align:cent
     </div>
 
     <div class="takeaway">
-      <span class="eyebrow">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true" focusable="false"><path d="M12 2v6m0 8v6M4.9 4.9l4.2 4.2m5.8 5.8l4.2 4.2M2 12h6m8 0h6M4.9 19.1l4.2-4.2m5.8-5.8l4.2-4.2"/></svg>
-        Takeaway
+      <span class="eyebrow">Takeaway
       </span>
       <p>Khai <code>outputSchema</code> và trả <code>structuredContent</code> để code hạ nguồn nhận <span class="hl">JSON có kiểu thay vì regex bới text</span>; và khi tool chạy nhưng hỏng, báo bằng <code>isError: true</code> với message model tự-sửa-được: đừng ném stack trace, đừng nhầm sang lỗi protocol.</p>
     </div>
@@ -1109,7 +1092,7 @@ footer.site{border-top:1px solid var(--border);padding:26px 24px;text-align:cent
     </div>
   </div>
   <div class="lesson-body">
-    <p class="muted"><small>Nguồn: <a href="https://modelcontextprotocol.io/specification/2026-07-28/server/tools" target="_blank" rel="noopener noreferrer">tài liệu gốc</a></small></p>
+    <p class="muted"><small>Nguồn: <a href="https://modelcontextprotocol.io/specification/2026-07-28/server/tools" target="_blank" rel="noopener noreferrer">MCP 2026-07-28, Tools</a></small></p>
 
     <div class="objectives">
       <span class="eyebrow">Học xong bài này bạn có thể</span>
@@ -1125,7 +1108,6 @@ footer.site{border-top:1px solid var(--border);padding:26px 24px;text-align:cent
     <p>Ở Module 1 bạn đã thấy <strong>host</strong> là nơi thực thi ranh giới bảo mật, và spec khuyến nghị theo mức SHOULD, nên có người dùng can thiệp và từ chối lời gọi. Annotations hỗ trợ UX của vòng phê duyệt này; host vẫn phải quyết theo policy.</p>
 
     <div class="concept">
-      <span class="eyebrow">Đặt tên · Bốn hint và mặc định của chúng</span>
       <h4>Annotation: mô tả hành vi tool, do server tự khai</h4>
       <p><strong>Annotation</strong> là bốn cờ mô tả hành vi một tool để client hiển thị/quyết định UX. Điểm mấu chốt trước cả định nghĩa: chúng do <em>server tự khai</em>. Bốn cờ và giá trị mặc định (lấy nguyên từ TypeScript schema của spec):</p>
     </div>
@@ -1188,9 +1170,7 @@ footer.site{border-top:1px solid var(--border);padding:26px 24px;text-align:cent
     </div>
 
     <div class="takeaway">
-      <span class="eyebrow">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true" focusable="false"><path d="M12 2v6m0 8v6M4.9 4.9l4.2 4.2m5.8 5.8l4.2 4.2M2 12h6m8 0h6M4.9 19.1l4.2-4.2m5.8-5.8l4.2-4.2"/></svg>
-        Takeaway
+      <span class="eyebrow">Takeaway
       </span>
       <p><span class="hl">Annotation là hint, không phải authorization hay sandbox.</span> Server khai trung thực; host coi annotation từ server chưa tin là untrusted và quyết approval theo policy đã kiểm. Giá trị mặc định không bảo đảm mọi client sẽ bật confirmation.</p>
     </div>
@@ -1225,7 +1205,7 @@ footer.site{border-top:1px solid var(--border);padding:26px 24px;text-align:cent
     </div>
   </div>
   <div class="lesson-body">
-    <p class="muted"><small>Nguồn: <a href="https://modelcontextprotocol.io/specification/2026-07-28/basic/transports/streamable-http" target="_blank" rel="noopener noreferrer">tài liệu gốc</a></small></p>
+    <p class="muted"><small>Nguồn: <a href="https://modelcontextprotocol.io/specification/2026-07-28/basic/transports/streamable-http" target="_blank" rel="noopener noreferrer">MCP 2026-07-28, Streamable HTTP</a></small></p>
 
     <div class="objectives">
       <span class="eyebrow">Sau bài này bạn có thể</span>
@@ -1239,7 +1219,6 @@ footer.site{border-top:1px solid var(--border);padding:26px 24px;text-align:cent
     <p>Một server dùng transport HTTP+SSE legacy bị mất thông báo sau khi deploy nhiều replica. Load balancer không chia sẻ state hoặc không giữ affinity có thể làm hỏng cấu hình ấy; điều này <strong>không có nghĩa SSE luôn hỏng sau load balancer</strong>. Chọn transport/revision phù hợp và kiểm state, proxy buffering, timeout và auth của deployment.</p>
 
     <div class="concept">
-      <span class="eyebrow">Đặt tên hai transport chuẩn</span>
       <h4>stdio và Streamable HTTP</h4>
       <p>Spec MCP định nghĩa hai transport chuẩn và khuyên client SHOULD hỗ trợ stdio khi có thể. <strong>stdio transport</strong>: client <em>spawn</em> server làm subprocess, server đọc JSON-RPC từ <code>stdin</code>, ghi ra <code>stdout</code> (mỗi message một dòng, MUST NOT có newline bên trong message), dùng <code>stderr</code> để log, dành cho server chạy <em>local</em>. <strong>Streamable HTTP</strong>: một endpoint HTTP duy nhất: bản 2025-03-26→2025-11-25 nhận cả POST và GET; <strong>bản 2026-07-28 gỡ hẳn GET endpoint</strong>, mọi message client gửi là một POST riêng, còn stream thông báo dài hạn nay mở bằng một request <code>subscriptions/listen</code>. Dành cho server <em>remote</em>, và nó "replaces the HTTP+SSE transport from protocol version 2024-11-05".</p>
     </div>
@@ -1277,7 +1256,7 @@ footer.site{border-top:1px solid var(--border);padding:26px 24px;text-align:cent
       <figcaption><b>Hình 3.1</b>. Trái là transport legacy 2024-11-05. Phải là core 2026-07-28: một endpoint POST, trả JSON hoặc SSE theo request; subscription là response stream của POST subscriptions/listen. Không Mcp-Session-Id, GET stream hay Last-Event-ID. Cả hai kiểu đều cần cấu hình proxy/state đúng.</figcaption>
     </figure>
 
-    <p>Request HTTP hiện hành mang MCP-Protocol-Version khớp version trong params._meta, Mcp-Method khớp method, và Mcp-Name cho tools/call, resources/read, prompts/get. Mismatch bị từ chối HTTP400/-32020. Notification POST có quy tắc khác; core này không định nghĩa client notification trên HTTP. stdio không dùng HTTP header.</p>
+    <p>Request HTTP hiện hành mang MCP-Protocol-Version khớp version trong params._meta, Mcp-Method khớp method, và Mcp-Name cho tools/call, resources/read, prompts/get. Mismatch bị từ chối HTTP 400/-32020. Notification POST có quy tắc khác; core này không định nghĩa client notification trên HTTP. stdio không dùng HTTP header.</p>
 
     <div class="callout danger">
       <div class="callout-title">DNS rebinding — cảnh báo lý thuyết đã thành CVE thật</div>
@@ -1300,9 +1279,7 @@ footer.site{border-top:1px solid var(--border);padding:26px 24px;text-align:cent
     </div>
 
     <div class="takeaway">
-      <span class="eyebrow">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true" focusable="false"><path d="M12 2v6m0 8v6M4.9 4.9l4.2 4.2m5.8 5.8l4.2 4.2M2 12h6m8 0h6M4.9 19.1l4.2-4.2m5.8-5.8l4.2-4.2"/></svg>
-        Takeaway
+      <span class="eyebrow">Takeaway
       </span>
       <p>stdio cho server chạy local, Streamable HTTP một-endpoint cho remote, và mọi server HTTP phải <span class="hl">validate Origin header</span>, nếu không DNS rebinding biến một website bất kỳ thành kẻ gọi tool local (đúng như CVE-2025-66414).</p>
     </div>
@@ -1329,7 +1306,7 @@ footer.site{border-top:1px solid var(--border);padding:26px 24px;text-align:cent
     </div>
   </div>
   <div class="lesson-body">
-    <p class="muted"><small>Nguồn: <a href="https://modelcontextprotocol.io/specification/2026-07-28/changelog" target="_blank" rel="noopener noreferrer">tài liệu gốc</a></small></p>
+    <p class="muted"><small>Nguồn: <a href="https://modelcontextprotocol.io/specification/2026-07-28/changelog" target="_blank" rel="noopener noreferrer">MCP 2026-07-28, Key changes</a></small></p>
 
     <div class="objectives">
       <span class="eyebrow">Sau bài này bạn có thể</span>
@@ -1340,10 +1317,9 @@ footer.site{border-top:1px solid var(--border);padding:26px 24px;text-align:cent
       </ul>
     </div>
 
-    <p>Giả sử server từng chấp nhận batching theo revision 2025-03-26. Sau nâng SDK/cấu hình, request bị reject. SDK version không tự nó cho biết protocol revision trên dây: kiểm lockfile, cấu hình và trace. Changelog2025-06-18 bỏ batching; cần migrate client/request theo hợp đồng cả hai đầu hỗ trợ, không đoán từ nhãn minor.</p>
+    <p>Giả sử server từng chấp nhận batching theo revision 2025-03-26. Sau nâng SDK/cấu hình, request bị reject. SDK version không tự nó cho biết protocol revision trên dây: kiểm lockfile, cấu hình và trace. Changelog 2025-06-18 bỏ batching; cần migrate client/request theo hợp đồng cả hai đầu hỗ trợ, không đoán từ nhãn minor.</p>
 
     <div class="concept">
-      <span class="eyebrow">Đặt tên cơ chế</span>
       <h4>Protocol version negotiation</h4>
       <p>Core 2026-07-28 khai version trên <strong>từng request</strong>; không có handshake. Version không hỗ trợ trả -32022 với supported/requested; server MUST có server/discover và client MAY gọi trước. Legacy 2025-11-25 trở về trước thương lượng lúc initialize. Pin dependency lẫn protocol configuration, rồi kiểm trace: cùng một SDK có thể hỗ trợ nhiều revision.</p>
     </div>
@@ -1393,7 +1369,7 @@ footer.site{border-top:1px solid var(--border);padding:26px 24px;text-align:cent
           <tr><td class="mono">2025-03-26</td><td class="mono">2025-03-26</td><td>OAuth 2.1; Streamable HTTP <b>thay</b> HTTP+SSE; tool annotations; <b>thêm</b> JSON-RPC batching</td></tr>
           <tr><td class="mono">2025-06-18</td><td class="mono">2025-06-18</td><td><b>Bỏ</b> batching; structured output; MCP server = OAuth Resource Server</td></tr>
           <tr><td class="mono">2025-11-25</td><td class="mono">2025-11-25</td><td><b>Bản trước</b> — vẫn là một revision legacy cần kiểm khi tương tác; OIDC discovery; tasks (thử nghiệm)</td></tr>
-          <tr><td class="mono">2026-07-28</td><td class="mono">2026-07-28<br>(RC: 2026-05-29)</td><td><b>CURRENT — final 28/07/2026</b>; bỏ <code>initialize</code>/<code>initialized</code> và <code>Mcp-Session-Id</code>, thay bằng <code>server/discover</code> + <code>_meta</code> trên từng request; Extensions; Roots/Sampling/Logging và Dynamic Client Registration vào diện Deprecated, cửa sổ ≥ 12 tháng; <b>MRTR</b> thay request server→client (sampling/elicitation/roots giờ đi qua <code>InputRequiredResult</code> + <code>inputResponses</code>, SEP-2322); mọi result mang field bắt buộc <code>resultType</code>; <b><code>subscriptions/listen</code></b> thay GET endpoint và <code>resources/subscribe</code>; <b>bỏ SSE resumability</b> (<code>Last-Event-ID</code>); bỏ <code>ping</code>, <code>logging/setLevel</code>, <code>notifications/roots/list_changed</code>; bắt buộc header <code>Mcp-Method</code> trên mọi request, và <code>Mcp-Name</code> trên <code>tools/call</code>/<code>resources/read</code>/<code>prompts/get</code> (lệch header↔body → <code>-32020 HeaderMismatch</code>); <code>ttlMs</code> + <code>cacheScope</code> bắt buộc trên mọi list result và cả <code>resources/read</code>, qua interface <code>CacheableResult</code> (SEP-2549); dải error code mới <code>-32020..-32099</code></td></tr>
+          <tr><td class="mono">2026-07-28</td><td class="mono">2026-07-28<br>(<a href="https://blog.modelcontextprotocol.io/posts/2026-07-28-release-candidate/" target="_blank" rel="noopener noreferrer">công bố RC 21/05/2026</a>)</td><td><b>CURRENT — final 28/07/2026</b>; bỏ <code>initialize</code>/<code>initialized</code> và <code>Mcp-Session-Id</code>, thay bằng <code>server/discover</code> + <code>_meta</code> trên từng request; Extensions; Roots/Sampling/Logging và Dynamic Client Registration vào diện Deprecated, cửa sổ ≥ 12 tháng; <b>MRTR</b> thay request server→client (sampling/elicitation/roots giờ đi qua <code>InputRequiredResult</code> + <code>inputResponses</code>, SEP-2322); mọi result mang field bắt buộc <code>resultType</code>; <b><code>subscriptions/listen</code></b> thay GET endpoint và <code>resources/subscribe</code>; <b>bỏ SSE resumability</b> (<code>Last-Event-ID</code>); bỏ <code>ping</code>, <code>logging/setLevel</code>, <code>notifications/roots/list_changed</code>; bắt buộc header <code>Mcp-Method</code> trên mọi request, và <code>Mcp-Name</code> trên <code>tools/call</code>/<code>resources/read</code>/<code>prompts/get</code> (lệch header↔body → <code>-32020 HeaderMismatch</code>); <code>ttlMs</code> + <code>cacheScope</code> bắt buộc trên mọi list result và cả <code>resources/read</code>, qua interface <code>CacheableResult</code> (SEP-2549); dải error code mới <code>-32020..-32099</code></td></tr>
         </tbody>
       </table>
     </div>
@@ -1401,7 +1377,7 @@ footer.site{border-top:1px solid var(--border);padding:26px 24px;text-align:cent
     <div class="callout warn">
       <div class="callout-title">Bản 2026-07-28 đã final — và nó đổi rất lớn</div>
       <p>Core 2026-07-28 bỏ handshake và protocol session; request mang metadata, discovery có thể gọi trước. State nghiệp vụ phải dùng explicit handle và authorization, không dựa vào protocol session. Tasks là extension riêng; tương thích legacy cần implementation hỗ trợ cả hai era, không tự có vì nâng SDK.</p>
-      <p>Roots, Sampling, Logging và Dynamic Client Registration đã deprecated, chưa bị gỡ; deprecation policy cho cửa sổ ít nhất12 tháng, không hứa ngày gỡ chính xác. Legacy có thể tiếp tục tương tác nếu cả hai implementation hỗ trợ revision đó. Một modern request không có handshake; chỉ nhánh legacy mới initialize.</p>
+      <p>Roots, Sampling, Logging và Dynamic Client Registration đã deprecated, chưa bị gỡ; deprecation policy cho cửa sổ ít nhất 12 tháng, không hứa ngày gỡ chính xác. Legacy có thể tiếp tục tương tác nếu cả hai implementation hỗ trợ revision đó. Một modern request không có handshake; chỉ nhánh legacy mới initialize.</p>
       <p><strong>Extensions là tùy chọn ngoài core.</strong> Hai bên phải khai support trong capabilities.extensions, nếu bên kia không hỗ trợ thì fallback core hoặc reject theo extension. Không giả định client nào cũng cài: Tasks, MCP Apps, Skills, OAuth Client Credentials và Enterprise-Managed Authorization có phạm vi/stage riêng. Kiểm identifier, stage và phiên bản extension khi chọn SDK.</p>
       <div class="table-wrap">
         <table>
@@ -1419,13 +1395,11 @@ footer.site{border-top:1px solid var(--border);padding:26px 24px;text-align:cent
 
     <div class="callout insight">
       <div class="callout-title">Bài tập đọc một tài liệu đã hết hạn</div>
-      <p>Một tài liệu <em>giả định</em> viết trước ngày release có thể gọi2026-07-28 là RC; sau release, người đọc phải kiểm lại current/versioned docs. Ngày xuất bản tài liệu không chứng minh nó còn đúng. Ghi revision và source; dùng changelog để xác định breaking change thay vì chỉ sửa nhãn ngày.</p>
+      <p>Một tài liệu <em>giả định</em> viết trước ngày release có thể gọi 2026-07-28 là RC; sau release, người đọc phải kiểm lại current/versioned docs. Ngày xuất bản tài liệu không chứng minh nó còn đúng. Ghi revision và source; dùng changelog để xác định breaking change thay vì chỉ sửa nhãn ngày.</p>
     </div>
 
     <div class="takeaway">
-      <span class="eyebrow">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true" focusable="false"><path d="M12 2v6m0 8v6M4.9 4.9l4.2 4.2m5.8 5.8l4.2 4.2M2 12h6m8 0h6M4.9 19.1l4.2-4.2m5.8-5.8l4.2-4.2"/></svg>
-        Takeaway
+      <span class="eyebrow">Takeaway
       </span>
       <p>Đừng học thuộc một bản spec, <span class="hl">pin protocol version và đọc changelog</span> trước khi nâng SDK. Theo spec: bản CURRENT là 2026-07-28 (final 28/07/2026, bỏ bắt tay <code>initialize</code>), còn 2025-11-25 vẫn là revision legacy trước; bạn cần đọc được cả hai, và cần biết SDK của mình đang nói bản nào.</p>
     </div>
@@ -1465,7 +1439,7 @@ footer.site{border-top:1px solid var(--border);padding:26px 24px;text-align:cent
     </div>
   </div>
   <div class="lesson-body">
-    <p class="muted"><small>Nguồn: <a href="https://modelcontextprotocol.io/specification/2026-07-28/basic/authorization" target="_blank" rel="noopener noreferrer">tài liệu gốc</a></small></p>
+    <p class="muted"><small>Nguồn: <a href="https://modelcontextprotocol.io/specification/2026-07-28/basic/authorization" target="_blank" rel="noopener noreferrer">MCP 2026-07-28, Authorization</a></small></p>
 
     <div class="objectives">
       <span class="eyebrow">Sau bài này bạn có thể</span>
@@ -1479,7 +1453,6 @@ footer.site{border-top:1px solid var(--border);padding:26px 24px;text-align:cent
     <p>Một dev tự dựng hệ đăng nhập/token cạnh server rồi phải tích hợp Okta. Vấn đề là bỏ qua chuẩn issuer, policy và SSO đã có. Với server được bảo vệ, MCP đóng vai resource server; authorization server cấp token. <strong>Hai vai logic có thể cùng host hoặc tách service</strong>, miễn tuân flow chuẩn; spec không cấm co-host hay một bảng người dùng.</p>
 
     <div class="concept">
-      <span class="eyebrow">Đặt tên</span>
       <h4>Resource server ≠ authorization server</h4>
       <p>Theo authorization spec hiện hành, protected MCP là OAuth resource server: validate token theo issuer/chữ ký hoặc introspection, expiry, audience và áp scope/quyền đối tượng. Authorization server lo login, consent và token issuance; implementation AS ngoài phạm vi MCP và có thể cùng host hoặc độc lập. Dùng chuẩn/discovery phù hợp với SSO đã có, không tự dựng flow không tương thích.</p>
     </div>
@@ -1556,7 +1529,6 @@ footer.site{border-top:1px solid var(--border);padding:26px 24px;text-align:cent
     </ul>
 
     <div class="concept">
-      <span class="eyebrow">Đặt tên · Quyền đến đâu</span>
       <h4>Scope và step-up: token không phải công tắc bật/tắt</h4>
       <p>Token chỉ mang quyền được cấp; không phải “đăng nhập xong là làm được mọi thứ”. Thiếu scope thì server hướng dẫn step-up có consent; quyền đối tượng và tenant vẫn được kiểm phía server. Không cần cấp tất cả người dùng quyền lớn nhất để khắc phục một lỗi scope.</p>
       <ol class="steps">
@@ -1598,9 +1570,7 @@ footer.site{border-top:1px solid var(--border);padding:26px 24px;text-align:cent
     </div>
 
     <div class="takeaway">
-      <span class="eyebrow">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true" focusable="false"><path d="M12 2v6m0 8v6M4.9 4.9l4.2 4.2m5.8 5.8l4.2 4.2M2 12h6m8 0h6M4.9 19.1l4.2-4.2m5.8-5.8l4.2-4.2"/></svg>
-        Takeaway
+      <span class="eyebrow">Takeaway
       </span>
       <p><span class="hl">Resource server kiểm token đầy đủ và authorization từng thao tác</span>: issuer/chữ ký hoặc introspection, hạn dùng, audience, scope và quyền đối tượng/tenant. AS lo login/consent/cấp token; hai vai có thể co-host. Không có “đúng audience là đủ an toàn”.</p>
     </div>
@@ -1627,7 +1597,7 @@ footer.site{border-top:1px solid var(--border);padding:26px 24px;text-align:cent
     </div>
   </div>
   <div class="lesson-body">
-    <p class="muted"><small>Nguồn: <a href="https://arxiv.org/abs/2508.14925v2" target="_blank" rel="noopener noreferrer">tài liệu gốc</a></small></p>
+    <p class="muted"><small>Nguồn: <a href="https://arxiv.org/abs/2508.14925v2" target="_blank" rel="noopener noreferrer">MCPTox, phiên bản 2</a></small></p>
 
     <div class="objectives">
       <span class="eyebrow">Sau bài này bạn có thể</span>
@@ -1640,10 +1610,9 @@ footer.site{border-top:1px solid var(--border);padding:26px 24px;text-align:cent
       </ul>
     </div>
 
-    <p>Trong <strong>PoC có kiểm soát</strong> do Invariant Labs công bố07/04/2025, server fact-of-the-day bị thay mô tả để hướng agent lấy lịch sử WhatsApp và đổi người nhận khi gửi tin. Đây là minh chứng một đường tấn công trong setup nghiên cứu, <strong>không phải báo cáo toàn bộ lịch sử của một nạn nhân thực tế đã bị đánh cắp</strong>. Tool description, UI xác nhận và quyền đọc/gửi cùng tạo điều kiện.</p>
+    <p>Trong <strong>PoC có kiểm soát</strong> do Invariant Labs công bố 07/04/2025, server fact-of-the-day bị thay mô tả để hướng agent lấy lịch sử WhatsApp và đổi người nhận khi gửi tin. Đây là minh chứng một đường tấn công trong setup nghiên cứu, <strong>không phải báo cáo toàn bộ lịch sử của một nạn nhân thực tế đã bị đánh cắp</strong>. Tool description, UI xác nhận và quyền đọc/gửi cùng tạo điều kiện.</p>
 
     <div class="concept">
-      <span class="eyebrow">Đặt tên</span>
       <h4>Bề mặt tấn công = khoảng cách visibility giữa AI và user</h4>
       <p>Invariant gọi việc nhét chỉ thị độc trong tool description là <strong>tool poisoning</strong>. Rủi ro tăng khi model đọc phần mô tả đầy đủ mà UI chỉ hiển thị tóm tắt; đây là hành vi client/UX, không phải yêu cầu user không được xem description. Annotation và description đều cần được review theo nguồn, không phải authorization mặc định.</p>
     </div>
@@ -1705,7 +1674,6 @@ footer.site{border-top:1px solid var(--border);padding:26px 24px;text-align:cent
     <p><strong>Confused deputy</strong> thì là bài toán OAuth: kẻ tấn công lợi dụng consent cookie còn sót để authorization server "thấy cookie, bỏ qua consent" và redirect code đi nơi khác — user không hề bấm đồng ý lần hai.</p>
 
     <div class="concept">
-      <span class="eyebrow">Đặt tên · Bề mặt tấn công có HAI kênh, không phải một</span>
       <h4>Definition-time (mô tả tool) và runtime (kết quả tool)</h4>
       <p>Tool poisoning và đổi description là kênh definition-time; CVE ở command/args là trust cấu hình thực thi; confused deputy là lỗi consent/identity trong OAuth. Pin và review giúp phát hiện thay đổi định nghĩa/config; consent binding và redirect validation xử lý nhánh OAuth. Mỗi lớp cần kiểm riêng.</p>
       <p>Kênh thứ hai là <strong>runtime</strong>: chỉ thị độc không nằm trong <em>mô tả</em> tool, mà nằm trong <em>kết quả</em> tool trả về. Body của một GitHub issue. Một trang web vừa crawl. Nội dung một email. Một ghi chú trong CRM. Khác biệt cốt tử: ở kênh này <strong>server hoàn toàn trung thực</strong>, nó chỉ làm đúng việc đọc dữ liệu và trả về. Nó không phải kẻ tấn công; nó là <em>người đưa thư</em>. Allowlist vẫn giới hạn server được dùng và pin vẫn kiểm thay đổi descriptor; cả hai không xác minh nội dung body bên thứ ba được server tin cậy trả về.</p>
@@ -1738,13 +1706,11 @@ footer.site{border-top:1px solid var(--border);padding:26px 24px;text-align:cent
 
     <div class="callout danger">
       <div class="callout-title">Vì sao đây không phải rủi ro lý thuyết</div>
-      <p><strong>MCPTox v2</strong> (arXiv2508.14925, cập nhật 29/09/2026) mô tả 45 server,353 tool,1.348 test case và 20 agent; o1-mini có attack success 72,8%, refusal cao nhất trong nhóm vẫn dưới 3% (Claude 3.7 Sonnet). Đây là kết quả của bộ task/model/attack đó, không phải tỷ lệ production hay luật model mạnh hơn luôn dễ bị lừa. Nghiên cứu là bằng chứng cần eval đối kháng, không phải bảo đảm guard nào sẽ chặn được.</p>
+      <p><strong>MCPTox v2</strong> (arXiv 2508.14925, cập nhật 29/09/2026) mô tả 45 server, 353 tool, 1.348 test case và 20 agent; o1-mini có attack success 72,8%, refusal cao nhất trong nhóm vẫn dưới 3% (Claude 3.7 Sonnet). Đây là kết quả của bộ task/model/attack đó, không phải tỷ lệ production hay luật model mạnh hơn luôn dễ bị lừa. Nghiên cứu là bằng chứng cần eval đối kháng, không phải bảo đảm guard nào sẽ chặn được.</p>
     </div>
 
     <div class="takeaway">
-      <span class="eyebrow">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true" focusable="false"><path d="M12 2v6m0 8v6M4.9 4.9l4.2 4.2m5.8 5.8l4.2 4.2M2 12h6m8 0h6M4.9 19.1l4.2-4.2m5.8-5.8l4.2-4.2"/></svg>
-        Takeaway
+      <span class="eyebrow">Takeaway
       </span>
       <p><span class="hl">Review cả nội dung định nghĩa/config, OAuth consent và dữ liệu runtime.</span> Pin phát hiện thay đổi; provenance giúp nhận diện dữ liệu bên thứ ba; auth/egress guard ngoài model hạn chế hậu quả ở nhiều kênh. Không coi domain allowlist hay một lần approve là bảo đảm an toàn.</p>
     </div>
@@ -1771,7 +1737,7 @@ footer.site{border-top:1px solid var(--border);padding:26px 24px;text-align:cent
     </div>
   </div>
   <div class="lesson-body">
-    <p class="muted"><small>Nguồn: <a href="https://modelcontextprotocol.io/specification/2026-07-28/basic/security_best_practices" target="_blank" rel="noopener noreferrer">tài liệu gốc</a></small></p>
+    <p class="muted"><small>Nguồn: <a href="https://modelcontextprotocol.io/specification/2026-07-28/basic/security_best_practices" target="_blank" rel="noopener noreferrer">MCP 2026-07-28, Security Best Practices</a></small></p>
 
     <div class="objectives">
       <span class="eyebrow">Sau bài này bạn có thể</span>
@@ -1785,7 +1751,6 @@ footer.site{border-top:1px solid var(--border);padding:26px 24px;text-align:cent
     <p>Một MCP proxy nhận token phát cho chính nó rồi chuyển nguyên token sang API kho. Đây là token passthrough: sai audience/trust boundary và có thể bypass policy. <strong>Nó không tự động làm 200 người thành cùng một danh tính</strong>; dùng chung một service-account token mới là một nguyên nhân riêng gây mất phân biệt caller. Cần tách xác thực token, quyền ủy nhiệm và audit.</p>
 
     <div class="concept">
-      <span class="eyebrow">Đặt tên</span>
       <h4>Token passthrough: anti-pattern spec cấm tuyệt đối</h4>
       <p><strong>Token passthrough</strong> là nhận token client rồi chuyển nguyên xuống API khác mà không giữ đúng ranh giới resource. Theo mức MUST NOT, server không nhận token không được phát cho nó và không chuyển token nhận từ MCP client xuống downstream. Lấy token riêng đúng audience/grant; kiểm quyền principal và audit, không coi đổi token tự tạo delegation.</p>
     </div>
@@ -1877,9 +1842,7 @@ footer.site{border-top:1px solid var(--border);padding:26px 24px;text-align:cent
     </div>
 
     <div class="takeaway">
-      <span class="eyebrow">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true" focusable="false"><path d="M12 2v6m0 8v6M4.9 4.9l4.2 4.2m5.8 5.8l4.2 4.2M2 12h6m8 0h6M4.9 19.1l4.2-4.2m5.8-5.8l4.2-4.2"/></svg>
-        Takeaway
+      <span class="eyebrow">Takeaway
       </span>
       <p><span class="hl">Validate token/authorization và không passthrough.</span> Downstream grant phải đúng identity/delegation; hash-pin provenance+nội dung cùng config là hardening bổ sung. Thay description có thể đổi hành vi: review trước khi dùng, không phân loại là vô hại chỉ vì trông như typo.</p>
     </div>
@@ -1914,7 +1877,7 @@ footer.site{border-top:1px solid var(--border);padding:26px 24px;text-align:cent
     </div>
   </div>
   <div class="lesson-body">
-    <p class="muted"><small>Nguồn: <a href="https://www.anthropic.com/engineering/writing-tools-for-agents" target="_blank" rel="noopener noreferrer">tài liệu gốc</a></small></p>
+    <p class="muted"><small>Nguồn: <a href="https://www.anthropic.com/engineering/writing-tools-for-agents" target="_blank" rel="noopener noreferrer">Anthropic, Writing effective tools for AI agents</a></small></p>
 
     <div class="objectives">
       <span class="eyebrow">Sau bài này bạn có thể</span>
@@ -1928,7 +1891,6 @@ footer.site{border-top:1px solid var(--border);padding:26px 24px;text-align:cent
     <p>Team bạn có sẵn một REST API 30 endpoint, nên dựng MCP server bằng cách wrap thẳng: 30 endpoint thành 30 tool, description copy nguyên từ tài liệu API. Kết quả: để đặt một cuộc họp, agent phải chain <code>list_users</code> → <code>list_events</code> → <code>create_event</code>; và nó chọn nhầm tool vì description chỉ ghi "returns user object" — thứ viết cho lập trình viên đọc, không phải cho một tác nhân phi tất định đang quyết định gọi gì.</p>
 
     <div class="concept">
-      <span class="eyebrow">Khái niệm</span>
       <h4>Description-as-prompt · namespacing · tool granularity</h4>
       <p>Anthropic khuyến nghị coi tool definition là giao diện hành vi: tên, description và tài liệu tham số ảnh hưởng cách agent chọn và dùng tool. Viết như onboarding người mới: nêu mục đích, khi nào dùng/không dùng, input/output, tác dụng phụ và lỗi có thể phục hồi. Namespacing như asana_projects_search giúp phân biệt nguồn; gộp thao tác thành workflow rõ thay vì máy móc wrap từng endpoint. Hiệu quả cần eval trên task/model của bạn.</p>
     </div>
@@ -1982,7 +1944,7 @@ footer.site{border-top:1px solid var(--border);padding:26px 24px;text-align:cent
 
     <div class="callout insight">
       <div class="callout-title">Bằng chứng thực nghiệm</div>
-      <p>Bài “Writing effective tools for AI agents” của Anthropic11/09/2025 mô tả việc dùng eval và model để tinh chỉnh tool definitions; họ ghi nhận thay đổi nhỏ có thể ảnh hưởng đáng kể trong setup của mình. Không có phần trăm cải thiện chung hay bằng chứng description là nguyên nhân duy nhất cho một thứ hạng SWE-bench. Chạy eval của bạn trước khi giữ bản sửa.</p>
+      <p>Bài “Writing effective tools for AI agents” của Anthropic 11/09/2025 mô tả việc dùng eval và model để tinh chỉnh tool definitions; họ ghi nhận thay đổi nhỏ có thể ảnh hưởng đáng kể trong setup của mình. Không có phần trăm cải thiện chung hay bằng chứng description là nguyên nhân duy nhất cho một thứ hạng SWE-bench. Chạy eval của bạn trước khi giữ bản sửa.</p>
     </div>
 
     <div class="callout info">
@@ -1991,9 +1953,7 @@ footer.site{border-top:1px solid var(--border);padding:26px 24px;text-align:cent
     </div>
 
     <div class="takeaway">
-      <span class="eyebrow">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true" focusable="false"><path d="M12 2v6m0 8v6M4.9 4.9l4.2 4.2m5.8 5.8l4.2 4.2M2 12h6m8 0h6M4.9 19.1l4.2-4.2m5.8-5.8l4.2-4.2"/></svg>
-        Takeaway
+      <span class="eyebrow">Takeaway
       </span>
       <p>Tool description là <span class="hl">prompt</span> — mỗi chữ trong tên/param định hình cách agent dùng tool; viết như onboarding người mới, đặt tên có namespace, và gộp tool theo workflow thay vì wrap 1:1 endpoint REST cũ, <span class="hl">nhưng không bao giờ gộp xuyên ranh giới phê duyệt</span>: gộp theo cùng principal, phạm vi dữ liệu, ý định và quyền đã duyệt; giữ checkpoint nếu cần xin quyền giữa hai thao tác. Read+write có thể là một hành động atomic hợp lệ, còn hai read vẫn có thể vượt scope riêng tư.</p>
     </div>
@@ -2020,7 +1980,7 @@ footer.site{border-top:1px solid var(--border);padding:26px 24px;text-align:cent
     </div>
   </div>
   <div class="lesson-body">
-    <p class="muted"><small>Nguồn: <a href="https://platform.claude.com/docs/en/agents-and-tools/tool-use/programmatic-tool-calling" target="_blank" rel="noopener noreferrer">tài liệu gốc</a></small></p>
+    <p class="muted"><small>Nguồn: <a href="https://platform.claude.com/docs/en/agents-and-tools/tool-use/programmatic-tool-calling" target="_blank" rel="noopener noreferrer">Claude API, Programmatic tool calling</a></small></p>
 
     <div class="objectives">
       <span class="eyebrow">Sau bài này bạn có thể</span>
@@ -2035,9 +1995,8 @@ footer.site{border-top:1px solid var(--border);padding:26px 24px;text-align:cent
     <p>Agent của bạn nối 5 server. Mỗi request "cõng" toàn bộ tool definitions của cả 5 vào system prompt trước cả khi đọc câu hỏi của user. Rồi nó tải một transcript cuộc họp từ Google Drive để đính vào một Salesforce lead — cả nội dung transcript chạy qua context window <em>hai lần</em> (đọc ra rồi ghi vào). Một spreadsheet 10.000 dòng cũng đi trọn qua model dù bạn chỉ cần 5 dòng. Cần đo token dành cho definitions và dữ liệu trung gian để chọn phần model cần đọc.</p>
 
     <div class="concept">
-      <span class="eyebrow">Khái niệm</span>
       <h4>Progressive disclosure · code execution với MCP</h4>
-      <p>Bài “Code execution with MCP” của Anthropic04/11/2025 mô tả hai cơ chế. <strong>Progressive disclosure</strong> chỉ nạp tool definitions cần dùng từ filesystem-of-tools; bài minh hoạ ngân sách definitions150.000→2.000 token, giảm 98,7%. <strong>Code execution</strong> còn giữ dữ liệu trung gian ở môi trường thực thi: ví dụ lấy tài liệu Drive rồi cập nhật Salesforce, hoặc lọc spreadsheet trước khi trả phần cần review. Đây là hai lợi ích liên quan nhưng <strong>không có phép đo rằng toàn bộ workflow Drive→Salesforce hay10.000 dòng đều tốn đúng150K/2K</strong>. Tool search hiện hành của provider là một cách khác để deferred-load definitions.</p>
+      <p>Bài “Code execution with MCP” của Anthropic 04/11/2025 mô tả hai cơ chế. <strong>Progressive disclosure</strong> chỉ nạp tool definitions cần dùng từ filesystem-of-tools; bài minh hoạ ngân sách definitions150.000→2.000 token, giảm 98,7%. <strong>Code execution</strong> còn giữ dữ liệu trung gian ở môi trường thực thi: ví dụ lấy tài liệu Drive rồi cập nhật Salesforce, hoặc lọc spreadsheet trước khi trả phần cần review. Đây là hai lợi ích liên quan nhưng <strong>không có phép đo rằng toàn bộ workflow Drive→Salesforce hay10.000 dòng đều tốn đúng150K/2K</strong>. Tool search hiện hành của provider là một cách khác để deferred-load definitions.</p>
     </div>
 
     <figure class="figure">
@@ -2094,7 +2053,7 @@ footer.site{border-top:1px solid var(--border);padding:26px 24px;text-align:cent
       <details class="accordion"><summary><span class="chev">▶</span><span class="accordion-tag">pagination</span><span>Cursor-based cho list lớn, nhưng KHÔNG phải cần gạt token</span></summary>
         <div class="accordion-body"><p>Với <code>tools/list</code>, <code>resources/list</code>, <code>prompts/list</code>… MCP dùng cursor-based pagination: cursor là chuỗi opaque, client không giải nghĩa nội dung. Page size do server quyết, client <strong>MUST NOT</strong> giả định cỡ trang cố định và <strong>MUST</strong> coi cursor là opaque (không parse hay coi là handle bền; dùng theo catalog/auth và hợp đồng freshness của server). Cursor không hợp lệ → trả đúng lỗi JSON-RPC <code>-32602</code> (Invalid params) thay vì crash.</p>
         <p style="margin-top:10px">Pagination phân trang catalog cho client, không tự quyết model thấy schema nào. Host có thể nạp toàn bộ hoặc chỉ các tool đã tìm thấy/được phép; model chỉ cần schema của tool được expose tại thời điểm gọi. Core hiện hành không có tools/search chuẩn; tool search của provider/host là lớp riêng. Caching ttlMs/cacheScope cũng không thay chính sách context selection.</p>
-        <p style="margin-top:10px">Roadmap MCP cập nhật22/08/2026 đặt progressive discovery là công việc tiếp theo, cùng caching/ETags. Đây là hướng nghiên cứu/triển khai, không phải cam kết có RPC mới trong12 tháng. Giữ adapter host có thể thay đổi; kiểm spec/extension/client trước khi dựa vào tính năng đó.</p></div>
+        <p style="margin-top:10px">MCP 2026-07-28 đã định nghĩa <code>ttlMs</code> và <code>cacheScope</code> cho kết quả discovery. Với danh sách tool thay đổi theo quyền người gọi, giữ cache riêng theo ngữ cảnh ủy quyền. Khi cache hết hạn, lấy danh sách mới. Tìm tool theo truy vấn vẫn phụ thuộc host hoặc extension được hai bên hỗ trợ. <a href="https://py.sdk.modelcontextprotocol.io/client/caching/" target="_blank" rel="noopener noreferrer">MCP Python SDK, Caching hints</a>.</p></div>
       </details>
     </div>
 
@@ -2132,11 +2091,9 @@ footer.site{border-top:1px solid var(--border);padding:26px 24px;text-align:cent
     </div>
 
     <div class="takeaway">
-      <span class="eyebrow">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true" focusable="false"><path d="M12 2v6m0 8v6M4.9 4.9l4.2 4.2m5.8 5.8l4.2 4.2M2 12h6m8 0h6M4.9 19.1l4.2-4.2m5.8-5.8l4.2-4.2"/></svg>
-        Takeaway
+      <span class="eyebrow">Takeaway
       </span>
-      <p><span class="hl">Đo rồi chọn upfront, tool search hoặc gateway; sandbox/broker phải kiểm quyền từng call.</span> Ví dụ vendor 150K→2K giảm 98,7%; ví dụ 77K→8,7K giảm≈88,7% theo số làm tròn. Đây là minh hoạ, không phải mức tiết kiệm chung hay ngưỡng bắt buộc1–5%.</p>
+      <p><span class="hl">Đo rồi chọn upfront, tool search hoặc gateway; sandbox/broker phải kiểm quyền từng call.</span> Ví dụ vendor 150K→2K giảm 98,7%; ví dụ 77K→8,7K giảm ≈88,7% theo số làm tròn. Đây là minh hoạ, không phải mức tiết kiệm chung hay ngưỡng bắt buộc1–5%.</p>
     </div>
 
     <div class="quiz" data-correct="2">
@@ -2161,7 +2118,7 @@ footer.site{border-top:1px solid var(--border);padding:26px 24px;text-align:cent
     </div>
   </div>
   <div class="lesson-body">
-    <p class="muted"><small>Nguồn: <a href="https://github.com/modelcontextprotocol/registry" target="_blank" rel="noopener noreferrer">tài liệu gốc</a></small></p>
+    <p class="muted"><small>Nguồn: <a href="https://github.com/modelcontextprotocol/registry" target="_blank" rel="noopener noreferrer">MCP Registry</a></small></p>
 
     <div class="objectives">
       <span class="eyebrow">Sau bài này bạn có thể</span>
@@ -2175,7 +2132,6 @@ footer.site{border-top:1px solid var(--border);padding:26px 24px;text-align:cent
     <p>Team dành hai tuần dựng một MCP server cho một script nội bộ mà chỉ Claude Code dùng — thêm transport, thêm lớp OAuth, thêm định nghĩa tool. Trong khi đó, <code>gh</code> CLI đã làm xong việc từ ngày đầu: gõ lệnh, pipe kết quả, xong. Không phải mọi tích hợp đều đáng một protocol. Câu hỏi không phải "MCP hay không", mà "use case này có <em>đòi</em> MCP không".</p>
 
     <div class="concept">
-      <span class="eyebrow">Khái niệm</span>
       <h4>MCP đáng giá khi cần chuẩn hoá nhiều bên (multi-client standardization)</h4>
       <p>MCP giải bài toán N×M: một protocol để <em>nhiều</em> client/model dùng <em>nhiều</em> server khác nhau mà không viết lại adapter mỗi lần. Giá trị đó lớn nhất khi bạn thật sự có nhiều bên dùng chung. Armin Ronacher (tác giả Flask) nêu một phản biện công khai: nếu use case chỉ chạy nội bộ, một model, ưu tiên tốc độ dev, thì <strong>CLI hoặc function calling trực tiếp</strong> có thể rẻ hơn: không tốn context tool-definition upfront, và compose được qua pipe/script. Đây là <em>quan điểm phản biện công khai, không phải khẳng định của Anthropic hay MCP maintainers</em> — nhưng là bộ lọc thực tế trước khi bỏ công dựng server. ("Tools: Code Is All You Need", 03/07/2025; "Your MCP Doesn't Need 30 Tools: It Needs Code", 18/08/2025)</p>
     </div>
@@ -2220,9 +2176,7 @@ footer.site{border-top:1px solid var(--border);padding:26px 24px;text-align:cent
     </div>
 
     <div class="takeaway">
-      <span class="eyebrow">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true" focusable="false"><path d="M12 2v6m0 8v6M4.9 4.9l4.2 4.2m5.8 5.8l4.2 4.2M2 12h6m8 0h6M4.9 19.1l4.2-4.2m5.8-5.8l4.2-4.2"/></svg>
-        Takeaway
+      <span class="eyebrow">Takeaway
       </span>
       <p><span class="hl">Cân ranh giới triển khai, ai quản lý caller, và nhu cầu reuse.</span> Không cần cả ba đều có mới được chọn MCP. CLI compose thuận tiện nhưng vẫn cần sandbox/broker để kiểm operation; native function và MCP đều có thể có policy/audit từng call.</p>
     </div>
@@ -2249,7 +2203,7 @@ footer.site{border-top:1px solid var(--border);padding:26px 24px;text-align:cent
     </div>
   </div>
   <div class="lesson-body">
-    <p class="muted"><small>Nguồn: <a href="https://www.anthropic.com/engineering/demystifying-evals-for-ai-agents" target="_blank" rel="noopener noreferrer">tài liệu gốc</a></small></p>
+    <p class="muted"><small>Nguồn: <a href="https://www.anthropic.com/engineering/demystifying-evals-for-ai-agents" target="_blank" rel="noopener noreferrer">Anthropic, Demystifying evals for AI agents</a></small></p>
 
     <div class="objectives">
       <span class="eyebrow">Sau bài này bạn có thể</span>
@@ -2268,7 +2222,6 @@ footer.site{border-top:1px solid var(--border);padding:26px 24px;text-align:cent
     <p>Fixture, verifier và CI gate được giải thích kỹ ở khóa Agent Reliability & Evaluation. Ở đây tập trung vào selection/success, calls/token và vòng đề xuất sửa description. Code verifier ưu tiên khi kiểm được bằng trạng thái; không mặc định mọi tiêu chí đều chấm bằng code hoặc mọi run đều giống nhau.</p>
 
     <div class="concept">
-      <span class="eyebrow">Đặt tên</span>
       <h4>Eval-driven tool development: tool surface là code, và code thì có test</h4>
       <p>Anthropic ghi nhận tinh chỉnh tool definitions có thể ảnh hưởng kết quả trong eval của họ. Điều đó gợi ý phải kiểm regression; không chứng minh tác động luôn lớn hay một sửa nhỏ là nguyên nhân duy nhất. Task, model, fixture và policy cũng phải được giữ rõ khi so trước/sau.</p>
       <p>Hệ quả về mặt quy trình: <strong>tool surface</strong> (tên, description, schema, ranh giới giữa các tool) là một artifact <em>hành vi</em>, không phải văn bản trang trí. Nó thuộc loại thứ mà bạn không sửa nếu không có test, đúng như bạn không sửa hàm tính tiền mà không chạy test. Description có thể bị xem chỉ là tài liệu; đưa nó vào quy trình review/eval giúp kiểm thay đổi hành vi.</p>
@@ -2378,9 +2331,7 @@ footer.site{border-top:1px solid var(--border);padding:26px 24px;text-align:cent
     </div>
 
     <div class="takeaway">
-      <span class="eyebrow">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true" focusable="false"><path d="M12 2v6m0 8v6M4.9 4.9l4.2 4.2m5.8 5.8l4.2 4.2M2 12h6m8 0h6M4.9 19.1l4.2-4.2m5.8-5.8l4.2-4.2"/></svg>
-        Takeaway
+      <span class="eyebrow">Takeaway
       </span>
       <p><span class="hl">Eval cần fixture, verifier và quy tắc ra quyết định rõ.</span> Bắt đầu 20–40 task rồi mở rộng coverage/held-out; đọc selection/success cùng calls/token; code verifier không xóa nhiễu của agent/task/tool. Chặn vi phạm quyền và regression có ý nghĩa theo policy, không mọi dao động đơn lẻ.</p>
     </div>
@@ -2421,7 +2372,7 @@ footer.site{border-top:1px solid var(--border);padding:26px 24px;text-align:cent
     </div>
   </div>
   <div class="lesson-body">
-    <p class="muted"><small>Nguồn: <a href="https://www.anthropic.com/news/donating-the-model-context-protocol-and-establishing-of-the-agentic-ai-foundation" target="_blank" rel="noopener noreferrer">tài liệu gốc</a></small></p>
+    <p class="muted"><small>Nguồn: <a href="https://www.anthropic.com/news/donating-the-model-context-protocol-and-establishing-of-the-agentic-ai-foundation" target="_blank" rel="noopener noreferrer">Anthropic, Donating the Model Context Protocol</a></small></p>
 
     <div class="objectives">
       <span class="eyebrow">Sau bài này bạn có thể</span>
@@ -2435,7 +2386,6 @@ footer.site{border-top:1px solid var(--border);padding:26px 24px;text-align:cent
     <p>Bạn vừa đề xuất dựng tầng tool cho hệ agent nội bộ trên MCP. Sếp kỹ thuật hỏi lại một câu duy nhất: <strong>«MCP là đồ riêng của Anthropic — dùng vào có bị lock-in một nhà cung cấp không?»</strong> Đây là câu hỏi đúng, và trả lời «không, yên tâm đi» là câu trả lời sai. Câu trả lời tốt phải dựng được bằng <em>mốc công bố</em>: ai công bố, ai adopt, và hôm nay quyền quản trị nằm ở đâu.</p>
 
     <div class="concept">
-      <span class="eyebrow">Đặt tên</span>
       <h4>Ai đứng sau MCP hôm nay</h4>
       <p>Anthropic khởi xướng MCP 25/11/2024 và donate cho <strong>AAIF, directed fund thuộc Linux Foundation</strong>,09/12/2025. AAIF do Anthropic, Block, OpenAI đồng sáng lập, có nhiều tổ chức hỗ trợ. Thông báo nói governance cộng đồng của MCP giữ nguyên; donation không tự chứng minh thay đổi quyền merge/roadmap hay bảo đảm không có lock-in ở tầng client/provider.</p>
     </div>
@@ -2512,7 +2462,7 @@ footer.site{border-top:1px solid var(--border);padding:26px 24px;text-align:cent
     </div>
     <p style="font-size:13px;color:var(--ink-3)">Danh sách 10 SDK có tier khác nhau; kiểm revision của từng SDK trước khi dùng.</p>
 
-    <p>Quy mô tại thời điểm donate (2025-12-09, hơn 12 tháng sau khi ra mắt), theo thông báo Anthropic: hơn10.000 MCP server công khai đang hoạt động và hơn97triệu lượt tải SDK Python/TypeScript mỗi tháng. Đây là số vendor tại ngày donation, không đo người dùng độc lập hay quy mô hiện tại.</p>
+    <p>Quy mô tại thời điểm donate (2025-12-09, hơn 12 tháng sau khi ra mắt), theo thông báo Anthropic: hơn 10.000 MCP server công khai đang hoạt động và hơn 97 triệu lượt tải SDK Python/TypeScript mỗi tháng. Đây là số vendor tại ngày donation, không đo người dùng độc lập hay quy mô hiện tại.</p>
 
     <div class="callout insight">
       <div class="callout-title">Mô hình tư duy</div>
@@ -2521,7 +2471,7 @@ footer.site{border-top:1px solid var(--border);padding:26px 24px;text-align:cent
 
     <div class="callout warn">
       <div class="callout-title">MCP Registry vẫn «in preview» — nhắc lại từ Bài 5.3</div>
-      <p>Registry ra mắt preview08/09/2025, cung cấp metadata discovery chứ không host code. README ghi preview và khả năng thay đổi/reset, dù v0.1 đã freeze24/10/2025. Reverse-DNS namespace giúp xác minh ownership theo cơ chế registry; đó không phải chứng nhận code an toàn. Chọn cache/pin/fallback và kiểm provenance artifact riêng.</p>
+      <p>Registry ra mắt preview 08/09/2025, cung cấp metadata discovery chứ không host code. README ghi preview và khả năng thay đổi/reset, dù v0.1 đã freeze 24/10/2025. Reverse-DNS namespace giúp xác minh ownership theo cơ chế registry; đó không phải chứng nhận code an toàn. Chọn cache/pin/fallback và kiểm provenance artifact riêng.</p>
     </div>
 
     <div>
@@ -2535,9 +2485,7 @@ footer.site{border-top:1px solid var(--border);padding:26px 24px;text-align:cent
     </div>
 
     <div class="takeaway">
-      <span class="eyebrow">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true" focusable="false"><path d="M12 2v6m0 8v6M4.9 4.9l4.2 4.2m5.8 5.8l4.2 4.2M2 12h6m8 0h6M4.9 19.1l4.2-4.2m5.8-5.8l4.2-4.2"/></svg>
-        Takeaway
+      <span class="eyebrow">Takeaway
       </span>
       <p>Anthropic khởi xướng 2024-11-25; donation cho AAIF thuộc Linux Foundation được công bố 2025-12-09. <span class="hl">10.000+ server và 97M+ SDK downloads/tháng là số vendor báo tại ngày donation</span>, không phải phép đo hiện tại hay số người dùng độc lập. Governance và khả năng tương tác cần xem bằng chứng riêng.</p>
     </div>
@@ -2547,7 +2495,7 @@ footer.site{border-top:1px solid var(--border);padding:26px 24px;text-align:cent
       <p class="quiz-q">Sếp hỏi: «MCP là chuẩn riêng của Anthropic, dùng vào có bị lock-in không?» Câu trả lời nào đúng theo các thông báo được dẫn?</p>
       <button class="quiz-opt" onclick="quizPick(this,0)"><span class="quiz-letter">A</span><span>«Đúng vậy — MCP do Anthropic sở hữu và kiểm soát hoàn toàn, nên phải tính rủi ro phụ thuộc một nhà cung cấp.»</span></button>
       <button class="quiz-opt" onclick="quizPick(this,1)"><span class="quiz-letter">B</span><span>«Yên tâm, Anthropic đã bán MCP cho Linux Foundation rồi nên không còn rủi ro gì nữa.»</span></button>
-      <button class="quiz-opt" onclick="quizPick(this,2)"><span class="quiz-letter">C</span><span>Anthropic khởi xướng11/2024, donate MCP cho AAIF thuộc Linux Foundation09/12/2025; thông báo nói governance cộng đồng giữ nguyên. Có ecosystem đa nhà, nhưng phải kiểm client/SDK/revision và phần phụ thuộc provider cụ thể trước khi kết luận lock-in.</span></button>
+      <button class="quiz-opt" onclick="quizPick(this,2)"><span class="quiz-letter">C</span><span>Anthropic khởi xướng 11/2024, donate MCP cho AAIF thuộc Linux Foundation 09/12/2025; thông báo nói governance cộng đồng giữ nguyên. Có ecosystem đa nhà, nhưng phải kiểm client/SDK/revision và phần phụ thuộc provider cụ thể trước khi kết luận lock-in.</span></button>
       <div class="quiz-feedback" role="status" data-explain="C dùng mốc donation và governance đúng phạm vi. Donation không phải bán đứt hay bảo đảm không còn lock-in. SDK có tier khác nhau; số server/download là snapshot do vendor công bố ở 12/2025."></div>
     </div>
   </div>
@@ -2565,7 +2513,7 @@ footer.site{border-top:1px solid var(--border);padding:26px 24px;text-align:cent
     </div>
   </div>
   <div class="lesson-body">
-    <p class="muted"><small>Nguồn: <a href="https://modelcontextprotocol.io/specification/2026-07-28/server/tools" target="_blank" rel="noopener noreferrer">tài liệu gốc</a></small></p>
+    <p class="muted"><small>Nguồn: <a href="https://modelcontextprotocol.io/specification/2026-07-28/server/tools" target="_blank" rel="noopener noreferrer">MCP 2026-07-28, Tools</a></small></p>
 
     <div class="objectives">
       <span class="eyebrow">Sau bài này bạn có thể</span>
@@ -2579,7 +2527,6 @@ footer.site{border-top:1px solid var(--border);padding:26px 24px;text-align:cent
     <p>Bạn đã học rời từng mảnh: primitive, JSON-RPC, structured output, transport, OAuth, ba đòn tấn công, description-as-prompt, ngân sách context. Giờ nhiệm vụ là <strong>ship một server thật</strong>, và câu hỏi đầu tiên không phải «viết code thế nào» mà là «bắt đầu checklist từ đâu, và mỗi lựa chọn có truy được về một lý do đã học không?». Lấy một <strong>MCP server ví dụ</strong> để neo: server tra cứu và cập nhật <em>đơn hàng minh hoạ</em> (không mô tả hệ nào có thật) — vừa đủ nhỏ để thấy hết, vừa đủ giống production để mọi mảnh đều được dùng.</p>
 
     <div class="concept">
-      <span class="eyebrow">Đặt tên</span>
       <h4>Checklist là bản đồ, không phải phép cộng</h4>
       <p>Một server đạt chuẩn không phải là «gắn thêm nhiều tính năng». Nó là một tập <em>quyết định</em>, mỗi quyết định trỏ về một bài đã dạy vì sao phải làm vậy. Khi review, bạn không hỏi «đủ tính năng chưa» mà hỏi «mỗi lớp có lý do của nó chưa». Mục tiêu là để agent dùng server với quyền, dữ liệu và phép kiểm rõ ràng.</p>
     </div>
@@ -2681,16 +2628,14 @@ footer.site{border-top:1px solid var(--border);padding:26px 24px;text-align:cent
         <div class="accordion-body">Local stdio: credential từ environment và quyền process phải được giới hạn theo principal/tác vụ. Dùng chung service identity cần nêu rõ, không giả delegated user. Remote HTTP có thể public hoặc được bảo vệ; khi chọn OAuth cho server bảo vệ, áp validation/metadata/consent tương ứng.</div>
       </details>
       <details class="accordion"><summary><span class="chev">▶</span><span class="accordion-tag">Production remote</span><span>Nhiều instance sau load balancer</span></summary>
-        <div class="accordion-body"><p>Production: core 2026 POST endpoint với metadata/header đúng và Origin validation; token validation/authorization đầy đủ. Downstream dùng grant riêng theo delegated-user hoặc workload policy; cache bind issuer/tenant/subject/client-delegation/audience/scope và TTL phù hợp. Review descriptor/config changes; đo context trước khi chọn search/code. Ví dụ vendor77K→8,7K giảm≈88,7% theo số làm tròn,150K→2K giảm 98,7%, không phải mức chung.</p>
+        <div class="accordion-body"><p>Production: core 2026 POST endpoint với metadata/header đúng và Origin validation; token validation/authorization đầy đủ. Downstream dùng grant riêng theo delegated-user hoặc workload policy; cache bind issuer/tenant/subject/client-delegation/audience/scope và TTL phù hợp. Review descriptor/config changes; đo context trước khi chọn search/code. Ví dụ vendor 77K→8,7K giảm ≈88,7% theo số làm tròn, 150K→2K giảm 98,7%, không phải mức chung.</p>
         <p style="margin-top:10px">Nếu chọn code execution: sandbox không có credential môi trường, egress allowlist, trần CPU/thời gian/bộ nhớ, filesystem read-only trừ một scratch dir, và mọi tool call phát ra từ trong sandbox vẫn đi qua đúng cổng duyệt + audit như call trực tiếp. Đây là phần bạn tự dựng — programmatic tool calling của Claude API không chạy được với tool đến từ MCP connector. (Bài 5.2)</p>
         <p style="margin-top:10px">Trước thay đổi tầng tool, chạy eval với fixture/model/config có thể so sánh; điều tra biến động và để CI chặn vi phạm quyền hoặc regression đáng kể theo policy đã định (bài 5.4).</p></div>
       </details>
     </div>
 
     <div class="takeaway">
-      <span class="eyebrow">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true" focusable="false"><path d="M12 2v6m0 8v6M4.9 4.9l4.2 4.2m5.8 5.8l4.2 4.2M2 12h6m8 0h6M4.9 19.1l4.2-4.2m5.8-5.8l4.2-4.2"/></svg>
-        Takeaway
+      <span class="eyebrow">Takeaway
       </span>
       <p>Checklist yêu cầu <span class="hl">mỗi quyết định (granularity, structured output, transport, audience check, hash-pin, progressive disclosure) đều truy được về một bài đã học</span>, với hợp đồng tương thích, quyền và phép kiểm tương ứng.</p>
     </div>
@@ -2801,7 +2746,7 @@ footer.site{border-top:1px solid var(--border);padding:26px 24px;text-align:cent
           <tr><td><strong>2.1</strong></td><td>Core 2026-07-28: từng request có version/clientCapabilities trong params._meta, discovery là server MUST/client MAY, resultType phân complete/input_required. Initialize chỉ thuộc legacy.</td></tr>
           <tr><td><strong>2.2</strong></td><td>outputSchema/structuredContent giúp consumer nhận JSON có kiểu; resultType và text compatibility theo revision/client. Strict provider API không thay validation, authorization hay kiểm business correctness.</td></tr>
           <tr><td><strong>2.3</strong></td><td>Annotations là hint; mặc định bảo thủ không bắt mọi client hỏi người. Host quyết approval theo policy và nguồn tin; read-only không có nghĩa không exfiltrate.</td></tr>
-          <tr><td><strong>3.1</strong></td><td>stdio cho subprocess local; core Streamable HTTP2026 dùng POST một endpoint, JSON/SSE response. Validate Origin khi có header, auth và local binding đúng; không protocol session/GET/resume.</td></tr>
+          <tr><td><strong>3.1</strong></td><td>stdio cho subprocess local; core Streamable HTTP 2026 dùng POST một endpoint, JSON/SSE response. Validate Origin khi có header, auth và local binding đúng; không protocol session/GET/resume.</td></tr>
           <tr><td><strong>3.2</strong></td><td>Pin SDK và protocol config rồi kiểm trace/changelog. Core 2026 stateless khác legacy 2025; không suy mức adoption. Extensions riêng có identifier/stage/support cần xác minh.</td></tr>
           <tr><td><strong>4.1</strong></td><td>Protected MCP là resource server: issuer/chữ ký/hạn/audience + scope/quyền thao tác/tenant; AS lo login/consent/token, có thể co-host. HTTP OAuth là framework tùy chọn, stdio dùng credential process.</td></tr>
           <tr><td><strong>4.2</strong></td><td>Phân biệt poisoning qua description, trust config đổi ngầm và OAuth confused deputy. Runtime data cũng có injection; provenance và guard ngoài model bổ trợ review/pin, domain allowlist không đủ.</td></tr>
@@ -2831,9 +2776,7 @@ footer.site{border-top:1px solid var(--border);padding:26px 24px;text-align:cent
     </ol>
 
     <div class="takeaway">
-      <span class="eyebrow">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true" focusable="false"><path d="M12 2v6m0 8v6M4.9 4.9l4.2 4.2m5.8 5.8l4.2 4.2M2 12h6m8 0h6M4.9 19.1l4.2-4.2m5.8-5.8l4.2-4.2"/></svg>
-        Takeaway
+      <span class="eyebrow">Takeaway
       </span>
       <p>Trang tra cứu gồm 17 dòng distill, một checklist chạy tay theo thứ tự, một bản đồ host·client·server ba lớp. Tra theo từng lớp: <span class="hl">đi từ trong ra ngoài — primitive đúng vai, schema, bảo mật, thiết kế, rồi hệ sinh thái — không bỏ lớp nào</span>.</p>
     </div>
@@ -2863,9 +2806,9 @@ footer.site{border-top:1px solid var(--border);padding:26px 24px;text-align:cent
     <!-- ---- COMPLETION PANE ---- -->
     <section class="pane" id="complete" data-pane>
       <div class="complete">
-        <div class="complete-badge">✓</div>
+
         <h2>Hoàn thành khoá học</h2>
-        <p>Bạn đã đi từ «vì sao N×M tích hợp viết tay không scale» → host·client·server, core hiện hành và feature deprecated → JSON-RPC metadata hiện hành và legacy compatibility, structured output, annotations-là-hint → transport stdio/Streamable HTTP và cách đọc changelog spec → OAuth 2.1 resource server, ba đòn tấn công và các yêu cầu auth và hardening bổ sung → thiết kế tool theo workflow với description-as-prompt, tool search và code execution trong sandbox → khi nào không cần MCP → cách đo tầng tool bằng eval và cổng CI → adoption và governance trung lập. Bài thực hành: mở một MCP server bạn đang dùng (hoặc định build), chạy checklist bài tổng kết lên nó, sửa một tool description theo chuẩn «viết như onboarding người mới» — sau đó dựng năm eval task từ transcript thật để so hành vi trước và sau khi sửa. Muốn xây vòng lặp agent, xem «Loop Engineering»; kỹ nghệ ngữ cảnh và harness, xem «Context & Harness Engineering»; đo độ tin cậy trước khi ship, xem «Agent Reliability & Evaluation».</p>
+        <p>Chọn một tool, sửa phần mô tả rồi chạy lại cùng bộ tác vụ. So sánh tool được chọn, tham số gửi đi và kết quả trước và sau khi sửa.</p>
         <div style="margin-top:26px"><a class="btn btn-primary" href="#overview">Về trang đầu</a></div>
       </div>
     </section>
@@ -2985,6 +2928,7 @@ function markUI(id,done){
 
 /* ---- pagination ---- */
 function show(id){
+  const curriculum = id === 'curriculum' ? document.getElementById('curriculum') : null;
   const valid = PANES.includes(id) || LESSONS.some(l=>l.id===id);
   if(!valid) id='overview';
   document.querySelectorAll('[data-pane],[data-lesson],.module-header').forEach(el=>el.classList.remove('active'));
@@ -3004,7 +2948,8 @@ function show(id){
   if(an&&ns){ns.scrollTo({top:Math.max(0,an.offsetTop-ns.clientHeight/2),behavior:'auto'})}
   sSet(LAST_KEY,id);
   if(window.innerWidth<1024){document.getElementById('sidebar').classList.remove('open');document.getElementById('backdrop').classList.remove('show')}
-  window.scrollTo({top:0,behavior:'instant'});
+  if (curriculum) curriculum.scrollIntoView({behavior: 'instant'});
+  else window.scrollTo({top:0,behavior:'instant'});
   document.getElementById('main').focus({preventScroll:true}); // screen readers announce from the top of the new lesson
   try{window.parent.postMessage({type:'lms:lesson-change',course:COURSE_SLUG,lessonId:id},'*')}catch(e){}
 }
