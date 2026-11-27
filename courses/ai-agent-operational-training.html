@@ -149,6 +149,7 @@
    topbar toggle and persists the choice. Only surfaces + ink flip; accents
    lighten just enough to stay legible. ---- */
     body[data-mode="dark"] {
+  --on-accent:var(--bg);
       --bg: #0a0d18;
       --surface: #11141f;
       --surface-2: #161a27;
@@ -348,16 +349,13 @@
 
     .sidebar-brand-title em {
       font-style: normal;
-      color: var(--accent-3)
+      color: inherit;
     }
 
     .sidebar-brand-sub {
-      font-family: var(--font-mono);
-      font-size: 10.5px;
-      color: var(--ink-3);
-      letter-spacing: .1em;
-      text-transform: uppercase;
-      margin-top: 4px
+      font-size: 12px;
+      color: var(--ink-2);
+      margin-top: 4px;
     }
 
     .progress-wrap {
@@ -368,12 +366,9 @@
     .progress-meta {
       display: flex;
       justify-content: space-between;
-      font-family: var(--font-mono);
-      font-size: 10.5px;
-      color: var(--ink-3);
-      text-transform: uppercase;
-      letter-spacing: .1em;
-      margin-bottom: 6px
+      font-size: 12px;
+      color: var(--ink-2);
+      margin-bottom: 6px;
     }
 
     .progress-track {
@@ -415,36 +410,28 @@
     }
 
     .nav-part {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      padding: 0 10px 8px;
-      font-family: var(--font-mono);
-      font-size: 10px;
-      letter-spacing: .16em;
-      text-transform: uppercase;
-      color: var(--accent);
-      font-weight: 600
+      padding: 0 10px 6px;
+      font-size: 13px;
+      color: var(--ink);
+      font-weight: 650;
+      line-height: 1.4;
     }
 
     .nav-part::after {
-      content: "";
-      flex: 1;
-      height: 1px;
-      background: var(--border)
+      content: none;
     }
 
     .nav-link {
       display: flex;
-      align-items: flex-start;
-      gap: 10px;
+      align-items: baseline;
+      gap: 8px;
       padding: 8px 10px;
-      border-radius: 8px;
-      font-size: 13.5px;
+      min-height: 40px;
+      border-radius: 6px;
+      font-size: 14px;
       color: var(--ink-2);
       cursor: pointer;
-      transition: background .12s;
-      border-left: 2px solid transparent
+      border-left: 2px solid transparent;
     }
 
     .nav-link:hover {
@@ -460,36 +447,36 @@
     }
 
     .nav-dot {
-      margin-top: 6px;
-      width: 7px;
-      height: 7px;
-      border-radius: 99px;
+      align-self: baseline;
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
       background: var(--border-strong);
       flex-shrink: 0;
-      transition: background .2s
     }
 
     .nav-link.done .nav-dot {
-      background: var(--success);
-      box-shadow: 0 0 8px color-mix(in srgb, var(--success) 45%, transparent)
+      align-self: baseline;
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--border-strong);
+      flex-shrink: 0;
     }
 
     .nav-num {
-      margin-top: 3px;
       font-family: var(--font-mono);
-      font-size: 10px;
-      color: var(--ink-3);
-      width: 18px;
-      flex-shrink: 0
+      font-size: 11px;
+      color: var(--ink-2);
+      width: 2ch;
+      flex-shrink: 0;
     }
 
     .nav-title {
       flex: 1;
-      /* Wrap instead of ellipsis: 17/26 titles were truncated mid-word at
-         desktop width, hiding what the lesson is actually about. */
-      white-space: normal;
-      overflow-wrap: break-word;
-      line-height: 1.35
+      min-width: 0;
+      line-height: 1.45;
+      overflow-wrap: anywhere;
     }
 
     .main {
@@ -526,20 +513,19 @@
 
     /* Mobile toggle + backdrop */
     .mobile-toggle {
-      min-width: 44px;
-      min-height: 44px;
       display: none;
       position: fixed;
-      top: 14px;
-      left: 14px;
+      width: 44px;
+      height: 44px;
+      top: 8px;
+      left: 12px;
       z-index: 60;
-      background: var(--accent);
-      color: #fff;
-      border: none;
-      border-radius: 10px;
+      background: var(--surface);
+      color: var(--ink);
+      border: 1px solid var(--border);
+      border-radius: 8px;
       padding: 9px;
       cursor: pointer;
-      box-shadow: var(--shadow-md)
     }
 
     .backdrop {
@@ -603,16 +589,17 @@
       position: sticky;
       top: 0;
       z-index: 30;
-      background: color-mix(in srgb, var(--bg) 85%, transparent);
-      backdrop-filter: blur(10px);
+      background: var(--surface);
       border-bottom: 1px solid var(--border);
       display: flex;
       align-items: center;
       justify-content: space-between;
-      padding: 10px 40px;
+      gap: 12px;
+      min-height: 60px;
+      padding: 8px 24px;
       font-family: var(--font-mono);
-      font-size: 11px;
-      color: var(--ink-2)
+      font-size: 12px;
+      color: var(--ink-2);
     }
 
     .topbar-mini {
@@ -680,21 +667,25 @@
     .hero-inner {
       max-width: var(--maxw);
       margin: 0 auto;
-      padding: 72px 40px 60px
+      padding: 48px 24px;
     }
 
 
     .hero h1 {
-      font-size: clamp(2.1rem, 5vw, 3.4rem);
-      font-weight: 800;
-      margin: 20px 0 0;
-      letter-spacing: -.03em
+      font-size: clamp(2rem,3.5vw,3rem);
+      font-weight: 700;
+      margin: 0;
+      letter-spacing: -.025em;
+      line-height: 1.14;
+      text-wrap: balance;
     }
 
     .hero-sub {
-      font-size: clamp(1rem, 2vw, 1.2rem);
+      font-size: clamp(1rem,1.4vw,1.125rem);
       color: var(--ink-2);
-      margin-top: 18px
+      max-width: 72ch;
+      margin-top: 14px;
+      line-height: 1.6;
     }
 
 
@@ -750,82 +741,75 @@
    6 · TOC / CURRICULUM
    ============================================================================ */
     .section-pad {
-      padding-block: 56px
+      padding-block: 36px;
     }
-#curriculum{scroll-margin-block-start:1rem}
+#curriculum{scroll-margin-block-start:76px}
 
     .section-head {
       display: flex;
       align-items: baseline;
-      gap: 14px;
-      margin-bottom: 28px
+      margin-bottom: 20px;
     }
 
     .section-head h2 {
-      font-size: 1.9rem
+      font-size: clamp(1.45rem,2.3vw,1.85rem);
+      line-height: 1.25;
+      text-wrap: balance;
     }
 
     .section-head .line {
-      flex: 1;
-      height: 1px;
-      background: var(--border)
+      display: none;
     }
 
     .toc-part-label {
-      font-family: var(--font-mono);
-      font-size: 11px;
-      letter-spacing: .16em;
-      text-transform: uppercase;
-      color: var(--accent);
-      font-weight: 600;
-      margin: 26px 0 12px
+      font-size: 1rem;
+      line-height: 1.4;
+      color: var(--ink);
+      font-weight: 650;
+      margin: 24px 0 8px;
     }
 
     .toc-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
-      gap: 12px
+      border-bottom: 1px solid var(--border);
     }
 
     .toc-card {
-      display: flex;
-      gap: 14px;
-      align-items: flex-start;
-      padding: 16px;
-      border: 1px solid var(--border);
-      border-radius: var(--radius);
-      background: var(--surface);
+      display: grid;
+      grid-template-columns: 3ch minmax(0,1fr);
+      align-items: baseline;
+      column-gap: 12px;
+      padding: 14px 4px;
+      border-top: 1px solid var(--border);
+      color: var(--ink);
       cursor: pointer;
-      transition: transform .15s, box-shadow .15s, border-color .15s
     }
 
     .toc-card:hover {
-      box-shadow: var(--shadow-md);
-      border-color: var(--accent);
-      text-decoration: none
+      background: var(--surface-2);
+      text-decoration: none;
     }
 
     .toc-card-num {
       font-family: var(--font-mono);
-      font-size: 20px;
-      font-weight: 700;
-      color: var(--accent-2);
-      line-height: 1
+      font-size: 13px;
+      font-variant-numeric: tabular-nums;
+      color: var(--ink-2);
     }
 
     .toc-card-title {
       display: block;
-      font-weight: 700;
-      font-size: 15px;
-      color: var(--ink)
+      font-weight: 650;
+      font-size: 16px;
+      line-height: 1.45;
+      color: var(--ink);
     }
 
     .toc-card-desc {
       display: block;
-      font-size: 12.5px;
+      font-size: 14px;
       color: var(--ink-2);
       margin-top: 4px;
-      line-height: 1.5
+      line-height: 1.5;
     }
 
     .toc-card>span:last-child {
@@ -844,40 +828,37 @@
     .module-header.active,
     .lesson.active,
     .pane.active {
-      display: block;
-      animation: fade .3s ease
+      display:block
     }
 
-    @keyframes fade {
-      from {
-        opacity: 0;
-        transform: translateY(6px)
-      }
 
-      to {
-        opacity: 1;
-        transform: none
-      }
-    }
 
     .module-header {
-      padding: 44px 0 6px
+      padding: 28px 0 4px;
     }
 
     .module-header .eyebrow {
-      margin-bottom: 10px;
-      display: block
+      display: block;
+      font: inherit;
+      font-size: 13px;
+      letter-spacing: normal;
+      text-transform: none;
+      color: var(--ink-2);
+      margin-bottom: 6px;
     }
 
     .module-header h2 {
-      font-size: clamp(1.8rem, 4vw, 2.6rem);
-      font-weight: 800
+      font-size: clamp(1.35rem,2vw,1.75rem);
+      line-height: 1.25;
+      text-wrap: balance;
+      font-weight: 650;
     }
 
     .module-header p {
       color: var(--ink-2);
-      margin-top: 14px;
-      font-size: 1.05rem
+      margin-top: 8px;
+      font-size: 1rem;
+      max-width: 72ch;
     }
 
     .lesson {
@@ -890,19 +871,25 @@
     }
 
     .lesson-head {
-      background: var(--grad);
-      color: #fff;
-      padding: 26px 30px
+      color: var(--ink);
+      padding: 22px 30px;
+      border-bottom: 1px solid var(--border);
     }
 
     .lesson-head .eyebrow {
-      color: color-mix(in srgb, var(--brand-gold) 90%, #fff)
+      font: inherit;
+      font-size: 13px;
+      letter-spacing: normal;
+      text-transform: none;
+      color: var(--ink-2);
     }
 
     .lesson-head h3 {
-      color: #fff;
-      font-size: clamp(1.4rem, 3vw, 1.9rem);
-      margin-top: 4px
+      color: var(--ink);
+      font-size: clamp(1.4rem,2.3vw,1.85rem);
+      margin: 4px 0 0;
+      line-height: 1.25;
+      text-wrap: balance;
     }
 
     .lesson-body {
@@ -943,37 +930,18 @@
 
 
     /* COMPONENT: Learning objectives */
-    .objectives {
-      background: var(--surface-2);
-      border: 1px solid var(--border);
-      border-radius: var(--radius);
-      padding: 18px 20px
-    }
+    .objectives{padding:0 0 16px;border-bottom:1px solid var(--border)}
 
     .objectives .eyebrow {
       margin-bottom: 8px;
       display: block
     }
 
-    .objectives ul {
-      list-style: none;
-      padding: 0
-    }
+    .objectives ul{list-style:disc;padding-inline-start:1.3em}
 
-    .objectives li {
-      position: relative;
-      padding-left: 26px;
-      color: var(--ink-2);
-      font-size: 14.5px
-    }
+    .objectives li{color:var(--ink-2);font-size:15px}
 
-    .objectives li::before {
-      content: "→";
-      position: absolute;
-      left: 4px;
-      color: var(--accent-2);
-      font-weight: 700
-    }
+    .objectives li::before{content:none}
 
     /* COMPONENT: Callout (info / warn / success / danger / insight) */
     .callout {
@@ -1116,12 +1084,7 @@
     }
 
     /* COMPONENT: Mental model / concept box */
-    .concept {
-      background: var(--surface-2);
-      border: 1px solid var(--border);
-      border-radius: var(--radius);
-      padding: 20px 22px
-    }
+    .concept{padding-block:8px}
 
     .concept .eyebrow {
       margin-bottom: 8px;
@@ -1428,24 +1391,9 @@
       border-radius: var(--radius)
     }
 
-    table {
-      width: 100%;
-      border-collapse: collapse;
-      font-size: 14px;
-      min-width: 460px
-    }
+    table{width:100%;border-collapse:collapse;font-size:14px}
 
-    thead th {
-      background: var(--surface-2);
-      text-align: left;
-      padding: 11px 14px;
-      font-family: var(--font-mono);
-      font-size: 11px;
-      letter-spacing: .08em;
-      text-transform: uppercase;
-      color: var(--ink-2);
-      border-bottom: 1px solid var(--border)
-    }
+    thead th{background:var(--surface-2);text-align:left;padding:10px 12px;font:600 14px/1.4 var(--font-body);color:var(--ink);border-bottom:1px solid var(--border)}
 
     tbody td {
       padding: 11px 14px;
@@ -1463,45 +1411,20 @@
     }
 
     /* COMPONENT: Takeaway (mandatory, once per lesson) */
-    .takeaway {
-      background: var(--grad);
-      color: #fff;
-      border-radius: var(--radius);
-      padding: 22px 26px;
-      position: relative;
-      overflow: hidden
-    }
+    .takeaway{padding:16px 0;border-block:1px solid var(--border);color:var(--ink)}
 
-    .takeaway .eyebrow {
-      color: color-mix(in srgb, var(--brand-gold) 90%, #fff);
-      margin-bottom: 8px;
-      display: flex;
-      align-items: center;
-      gap: 8px
-    }
+    .takeaway .eyebrow{display:block;margin-bottom:6px;color:var(--ink-2)}
 
     .takeaway .eyebrow svg {
       display: none
     }
 
-    .takeaway p {
-      color: #fff;
-      font-size: 1.12rem;
-      font-weight: 600;
-      line-height: 1.5
-    }
+    .takeaway p{color:var(--ink);font-size:1.05rem;font-weight:500;line-height:1.6}
 
-    .takeaway .hl {
-      color: var(--brand-gold)
-    }
+    .takeaway .hl{color:inherit;font-weight:700}
 
     /* COMPONENT: Quiz (mandatory, once per lesson) */
-    .quiz {
-      border: 1px solid var(--border);
-      border-radius: var(--radius);
-      padding: 20px 22px;
-      background: var(--surface-2)
-    }
+    .quiz{padding:0}
 
     .quiz .eyebrow {
       margin-bottom: 8px;
@@ -1514,21 +1437,7 @@
       margin-bottom: 14px
     }
 
-    .quiz-opt {
-      display: flex;
-      gap: 12px;
-      align-items: flex-start;
-      width: 100%;
-      text-align: left;
-      border: 2px solid var(--border);
-      border-radius: var(--radius-sm);
-      padding: 12px 14px;
-      background: var(--surface);
-      cursor: pointer;
-      font-size: 14.5px;
-      color: var(--ink);
-      transition: all .13s
-    }
+    .quiz-opt{display:flex;gap:12px;align-items:baseline;width:100%;min-height:44px;text-align:left;border:1px solid var(--border-strong);border-radius:var(--radius-sm);padding:10px 14px;background:var(--surface);cursor:pointer;font:inherit;font-size:15px;line-height:1.5;color:var(--ink)}
 
     .quiz-opt+.quiz-opt {
       margin-top: 8px
@@ -1637,13 +1546,7 @@
       text-align: right
     }
 
-    .lesson-nav .nl-label {
-      font-family: var(--font-mono);
-      font-size: 10px;
-      letter-spacing: .14em;
-      text-transform: uppercase;
-      color: var(--ink-3)
-    }
+    .lesson-nav .nl-label {font-size:13px;color:var(--ink-2)}
 
     .lesson-nav .nl-title {
       font-weight: 600;
@@ -1673,13 +1576,14 @@
       font-weight: 600
     }
 
-    .lesson-nav .nav-complete:hover {
-      background: var(--brand-navy-deep);
+    .lesson-nav .nav-complete:hover {background:var(--accent);text-decoration:underline;
       transform: translateY(-1px)
     }
 
     .lesson-nav .nav-complete.done {
-      background: var(--grad)
+      background: var(--surface-2);
+      color: var(--ink);
+      border-color: var(--border)
     }
 
     /* COMPONENT: Completion screen */
@@ -1708,8 +1612,42 @@
       color: var(--ink-3)
     }
 
-    /* Print: the active lesson prints clean (chrome hidden, card flattened) */
-    @media print {
+
+
+.toc-card:hover .toc-card-title{text-decoration:underline;text-underline-offset:.18em}
+.hero .btn-ghost{background:transparent;border-color:transparent;padding-inline:6px;color:var(--ink);text-decoration:underline;text-underline-offset:.2em}
+.topbar a[href="#overview"]{display:inline-flex;align-items:center;min-height:44px;font:500 13px/1.35 var(--font-body,sans-serif);color:var(--ink-2)}
+#overview,.pane[id],.lesson[id]{scroll-margin-block-start:76px}
+.topbar #tb-location{display:none}
+.topbar #tb-crumb,.topbar #tb-location{font:500 13px/1.35 var(--font-body,sans-serif)}
+.main:has(#overview.active) .topbar a[href="#overview"]{display:none}
+@media(min-width:840px){
+  .toc-card>span:last-child{display:grid;grid-template-columns:minmax(0,2fr) minmax(0,3fr);gap:24px;align-items:baseline}
+  .toc-card-desc{margin-top:0}
+}
+@media(max-width:1024px){
+  .sidebar{visibility:hidden;height:100dvh;max-width:calc(100vw - 36px)}
+  .topbar #tb-crumb{display:none}
+  .topbar #tb-location{display:block}
+  .sidebar.open{visibility:visible}
+  body:has(.sidebar.open){overflow:hidden}
+  body:has(.sidebar.open) .mobile-toggle svg{display:none}
+  body:has(.sidebar.open) .mobile-toggle::before,body:has(.sidebar.open) .mobile-toggle::after{content:"";position:absolute;top:50%;left:50%;width:20px;height:2px;background:currentColor;transform:translate(-50%,-50%) rotate(45deg)}
+  body:has(.sidebar.open) .mobile-toggle::after{transform:translate(-50%,-50%) rotate(-45deg)}
+  .sidebar-brand{padding-left:68px;min-height:64px}
+  .nav-link{min-height:44px}
+  .hero .hero-inner{padding-inline:18px}
+  .main .topbar{min-height:60px;padding-block:8px;padding-right:14px}
+}
+@media(max-width:640px){
+  .hero .hero-inner{padding-block:32px}
+  .lesson-nav .nav-empty{display:none}
+  .section-pad{padding-block:28px}
+}
+
+.theme-sun,[data-mode="dark"] .theme-moon{display:none}
+[data-mode="dark"] .theme-sun{display:block}
+@media print {
 
       .sidebar,
       .topbar,
@@ -1736,6 +1674,31 @@
     }
   .diagram-scroll-hint{padding:7px 12px;border-bottom:1px solid var(--border);background:var(--surface-2);color:var(--ink-2);font-size:12px;font-weight:600}
 .diagram-scroll-hint[hidden]{display:none}
+
+.lesson-body,.pane{overflow-wrap:break-word}
+.lesson-body :where(p,li,summary,button,pre),.pane :where(p,li,summary,button){overflow-wrap:anywhere}
+.lesson-body :where(.objectives,.concept,.callout,.takeaway,.quiz,.accordion,.steps,.checklist){max-inline-size:76ch}
+.lesson-body .eyebrow,.quiz .eyebrow{font:600 14px/1.45 var(--font-body);letter-spacing:normal;text-transform:none;color:var(--ink-2)}
+.lesson-body .objectives ul{margin-block:0}
+.lesson-body .checklist{padding:0}
+.lesson-body .quiz-opt>span:last-child{min-width:0}
+.lesson-body .callout p+p,.lesson-body .accordion-body p+p{margin-top:.65em}
+.lesson-body .callout:is(.info,.insight,.success){padding:0;border:0;border-radius:0;background:transparent}
+.lesson-body .callout:is(.info,.insight,.success)::before{content:none}
+.lesson-body .callout:is(.info,.insight,.success) .callout-title{font-size:1rem;margin-bottom:4px}
+.lesson-body .callout:is(.info,.insight,.success) p{font-size:inherit;color:var(--ink)}
+.lesson-body .accordion-body>pre,.pane .accordion-body>pre,.lesson-body .callout>pre{white-space:pre-wrap;overflow-wrap:anywhere}
+.copy-btn{min-height:44px;min-width:44px}
+.table-wrap th.prose-column{min-width:14rem}
+.table-wrap th.detail-column{min-width:18rem}
+.table-wrap td{overflow-wrap:break-word}
+.lesson-body a[href]:not(.btn){color:var(--ink);text-decoration:underline;text-underline-offset:.15em}
+@media (max-width:640px){
+  .lesson-body .callout{padding:14px}
+  .lesson-body .callout::before{left:12px}
+  .accordion-body{padding:4px 14px 16px}
+  .prompt-head{flex-wrap:wrap;gap:6px 12px}
+}
 </style>
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E📚%3C/text%3E%3C/svg%3E">
 </head>
@@ -1743,7 +1706,7 @@
 <body data-theme="midnight">
   <a href="#main" class="skip-link">Bỏ qua, tới nội dung chính</a>
 
-  <button class="mobile-toggle" aria-label="Mở menu điều hướng" onclick="toggleSidebar()">
+  <button class="mobile-toggle" onclick="toggleSidebar()" aria-label="Mở mục lục" aria-expanded="false" aria-controls="sidebar">
     <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
       <line x1="3" y1="6" x2="21" y2="6" />
       <line x1="3" y1="12" x2="21" y2="12" />
@@ -1773,15 +1736,15 @@
     <!-- ============ MAIN ============ -->
     <main class="main" id="main" tabindex="-1">
       <div class="topbar">
-        <span class="mono" id="tb-crumb">Tổng quan</span>
+        <span class="mono" id="tb-crumb">Tổng quan</span><span id="tb-location" class="mono"></span>
         <div class="topbar-mini">
           <div class="topbar-mini-fill" id="tb-fill"></div>
         </div>
         <div class="topbar-actions">
           <span class="mono kbd-hint" style="color:var(--ink-3)" aria-hidden="true">← → chuyển bài</span>
-          <a href="#overview" class="mono" style="cursor:pointer">⌂ Tổng quan</a>
+          <a href="#overview" class="mono" style="cursor:pointer">Tổng quan</a>
           <button class="mode-toggle" id="mode-toggle" onclick="toggleMode()" aria-label="Chuyển sang chế độ tối"
-            aria-pressed="false">🌙</button>
+            aria-pressed="false"><svg class="theme-moon" aria-hidden="true" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75"><path d="M20.5 13.4A8.8 8.8 0 0 1 10.6 3.5a8.8 8.8 0 1 0 9.9 9.9Z"/></svg><svg class="theme-sun" aria-hidden="true" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2m0 16v2M2 12h2m16 0h2M5 5l1.5 1.5m11 11L19 19M5 19l1.5-1.5m11-11L19 5"/></svg></button>
         </div>
       </div>
 
@@ -1792,7 +1755,7 @@
             <h1>Vận hành AI Agent</h1>
             <p class="hero-sub">Thực hành nhập dữ liệu vào CRM thử nghiệm, duyệt lô đầu và đối soát bản xuất cuối với nguồn. Từng bước đều có quyết định cụ thể về quyền của agent và lúc cần người duyệt.</p>
             <div style="margin-top:28px;display:flex;gap:12px;flex-wrap:wrap">
-              <a class="btn btn-primary" id="start-btn">Bắt đầu học →</a>
+              <a class="btn btn-primary" id="start-btn">Bắt đầu học</a>
               <a class="btn btn-ghost" href="#curriculum">Xem chương trình</a>
             </div>
           </div>
@@ -1815,7 +1778,7 @@
                 <thead>
                   <tr>
                     <th style="width:180px">Thuật ngữ</th>
-                    <th>Nghĩa một dòng (như dùng trong khoá này)</th>
+                    <th class="detail-column">Nghĩa một dòng (như dùng trong khoá này)</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -1936,7 +1899,7 @@
          ============================================================ -->
       <div class="container">
         <header class="module-header" data-module="1">
-          <span class="eyebrow">Module 01 · Phần I · Nền tảng</span>
+          <span class="eyebrow">Phần I · Nền tảng</span>
           <h2>Bản đồ 4 môi trường, quyền và điều khiển từ xa</h2>
           <p>Module này phân biệt Chat, Work/Cowork, công cụ code và Browser/Computer Use; sau đó thiết lập quyền, nhận diện lệnh ẩn và dùng Voice/Remote mà không bỏ các cổng kiểm.</p>
         </header>
@@ -2054,9 +2017,7 @@
               </details>
             </div>
 
-            <div class="takeaway">
-              <span class="eyebrow">Takeaway
-              </span>
+            <div class="takeaway" role="note" aria-label="Ghi nhớ">
               <p>Trước khi đổi model, kiểm tra lại <span class="hl">môi trường làm việc</span>: đầu ra cần gì, dữ liệu ở đâu, AI được phép làm gì và kết quả sẽ được kiểm bằng cách nào.</p>
             </div>
 
@@ -2122,7 +2083,7 @@
 <li>Tài khoản dùng chung của team</li>
 </ul>
 </div>
-</div><p>Trong Claude Code, dùng <code>/permissions</code> để xem quy tắc đang áp dụng và nguồn cấu hình. Quản trị viên có thể giới hạn các chế độ được phép dùng. Trước khi nối CRM, hãy kiểm tra tài khoản, quyền truy cập tệp và quyền truy cập mạng thực tế.</p><p>Chính sách lab của khoá: loại ngân hàng, HR, thanh toán và dữ liệu khách thật khỏi phạm vi. Ghi staging cần pilot; gửi, xoá và ghi production theo cổng duyệt của tổ chức. Đọc qua công cụ/dịch vụ bên ngoài có thể làm lộ dữ liệu; “hoàn tác được” không đồng nghĩa chạy tự do.</p><figure class="figure"><div class="diagram-viewport" role="region" tabindex="0" aria-label="Sơ đồ; cuộn ngang để đọc đầy đủ nhãn" style="--diagram-width:720px"><svg viewBox="0 0 720 140" role="img" aria-label="Mode điều khiển duyệt tool; quyền OS/network mới giới hạn thực thi."><rect x="15" y="20" width="220" height="100" rx="12" fill="var(--surface-2)" stroke="var(--border)"/><text x="125" y="72" text-anchor="middle" fill="var(--ink)" font-size="13">Plan</text><rect x="250" y="20" width="220" height="100" rx="12" fill="var(--surface-2)" stroke="var(--border)"/><text x="360" y="72" text-anchor="middle" fill="var(--ink)" font-size="13">Manual</text><rect x="485" y="20" width="220" height="100" rx="12" fill="var(--surface-2)" stroke="var(--border)"/><text x="595" y="72" text-anchor="middle" fill="var(--ink)" font-size="13">Auto</text></svg></div><figcaption>Mode điều khiển duyệt tool; quyền OS/network mới giới hạn thực thi.</figcaption></figure><p>Claude Code: Manual cho phép đọc đã được duyệt mà không hỏi lại từng lần. Plan khảo sát; khi có Auto, lệnh được classifier duyệt cũng có thể chạy. Auto dùng classifier có thể sai, không chỉ chặn việc không hoàn tác. Bypass bỏ prompt phê duyệt. Kiểm phiên và policy thực tế; prompt không thay cơ chế cấp quyền.</p><p><a href="https://code.claude.com/docs/en/permissions" target="_blank" rel="noreferrer">Claude Code · Permissions</a>.</p><div class="takeaway"><span class="eyebrow">Takeaway</span><p><span class="hl">Cấp quyền hẹp đã duyệt, có phép kiểm đã thử và cách dừng/thu hồi quyền hoạt động.</span></p></div><div class="quiz" data-correct="1"><span class="eyebrow">Kiểm tra nhanh</span><p class="quiz-q">Hai lượt staging đạt. Cần gì thêm trước khi dùng Auto?</p><button class="quiz-opt" onclick="quizPick(this,0)"><span class="quiz-letter">A</span><span>Không cần gì; hai lượt đủ chứng minh an toàn.</span></button><button class="quiz-opt" onclick="quizPick(this,1)"><span class="quiz-letter">B</span><span>Hành động được duyệt, phạm vi quyền/dữ liệu không đổi, checkpoint đã thử, giám sát và dừng/thu hồi quyền.</span></button><button class="quiz-opt" onclick="quizPick(this,2)"><span class="quiz-letter">C</span><span>Prompt ghi “cẩn thận”.</span></button><div class="quiz-feedback" role="status" data-explain="Hai lượt chỉ bao phủ đầu vào đã thử. Kiểm lại quyền, dữ liệu, hành động và xử lý lỗi; giữ người duyệt khi kiểm soát hoặc hậu quả chưa rõ."></div></div>
+</div><p>Trong Claude Code, dùng <code>/permissions</code> để xem quy tắc đang áp dụng và nguồn cấu hình. Quản trị viên có thể giới hạn các chế độ được phép dùng. Trước khi nối CRM, hãy kiểm tra tài khoản, quyền truy cập tệp và quyền truy cập mạng thực tế.</p><p>Chính sách lab của khoá: loại ngân hàng, HR, thanh toán và dữ liệu khách thật khỏi phạm vi. Ghi staging cần pilot; gửi, xoá và ghi production theo cổng duyệt của tổ chức. Đọc qua công cụ/dịch vụ bên ngoài có thể làm lộ dữ liệu; “hoàn tác được” không đồng nghĩa chạy tự do.</p><figure class="figure"><div class="diagram-viewport" role="region" tabindex="0" aria-label="Sơ đồ; cuộn ngang để đọc đầy đủ nhãn" style="--diagram-width:720px"><svg viewBox="0 0 720 140" role="img" aria-label="Mode điều khiển duyệt tool; quyền OS/network mới giới hạn thực thi."><rect x="15" y="20" width="220" height="100" rx="12" fill="var(--surface-2)" stroke="var(--border)"/><text x="125" y="72" text-anchor="middle" fill="var(--ink)" font-size="13">Plan</text><rect x="250" y="20" width="220" height="100" rx="12" fill="var(--surface-2)" stroke="var(--border)"/><text x="360" y="72" text-anchor="middle" fill="var(--ink)" font-size="13">Manual</text><rect x="485" y="20" width="220" height="100" rx="12" fill="var(--surface-2)" stroke="var(--border)"/><text x="595" y="72" text-anchor="middle" fill="var(--ink)" font-size="13">Auto</text></svg></div><figcaption>Mode điều khiển duyệt tool; quyền OS/network mới giới hạn thực thi.</figcaption></figure><p>Claude Code: Manual cho phép đọc đã được duyệt mà không hỏi lại từng lần. Plan khảo sát; khi có Auto, lệnh được classifier duyệt cũng có thể chạy. Auto dùng classifier có thể sai, không chỉ chặn việc không hoàn tác. Bypass bỏ prompt phê duyệt. Kiểm phiên và policy thực tế; prompt không thay cơ chế cấp quyền.</p><p><a href="https://code.claude.com/docs/en/permissions" target="_blank" rel="noreferrer">Claude Code · Permissions</a>.</p><div class="takeaway" role="note" aria-label="Ghi nhớ"><p><span class="hl">Cấp quyền hẹp đã duyệt, có phép kiểm đã thử và cách dừng/thu hồi quyền hoạt động.</span></p></div><div class="quiz" data-correct="1"><span class="eyebrow">Kiểm tra nhanh</span><p class="quiz-q">Hai lượt staging đạt. Cần gì thêm trước khi dùng Auto?</p><button class="quiz-opt" onclick="quizPick(this,0)"><span class="quiz-letter">A</span><span>Không cần gì; hai lượt đủ chứng minh an toàn.</span></button><button class="quiz-opt" onclick="quizPick(this,1)"><span class="quiz-letter">B</span><span>Hành động được duyệt, phạm vi quyền/dữ liệu không đổi, checkpoint đã thử, giám sát và dừng/thu hồi quyền.</span></button><button class="quiz-opt" onclick="quizPick(this,2)"><span class="quiz-letter">C</span><span>Prompt ghi “cẩn thận”.</span></button><div class="quiz-feedback" role="status" data-explain="Hai lượt chỉ bao phủ đầu vào đã thử. Kiểm lại quyền, dữ liệu, hành động và xử lý lỗi; giữ người duyệt khi kiểm soát hoặc hậu quả chưa rõ."></div></div>
 </div>
           <div class="lesson-nav" data-navfor="m1-l2"></div>
         </article>
@@ -2173,7 +2134,7 @@
 <text class="dgm-ink2" font-size="12" text-anchor="middle" x="360" y="186">Prompt là một lớp hướng dẫn, không thay thế kiểm soát quyền.</text>
 </svg></div>
 <figcaption>Nội dung bên ngoài có thể chứa chỉ dẫn; quyền và kênh hành động quyết định hậu quả.</figcaption>
-</figure><ul><li>Dùng nguồn cần thiết và tài khoản ít quyền; tách dữ liệu nhạy cảm khỏi khả năng gửi ra ngoài.</li><li>Thực thi giới hạn file/network/tool ngoài prompt; thử cách dừng, thu hồi credential và ghi log.</li><li>Dừng và báo IT khi đổi chủ đề bất thường, mở domain ngoài kế hoạch, đòi password/OTP/thẻ hoặc gửi file đến địa chỉ lạ. Giữ bằng chứng trước khi khôi phục.</li></ul><p>Hướng dẫn chung ngày 01/05/2026 do ASD cùng các đối tác quốc tế công bố khuyến nghị bắt đầu với việc ít rủi ro và quyền hẹp. Hướng dẫn ngày 12/11/2026 dành riêng cho môi trường thử năng lực cyber của AI: không phải chuẩn production phổ quát. Nó nhấn mạnh containment bên ngoài model, theo dõi và dừng khẩn cấp.</p><p><a href="https://www.cyber.gov.au/publication/careful-adoption-of-agentic-ai-services" target="_blank" rel="noreferrer">ASD · Careful adoption</a>.</p><p><a href="https://www.cyber.gov.au/publication/securing-ai-testing-environments" target="_blank" rel="noreferrer">ASD · Securing AI testing environments</a>.</p><div class="takeaway"><span class="eyebrow">Takeaway</span><p><span class="hl">Nguồn đáng tin vẫn có thể chứa nội dung không đáng tin; dùng quyền hẹp và kiểm soát thực thi.</span></p></div><div class="quiz" data-correct="0"><span class="eyebrow">Kiểm tra nhanh</span><p class="quiz-q">Agent migrate CRM bỗng đòi password ngân hàng. Làm gì?</p><button class="quiz-opt" onclick="quizPick(this,0)"><span class="quiz-letter">A</span><span>Dừng, không cấp thêm dữ liệu/quyền, báo IT và giữ log.</span></button><button class="quiz-opt" onclick="quizPick(this,1)"><span class="quiz-letter">B</span><span>Chỉ sửa prompt rồi tiếp tục.</span></button><button class="quiz-opt" onclick="quizPick(this,2)"><span class="quiz-letter">C</span><span>Cho password vì chưa có giao dịch.</span></button><div class="quiz-feedback" role="status" data-explain="Yêu cầu vượt phạm vi là tín hiệu dừng; sửa câu chữ không kiểm lại được hành động hay quyền đã cấp."></div></div>
+</figure><ul><li>Dùng nguồn cần thiết và tài khoản ít quyền; tách dữ liệu nhạy cảm khỏi khả năng gửi ra ngoài.</li><li>Thực thi giới hạn file/network/tool ngoài prompt; thử cách dừng, thu hồi credential và ghi log.</li><li>Dừng và báo IT khi đổi chủ đề bất thường, mở domain ngoài kế hoạch, đòi password/OTP/thẻ hoặc gửi file đến địa chỉ lạ. Giữ bằng chứng trước khi khôi phục.</li></ul><p>Hướng dẫn chung ngày 01/05/2026 do ASD cùng các đối tác quốc tế công bố khuyến nghị bắt đầu với việc ít rủi ro và quyền hẹp. Hướng dẫn ngày 12/11/2026 dành riêng cho môi trường thử năng lực cyber của AI: không phải chuẩn production phổ quát. Nó nhấn mạnh containment bên ngoài model, theo dõi và dừng khẩn cấp.</p><p><a href="https://www.cyber.gov.au/publication/careful-adoption-of-agentic-ai-services" target="_blank" rel="noreferrer">ASD · Careful adoption</a>.</p><p><a href="https://www.cyber.gov.au/publication/securing-ai-testing-environments" target="_blank" rel="noreferrer">ASD · Securing AI testing environments</a>.</p><div class="takeaway" role="note" aria-label="Ghi nhớ"><p><span class="hl">Nguồn đáng tin vẫn có thể chứa nội dung không đáng tin; dùng quyền hẹp và kiểm soát thực thi.</span></p></div><div class="quiz" data-correct="0"><span class="eyebrow">Kiểm tra nhanh</span><p class="quiz-q">Agent migrate CRM bỗng đòi password ngân hàng. Làm gì?</p><button class="quiz-opt" onclick="quizPick(this,0)"><span class="quiz-letter">A</span><span>Dừng, không cấp thêm dữ liệu/quyền, báo IT và giữ log.</span></button><button class="quiz-opt" onclick="quizPick(this,1)"><span class="quiz-letter">B</span><span>Chỉ sửa prompt rồi tiếp tục.</span></button><button class="quiz-opt" onclick="quizPick(this,2)"><span class="quiz-letter">C</span><span>Cho password vì chưa có giao dịch.</span></button><div class="quiz-feedback" role="status" data-explain="Yêu cầu vượt phạm vi là tín hiệu dừng; sửa câu chữ không kiểm lại được hành động hay quyền đã cấp."></div></div>
 </div>
           <div class="lesson-nav" data-navfor="m1-l3"></div>
         </article>
@@ -2194,8 +2155,8 @@
 <thead>
 <tr>
 <th style="width:110px">Gate</th>
-<th>Làm gì</th>
-<th>Không làm gì</th>
+<th class="prose-column">Làm gì</th>
+<th class="prose-column">Không làm gì</th>
 </tr>
 </thead>
 <tbody>
@@ -2226,7 +2187,7 @@ Nguồn/quyền: [phạm vi đã duyệt].
 Nơi chạy/tài khoản: [kiểm trong phiên].
 Không gửi/ghi prod/deploy; tối đa 2 luồng (giới hạn ví dụ).
 Thiếu fact hoặc vượt quyền: dừng hỏi.
-Kết thúc: file/diff/test/log và mục chưa kiểm.</pre></div><div class="takeaway"><span class="eyebrow">Takeaway</span><p><span class="hl">Từ xa vẫn phải kiểm phạm vi và đầu ra; host cần thức chỉ khi công việc phụ thuộc host.</span></p></div><div class="quiz" data-correct="1"><span class="eyebrow">Kiểm tra nhanh</span><p class="quiz-q">Đang đi bộ, bạn nghĩ ra tính năng cần deploy prod. Giao việc thế nào?</p><button class="quiz-opt" onclick="quizPick(this,0)"><span class="quiz-letter">A</span><span>Cho toàn quyền deploy.</span></button><button class="quiz-opt" onclick="quizPick(this,1)"><span class="quiz-letter">B</span><span>Giao bản nháp/prototype trong phạm vi đã duyệt; giữ deploy sau bước review evidence.</span></button><button class="quiz-opt" onclick="quizPick(this,2)"><span class="quiz-letter">C</span><span>Cấm mọi voice.</span></button><div class="quiz-feedback" role="status" data-explain="Kênh tiện lợi không mở rộng quyền đã duyệt."></div></div>
+Kết thúc: file/diff/test/log và mục chưa kiểm.</pre></div><div class="takeaway" role="note" aria-label="Ghi nhớ"><p><span class="hl">Từ xa vẫn phải kiểm phạm vi và đầu ra; host cần thức chỉ khi công việc phụ thuộc host.</span></p></div><div class="quiz" data-correct="1"><span class="eyebrow">Kiểm tra nhanh</span><p class="quiz-q">Đang đi bộ, bạn nghĩ ra tính năng cần deploy prod. Giao việc thế nào?</p><button class="quiz-opt" onclick="quizPick(this,0)"><span class="quiz-letter">A</span><span>Cho toàn quyền deploy.</span></button><button class="quiz-opt" onclick="quizPick(this,1)"><span class="quiz-letter">B</span><span>Giao bản nháp/prototype trong phạm vi đã duyệt; giữ deploy sau bước review evidence.</span></button><button class="quiz-opt" onclick="quizPick(this,2)"><span class="quiz-letter">C</span><span>Cấm mọi voice.</span></button><div class="quiz-feedback" role="status" data-explain="Kênh tiện lợi không mở rộng quyền đã duyệt."></div></div>
 </div>
           <div class="lesson-nav" data-navfor="m1-l4"></div>
         </article>
@@ -2237,7 +2198,7 @@ Kết thúc: file/diff/test/log và mục chưa kiểm.</pre></div><div class="t
          ============================================================ -->
       <div class="container">
         <header class="module-header" data-module="2">
-          <span class="eyebrow">Module 02 · Phần II · Xương sống</span>
+          <span class="eyebrow">Phần II · Xương sống</span>
           <h2>Vòng lặp Nhìn · Chốt · Làm · Soi</h2>
           <p>Trước khi chạm dữ liệu, trả lời hai câu: <strong>nguồn nào là chuẩn?</strong> và <strong>điều kiện nào chứng minh đạt?</strong> Vòng lặp bốn bước buộc hai câu đó xuất hiện trước khi thay đổi, rồi kiểm lại sau. Việc chỉ "xong" ở bước SOI — không phải khi tác vụ tự báo xong.</p>
         <figure class="figure" style="margin:12px 0 0">
@@ -2301,7 +2262,7 @@ Kết thúc: file/diff/test/log và mục chưa kiểm.</pre></div><div class="t
             </div>
           </div>
           <div class="lesson-body">
-<div class="objectives"><span class="eyebrow">Sau bài này bạn có thể</span><ul><li>Chọn bằng chứng phù hợp câu hỏi.</li><li>Lưu provenance và phạm vi trước ghi.</li><li>Tách baseline khỏi backup.</li></ul></div><p>Ví dụ giả lập: “khoảng 800 dòng, trông hợp lệ” không đủ làm baseline cho migrate. Lưu danh tính nguồn/đích, thời điểm, filter, khoá, export gốc và tiêu chí đếm trước khi ghi.</p><figure class="figure"><div class="diagram-viewport" role="region" tabindex="0" aria-label="Sơ đồ; cuộn ngang để đọc đầy đủ nhãn" style="--diagram-width:720px"><svg viewBox="0 0 720 140" role="img" aria-label="Các loại bằng chứng bổ sung nhau; không xếp screenshot cao hơn diff có nguồn gốc rõ."><rect x="15" y="20" width="220" height="100" rx="12" fill="var(--surface-2)" stroke="var(--border)"/><text x="125" y="72" text-anchor="middle" fill="var(--ink)" font-size="13">Count: bao nhiêu?</text><rect x="250" y="20" width="220" height="100" rx="12" fill="var(--surface-2)" stroke="var(--border)"/><text x="360" y="72" text-anchor="middle" fill="var(--ink)" font-size="13">Keyed diff: giá trị?</text><rect x="485" y="20" width="220" height="100" rx="12" fill="var(--surface-2)" stroke="var(--border)"/><text x="595" y="72" text-anchor="middle" fill="var(--ink)" font-size="13">Log: thao tác nào?</text></svg></div><figcaption>Các loại bằng chứng bổ sung nhau; không xếp screenshot cao hơn diff có nguồn gốc rõ.</figcaption></figure><ul><li>Screenshot lưu trạng thái giao diện/filter nhưng không chứng minh đủ mọi dòng.</li><li>Export đầy đủ và keyed field diff kiểm nội dung; kiểm nguồn gốc, query/filter, thời điểm và tính đầy đủ.</li><li>Log/audit trail kiểm actor và hành động; log cũng có thể thiếu, cần đối chiếu với đích.</li><li>Baseline dùng để so; backup có cơ chế restore được thử dùng để khôi phục. Không backup nào thu hồi được dữ liệu đã gửi ra ngoài.</li></ul><div class="takeaway"><span class="eyebrow">Takeaway</span><p><span class="hl">Evidence cần đúng phạm vi và kiểm lại được; câu chữ tự tin hay dè dặt không tự chứng minh đúng/sai.</span></p></div><div class="quiz" data-correct="1"><span class="eyebrow">Kiểm tra nhanh</span><p class="quiz-q">Cần kiểm 247 field email migrate. Bằng chứng chính nào?</p><button class="quiz-opt" onclick="quizPick(this,0)"><span class="quiz-letter">A</span><span>Ảnh đầu bảng.</span></button><button class="quiz-opt" onclick="quizPick(this,1)"><span class="quiz-letter">B</span><span>Export đầy đủ đúng phạm vi, keyed field diff và provenance; ảnh/log bổ sung.</span></button><button class="quiz-opt" onclick="quizPick(this,2)"><span class="quiz-letter">C</span><span>Agent nhắc lại “đã kiểm”.</span></button><div class="quiz-feedback" role="status" data-explain="Count không bắt được giá trị sai khi tổng vẫn đúng."></div></div>
+<div class="objectives"><span class="eyebrow">Sau bài này bạn có thể</span><ul><li>Chọn bằng chứng phù hợp câu hỏi.</li><li>Lưu provenance và phạm vi trước ghi.</li><li>Tách baseline khỏi backup.</li></ul></div><p>Ví dụ giả lập: “khoảng 800 dòng, trông hợp lệ” không đủ làm baseline cho migrate. Lưu danh tính nguồn/đích, thời điểm, filter, khoá, export gốc và tiêu chí đếm trước khi ghi.</p><figure class="figure"><div class="diagram-viewport" role="region" tabindex="0" aria-label="Sơ đồ; cuộn ngang để đọc đầy đủ nhãn" style="--diagram-width:720px"><svg viewBox="0 0 720 140" role="img" aria-label="Các loại bằng chứng bổ sung nhau; không xếp screenshot cao hơn diff có nguồn gốc rõ."><rect x="15" y="20" width="220" height="100" rx="12" fill="var(--surface-2)" stroke="var(--border)"/><text x="125" y="72" text-anchor="middle" fill="var(--ink)" font-size="13">Count: bao nhiêu?</text><rect x="250" y="20" width="220" height="100" rx="12" fill="var(--surface-2)" stroke="var(--border)"/><text x="360" y="72" text-anchor="middle" fill="var(--ink)" font-size="13">Keyed diff: giá trị?</text><rect x="485" y="20" width="220" height="100" rx="12" fill="var(--surface-2)" stroke="var(--border)"/><text x="595" y="72" text-anchor="middle" fill="var(--ink)" font-size="13">Log: thao tác nào?</text></svg></div><figcaption>Các loại bằng chứng bổ sung nhau; không xếp screenshot cao hơn diff có nguồn gốc rõ.</figcaption></figure><ul><li>Screenshot lưu trạng thái giao diện/filter nhưng không chứng minh đủ mọi dòng.</li><li>Export đầy đủ và keyed field diff kiểm nội dung; kiểm nguồn gốc, query/filter, thời điểm và tính đầy đủ.</li><li>Log/audit trail kiểm actor và hành động; log cũng có thể thiếu, cần đối chiếu với đích.</li><li>Baseline dùng để so; backup có cơ chế restore được thử dùng để khôi phục. Không backup nào thu hồi được dữ liệu đã gửi ra ngoài.</li></ul><div class="takeaway" role="note" aria-label="Ghi nhớ"><p><span class="hl">Evidence cần đúng phạm vi và kiểm lại được; câu chữ tự tin hay dè dặt không tự chứng minh đúng/sai.</span></p></div><div class="quiz" data-correct="1"><span class="eyebrow">Kiểm tra nhanh</span><p class="quiz-q">Cần kiểm 247 field email migrate. Bằng chứng chính nào?</p><button class="quiz-opt" onclick="quizPick(this,0)"><span class="quiz-letter">A</span><span>Ảnh đầu bảng.</span></button><button class="quiz-opt" onclick="quizPick(this,1)"><span class="quiz-letter">B</span><span>Export đầy đủ đúng phạm vi, keyed field diff và provenance; ảnh/log bổ sung.</span></button><button class="quiz-opt" onclick="quizPick(this,2)"><span class="quiz-letter">C</span><span>Agent nhắc lại “đã kiểm”.</span></button><div class="quiz-feedback" role="status" data-explain="Count không bắt được giá trị sai khi tổng vẫn đúng."></div></div>
 </div>
           <div class="lesson-nav" data-navfor="m2-l1"></div>
         </article>
@@ -2363,7 +2324,7 @@ Kết thúc: file/diff/test/log và mục chưa kiểm.</pre></div><div class="t
 <path d="M316 220h84" fill="none" marker-end="url(#m2l2-stop)" stroke="var(--danger)" stroke-dasharray="5 4" stroke-width="2"></path>
 </svg></div>
 <figcaption>Field map giữ rõ quy tắc normalization và cách xử lý ô thiếu; không tự điền giá trị hợp lý.</figcaption>
-</figure><div class="takeaway"><span class="eyebrow">Takeaway</span><p><span class="hl">Rejected không miễn lỗi ở accepted rows; acceptance cần full keyed diff rỗng và source partition đúng.</span></p></div><div class="quiz" data-correct="2"><span class="eyebrow">Kiểm tra nhanh</span><p class="quiz-q">Agent tự điền Facebook cho ô rỗng. Bước sửa nào phù hợp?</p><button class="quiz-opt" onclick="quizPick(this,0)"><span class="quiz-letter">A</span><span>Quy ngay cho người viết brief.</span></button><button class="quiz-opt" onclick="quizPick(this,1)"><span class="quiz-letter">B</span><span>Chấp nhận vì giá trị phổ biến.</span></button><button class="quiz-opt" onclick="quizPick(this,2)"><span class="quiz-letter">C</span><span>Kiểm yêu cầu/log; cấm fill chưa duyệt, tách rejected hoặc dừng; retest ca biên.</span></button><div class="quiz-feedback" role="status" data-explain="Quan sát lỗi chưa đủ xác định nguyên nhân. Quy tắc xử lý thiếu cần rõ và được thử."></div></div>
+</figure><div class="takeaway" role="note" aria-label="Ghi nhớ"><p><span class="hl">Rejected không miễn lỗi ở accepted rows; acceptance cần full keyed diff rỗng và source partition đúng.</span></p></div><div class="quiz" data-correct="2"><span class="eyebrow">Kiểm tra nhanh</span><p class="quiz-q">Agent tự điền Facebook cho ô rỗng. Bước sửa nào phù hợp?</p><button class="quiz-opt" onclick="quizPick(this,0)"><span class="quiz-letter">A</span><span>Quy ngay cho người viết brief.</span></button><button class="quiz-opt" onclick="quizPick(this,1)"><span class="quiz-letter">B</span><span>Chấp nhận vì giá trị phổ biến.</span></button><button class="quiz-opt" onclick="quizPick(this,2)"><span class="quiz-letter">C</span><span>Kiểm yêu cầu/log; cấm fill chưa duyệt, tách rejected hoặc dừng; retest ca biên.</span></button><div class="quiz-feedback" role="status" data-explain="Quan sát lỗi chưa đủ xác định nguyên nhân. Quy tắc xử lý thiếu cần rõ và được thử."></div></div>
 </div>
           <div class="lesson-nav" data-navfor="m2-l2"></div>
         </article>
@@ -2400,8 +2361,8 @@ Kết thúc: file/diff/test/log và mục chưa kiểm.</pre></div><div class="t
                 <thead>
                   <tr>
                     <th>Mức</th>
-                    <th>Hành động</th>
-                    <th>Cần gì trước khi chạy</th>
+                    <th class="prose-column">Hành động</th>
+                    <th class="prose-column">Cần gì trước khi chạy</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -2483,9 +2444,7 @@ Kết thúc: file/diff/test/log và mục chưa kiểm.</pre></div><div class="t
                 hạn quyền.</p>
             </div>
 
-            <div class="takeaway">
-              <span class="eyebrow">Takeaway
-              </span>
+            <div class="takeaway" role="note" aria-label="Ghi nhớ">
               <p>Phân loại thao tác theo <span class="hl">khả năng hoàn tác và mức tác động</span>. Mỗi phase cần phạm vi,
                 điểm kiểm tra và lớp phê duyệt phù hợp với chính sách của tổ chức.</p>
             </div>
@@ -2539,7 +2498,7 @@ Kết thúc: file/diff/test/log và mục chưa kiểm.</pre></div><div class="t
 <text fill="var(--danger-ink)" font-family="IBM Plex Mono" font-size="11.5" text-anchor="middle" x="360" y="232">thiếu một ô bất kỳ → entry ở trạng thái CHƯA XÁC MINH</text>
 </svg></div>
 <figcaption>Ledger ghi hành động, evidence, phép kiểm và verdict; chỉ nhận khi partition đúng, full keyed diff rỗng và target baseline được bảo vệ.</figcaption>
-</figure><ul><li>Count cùng scope: raw = clean + rejected; xác minh mỗi ID đúng một lần, không thiếu/trùng.</li><li>Diff: export mới đủ phạm vi, so clean theo external_ref và mọi field; diff phải rỗng.</li><li>Baseline: bảo vệ record có sẵn; kiểm missing/unexpected keys và thay đổi ngoài job.</li><li>Spot-check và ảnh cùng filter bổ sung cho kiểm máy; reload không thấy record thì kiểm ACL/filter/cache trước khi kết luận chưa lưu.</li></ul><div class="takeaway"><span class="eyebrow">Takeaway</span><p><span class="hl">Chỉ nhận migrate khi partition đúng, full keyed diff rỗng và baseline được bảo vệ.</span></p></div><div class="quiz" data-correct="1"><span class="eyebrow">Kiểm tra nhanh</span><p class="quiz-q">Báo cáo 487/500 và rejected 13, spot-check 5 đúng. Đã nhận chưa?</p><button class="quiz-opt" onclick="quizPick(this,0)"><span class="quiz-letter">A</span><span>Có, count đã giải thích.</span></button><button class="quiz-opt" onclick="quizPick(this,1)"><span class="quiz-letter">B</span><span>Chưa: cần source partition, full keyed diff rỗng và kiểm target baseline/key lạ.</span></button><button class="quiz-opt" onclick="quizPick(this,2)"><span class="quiz-letter">C</span><span>Phải làm lại mọi click bằng tay.</span></button><div class="quiz-feedback" role="status" data-explain="Rejected không giải thích accepted record bị sai hoặc target bị ghi đè."></div></div>
+</figure><ul><li>Count cùng scope: raw = clean + rejected; xác minh mỗi ID đúng một lần, không thiếu/trùng.</li><li>Diff: export mới đủ phạm vi, so clean theo external_ref và mọi field; diff phải rỗng.</li><li>Baseline: bảo vệ record có sẵn; kiểm missing/unexpected keys và thay đổi ngoài job.</li><li>Spot-check và ảnh cùng filter bổ sung cho kiểm máy; reload không thấy record thì kiểm ACL/filter/cache trước khi kết luận chưa lưu.</li></ul><div class="takeaway" role="note" aria-label="Ghi nhớ"><p><span class="hl">Chỉ nhận migrate khi partition đúng, full keyed diff rỗng và baseline được bảo vệ.</span></p></div><div class="quiz" data-correct="1"><span class="eyebrow">Kiểm tra nhanh</span><p class="quiz-q">Báo cáo 487/500 và rejected 13, spot-check 5 đúng. Đã nhận chưa?</p><button class="quiz-opt" onclick="quizPick(this,0)"><span class="quiz-letter">A</span><span>Có, count đã giải thích.</span></button><button class="quiz-opt" onclick="quizPick(this,1)"><span class="quiz-letter">B</span><span>Chưa: cần source partition, full keyed diff rỗng và kiểm target baseline/key lạ.</span></button><button class="quiz-opt" onclick="quizPick(this,2)"><span class="quiz-letter">C</span><span>Phải làm lại mọi click bằng tay.</span></button><div class="quiz-feedback" role="status" data-explain="Rejected không giải thích accepted record bị sai hoặc target bị ghi đè."></div></div>
 </div>
           <div class="lesson-nav" data-navfor="m2-l4"></div>
         </article>
@@ -2550,7 +2509,7 @@ Kết thúc: file/diff/test/log và mục chưa kiểm.</pre></div><div class="t
          ============================================================ -->
       <div class="container">
         <header class="module-header" data-module="3">
-          <span class="eyebrow">Module 03 · Phần III · Điều phối</span>
+          <span class="eyebrow">Phần III · Điều phối</span>
           <h2>Chọn chế độ, model và vai kiểm chứng</h2>
           <p>Chọn đúng môi trường trước, rồi mới chọn model hoặc mức suy luận nếu sản phẩm cho phép. Việc nhanh dùng
             Chat; việc dài cần sản phẩm hoàn chỉnh dùng ChatGPT Work hoặc Claude Cowork; phần mềm dùng Codex hoặc
@@ -2601,7 +2560,7 @@ Kết thúc: file/diff/test/log và mục chưa kiểm.</pre></div><div class="t
 <text class="dgm-ink2" font-size="11" x="514" y="250">sửa điều kiện thiếu rồi thử lại</text>
 </svg></div>
 <figcaption>Gợi ý review: kiểm quyền/hậu quả, phép kiểm và spec; ba câu trả lời không thay policy, giám sát hay cách dừng.</figcaption>
-</figure><p>Ghi model, effort, client/version, tools, context và cấu hình thực tế của phiên. Work/Codex có control model/effort; lựa chọn phụ thuộc account/workspace/client. Tránh học thuộc model name. App và API cùng tên model vẫn có thể khác prompt hệ thống, tools và sampling: chưa phải thí nghiệm có kiểm soát.</p><p><a href="https://learn.chatgpt.com/docs/models" target="_blank" rel="noreferrer">ChatGPT · Models</a>.</p><p>Benchmark khác task/metric/scope không được trừ partial-credit với full-completion để gọi là “chi phí giám sát”. Đo job thật: pass rate, lỗi gây hại, thời gian sửa tay và tổng chi phí mỗi kết quả đạt. Nếu chưa thể giao tự chạy, kiểm quyền, tools, evidence và spec; đừng mặc định mọi lỗi là thiếu spec. Công việc có gu vẫn có rubric và ví dụ để review.</p><div class="takeaway"><span class="eyebrow">Takeaway</span><p><span class="hl">Tăng model/effort khi đo cho thấy cần; tự động hoá chỉ trong quyền đã duyệt và kiểm soát đã thử.</span></p></div><div class="quiz" data-correct="2"><span class="eyebrow">Kiểm tra nhanh</span><p class="quiz-q">Bắt đầu phân loại 2.000 bình luận thế nào?</p><button class="quiz-opt" onclick="quizPick(this,0)"><span class="quiz-letter">A</span><span>Chọn model mạnh nhất.</span></button><button class="quiz-opt" onclick="quizPick(this,1)"><span class="quiz-letter">B</span><span>Chạy hết rồi đọc kết luận.</span></button><button class="quiz-opt" onclick="quizPick(this,2)"><span class="quiz-letter">C</span><span>Thử tập có nhãn đại diện, sửa lỗi đúng nguyên nhân, kiểm lại tập giữ riêng rồi chọn cấu hình.</span></button><div class="quiz-feedback" role="status" data-explain="Số dòng không tự quyết định model hay quyền tự chạy."></div></div>
+</figure><p>Ghi model, effort, client/version, tools, context và cấu hình thực tế của phiên. Work/Codex có control model/effort; lựa chọn phụ thuộc account/workspace/client. Tránh học thuộc model name. App và API cùng tên model vẫn có thể khác prompt hệ thống, tools và sampling: chưa phải thí nghiệm có kiểm soát.</p><p><a href="https://learn.chatgpt.com/docs/models" target="_blank" rel="noreferrer">ChatGPT · Models</a>.</p><p>Benchmark khác task/metric/scope không được trừ partial-credit với full-completion để gọi là “chi phí giám sát”. Đo job thật: pass rate, lỗi gây hại, thời gian sửa tay và tổng chi phí mỗi kết quả đạt. Nếu chưa thể giao tự chạy, kiểm quyền, tools, evidence và spec; đừng mặc định mọi lỗi là thiếu spec. Công việc có gu vẫn có rubric và ví dụ để review.</p><div class="takeaway" role="note" aria-label="Ghi nhớ"><p><span class="hl">Tăng model/effort khi đo cho thấy cần; tự động hoá chỉ trong quyền đã duyệt và kiểm soát đã thử.</span></p></div><div class="quiz" data-correct="2"><span class="eyebrow">Kiểm tra nhanh</span><p class="quiz-q">Bắt đầu phân loại 2.000 bình luận thế nào?</p><button class="quiz-opt" onclick="quizPick(this,0)"><span class="quiz-letter">A</span><span>Chọn model mạnh nhất.</span></button><button class="quiz-opt" onclick="quizPick(this,1)"><span class="quiz-letter">B</span><span>Chạy hết rồi đọc kết luận.</span></button><button class="quiz-opt" onclick="quizPick(this,2)"><span class="quiz-letter">C</span><span>Thử tập có nhãn đại diện, sửa lỗi đúng nguyên nhân, kiểm lại tập giữ riêng rồi chọn cấu hình.</span></button><div class="quiz-feedback" role="status" data-explain="Số dòng không tự quyết định model hay quyền tự chạy."></div></div>
 </div>
           <div class="lesson-nav" data-navfor="m3-l1"></div>
         </article>
@@ -2618,7 +2577,7 @@ Kết thúc: file/diff/test/log và mục chưa kiểm.</pre></div><div class="t
             </div>
           </div>
           <div class="lesson-body">
-<div class="objectives"><span class="eyebrow">Sau bài này bạn có thể</span><ul><li>Vẽ phase phụ thuộc chạy tuần tự.</li><li>Cấp đủ đầu vào cho verifier.</li><li>Giới hạn song song theo phụ thuộc và review.</li></ul></div><p>Tách vai để tránh runner tự công nhận kết quả của mình. Với migrate, normalize → write → export/verify phụ thuộc nhau nên chạy tuần tự; việc thu log đi cùng thực thi. Không vẽ ba worker này thành ba nhánh song song độc lập.</p><figure class="figure"><div class="diagram-viewport" role="region" tabindex="0" aria-label="Sơ đồ; cuộn ngang để đọc đầy đủ nhãn" style="--diagram-width:720px"><svg viewBox="0 0 720 300" role="img" aria-label="Chuẩn hoá + partition → Pilot → duyệt → bulk còn lại → Export → keyed diff → baseline. Bất kỳ check lỗi/thiếu → DỪNG chưa xác minh; sửa và kiểm lại."><rect x="90" y="15" width="540" height="50" rx="10" fill="var(--surface-2)" stroke="var(--border)"/><text x="360" y="45" text-anchor="middle" fill="var(--ink)" font-size="15">Chuẩn hoá + partition</text><path d="M360 65v20" stroke="var(--ink-3)" fill="none"/><path d="M354 79l6 6 6-6" stroke="var(--ink-3)" fill="none"/><rect x="90" y="90" width="540" height="50" rx="10" fill="var(--surface-2)" stroke="var(--border)"/><text x="360" y="120" text-anchor="middle" fill="var(--ink)" font-size="15">Pilot → duyệt → bulk còn lại</text><path d="M360 140v20" stroke="var(--ink-3)" fill="none"/><path d="M354 154l6 6 6-6" stroke="var(--ink-3)" fill="none"/><rect x="90" y="165" width="540" height="50" rx="10" fill="var(--surface-2)" stroke="var(--border)"/><text x="360" y="195" text-anchor="middle" fill="var(--ink)" font-size="15">Export → keyed diff → baseline</text><text x="360" y="274" text-anchor="middle" fill="var(--ink)" font-size="13">Bất kỳ check lỗi/thiếu → DỪNG chưa xác minh; sửa và kiểm lại.</text></svg></div><figcaption>Bất kỳ check lỗi/thiếu → DỪNG chưa xác minh; sửa và kiểm lại.</figcaption></figure><ul><li>Planner chốt spec, quyền và tiêu chí; người có thẩm quyền duyệt trước ghi.</li><li>Runner ghi pilot, chờ duyệt, loại pilot khỏi bulk; UNKNOWN commit phải reconcile trước retry.</li><li>Verifier nhận raw, clean, rejected, map/criteria, baseline và export mới đúng account/scope. Tự kiểm partition và mọi field theo key. Có thể chấm kết quả trước khi đọc diễn giải của runner để giảm anchoring; log vẫn dùng được cho audit và tìm nguyên nhân.</li><li>Chỉ chạy song song phần không phụ thuộc, có quyền/dữ liệu phù hợp, không tranh chấp tài nguyên và đủ quota/review bandwidth. Khác file chưa đủ; hai luồng LLM không độc lập thống kê.</li></ul><div class="takeaway"><span class="eyebrow">Takeaway</span><p><span class="hl">Tách người/luồng kiểm khỏi lời tự báo cáo; đừng cấm log hoặc thiếu spec/dữ liệu cần kiểm.</span></p></div><div class="quiz" data-correct="1"><span class="eyebrow">Kiểm tra nhanh</span><p class="quiz-q">Bộ đầu vào verifier migrate nào đủ?</p><button class="quiz-opt" onclick="quizPick(this,0)"><span class="quiz-letter">A</span><span>Chỉ log của runner.</span></button><button class="quiz-opt" onclick="quizPick(this,1)"><span class="quiz-letter">B</span><span>Raw/clean/rejected, map/criteria, baseline và export mới đúng scope; log để audit khi cần.</span></button><button class="quiz-opt" onclick="quizPick(this,2)"><span class="quiz-letter">C</span><span>Chỉ clean và export, không cần phạm vi.</span></button><div class="quiz-feedback" role="status" data-explain="Phải kiểm cả nguồn bị bỏ qua và target có sẵn, không chỉ accepted fields."></div></div>
+<div class="objectives"><span class="eyebrow">Sau bài này bạn có thể</span><ul><li>Vẽ phase phụ thuộc chạy tuần tự.</li><li>Cấp đủ đầu vào cho verifier.</li><li>Giới hạn song song theo phụ thuộc và review.</li></ul></div><p>Tách vai để tránh runner tự công nhận kết quả của mình. Với migrate, normalize → write → export/verify phụ thuộc nhau nên chạy tuần tự; việc thu log đi cùng thực thi. Không vẽ ba worker này thành ba nhánh song song độc lập.</p><figure class="figure"><div class="diagram-viewport" role="region" tabindex="0" aria-label="Sơ đồ; cuộn ngang để đọc đầy đủ nhãn" style="--diagram-width:720px"><svg viewBox="0 0 720 300" role="img" aria-label="Chuẩn hoá + partition → Pilot → duyệt → bulk còn lại → Export → keyed diff → baseline. Bất kỳ check lỗi/thiếu → DỪNG chưa xác minh; sửa và kiểm lại."><rect x="90" y="15" width="540" height="50" rx="10" fill="var(--surface-2)" stroke="var(--border)"/><text x="360" y="45" text-anchor="middle" fill="var(--ink)" font-size="15">Chuẩn hoá + partition</text><path d="M360 65v20" stroke="var(--ink-3)" fill="none"/><path d="M354 79l6 6 6-6" stroke="var(--ink-3)" fill="none"/><rect x="90" y="90" width="540" height="50" rx="10" fill="var(--surface-2)" stroke="var(--border)"/><text x="360" y="120" text-anchor="middle" fill="var(--ink)" font-size="15">Pilot → duyệt → bulk còn lại</text><path d="M360 140v20" stroke="var(--ink-3)" fill="none"/><path d="M354 154l6 6 6-6" stroke="var(--ink-3)" fill="none"/><rect x="90" y="165" width="540" height="50" rx="10" fill="var(--surface-2)" stroke="var(--border)"/><text x="360" y="195" text-anchor="middle" fill="var(--ink)" font-size="15">Export → keyed diff → baseline</text><text x="360" y="274" text-anchor="middle" fill="var(--ink)" font-size="13">Bất kỳ check lỗi/thiếu → DỪNG chưa xác minh; sửa và kiểm lại.</text></svg></div><figcaption>Bất kỳ check lỗi/thiếu → DỪNG chưa xác minh; sửa và kiểm lại.</figcaption></figure><ul><li>Planner chốt spec, quyền và tiêu chí; người có thẩm quyền duyệt trước ghi.</li><li>Runner ghi pilot, chờ duyệt, loại pilot khỏi bulk; UNKNOWN commit phải reconcile trước retry.</li><li>Verifier nhận raw, clean, rejected, map/criteria, baseline và export mới đúng account/scope. Tự kiểm partition và mọi field theo key. Có thể chấm kết quả trước khi đọc diễn giải của runner để giảm anchoring; log vẫn dùng được cho audit và tìm nguyên nhân.</li><li>Chỉ chạy song song phần không phụ thuộc, có quyền/dữ liệu phù hợp, không tranh chấp tài nguyên và đủ quota/review bandwidth. Khác file chưa đủ; hai luồng LLM không độc lập thống kê.</li></ul><div class="takeaway" role="note" aria-label="Ghi nhớ"><p><span class="hl">Tách người/luồng kiểm khỏi lời tự báo cáo; đừng cấm log hoặc thiếu spec/dữ liệu cần kiểm.</span></p></div><div class="quiz" data-correct="1"><span class="eyebrow">Kiểm tra nhanh</span><p class="quiz-q">Bộ đầu vào verifier migrate nào đủ?</p><button class="quiz-opt" onclick="quizPick(this,0)"><span class="quiz-letter">A</span><span>Chỉ log của runner.</span></button><button class="quiz-opt" onclick="quizPick(this,1)"><span class="quiz-letter">B</span><span>Raw/clean/rejected, map/criteria, baseline và export mới đúng scope; log để audit khi cần.</span></button><button class="quiz-opt" onclick="quizPick(this,2)"><span class="quiz-letter">C</span><span>Chỉ clean và export, không cần phạm vi.</span></button><div class="quiz-feedback" role="status" data-explain="Phải kiểm cả nguồn bị bỏ qua và target có sẵn, không chỉ accepted fields."></div></div>
 </div>
           <div class="lesson-nav" data-navfor="m3-l2"></div>
         </article>
@@ -2681,9 +2640,7 @@ Kết thúc: file/diff/test/log và mục chưa kiểm.</pre></div><div class="t
                 thời gian sửa tay. Số token hoặc số lượt gọi riêng lẻ không cho biết toàn bộ chi phí vận hành.</p>
             </div>
 
-            <div class="takeaway">
-              <span class="eyebrow">Takeaway
-              </span>
+            <div class="takeaway" role="note" aria-label="Ghi nhớ">
               <p>Chọn môi trường theo đầu ra, đặt model theo kết quả đo và quản lý phiên theo workstream. Theo dõi
                 <span class="hl">chi phí trên một kết quả đạt</span>, gồm cả thời gian sửa tay.</p>
             </div>
@@ -2712,7 +2669,7 @@ Kết thúc: file/diff/test/log và mục chưa kiểm.</pre></div><div class="t
          ============================================================ -->
       <div class="container">
         <header class="module-header" data-module="4">
-          <span class="eyebrow">Module 04 · Phần IV · Thực chiến</span>
+          <span class="eyebrow">Phần IV · Thực chiến</span>
           <h2>Điều khiển trình duyệt và máy tính</h2>
           <p>Module này gồm hai phần: (a) các luồng AI thao tác giao diện — trạng thái trang, xác thực, tải chậm, lưu nửa chừng và cách đọc lại kết quả sau mỗi hành động; và (b) một loại kết quả mà đếm và diff không bắt được lỗi — báo cáo nghiên cứu có trích dẫn (Bài 4.3).</p>
         </header>
@@ -2838,9 +2795,7 @@ Kết thúc: file/diff/test/log và mục chưa kiểm.</pre></div><div class="t
               <p>Giữ write scope hẹp và backup/commit đã thử khôi phục. Rewind không undo thay đổi CRM, email đã gửi, giao dịch hay dữ liệu đã lộ.</p>
             </div>
 
-            <div class="takeaway">
-              <span class="eyebrow">Takeaway
-              </span>
+            <div class="takeaway" role="note" aria-label="Ghi nhớ">
               <p>Vòng lặp thao tác kết thúc bằng <span class="hl">validate</span>: đọc lại field và, khi cần, tải lại
                 hoặc tìm record để xác nhận server đã lưu.</p>
             </div>
@@ -2892,8 +2847,8 @@ Kết thúc: file/diff/test/log và mục chưa kiểm.</pre></div><div class="t
                 <thead>
                   <tr>
                     <th style="width:160px">Kiểu lỗi</th>
-                    <th>Đặc tả</th>
-                    <th style="width:180px">Dấu hiệu + phép kiểm</th>
+                    <th class="prose-column">Đặc tả</th>
+                    <th style="width:180px" class="detail-column">Dấu hiệu + phép kiểm</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -2964,9 +2919,7 @@ Kết thúc: file/diff/test/log và mục chưa kiểm.</pre></div><div class="t
                 đã tự điền. So sánh số ô trống theo từng trường; mọi chênh lệch phải truy được về một quy tắc đã duyệt.</p>
             </div>
 
-            <div class="takeaway">
-              <span class="eyebrow">Takeaway
-              </span>
+            <div class="takeaway" role="note" aria-label="Ghi nhớ">
               <p>Các từ "tất cả/toàn bộ/chính xác" không tự tạo thành lỗi. Chúng là <span class="hl">kết luận chưa được
                   xác minh</span> nếu báo cáo không kèm con số, artifact và phép kiểm tương ứng.</p>
             </div>
@@ -3133,9 +3086,7 @@ Mọi câu suy luận của bạn (không từ nguồn) ghi rõ [suy luận].
 Chưa viết kết luận cho tới khi bảng đầy đủ.</pre>
             </div>
 
-            <div class="takeaway">
-              <span class="eyebrow">Takeaway
-              </span>
+            <div class="takeaway" role="note" aria-label="Ghi nhớ">
               <p>Với báo cáo nghiên cứu, hãy <span class="hl">lần từ luận điểm về nguồn gốc</span>, đánh dấu con số
                 chưa kiểm chứng và dùng luồng độc lập cho báo cáo quan trọng.</p>
             </div>
@@ -3165,7 +3116,7 @@ Chưa viết kết luận cho tới khi bảng đầy đủ.</pre>
          ============================================================ -->
       <div class="container">
         <header class="module-header" data-module="5">
-          <span class="eyebrow">Module 05 · Phần V · Hệ thống hoá</span>
+          <span class="eyebrow">Phần V · Hệ thống hoá</span>
           <h2>Từ việc làm một lần thành quy trình lặp lại</h2>
           <p>Module này ghi lại ngữ cảnh, quy trình, lịch chạy và quy tắc bộ nhớ để một công việc có thể được lặp lại và kiểm tra.</p>
         </header>
@@ -3204,8 +3155,8 @@ Chưa viết kết luận cho tới khi bảng đầy đủ.</pre>
                 <thead>
                   <tr>
                     <th style="width:170px">Tầng</th>
-                    <th>Chứa gì</th>
-                    <th>Áp dụng khi nào</th>
+                    <th class="prose-column">Chứa gì</th>
+                    <th class="prose-column">Áp dụng khi nào</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -3251,9 +3202,7 @@ Chưa viết kết luận cho tới khi bảng đầy đủ.</pre>
                 gói quy trình cho công cụ hỗ trợ Skills. Tên và khả năng của từng tầng có thể khác giữa sản phẩm.</p>
             </div>
 
-            <div class="takeaway">
-              <span class="eyebrow">Takeaway
-              </span>
+            <div class="takeaway" role="note" aria-label="Ghi nhớ">
               <p>Lưu <span class="hl">ngữ cảnh ổn định ở đúng phạm vi</span>; prompt của lần chạy chỉ bổ sung đầu vào,
                 phạm vi và thay đổi riêng của job đó.</p>
             </div>
@@ -3320,7 +3269,7 @@ description: &gt;-
 ## Stop conditions
 - Wrong account/environment, changed schema/map, missing authorization
 - Auth error, unresolved UNKNOWN commit or failed validation
-- Ask owner before changing limits, rules or mappings</pre></div><p><a href="https://agentskills.io/specification" target="_blank" rel="noreferrer">Agent Skills · Specification</a>.</p><p>Ví dụ doanh số giả lập: dashboard 312 đơn, 1.284.500.000₫; CSV 318 dòng, 1.291.200.000₫. Chênh 6 dòng và 6.700.000₫. Kiểm theo ID xác nhận 6 đơn Cancelled thuộc phần export nhưng bị dashboard loại. Sau khi chủ dữ liệu duyệt quy tắc lọc, tính lại trên tập cùng scope: 312 đơn, 1.284.500.000₫. Không suy từ count rằng mọi chênh lệch đều là Cancelled.</p><p>Steps vẫn đã chạy; Gotchas nhắc kiểm export, Validation phát hiện lệch; Stop condition có thể không kích hoạt. Batch 50, ngưỡng 10% hoặc lệch tuần 5% chỉ là ví dụ cần owner phê duyệt, không phải luật CRM. Hỏi khi thiếu input, quyền hoặc tiêu chí thành công là hành vi đúng.</p><div class="takeaway"><span class="eyebrow">Takeaway</span><p><span class="hl">Skill dùng lại được khi dependency, quyền và phép kiểm rõ; hỏi đúng lúc là một phần của thành công.</span></p></div><div class="quiz" data-correct="2"><span class="eyebrow">Kiểm tra nhanh</span><p class="quiz-q">Người mới gặp tình huống chưa có quy tắc. Skill nên làm gì?</p><button class="quiz-opt" onclick="quizPick(this,0)"><span class="quiz-letter">A</span><span>Đoán để không phải hỏi.</span></button><button class="quiz-opt" onclick="quizPick(this,1)"><span class="quiz-letter">B</span><span>Tin lần chạy trước.</span></button><button class="quiz-opt" onclick="quizPick(this,2)"><span class="quiz-letter">C</span><span>Dừng/hỏi theo điều kiện; bổ sung gotcha và regression case sau khi owner chốt.</span></button><div class="quiz-feedback" role="status" data-explain="Một lần đạt không chứng minh đủ bao phủ. Body bốn phần là recipe của khoá, không phải điều kiện syntax của mọi Skill."></div></div>
+- Ask owner before changing limits, rules or mappings</pre></div><p><a href="https://agentskills.io/specification" target="_blank" rel="noreferrer">Agent Skills · Specification</a>.</p><p>Ví dụ doanh số giả lập: dashboard 312 đơn, 1.284.500.000₫; CSV 318 dòng, 1.291.200.000₫. Chênh 6 dòng và 6.700.000₫. Kiểm theo ID xác nhận 6 đơn Cancelled thuộc phần export nhưng bị dashboard loại. Sau khi chủ dữ liệu duyệt quy tắc lọc, tính lại trên tập cùng scope: 312 đơn, 1.284.500.000₫. Không suy từ count rằng mọi chênh lệch đều là Cancelled.</p><p>Steps vẫn đã chạy; Gotchas nhắc kiểm export, Validation phát hiện lệch; Stop condition có thể không kích hoạt. Batch 50, ngưỡng 10% hoặc lệch tuần 5% chỉ là ví dụ cần owner phê duyệt, không phải luật CRM. Hỏi khi thiếu input, quyền hoặc tiêu chí thành công là hành vi đúng.</p><div class="takeaway" role="note" aria-label="Ghi nhớ"><p><span class="hl">Skill dùng lại được khi dependency, quyền và phép kiểm rõ; hỏi đúng lúc là một phần của thành công.</span></p></div><div class="quiz" data-correct="2"><span class="eyebrow">Kiểm tra nhanh</span><p class="quiz-q">Người mới gặp tình huống chưa có quy tắc. Skill nên làm gì?</p><button class="quiz-opt" onclick="quizPick(this,0)"><span class="quiz-letter">A</span><span>Đoán để không phải hỏi.</span></button><button class="quiz-opt" onclick="quizPick(this,1)"><span class="quiz-letter">B</span><span>Tin lần chạy trước.</span></button><button class="quiz-opt" onclick="quizPick(this,2)"><span class="quiz-letter">C</span><span>Dừng/hỏi theo điều kiện; bổ sung gotcha và regression case sau khi owner chốt.</span></button><div class="quiz-feedback" role="status" data-explain="Một lần đạt không chứng minh đủ bao phủ. Body bốn phần là recipe của khoá, không phải điều kiện syntax của mọi Skill."></div></div>
 </div>
           <div class="lesson-nav" data-navfor="m5-l2"></div>
         </article>
@@ -3415,9 +3364,7 @@ description: &gt;-
             </div>
             <p>Chọn cách ít quyền nhất vẫn đủ dữ liệu và kiểm được kết quả. Độ nhanh/ổn định phụ thuộc tool và job, không có luật mỗi bậc xuống luôn chậm hơn. Ngưỡng cảnh báo 5% là ví dụ cần owner hiệu chỉnh.</p>
 
-            <div class="takeaway">
-              <span class="eyebrow">Takeaway
-              </span>
+            <div class="takeaway" role="note" aria-label="Ghi nhớ">
               <p><span class="hl">Scheduled task cần đúng nơi chạy, quyền runtime, owner, kiểm đầu ra, cảnh báo và dừng; chọn tool theo dữ liệu/quyền thay vì thứ tự tuyệt đối.</span></p>
             </div>
 
@@ -3481,7 +3428,7 @@ description: &gt;-
 <text fill="var(--danger-ink)" font-family="IBM Plex Mono" font-size="10.5" text-anchor="middle" x="440" y="150">có thể dùng ở phiên sau</text>
 </svg></div>
 <figcaption>Tình huống giả lập: context lưu lại có thể ảnh hưởng phiên sau theo scope/settings; secret lộ cần revoke/rotate và kiểm truy cập.</figcaption>
-</figure><ul><li>Xem memory như gợi ý chưa xác minh; đối chiếu CRM/note có ngày, giải quyết cả khi hồ sơ chính thức cũ hoặc mâu thuẫn.</li><li>Không đưa secret vào chat hoặc memory. Nếu lộ key: revoke/rotate, kiểm access/log, xoá ở các kho được phép; chỉ xoá memory không làm key hết hiệu lực.</li><li>Review, sửa hoặc xoá thông tin sai theo chính sách retention. New chat không bảo đảm không memory; tắt nguồn context cần loại và kiểm account/project policy.</li><li>Với việc nhạy cảm, tổ chức có thể tắt memory cho cả nhóm; quyết định dựa trên nhu cầu, quyền và rủi ro, không coi đó là sai cực đoan.</li></ul><div class="takeaway"><span class="eyebrow">Takeaway</span><p><span class="hl">Memory là context cần xác minh, không là bằng chứng; phiên mới chưa chắc sạch context cũ.</span></p></div><div class="quiz" data-correct="1"><span class="eyebrow">Kiểm tra nhanh</span><p class="quiz-q">Agent nhớ khách ưu tiên rẻ và áp vào báo giá mới. Làm gì trước?</p><button class="quiz-opt" onclick="quizPick(this,0)"><span class="quiz-letter">A</span><span>Tin memory hơn nguồn có ngày.</span></button><button class="quiz-opt" onclick="quizPick(this,1)"><span class="quiz-letter">B</span><span>Đối chiếu ghi nhận hiện tại và hỏi owner khi mâu thuẫn; áp chính sách memory của nhóm.</span></button><button class="quiz-opt" onclick="quizPick(this,2)"><span class="quiz-letter">C</span><span>Chỉ mở chat mới là chắc sạch.</span></button><div class="quiz-feedback" role="status" data-explain="Kiểm thông tin và scope context thực tế; tắt memory có thể là chính sách hợp lý cho việc nhạy cảm."></div></div>
+</figure><ul><li>Xem memory như gợi ý chưa xác minh; đối chiếu CRM/note có ngày, giải quyết cả khi hồ sơ chính thức cũ hoặc mâu thuẫn.</li><li>Không đưa secret vào chat hoặc memory. Nếu lộ key: revoke/rotate, kiểm access/log, xoá ở các kho được phép; chỉ xoá memory không làm key hết hiệu lực.</li><li>Review, sửa hoặc xoá thông tin sai theo chính sách retention. New chat không bảo đảm không memory; tắt nguồn context cần loại và kiểm account/project policy.</li><li>Với việc nhạy cảm, tổ chức có thể tắt memory cho cả nhóm; quyết định dựa trên nhu cầu, quyền và rủi ro, không coi đó là sai cực đoan.</li></ul><div class="takeaway" role="note" aria-label="Ghi nhớ"><p><span class="hl">Memory là context cần xác minh, không là bằng chứng; phiên mới chưa chắc sạch context cũ.</span></p></div><div class="quiz" data-correct="1"><span class="eyebrow">Kiểm tra nhanh</span><p class="quiz-q">Agent nhớ khách ưu tiên rẻ và áp vào báo giá mới. Làm gì trước?</p><button class="quiz-opt" onclick="quizPick(this,0)"><span class="quiz-letter">A</span><span>Tin memory hơn nguồn có ngày.</span></button><button class="quiz-opt" onclick="quizPick(this,1)"><span class="quiz-letter">B</span><span>Đối chiếu ghi nhận hiện tại và hỏi owner khi mâu thuẫn; áp chính sách memory của nhóm.</span></button><button class="quiz-opt" onclick="quizPick(this,2)"><span class="quiz-letter">C</span><span>Chỉ mở chat mới là chắc sạch.</span></button><div class="quiz-feedback" role="status" data-explain="Kiểm thông tin và scope context thực tế; tắt memory có thể là chính sách hợp lý cho việc nhạy cảm."></div></div>
 </div>
           <div class="lesson-nav" data-navfor="m5-l4"></div>
         </article>
@@ -3587,9 +3534,7 @@ description: &gt;-
                 vào một người.</p>
             </div>
 
-            <div class="takeaway">
-              <span class="eyebrow">Takeaway
-              </span>
+            <div class="takeaway" role="note" aria-label="Ghi nhớ">
               <p>Gói skill dùng chung = <span class="hl">SKILL.md + assets (đường dẫn tương đối) + README người chạy</span>,
                 để một chỗ chung, mỗi skill có owner + version; chỉ vào thư viện sau khi một người khác chạy được.
                 Skill chạy được trên máy bạn chưa phải là skill share được.</p>
@@ -3620,7 +3565,7 @@ description: &gt;-
          ============================================================ -->
       <div class="container">
         <header class="module-header" data-module="6">
-          <span class="eyebrow">Module 06 · Phần VI · Khi người duyệt bắt đầu lướt</span>
+          <span class="eyebrow">Phần VI · Khi người duyệt bắt đầu lướt</span>
           <h2>Giảm rủi ro duyệt lướt bằng gate đã kiểm và review</h2>
           <p>Thành công lặp lại có thể khiến người duyệt bớt chú ý; khảo sát được dẫn không chứng minh quy luật nhân quả chung. Bốn gate này giảm các lỗi chúng phát hiện được. Thử checker với lỗi đã biết và đánh giá lại cả kiểm tự động lẫn review của người.</p>
         </header>
@@ -3636,7 +3581,7 @@ description: &gt;-
             </div>
           </div>
           <div class="lesson-body">
-<div class="objectives"><span class="eyebrow">Sau bài này bạn có thể</span><ul><li>Phân biệt khảo sát liên hệ với nhân quả.</li><li>Thiết kế gate có phạm vi đo được.</li><li>Kiểm checker và golden set đại diện.</li></ul></div><p>Tình huống giả lập: người duyệt quen output xanh nên bắt đầu lướt. Đây là rủi ro cần kiểm soát, không phải đường cong chất lượng đã đo của khoá. Khảo sát CHI2025 với 319 người và 936 ví dụ tự báo cáo tìm thấy liên hệ giữa tin GenAI cao hơn và ít tư duy phản biện hơn; không chứng minh AI gây suy giảm theo 12 tuần.</p><p><a href="https://www.microsoft.com/en-us/research/publication/the-impact-of-generative-ai-on-critical-thinking-self-reported-reductions-in-cognitive-effort-and-confidence-effects-from-a-survey-of-knowledge-workers/" target="_blank" rel="noreferrer">CHI2025 · Critical thinking survey</a>.</p><figure class="figure"><div class="diagram-viewport" role="region" tabindex="0" aria-label="Sơ đồ; cuộn ngang để đọc đầy đủ nhãn" style="--diagram-width:720px"><svg viewBox="0 0 720 300" role="img" aria-label="Quyền + pilot trước ghi → Đối chiếu đủ dữ liệu → Đạt checks → người nhận. Bất kỳ check lỗi/thiếu → DỪNG chưa xác minh; sửa và kiểm lại."><rect x="90" y="15" width="540" height="50" rx="10" fill="var(--surface-2)" stroke="var(--border)"/><text x="360" y="45" text-anchor="middle" fill="var(--ink)" font-size="15">Quyền + pilot trước ghi</text><path d="M360 65v20" stroke="var(--ink-3)" fill="none"/><path d="M354 79l6 6 6-6" stroke="var(--ink-3)" fill="none"/><rect x="90" y="90" width="540" height="50" rx="10" fill="var(--surface-2)" stroke="var(--border)"/><text x="360" y="120" text-anchor="middle" fill="var(--ink)" font-size="15">Đối chiếu đủ dữ liệu</text><path d="M360 140v20" stroke="var(--ink-3)" fill="none"/><path d="M354 154l6 6 6-6" stroke="var(--ink-3)" fill="none"/><rect x="90" y="165" width="540" height="50" rx="10" fill="var(--surface-2)" stroke="var(--border)"/><text x="360" y="195" text-anchor="middle" fill="var(--ink)" font-size="15">Đạt checks → người nhận</text><text x="360" y="274" text-anchor="middle" fill="var(--ink)" font-size="13">Bất kỳ check lỗi/thiếu → DỪNG chưa xác minh; sửa và kiểm lại.</text></svg></div><figcaption>Bất kỳ check lỗi/thiếu → DỪNG chưa xác minh; sửa và kiểm lại.</figcaption></figure><ul><li>Pilot bắt một số lỗi map trước bulk, không bảo đảm mọi ca đã được thử.</li><li>Kiểm máy: source partition, unique keys, full field diff, baseline. Count/checksum không chứng minh đúng nghĩa; checker có thể có bug nên cần ca đúng, ca biên và ca lỗi đã biết.</li><li>Dual control giảm xung đột vai, nhưng người thứ hai cũng có thể mệt hoặc chung điểm mù. Audit mẫu theo rủi ro, không hứa bắt mọi lỗi.</li><li>Guardrails hạn chế quyền trước thao tác; validation kiểm đầu ra sau. Cần cả hai và theo dõi lỗi lọt.</li></ul><p>Lộ trình người kiểm → luồng kiểm riêng → script là gợi ý của khoá, không luật “lần 3”. Script chạy lặp lại cùng quy tắc nhưng vẫn tốn compute và có thể sai. Golden set cần valid, boundary và known failures đại diện; chọn kích thước theo coverage. Khi model/tool/quyền thay đổi, hạ tự động nếu cần, chạy lại set giữ riêng, review thay đổi rồi mới khôi phục.</p><div class="takeaway"><span class="eyebrow">Takeaway</span><p><span class="hl">Gate giảm các lỗi được kiểm, không khiến job xấu bất khả thi; cả người và checker cần đánh giá lại.</span></p></div><div class="quiz" data-correct="1"><span class="eyebrow">Kiểm tra nhanh</span><p class="quiz-q">Thấy 15 job được duyệt trong 2 phút. Kết luận nào có cơ sở?</p><button class="quiz-opt" onclick="quizPick(this,0)"><span class="quiz-letter">A</span><span>Chắc người duyệt thiếu kỷ luật.</span></button><button class="quiz-opt" onclick="quizPick(this,1)"><span class="quiz-letter">B</span><span>Đó là tín hiệu kiểm quy trình: scope job, evidence và gate; chưa đủ quy nguyên nhân hoặc hứa checksum chặn mọi lỗi.</span></button><button class="quiz-opt" onclick="quizPick(this,2)"><span class="quiz-letter">C</span><span>Chắc model đã sai.</span></button><div class="quiz-feedback" role="status" data-explain="Tìm hệ thống có thể sửa và actor chịu trách nhiệm theo evidence; không dùng tốc độ duyệt để đoán nguyên nhân."></div></div>
+<div class="objectives"><span class="eyebrow">Sau bài này bạn có thể</span><ul><li>Phân biệt khảo sát liên hệ với nhân quả.</li><li>Thiết kế gate có phạm vi đo được.</li><li>Kiểm checker và golden set đại diện.</li></ul></div><p>Tình huống giả lập: người duyệt quen output xanh nên bắt đầu lướt. Đây là rủi ro cần kiểm soát, không phải đường cong chất lượng đã đo của khoá. Khảo sát CHI2025 với 319 người và 936 ví dụ tự báo cáo tìm thấy liên hệ giữa tin GenAI cao hơn và ít tư duy phản biện hơn; không chứng minh AI gây suy giảm theo 12 tuần.</p><p><a href="https://www.microsoft.com/en-us/research/publication/the-impact-of-generative-ai-on-critical-thinking-self-reported-reductions-in-cognitive-effort-and-confidence-effects-from-a-survey-of-knowledge-workers/" target="_blank" rel="noreferrer">CHI2025 · Critical thinking survey</a>.</p><figure class="figure"><div class="diagram-viewport" role="region" tabindex="0" aria-label="Sơ đồ; cuộn ngang để đọc đầy đủ nhãn" style="--diagram-width:720px"><svg viewBox="0 0 720 300" role="img" aria-label="Quyền + pilot trước ghi → Đối chiếu đủ dữ liệu → Đạt checks → người nhận. Bất kỳ check lỗi/thiếu → DỪNG chưa xác minh; sửa và kiểm lại."><rect x="90" y="15" width="540" height="50" rx="10" fill="var(--surface-2)" stroke="var(--border)"/><text x="360" y="45" text-anchor="middle" fill="var(--ink)" font-size="15">Quyền + pilot trước ghi</text><path d="M360 65v20" stroke="var(--ink-3)" fill="none"/><path d="M354 79l6 6 6-6" stroke="var(--ink-3)" fill="none"/><rect x="90" y="90" width="540" height="50" rx="10" fill="var(--surface-2)" stroke="var(--border)"/><text x="360" y="120" text-anchor="middle" fill="var(--ink)" font-size="15">Đối chiếu đủ dữ liệu</text><path d="M360 140v20" stroke="var(--ink-3)" fill="none"/><path d="M354 154l6 6 6-6" stroke="var(--ink-3)" fill="none"/><rect x="90" y="165" width="540" height="50" rx="10" fill="var(--surface-2)" stroke="var(--border)"/><text x="360" y="195" text-anchor="middle" fill="var(--ink)" font-size="15">Đạt checks → người nhận</text><text x="360" y="274" text-anchor="middle" fill="var(--ink)" font-size="13">Bất kỳ check lỗi/thiếu → DỪNG chưa xác minh; sửa và kiểm lại.</text></svg></div><figcaption>Bất kỳ check lỗi/thiếu → DỪNG chưa xác minh; sửa và kiểm lại.</figcaption></figure><ul><li>Pilot bắt một số lỗi map trước bulk, không bảo đảm mọi ca đã được thử.</li><li>Kiểm máy: source partition, unique keys, full field diff, baseline. Count/checksum không chứng minh đúng nghĩa; checker có thể có bug nên cần ca đúng, ca biên và ca lỗi đã biết.</li><li>Dual control giảm xung đột vai, nhưng người thứ hai cũng có thể mệt hoặc chung điểm mù. Audit mẫu theo rủi ro, không hứa bắt mọi lỗi.</li><li>Guardrails hạn chế quyền trước thao tác; validation kiểm đầu ra sau. Cần cả hai và theo dõi lỗi lọt.</li></ul><p>Lộ trình người kiểm → luồng kiểm riêng → script là gợi ý của khoá, không luật “lần 3”. Script chạy lặp lại cùng quy tắc nhưng vẫn tốn compute và có thể sai. Golden set cần valid, boundary và known failures đại diện; chọn kích thước theo coverage. Khi model/tool/quyền thay đổi, hạ tự động nếu cần, chạy lại set giữ riêng, review thay đổi rồi mới khôi phục.</p><div class="takeaway" role="note" aria-label="Ghi nhớ"><p><span class="hl">Gate giảm các lỗi được kiểm, không khiến job xấu bất khả thi; cả người và checker cần đánh giá lại.</span></p></div><div class="quiz" data-correct="1"><span class="eyebrow">Kiểm tra nhanh</span><p class="quiz-q">Thấy 15 job được duyệt trong 2 phút. Kết luận nào có cơ sở?</p><button class="quiz-opt" onclick="quizPick(this,0)"><span class="quiz-letter">A</span><span>Chắc người duyệt thiếu kỷ luật.</span></button><button class="quiz-opt" onclick="quizPick(this,1)"><span class="quiz-letter">B</span><span>Đó là tín hiệu kiểm quy trình: scope job, evidence và gate; chưa đủ quy nguyên nhân hoặc hứa checksum chặn mọi lỗi.</span></button><button class="quiz-opt" onclick="quizPick(this,2)"><span class="quiz-letter">C</span><span>Chắc model đã sai.</span></button><div class="quiz-feedback" role="status" data-explain="Tìm hệ thống có thể sửa và actor chịu trách nhiệm theo evidence; không dùng tốc độ duyệt để đoán nguyên nhân."></div></div>
 </div>
           <div class="lesson-nav" data-navfor="m6-l1"></div>
         </article>
@@ -3649,7 +3594,7 @@ description: &gt;-
          ============================================================ -->
       <div class="container">
         <header class="module-header" data-module="7">
-          <span class="eyebrow">Module 07 · Phần VII · Thực hành</span>
+          <span class="eyebrow">Phần VII · Thực hành</span>
           <h2>Lab A &amp; Lab B</h2>
           <p>Hai lab thực hành, tự làm theo nhịp của bạn. Lab A (~45 phút) để quen vòng lặp NHÌN → LÀM → SOI. Lab B
             (~90 phút) chạy trọn vòng lặp 4 bước — bạn đóng vai người duyệt ở từng gate, còn kiểm chứng độc lập giao cho
@@ -3767,9 +3712,7 @@ Hỏi tôi nếu thiếu fact. Đừng đoán bộ lọc.</pre>
               <p>Nếu count lệch, giữ trạng thái export CHƯA XÁC MINH: đối chiếu cùng filter/scope, tổng toàn bộ và khoá đầy đủ; kiểm pagination, hidden rows, quyền và thời điểm. Dừng đúng là đạt kiểm soát an toàn, chưa phải hoàn thành mục tiêu export.</p>
             </div>
 
-            <div class="takeaway">
-              <span class="eyebrow">Takeaway
-              </span>
+            <div class="takeaway" role="note" aria-label="Ghi nhớ">
               <p><span class="hl">Count bằng nhau chưa chứng minh đủ dòng. So cùng phạm vi và keys; lệch thì dừng chưa xác minh, tìm nguyên nhân trước nhận kết quả.</span></p>
             </div>
 
@@ -3945,7 +3888,7 @@ Hỏi tôi nếu thiếu fact. Đừng đoán bộ lọc.</pre>
                     <th>Cột A</th>
                     <th>Field B</th>
                     <th>Bắt buộc</th>
-                    <th>Quy tắc chuẩn hoá</th>
+                    <th class="detail-column">Quy tắc chuẩn hoá</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -4024,7 +3967,7 @@ Hỏi tôi nếu thiếu fact. Đừng đoán bộ lọc.</pre>
                   <tr>
                     <th style="width:110px">Mức</th>
                     <th style="width:60px">Điểm</th>
-                    <th>Tiêu chí</th>
+                    <th class="detail-column">Tiêu chí</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -4072,9 +4015,7 @@ Hỏi tôi nếu thiếu fact. Đừng đoán bộ lọc.</pre>
               <p>Giải thích từng dòng theo field map và đạt đủ rubric. Chỉ đúng count 3/7 chưa đủ mức Đạt. Xuất sắc còn cần nêu 1005, thử crash sau pilot và đối soát UNKNOWN để resume không ghi trùng hay ghi đè. Migrate 10/10 vi phạm field map của fixture này.</p>
             </div>
 
-            <div class="takeaway">
-              <span class="eyebrow">Takeaway
-              </span>
+            <div class="takeaway" role="note" aria-label="Ghi nhớ">
               <p><span class="hl">Lab B: 3 accepted/7 rejected đúng lý do, đủ source partition, full keyed diff rỗng và bảo vệ baseline; pilot không lặp khi resume.</span></p>
             </div>
 
@@ -4101,7 +4042,7 @@ Hỏi tôi nếu thiếu fact. Đừng đoán bộ lọc.</pre>
          ============================================================ -->
       <div class="container">
         <header class="module-header" data-module="8">
-          <span class="eyebrow">Module 08 · Phần VIII · Tổng kết</span>
+          <span class="eyebrow">Phần VIII · Tổng kết</span>
           <h2>Bảng tóm tắt + 6 prompt mẫu + chính sách một trang</h2>
           <p>Toàn bộ khoá học trong một trang: 23 ý chính, 6 khung prompt có thể dùng lại và mẫu chính sách
             một trang cho trưởng bộ phận.</p>
@@ -4117,7 +4058,7 @@ Hỏi tôi nếu thiếu fact. Đừng đoán bộ lọc.</pre>
               </div>
             </div>
           </div>
-          <div class="lesson-body"><div class="objectives"><span class="eyebrow">Sau bài này bạn có thể</span><ul><li>Đọc lại 23 ý chính.</li><li>Dùng 6 prompt theo quyền thực tế.</li><li>Điều chỉnh policy mẫu có owner.</li></ul></div><p>Mẫu dùng lại; các tình huống/số trong bài là giả lập trừ nghiên cứu có nguồn. Điều chỉnh policy và ngưỡng theo tổ chức.</p><div class="table-wrap"><table><thead><tr><th>#</th><th>Bài</th><th>Ý chính</th></tr></thead><tbody><tr><td>1</td><td>Bốn môi trường làm việc với AI</td><td>Trước khi đổi model, kiểm tra lại <span class="hl">môi trường làm việc</span>: đầu ra cần gì, dữ liệu ở đâu, AI được phép làm gì và kết quả sẽ được kiểm bằng cách nào.</td></tr><tr><td>2</td><td>Dựng vùng làm việc an toàn</td><td>Cấp quyền hẹp đã duyệt, có phép kiểm đã thử và cách dừng/thu hồi quyền hoạt động.</td></tr><tr><td>3</td><td>Prompt injection &amp; bốn dấu hiệu dừng khẩn cấp</td><td>Nguồn đáng tin vẫn có thể chứa nội dung không đáng tin; dùng quyền hẹp và kiểm soát thực thi.</td></tr><tr><td>4</td><td>Voice &amp; Remote: rời bàn, không bỏ cổng kiểm</td><td>Từ xa vẫn phải kiểm phạm vi và đầu ra; host cần thức chỉ khi công việc phụ thuộc host.</td></tr><tr><td>5</td><td>NHÌN: bằng chứng quan sát hợp lệ</td><td>Evidence cần đúng phạm vi và kiểm lại được; câu chữ tự tin hay dè dặt không tự chứng minh đúng/sai.</td></tr><tr><td>6</td><td>CHỐT: nguồn sự thật + field map + acceptance</td><td>Rejected không miễn lỗi ở accepted rows; acceptance cần full keyed diff rỗng và source partition đúng.</td></tr><tr><td>7</td><td>LÀM: chia phase theo khả năng hoàn tác</td><td>Phân loại thao tác theo <span class="hl">khả năng hoàn tác và mức tác động</span>. Mỗi phase cần phạm vi,
+          <div class="lesson-body"><div class="objectives"><span class="eyebrow">Sau bài này bạn có thể</span><ul><li>Đọc lại 23 ý chính.</li><li>Dùng 6 prompt theo quyền thực tế.</li><li>Điều chỉnh policy mẫu có owner.</li></ul></div><p>Mẫu dùng lại; các tình huống/số trong bài là giả lập trừ nghiên cứu có nguồn. Điều chỉnh policy và ngưỡng theo tổ chức.</p><div class="table-wrap"><table><thead><tr><th>#</th><th class="prose-column">Bài</th><th class="detail-column">Ý chính</th></tr></thead><tbody><tr><td>1</td><td>Bốn môi trường làm việc với AI</td><td>Trước khi đổi model, kiểm tra lại <span class="hl">môi trường làm việc</span>: đầu ra cần gì, dữ liệu ở đâu, AI được phép làm gì và kết quả sẽ được kiểm bằng cách nào.</td></tr><tr><td>2</td><td>Dựng vùng làm việc an toàn</td><td>Cấp quyền hẹp đã duyệt, có phép kiểm đã thử và cách dừng/thu hồi quyền hoạt động.</td></tr><tr><td>3</td><td>Prompt injection &amp; bốn dấu hiệu dừng khẩn cấp</td><td>Nguồn đáng tin vẫn có thể chứa nội dung không đáng tin; dùng quyền hẹp và kiểm soát thực thi.</td></tr><tr><td>4</td><td>Voice &amp; Remote: rời bàn, không bỏ cổng kiểm</td><td>Từ xa vẫn phải kiểm phạm vi và đầu ra; host cần thức chỉ khi công việc phụ thuộc host.</td></tr><tr><td>5</td><td>NHÌN: bằng chứng quan sát hợp lệ</td><td>Evidence cần đúng phạm vi và kiểm lại được; câu chữ tự tin hay dè dặt không tự chứng minh đúng/sai.</td></tr><tr><td>6</td><td>CHỐT: nguồn sự thật + field map + acceptance</td><td>Rejected không miễn lỗi ở accepted rows; acceptance cần full keyed diff rỗng và source partition đúng.</td></tr><tr><td>7</td><td>LÀM: chia phase theo khả năng hoàn tác</td><td>Phân loại thao tác theo <span class="hl">khả năng hoàn tác và mức tác động</span>. Mỗi phase cần phạm vi,
                 điểm kiểm tra và lớp phê duyệt phù hợp với chính sách của tổ chức.</td></tr><tr><td>8</td><td>SOI: ghi bằng chứng và bốn phép kiểm nhanh</td><td>Chỉ nhận migrate khi partition đúng, full keyed diff rỗng và baseline được bảo vệ.</td></tr><tr><td>9</td><td>Chọn chế độ và model theo loại việc</td><td>Tăng model/effort khi đo cho thấy cần; tự động hoá chỉ trong quyền đã duyệt và kiểm soát đã thử.</td></tr><tr><td>10</td><td>Điều phối ba vai: lập kế hoạch · thực thi · kiểm chứng</td><td>Tách người/luồng kiểm khỏi lời tự báo cáo; đừng cấm log hoặc thiếu spec/dữ liệu cần kiểm.</td></tr><tr><td>11</td><td>Kỷ luật chi phí: ba cách dùng sai môi trường</td><td>Chọn môi trường theo đầu ra, đặt model theo kết quả đo và quản lý phiên theo workstream. Theo dõi
                 <span class="hl">chi phí trên một kết quả đạt</span>, gồm cả thời gian sửa tay.</td></tr><tr><td>12</td><td>Chuẩn bị &amp; vòng lặp thao tác 6 bước</td><td>Vòng lặp thao tác kết thúc bằng <span class="hl">validate</span>: đọc lại field và, khi cần, tải lại
                 hoặc tìm record để xác nhận server đã lưu.</td></tr><tr><td>13</td><td>Tám kiểu lỗi điển hình</td><td>Các từ "tất cả/toàn bộ/chính xác" không tự tạo thành lỗi. Chúng là <span class="hl">kết luận chưa được
@@ -4143,7 +4084,7 @@ YAML frontmatter hợp lệ: name + description; body 4 phần là recipe của 
 Ghi dependency/version/quyền; không secret/private exports. Thử valid/boundary/failure cases với người khác.</pre></div></details><details><summary>06 · Orchestrate</summary><div class="prompt-card"><div class="prompt-head"><span>06 · Orchestrate</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div><pre>Vai plan chốt spec/quyền/checks → người duyệt.
 Vai execute chạy phase phụ thuộc tuần tự, thu log; pilot không lặp; UNKNOWN reconcile.
 Vai verify dùng bộ đầu vào Prompt04; rejected không miễn lỗi accepted.
-Chỉ song song phần không phụ thuộc, đủ quyền/tài nguyên/quota/review; khác file chưa đủ.</pre></div></details><p>Policy mẫu: chỉ lab giả/staging được cấp; quyền đọc/export theo data classification; ghi cần pilot và acceptance, send/delete/prod theo duyệt tổ chức. Scheduled job có owner/cảnh báo/stop. Sự cố: dừng/thu hồi quyền khi cần, giữ evidence, báo đầu mối. SLA 30 phút/24 giờ và bản policy một trang là ví dụ local, không chuẩn phổ quát. Ghi actor/owner và nguyên nhân có evidence, tránh đổ lỗi nhưng không bỏ accountability.</p><div class="takeaway"><span class="eyebrow">Takeaway</span><p><span class="hl">Không có evidence đủ acceptance thì chưa xác minh; count lệch là câu hỏi cần điều tra, không tự là chẩn đoán.</span></p></div><div class="quiz" data-correct="1"><span class="eyebrow">Kiểm tra nhanh</span><p class="quiz-q">Job scheduled chưa pilot ghi prod; raw500, target487, thiếu rejected. Bước tiếp?</p><button class="quiz-opt" onclick="quizPick(this,0)"><span class="quiz-letter">A</span><span>Đổi model mạnh hơn.</span></button><button class="quiz-opt" onclick="quizPick(this,1)"><span class="quiz-letter">B</span><span>Dừng/mở incident theo policy, kiểm quyền và target scope, partition và keyed diff; chưa nhận xong.</span></button><button class="quiz-opt" onclick="quizPick(this,2)"><span class="quiz-letter">C</span><span>Chắc chắn 13 dòng bị network làm mất.</span></button><div class="quiz-feedback" role="status" data-explain="Có nhiều kiểm soát thiếu; count không xác định cơ chế lỗi."></div></div></div>
+Chỉ song song phần không phụ thuộc, đủ quyền/tài nguyên/quota/review; khác file chưa đủ.</pre></div></details><p>Policy mẫu: chỉ lab giả/staging được cấp; quyền đọc/export theo data classification; ghi cần pilot và acceptance, send/delete/prod theo duyệt tổ chức. Scheduled job có owner/cảnh báo/stop. Sự cố: dừng/thu hồi quyền khi cần, giữ evidence, báo đầu mối. SLA 30 phút/24 giờ và bản policy một trang là ví dụ local, không chuẩn phổ quát. Ghi actor/owner và nguyên nhân có evidence, tránh đổ lỗi nhưng không bỏ accountability.</p><div class="takeaway" role="note" aria-label="Ghi nhớ"><p><span class="hl">Không có evidence đủ acceptance thì chưa xác minh; count lệch là câu hỏi cần điều tra, không tự là chẩn đoán.</span></p></div><div class="quiz" data-correct="1"><span class="eyebrow">Kiểm tra nhanh</span><p class="quiz-q">Job scheduled chưa pilot ghi prod; raw500, target487, thiếu rejected. Bước tiếp?</p><button class="quiz-opt" onclick="quizPick(this,0)"><span class="quiz-letter">A</span><span>Đổi model mạnh hơn.</span></button><button class="quiz-opt" onclick="quizPick(this,1)"><span class="quiz-letter">B</span><span>Dừng/mở incident theo policy, kiểm quyền và target scope, partition và keyed diff; chưa nhận xong.</span></button><button class="quiz-opt" onclick="quizPick(this,2)"><span class="quiz-letter">C</span><span>Chắc chắn 13 dòng bị network làm mất.</span></button><div class="quiz-feedback" role="status" data-explain="Có nhiều kiểm soát thiếu; count không xác định cơ chế lỗi."></div></div></div>
           <div class="lesson-nav" data-navfor="m8-l1"></div>
         </article>
       </div><!-- /container module 8 -->
@@ -4158,7 +4099,7 @@ Chỉ song song phần không phụ thuộc, đủ quyền/tài nguyên/quota/re
         </div>
       </section>
 
-      <footer class="site">Vận hành AI Agent · Nhìn · Chốt · Làm · Soi</footer>
+      <footer class="site"><a href="index.html" lang="vi">Danh mục khóa học</a> · <a href="ai-agent-operational-training.en.html" lang="en">English edition</a></footer>
     </main>
   </div>
 
@@ -4215,7 +4156,7 @@ Chỉ song song phần không phụ thuộc, đủ quyền/tài nguyên/quota/re
       document.body.dataset.mode = dark ? 'dark' : 'light';
       const b = document.getElementById('mode-toggle');
       if (b) {
-        b.textContent = dark ? '☀️' : '🌙'; b.setAttribute('aria-pressed', String(dark));
+        b.setAttribute('aria-pressed', String(dark));
         b.setAttribute('aria-label', dark ? 'Chuyển sang chế độ sáng' : 'Chuyển sang chế độ tối')
       }
     }
@@ -4292,6 +4233,8 @@ Chỉ song song phần không phụ thuộc, đủ quyền/tài nguyên/quota/re
         const l = LESSONS.find(x => x.id === id); if (l) crumb = l.title;
       } else if (id === 'overview') { crumb = 'Tổng quan' } else if (id === 'complete') { crumb = 'Hoàn thành' }
       document.getElementById('tb-crumb').textContent = crumb;
+  const lessonNumber = /^m(\d+)-l(\d+)$/.exec(id);
+  document.getElementById('tb-location').textContent = lessonNumber ? `Bài ${lessonNumber[1]}.${lessonNumber[2]}` : crumb;
       document.querySelectorAll('.nav-link').forEach(a => {
         const on = a.dataset.lesson === id; a.classList.toggle('active', on);
         if (on) a.setAttribute('aria-current', 'page'); else a.removeAttribute('aria-current');
@@ -4299,7 +4242,7 @@ Chỉ song song phần không phụ thuộc, đủ quyền/tài nguyên/quota/re
       const an = document.querySelector('.nav-link.active'), ns = document.querySelector('.nav-scroll');
       if (an && ns) { ns.scrollTo({ top: Math.max(0, an.offsetTop - ns.clientHeight / 2), behavior: 'auto' }) }
       sSet(LAST_KEY, id);
-      if (window.innerWidth < 1024) { document.getElementById('sidebar').classList.remove('open'); document.getElementById('backdrop').classList.remove('show') }
+      if (window.innerWidth <= 1024) setSidebarOpen(false);
       if (curriculum) curriculum.scrollIntoView({behavior: 'instant'});
       else window.scrollTo({ top: 0, behavior: 'instant' });
       document.getElementById('main').focus({ preventScroll: true }); // screen readers announce from the top of the new lesson
@@ -4334,7 +4277,33 @@ Chỉ song song phần không phụ thuộc, đủ quyền/tài nguyên/quota/re
     }
     window.quizPick = quizPick;
 
-    function toggleSidebar() { document.getElementById('sidebar').classList.toggle('open'); document.getElementById('backdrop').classList.toggle('show') }
+    function setSidebarOpen(open) {
+  const sidebar = document.getElementById('sidebar');
+  const button = document.querySelector('.mobile-toggle');
+  sidebar.classList.toggle('open', open);
+  document.getElementById('backdrop').classList.toggle('show', open);
+  document.getElementById('main').inert = open;
+  button.setAttribute('aria-expanded', String(open));
+  button.setAttribute('aria-label', open ? 'Đóng mục lục' : 'Mở mục lục');
+}
+function toggleSidebar() {
+  setSidebarOpen(!document.getElementById('sidebar').classList.contains('open'));
+  document.querySelector('.mobile-toggle').focus({preventScroll:true});
+}
+matchMedia('(max-width:1024px)').addEventListener('change', () => setSidebarOpen(false));
+document.addEventListener('keydown', event => {
+  if (event.key === 'Escape' && document.getElementById('sidebar').classList.contains('open')) {
+    event.preventDefault();
+    toggleSidebar();
+  }
+});
+document.getElementById('nav-list').addEventListener('click', event => {
+  const link = event.target.closest('a');
+  if (link && link.hash === location.hash && document.getElementById('sidebar').classList.contains('open')) {
+    setSidebarOpen(false);
+    document.getElementById('main').focus({preventScroll:true});
+  }
+});
     window.toggleSidebar = toggleSidebar;
 
     window.addEventListener('hashchange', () => show(location.hash.slice(1) || 'overview'));

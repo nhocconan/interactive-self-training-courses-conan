@@ -96,6 +96,7 @@ body{
    topbar toggle and persists the choice. Only surfaces + ink flip; accents
    lighten just enough to stay legible. ---- */
 body[data-mode="dark"]{
+  --on-accent:var(--bg);
   --bg:#0a0d18;        --surface:#11141f;     --surface-2:#161a27;
   --surface-3:#1b2130; --border:#232938;      --border-strong:#333b50;
   --ink:#e7e9f1;       --ink-2:#9aa3b8;       --ink-3:#7d879c;
@@ -150,37 +151,31 @@ code{font-family:var(--font-mono);font-size:.86em;background:var(--surface-2);
   display:flex;flex-direction:column;z-index:40}
 .sidebar-brand{padding:20px 20px 14px;border-bottom:1px solid var(--border)}
 .sidebar-brand-title{font-size:17px;font-weight:800;letter-spacing:-.02em}
-.sidebar-brand-title em{font-style:normal;color:var(--accent-3)}
-.sidebar-brand-sub{font-family:var(--font-mono);font-size:10.5px;color:var(--ink-3);
-  letter-spacing:.1em;text-transform:uppercase;margin-top:4px}
+.sidebar-brand-title em{font-style:normal;color:inherit}
+.sidebar-brand-sub{font-size:12px;color:var(--ink-2);margin-top:4px}
 .progress-wrap{padding:12px 20px;border-bottom:1px solid var(--border)}
-.progress-meta{display:flex;justify-content:space-between;font-family:var(--font-mono);
-  font-size:10.5px;color:var(--ink-3);text-transform:uppercase;letter-spacing:.1em;margin-bottom:6px}
+.progress-meta{display:flex;justify-content:space-between;font-size:12px;color:var(--ink-2);margin-bottom:6px}
 .progress-track{height:6px;background:var(--surface-2);border-radius:99px;overflow:hidden}
 .progress-fill{height:100%;width:0;background:var(--grad-bar);border-radius:99px;transition:width .3s ease}
 .nav-scroll{flex:1;overflow-y:auto;padding:12px 10px 24px}
 .nav-scroll::-webkit-scrollbar{width:6px}
 .nav-scroll::-webkit-scrollbar-thumb{background:var(--border-strong);border-radius:3px}
 .nav-group{margin-top:18px}.nav-group:first-child{margin-top:4px}
-.nav-part{display:flex;align-items:center;gap:8px;padding:0 10px 8px;
-  font-family:var(--font-mono);font-size:10px;letter-spacing:.16em;text-transform:uppercase;
-  color:var(--accent);font-weight:600}
-.nav-part::after{content:"";flex:1;height:1px;background:var(--border)}
-.nav-link{display:flex;align-items:center;gap:10px;padding:8px 10px;border-radius:8px;
-  font-size:13.5px;color:var(--ink-2);cursor:pointer;transition:background .12s;border-left:2px solid transparent}
+.nav-part{padding:0 10px 6px;font-size:13px;color:var(--ink);font-weight:650;line-height:1.4}
+.nav-part::after{content:none}
+.nav-link{display:flex;align-items:baseline;gap:8px;padding:8px 10px;min-height:40px;border-radius:6px;font-size:14px;color:var(--ink-2);cursor:pointer;border-left:2px solid transparent}
 .nav-link:hover{background:var(--surface-2);text-decoration:none}
 .nav-link.active{background:var(--surface-2);color:var(--ink);font-weight:600;border-left-color:var(--accent)}
-.nav-dot{width:7px;height:7px;border-radius:99px;background:var(--border-strong);flex-shrink:0;transition:background .2s}
-.nav-link.done .nav-dot{background:var(--success);box-shadow:0 0 8px color-mix(in srgb,var(--success) 45%,transparent)}
-.nav-num{font-family:var(--font-mono);font-size:10px;color:var(--ink-3);width:18px;flex-shrink:0}
-.nav-title{flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.nav-dot{align-self:baseline;width:6px;height:6px;border-radius:50%;background:var(--border-strong);flex-shrink:0}
+.nav-link.done .nav-dot{align-self:baseline;width:6px;height:6px;border-radius:50%;background:var(--border-strong);flex-shrink:0}
+.nav-num{font-family:var(--font-mono);font-size:11px;color:var(--ink-2);width:2ch;flex-shrink:0}
+.nav-title{flex:1;min-width:0;line-height:1.45;overflow-wrap:anywhere}
 
 .main{flex:1;margin-left:var(--sidebar-w);min-width:0}
 .container{max-width:var(--maxw);margin:0 auto;padding:0 24px}
 
 /* Mobile toggle + backdrop */
-.mobile-toggle{display:none;position:fixed;min-width:44px;min-height:44px;top:14px;left:14px;z-index:60;
-  background:var(--accent);color:#fff;border:none;border-radius:10px;padding:9px;cursor:pointer;box-shadow:var(--shadow-md)}
+.mobile-toggle{display:none;position:fixed;width:44px;height:44px;top:8px;left:12px;z-index:60;background:var(--surface);color:var(--ink);border:1px solid var(--border);border-radius:8px;padding:9px;cursor:pointer}
 .backdrop{display:none;position:fixed;inset:0;background:rgba(10,14,10,.5);z-index:35}
 @media (max-width:1024px){
   .sidebar{transform:translateX(-100%);transition:transform .25s ease;box-shadow:var(--shadow-lg)}
@@ -197,10 +192,7 @@ code{font-family:var(--font-mono);font-size:.86em;background:var(--surface-2);
 /* ============================================================================
    4 · TOPBAR
    ============================================================================ */
-.topbar{position:sticky;top:0;z-index:30;background:color-mix(in srgb,var(--bg) 85%,transparent);
-  backdrop-filter:blur(10px);border-bottom:1px solid var(--border);
-  display:flex;align-items:center;justify-content:space-between;padding:10px 24px;
-  font-family:var(--font-mono);font-size:11px;color:var(--ink-2)}
+.topbar{position:sticky;top:0;z-index:30;background:var(--surface);border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;gap:12px;min-height:60px;padding:8px 24px;font-family:var(--font-mono);font-size:12px;color:var(--ink-2)}
 .topbar-mini{height:3px;background:var(--surface-2);border-radius:99px;flex:1;max-width:180px;margin:0 16px;overflow:hidden}
 .topbar #tb-crumb{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;min-width:0}
 .topbar-mini-fill{height:100%;width:0;background:var(--grad-bar);transition:width .3s}
@@ -215,9 +207,9 @@ code{font-family:var(--font-mono);font-size:.86em;background:var(--surface-2);
    ============================================================================ */
 .hero{position:relative;overflow:hidden;border-bottom:1px solid var(--border);
   background:var(--surface)}
-.hero-inner{max-width:var(--maxw);margin:0 auto;padding:72px 24px 60px}
-.hero h1{font-size:clamp(2.1rem,5vw,3.4rem);font-weight:800;margin:20px 0 0;letter-spacing:-.03em}
-.hero-sub{font-size:clamp(1rem,2vw,1.2rem);color:var(--ink-2);margin-top:18px}
+.hero-inner{max-width:var(--maxw);margin:0 auto;padding:48px 24px}
+.hero h1{font-size:clamp(2rem,3.5vw,3rem);font-weight:700;margin:0;letter-spacing:-.025em;line-height:1.14;text-wrap:balance}
+.hero-sub{font-size:clamp(1rem,1.4vw,1.125rem);color:var(--ink-2);max-width:72ch;margin-top:14px;line-height:1.6}
 .chip{display:inline-flex;align-items:center;gap:6px;font-family:var(--font-mono);font-size:11px;
   color:var(--ink-2);background:var(--surface);border:1px solid var(--border);border-radius:99px;padding:6px 12px}
 .btn{display:inline-flex;align-items:center;gap:8px;font-weight:600;font-size:14px;
@@ -230,38 +222,36 @@ code{font-family:var(--font-mono);font-size:.86em;background:var(--surface-2);
 /* ============================================================================
    6 · TOC / CURRICULUM
    ============================================================================ */
-.section-pad{padding-block:56px}
-#curriculum{scroll-margin-block-start:1rem}
-.section-head{display:flex;align-items:baseline;gap:14px;margin-bottom:28px}
-.section-head h2{font-size:1.9rem}
-.section-head .line{flex:1;height:1px;background:var(--border)}
-.toc-part-label{font-family:var(--font-mono);font-size:11px;letter-spacing:.16em;text-transform:uppercase;
-  color:var(--accent);font-weight:600;margin:26px 0 12px}
-.toc-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:12px}
-.toc-card{display:flex;gap:14px;align-items:flex-start;padding:16px;border:1px solid var(--border);
-  border-radius:var(--radius);background:var(--surface);cursor:pointer;transition:transform .15s,box-shadow .15s,border-color .15s}
-.toc-card:hover{box-shadow:var(--shadow-md);border-color:var(--accent);text-decoration:none}
-.toc-card-num{font-family:var(--font-mono);font-size:20px;font-weight:700;color:var(--accent-2);line-height:1}
-.toc-card-title{display:block;font-weight:700;font-size:15px;color:var(--ink)}
-.toc-card-desc{display:block;font-size:12.5px;color:var(--ink-2);margin-top:4px;line-height:1.5}
+.section-pad{padding-block:36px}
+#curriculum{scroll-margin-block-start:76px}
+.section-head{display:flex;align-items:baseline;margin-bottom:20px}
+.section-head h2{font-size:clamp(1.45rem,2.3vw,1.85rem);line-height:1.25;text-wrap:balance}
+.section-head .line{display:none}
+.toc-part-label{font-size:1rem;line-height:1.4;color:var(--ink);font-weight:650;margin:24px 0 8px}
+.toc-grid{border-bottom:1px solid var(--border)}
+.toc-card{display:grid;grid-template-columns:3ch minmax(0,1fr);align-items:baseline;column-gap:12px;padding:14px 4px;border-top:1px solid var(--border);color:var(--ink);cursor:pointer}
+.toc-card:hover{background:var(--surface-2);text-decoration:none}
+.toc-card-num{font-family:var(--font-mono);font-size:13px;font-variant-numeric:tabular-nums;color:var(--ink-2)}
+.toc-card-title{display:block;font-weight:650;font-size:16px;line-height:1.45;color:var(--ink)}
+.toc-card-desc{display:block;font-size:14px;color:var(--ink-2);margin-top:4px;line-height:1.5}
 .toc-card>span:last-child{display:block}
 
 /* ============================================================================
    7 · LESSON PAGINATION (one lesson visible at a time)
    ============================================================================ */
 .module-header,.lesson,.pane{display:none}
-.module-header.active,.lesson.active,.pane.active{display:block;animation:fade .3s ease}
-@keyframes fade{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
-.module-header{padding:44px 0 6px}
-.module-header .eyebrow{margin-bottom:10px;display:block}
-.module-header h2{font-size:clamp(1.8rem,4vw,2.6rem);font-weight:800}
-.module-header p{color:var(--ink-2);margin-top:14px;font-size:1.05rem;max-width:62ch}
+.module-header.active,.lesson.active,.pane.active{display:block}
+
+.module-header{padding:28px 0 4px}
+.module-header .eyebrow{display:block;font:inherit;font-size:13px;letter-spacing:normal;text-transform:none;color:var(--ink-2);margin-bottom:6px}
+.module-header h2{font-size:clamp(1.35rem,2vw,1.75rem);line-height:1.25;text-wrap:balance;font-weight:650}
+.module-header p{color:var(--ink-2);margin-top:8px;font-size:1rem;max-width:72ch}
 
 .lesson{margin:22px 0 40px;background:var(--surface);border:1px solid var(--border);
   border-radius:var(--radius-lg);overflow:hidden;box-shadow:var(--shadow-sm)}
-.lesson-head{background:var(--grad);color:#fff;padding:26px 30px}
-.lesson-head .eyebrow{color:color-mix(in srgb,var(--brand-gold) 90%,#fff)}
-.lesson-head h3{color:#fff;font-size:clamp(1.4rem,3vw,1.9rem);margin-top:4px}
+.lesson-head{color:var(--ink);padding:22px 30px;border-bottom:1px solid var(--border)}
+.lesson-head .eyebrow{font:inherit;font-size:13px;letter-spacing:normal;text-transform:none;color:var(--ink-2)}
+.lesson-head h3{color:var(--ink);font-size:clamp(1.4rem,2.3vw,1.85rem);margin:4px 0 0;line-height:1.25;text-wrap:balance}
 .lesson-body{padding:26px 30px 6px;font-size:16px}
 .lesson-body>*+*,.course-case>*+*{margin-top:18px}
 .lesson-body>p,.lesson-body>ul,.lesson-body>ol,.course-case>p{max-width:75ch}
@@ -273,11 +263,11 @@ code{font-family:var(--font-mono);font-size:.86em;background:var(--surface-2);
 /* COMPONENT: Level badge (L1–L5 progression) */
 
 /* COMPONENT: Learning objectives */
-.objectives{background:var(--surface-2);border:1px solid var(--border);border-radius:var(--radius);padding:18px 20px}
+.objectives{padding:0 0 16px;border-bottom:1px solid var(--border)}
 .objectives .eyebrow{margin-bottom:8px;display:block}
-.objectives ul{list-style:none;padding:0}
-.objectives li{position:relative;padding-left:26px;color:var(--ink-2);font-size:14.5px}
-.objectives li::before{content:"→";position:absolute;left:4px;color:var(--accent-2);font-weight:700}
+.objectives ul{list-style:disc;padding-inline-start:1.3em}
+.objectives li{color:var(--ink-2);font-size:15px}
+.objectives li::before{content:none}
 
 /* COMPONENT: Callout (info / warn / success / danger / insight) */
 .callout{border-radius:var(--radius);padding:16px 18px 16px 46px;position:relative;
@@ -312,7 +302,7 @@ code{font-family:var(--font-mono);font-size:.86em;background:var(--surface-2);
 .compare-col.good li::before{content:"✓";color:var(--success)}
 
 /* COMPONENT: Mental model / concept box */
-.concept{background:var(--surface-2);border:1px solid var(--border);border-radius:var(--radius);padding:20px 22px}
+.concept{padding-block:8px}
 .concept .eyebrow{margin-bottom:8px;display:flex;align-items:center;gap:8px}
 .concept .eyebrow::before{content:"";width:8px;height:8px;border-radius:99px;background:var(--accent-2)}
 .concept h4{margin-bottom:6px}
@@ -377,26 +367,23 @@ details[open]>summary .chev{transform:rotate(90deg)}
 
 /* COMPONENT: Data table */
 .table-wrap{overflow-x:auto;border:1px solid var(--border);border-radius:var(--radius)}
-table{width:100%;border-collapse:collapse;font-size:14px;min-width:460px}
-thead th{background:var(--surface-2);text-align:left;padding:11px 14px;font-family:var(--font-mono);
-  font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-2);border-bottom:1px solid var(--border)}
+table{width:100%;border-collapse:collapse;font-size:14px}
+thead th{background:var(--surface-2);text-align:left;padding:10px 12px;font:600 14px/1.4 var(--font-body);color:var(--ink);border-bottom:1px solid var(--border)}
 tbody td{padding:11px 14px;border-bottom:1px solid var(--border);color:var(--ink);vertical-align:top}
 tbody tr:last-child td{border-bottom:none}
 tbody tr:hover{background:var(--surface-2)}
 
 /* COMPONENT: Takeaway (mandatory, once per lesson) */
-.takeaway{background:var(--grad);color:#fff;border-radius:var(--radius);padding:22px 26px;position:relative;overflow:hidden}
-.takeaway .eyebrow{color:color-mix(in srgb,var(--brand-gold) 90%,#fff);margin-bottom:8px;display:flex;align-items:center;gap:8px}
-.takeaway p{color:#fff;font-size:1.12rem;font-weight:600;line-height:1.5}
-.takeaway .hl{color:var(--brand-gold)}
+.takeaway{padding:16px 0;border-block:1px solid var(--border);color:var(--ink)}
+.takeaway .eyebrow{display:block;margin-bottom:6px;color:var(--ink-2)}
+.takeaway p{color:var(--ink);font-size:1.05rem;font-weight:500;line-height:1.6}
+.takeaway .hl{color:inherit;font-weight:700}
 
 /* COMPONENT: Quiz (mandatory, once per lesson) */
-.quiz{border:1px solid var(--border);border-radius:var(--radius);padding:20px 22px;background:var(--surface-2)}
+.quiz{padding:0}
 .quiz .eyebrow{margin-bottom:8px;display:block}
 .quiz-q{font-weight:700;color:var(--ink);margin-bottom:14px}
-.quiz-opt{display:flex;gap:12px;align-items:flex-start;width:100%;text-align:left;
-  border:2px solid var(--border);border-radius:var(--radius-sm);padding:12px 14px;background:var(--surface);
-  cursor:pointer;font-size:14.5px;color:var(--ink);transition:all .13s}
+.quiz-opt{display:flex;gap:12px;align-items:baseline;width:100%;min-height:44px;text-align:left;border:1px solid var(--border-strong);border-radius:var(--radius-sm);padding:10px 14px;background:var(--surface);cursor:pointer;font:inherit;font-size:15px;line-height:1.5;color:var(--ink)}
 .quiz-opt+.quiz-opt{margin-top:8px}
 .quiz-opt:hover:not(:disabled){border-color:var(--accent-2);background:var(--info-bg)}
 .quiz-opt:disabled{cursor:default}
@@ -419,14 +406,14 @@ tbody tr:hover{background:var(--surface-2)}
   background:var(--surface-2);cursor:pointer;transition:all .15s;text-decoration:none}
 .lesson-nav a:hover{border-color:var(--accent);background:var(--surface);transform:translateY(-1px);box-shadow:var(--shadow-md);text-decoration:none}
 .lesson-nav .nav-next{text-align:right}
-.lesson-nav .nl-label{font-family:var(--font-mono);font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-3)}
+.lesson-nav .nl-label{font-size:13px;color:var(--ink-2)}
 .lesson-nav .nl-title{font-weight:600;font-size:14px;color:var(--ink);margin-top:3px}
 .lesson-nav .nav-empty{opacity:.4;pointer-events:none;border-style:dashed}
 .lesson-nav .nav-complete{background:var(--accent);color:var(--on-accent);border-color:var(--accent);
   align-items:center;flex-direction:row;justify-content:center;gap:8px;
   font-family:var(--font-mono);font-size:11px;letter-spacing:.1em;text-transform:uppercase;font-weight:600}
-.lesson-nav .nav-complete:hover{background:var(--brand-navy-deep);transform:translateY(-1px)}
-.lesson-nav .nav-complete.done{background:var(--grad)}
+.lesson-nav .nav-complete:hover{background:var(--accent);text-decoration:underline;transform:translateY(-1px)}
+.lesson-nav .nav-complete.done{background:var(--surface-2);color:var(--ink);border-color:var(--border)}
 
 /* COMPONENT: Completion screen */
 .complete{text-align:center;padding:70px 24px}
@@ -437,7 +424,41 @@ tbody tr:hover{background:var(--surface-2)}
 footer.site{border-top:1px solid var(--border);padding:26px 24px;text-align:center;
   font-family:var(--font-mono);font-size:11px;color:var(--ink-3)}
 
-/* Print: the active lesson prints clean (chrome hidden, card flattened) */
+
+
+.toc-card:hover .toc-card-title{text-decoration:underline;text-underline-offset:.18em}
+.hero .btn-ghost{background:transparent;border-color:transparent;padding-inline:6px;color:var(--ink);text-decoration:underline;text-underline-offset:.2em}
+.topbar a[href="#overview"]{display:inline-flex;align-items:center;min-height:44px;font:500 13px/1.35 var(--font-body,sans-serif);color:var(--ink-2)}
+#overview,.pane[id],.lesson[id]{scroll-margin-block-start:76px}
+.topbar #tb-location{display:none}
+.topbar #tb-crumb,.topbar #tb-location{font:500 13px/1.35 var(--font-body,sans-serif)}
+.main:has(#overview.active) .topbar a[href="#overview"]{display:none}
+@media(min-width:840px){
+  .toc-card>span:last-child{display:grid;grid-template-columns:minmax(0,2fr) minmax(0,3fr);gap:24px;align-items:baseline}
+  .toc-card-desc{margin-top:0}
+}
+@media(max-width:1024px){
+  .sidebar{visibility:hidden;height:100dvh;max-width:calc(100vw - 36px)}
+  .topbar #tb-crumb{display:none}
+  .topbar #tb-location{display:block}
+  .sidebar.open{visibility:visible}
+  body:has(.sidebar.open){overflow:hidden}
+  body:has(.sidebar.open) .mobile-toggle svg{display:none}
+  body:has(.sidebar.open) .mobile-toggle::before,body:has(.sidebar.open) .mobile-toggle::after{content:"";position:absolute;top:50%;left:50%;width:20px;height:2px;background:currentColor;transform:translate(-50%,-50%) rotate(45deg)}
+  body:has(.sidebar.open) .mobile-toggle::after{transform:translate(-50%,-50%) rotate(-45deg)}
+  .sidebar-brand{padding-left:68px;min-height:64px}
+  .nav-link{min-height:44px}
+  .hero .hero-inner{padding-inline:18px}
+  .main .topbar{min-height:60px;padding-block:8px;padding-right:14px}
+}
+@media(max-width:640px){
+  .hero .hero-inner{padding-block:32px}
+  .lesson-nav .nav-empty{display:none}
+  .section-pad{padding-block:28px}
+}
+
+.theme-sun,[data-mode="dark"] .theme-moon{display:none}
+[data-mode="dark"] .theme-sun{display:block}
 @media print{
   .sidebar,.topbar,.mobile-toggle,.backdrop,.lesson-nav,.skip-link{display:none!important}
   .main{margin-left:0}
@@ -446,13 +467,37 @@ footer.site{border-top:1px solid var(--border);padding:26px 24px;text-align:cent
 }
 .diagram-scroll-hint{padding:7px 12px;border-bottom:1px solid var(--border);background:var(--surface-2);color:var(--ink-2);font-size:12px;font-weight:600}
 .diagram-scroll-hint[hidden]{display:none}
+
+.lesson-body,.pane{overflow-wrap:break-word}
+.lesson-body :where(p,li,summary,button,pre),.pane :where(p,li,summary,button){overflow-wrap:anywhere}
+.lesson-body :where(.objectives,.concept,.callout,.takeaway,.quiz,.accordion,.steps,.checklist){max-inline-size:76ch}
+.lesson-body .eyebrow,.quiz .eyebrow{font:600 14px/1.45 var(--font-body);letter-spacing:normal;text-transform:none;color:var(--ink-2)}
+.lesson-body .objectives ul{margin-block:0}
+.lesson-body .checklist{padding:0}
+.lesson-body .quiz-opt>span:last-child{min-width:0}
+.lesson-body .callout p+p,.lesson-body .accordion-body p+p{margin-top:.65em}
+.lesson-body .callout:is(.info,.insight,.success){padding:0;border:0;border-radius:0;background:transparent}
+.lesson-body .callout:is(.info,.insight,.success)::before{content:none}
+.lesson-body .callout:is(.info,.insight,.success) .callout-title{font-size:1rem;margin-bottom:4px}
+.lesson-body .callout:is(.info,.insight,.success) p{font-size:inherit;color:var(--ink)}
+.lesson-body .accordion-body>pre,.pane .accordion-body>pre,.lesson-body .callout>pre{white-space:pre-wrap;overflow-wrap:anywhere}
+.table-wrap th.prose-column{min-width:14rem}
+.table-wrap th.detail-column{min-width:18rem}
+.table-wrap td{overflow-wrap:break-word}
+.lesson-body a[href]:not(.btn){color:var(--ink);text-decoration:underline;text-underline-offset:.15em}
+@media (max-width:640px){
+  .lesson-body .callout{padding:14px 14px 14px 38px}
+  .lesson-body .callout::before{left:12px}
+  .accordion-body{padding:4px 14px 16px}
+  .prompt-head{flex-wrap:wrap;gap:6px 12px}
+}
 </style>
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E📚%3C/text%3E%3C/svg%3E">
 </head>
 <body data-theme="slate">
 <a href="#main" class="skip-link">Bỏ qua, tới nội dung chính</a>
 
-<button class="mobile-toggle" aria-label="Mở menu điều hướng" onclick="toggleSidebar()">
+<button class="mobile-toggle" onclick="toggleSidebar()" aria-label="Mở mục lục" aria-expanded="false" aria-controls="sidebar">
   <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
 </button>
 <div class="backdrop" id="backdrop" onclick="toggleSidebar()"></div>
@@ -474,12 +519,12 @@ footer.site{border-top:1px solid var(--border);padding:26px 24px;text-align:cent
   <!-- ============ MAIN ============ -->
   <main class="main" id="main" tabindex="-1">
     <div class="topbar">
-      <span class="mono" id="tb-crumb">Tổng quan</span>
+      <span class="mono" id="tb-crumb">Tổng quan</span><span id="tb-location" class="mono"></span>
       <div class="topbar-mini"><div class="topbar-mini-fill" id="tb-fill"></div></div>
       <div class="topbar-actions">
         <span class="mono kbd-hint" style="color:var(--ink-3)" aria-hidden="true">← → chuyển bài</span>
-        <a href="#overview" class="mono" style="cursor:pointer">⌂ Tổng quan</a>
-        <button class="mode-toggle" id="mode-toggle" onclick="toggleMode()" aria-label="Chuyển sang chế độ tối" aria-pressed="false">🌙</button>
+        <a href="#overview" class="mono" style="cursor:pointer">Tổng quan</a>
+        <button class="mode-toggle" id="mode-toggle" onclick="toggleMode()" aria-label="Chuyển sang chế độ tối" aria-pressed="false"><svg class="theme-moon" aria-hidden="true" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75"><path d="M20.5 13.4A8.8 8.8 0 0 1 10.6 3.5a8.8 8.8 0 1 0 9.9 9.9Z"/></svg><svg class="theme-sun" aria-hidden="true" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2m0 16v2M2 12h2m16 0h2M5 5l1.5 1.5m11 11L19 19M5 19l1.5-1.5m11-11L19 5"/></svg></button>
       </div>
     </div>
 
@@ -490,7 +535,7 @@ footer.site{border-top:1px solid var(--border);padding:26px 24px;text-align:cent
           <h1>Agent Reliability &amp; Evaluation</h1>
           <p class="hero-sub">Dựng bộ kiểm thử từ lỗi thực tế, chấm kết quả agent và quyết định khi nào có thể mở rộng triển khai. Các bài tính dùng dữ liệu giả lập để bạn tự đối chiếu kết quả.</p>
           <div style="margin-top:28px;display:flex;gap:12px;flex-wrap:wrap">
-            <a class="btn btn-primary" id="start-btn">Bắt đầu học →</a>
+            <a class="btn btn-primary" id="start-btn">Bắt đầu học</a>
             <a class="btn btn-ghost" href="#curriculum">Xem chương trình</a>
           </div>
         </div>
@@ -504,7 +549,7 @@ footer.site{border-top:1px solid var(--border);padding:26px 24px;text-align:cent
       <div class="container section-pad" id="glossary">
         <div class="section-head"><h2>Bảng thuật ngữ</h2><span class="line"></span></div>
         <div class="table-wrap"><table>
-          <thead><tr><th style="width:220px">Thuật ngữ</th><th>Nghĩa (như dùng trong khoá)</th></tr></thead>
+          <thead><tr><th style="width:220px">Thuật ngữ</th><th class="detail-column">Nghĩa (như dùng trong khoá)</th></tr></thead>
           <tbody>
             <tr><td><b>Reliability vs accuracy</b></td><td>Accuracy thường là tỷ lệ đúng trên tập quan sát. Reliability còn gồm nhất quán, policy, recovery và budget; luôn sai có thể rất nhất quán.</td></tr>
             <tr><td><b>Trajectory</b></td><td>Bản ghi tương tác quan sát được: output, tool call, kết quả trung gian. Có thể thiếu reasoning nội bộ hoặc span bị sampling/mất log.</td></tr>
@@ -532,7 +577,7 @@ footer.site{border-top:1px solid var(--border);padding:26px 24px;text-align:cent
     <!-- ============ MODULE 1 ============ -->
     <div class="container">
       <header class="module-header" data-module="1">
-        <span class="eyebrow">Module 01 · Phần I</span>
+        <span class="eyebrow">Phần I</span>
         <h2>Nền tảng độ tin cậy</h2>
         <p>Trước khi đo bất cứ gì, phải hiểu vì sao hệ dùng model hỏng khác phần mềm thường và «đáng tin» thật ra nghĩa là gì. Ba bài này cho ngôn ngữ nền: phi tất định, outcome vs trajectory, và bản đồ ba trụ eval·observability·gate. Có thể đọc phần nền ngay lúc chốt brief; các phần tracing/rollout hữu ích hơn khi đã có prototype hoặc production traffic.</p>
       </header>
@@ -619,9 +664,7 @@ footer.site{border-top:1px solid var(--border);padding:26px 24px;text-align:cent
     </div>
 
     <p class="muted"><b>Nguồn case nghiên cứu:</b> <a href="https://www.anthropic.com/research/multi-agent-research-system" target="_blank" rel="noopener noreferrer">Anthropic: Multi-agent research system, Prompt engineering</a>.</p>
-<div class="takeaway">
-      <span class="eyebrow">Takeaway
-      </span>
+<div class="takeaway" role="note" aria-label="Ghi nhớ">
       <p><span class="hl">Một lần pass là quan sát;</span> kiểm outcome, bất biến và nhiều lần thử. Phần mềm thường cũng có nhiễu; trace chỉ chứa những gì instrument và được phép ghi.</p>
     </div>
 
@@ -708,9 +751,7 @@ footer.site{border-top:1px solid var(--border);padding:26px 24px;text-align:cent
     </div>
 
     <p class="muted"><b>Nguồn gốc:</b> <a href="https://www.anthropic.com/research/demystifying-evals-for-ai-agents" target="_blank" rel="noopener noreferrer">Anthropic: Demystifying evals for AI agents</a>.</p>
-<div class="takeaway">
-      <span class="eyebrow">Takeaway
-      </span>
+<div class="takeaway" role="note" aria-label="Ghi nhớ">
       <p><span class="hl">Đối soát outcome độc lập cùng</span> policy và tác dụng phụ; lời tự báo không chứng minh commit. Nhất quán không đồng nghĩa đúng.</p>
     </div>
 
@@ -796,9 +837,7 @@ footer.site{border-top:1px solid var(--border);padding:26px 24px;text-align:cent
       <p>Nội dung tập trung vào cách <strong>định nghĩa và đo độ tin cậy</strong>, không dạy lại cách build một loại sản phẩm cụ thể. Dùng sớm phần eval/outcome để chốt success criteria; quay lại phần observability/gate khi đã có hệ chạy thật.</p>
     </div>
 
-    <div class="takeaway">
-      <span class="eyebrow">Takeaway
-      </span>
+    <div class="takeaway" role="note" aria-label="Ghi nhớ">
       <p><span class="hl">Eval, observability và gate bổ sung</span> nhau; trace có chọn lọc và provenance giúp biến lỗi thành regression kiểm được.</p>
     </div>
 
@@ -818,7 +857,7 @@ footer.site{border-top:1px solid var(--border);padding:26px 24px;text-align:cent
     <!-- ============ MODULE 2 ============ -->
     <div class="container">
       <header class="module-header" data-module="2">
-        <span class="eyebrow">Module 02 · Phần II</span>
+        <span class="eyebrow">Phần II</span>
         <h2>Dựng bộ eval</h2>
         <p>Dựng task có oracle từ lỗi quan sát, case bình thường và fixture rủi ro. Kiểm end-to-end, policy và chẩn đoán theo bước; chọn grader theo construct và kiểm cả lỗi của grader.</p>
       </header>
@@ -898,9 +937,7 @@ footer.site{border-top:1px solid var(--border);padding:26px 24px;text-align:cent
     </div>
 
     <p class="muted"><b>Nguồn gốc:</b> <a href="https://hamel.dev/blog/posts/evals/" target="_blank" rel="noopener noreferrer">Hamel Husain: Your AI Product Needs Evals</a>.</p>
-<div class="takeaway">
-      <span class="eyebrow">Takeaway
-      </span>
+<div class="takeaway" role="note" aria-label="Ghi nhớ">
       <p><span class="hl">Dùng lỗi quan sát lẫn fixture</span> rủi ro và case bình thường; coverage quan trọng hơn một số trace “đủ saturation”.</p>
     </div>
 
@@ -985,9 +1022,7 @@ footer.site{border-top:1px solid var(--border);padding:26px 24px;text-align:cent
       <p>Ví dụ tổng hợp: 6 trace cùng bắt đầu plan→search→write; 3 trace fail đầu ở write, 1 ở search, 2 đạt. Trong 4 trace fail, write chiếm 3/4 = 75%, nhưng trên toàn mẫu là 3/6 = 50%. Hai mẫu số trả lời hai câu khác nhau. Đây là hotspot quan sát, chưa chứng minh nguyên nhân: kiểm payload, quyền và tool response trước khi sửa.</p>
     </div>
 
-    <div class="takeaway">
-      <span class="eyebrow">Takeaway
-      </span>
+    <div class="takeaway" role="note" aria-label="Ghi nhớ">
       <p><span class="hl">Triage lỗi quan sát đầu tiên</span> rồi rà lỗi độc lập; hotspot cần mẫu số và kiểm nguyên nhân, không chỉ đếm triệu chứng.</p>
     </div>
 
@@ -1074,9 +1109,7 @@ footer.site{border-top:1px solid var(--border);padding:26px 24px;text-align:cent
       <p>Outcome verification (query DB xem row có tồn tại) chính là một <strong>code-based grader</strong>. Cái outcome check bạn gặp ở bài 1.2 thuộc về họ grader cứng này: kiểm được khi snapshot/transaction boundary và oracle đúng; thêm check policy và tác dụng phụ cấm.</p>
     </div>
 
-    <div class="takeaway">
-      <span class="eyebrow">Takeaway
-      </span>
+    <div class="takeaway" role="note" aria-label="Ghi nhớ">
       <p><span class="hl">Code grader cần oracle đúng; parse</span> JSON và so ID/quyền/amount theo hợp đồng, không dùng độ giống text để cấp quyền.</p>
     </div>
 
@@ -1096,7 +1129,7 @@ footer.site{border-top:1px solid var(--border);padding:26px 24px;text-align:cent
     <!-- ============ MODULE 3 ============ -->
     <div class="container">
       <header class="module-header" data-module="3">
-        <span class="eyebrow">Module 03 · Phần III</span>
+        <span class="eyebrow">Phần III</span>
         <h2>LLM-judge & chỉ số tin cậy</h2>
         <p>Rubric tách chiều và hiệu chuẩn judge trên reference độc lập; phân biệt p/pass@1, pass@k và pass^k với cùng điều kiện và uncertainty.</p>
       </header>
@@ -1159,9 +1192,7 @@ footer.site{border-top:1px solid var(--border);padding:26px 24px;text-align:cent
       <p>Trước khi với tay lấy judge, hỏi lại câu của bài 2.3: check này code làm được không? Judge chỉ dành cho phán đoán nuance thật sự. Dùng judge cho việc code làm được là tự chuốc chi phí và non-determinism.</p>
     </div>
 
-    <div class="takeaway">
-      <span class="eyebrow">Takeaway
-      </span>
+    <div class="takeaway" role="note" aria-label="Ghi nhớ">
       <p><span class="hl">Rubric tách chiều, reference độc lập</span> và đường Unknown giúp chẩn đoán; judge riêng mỗi chiều là lựa chọn cần đo, không bảo đảm.</p>
     </div>
 
@@ -1262,9 +1293,7 @@ footer.site{border-top:1px solid var(--border);padding:26px 24px;text-align:cent
     </div>
 
     <p class="muted"><b>Nguồn gốc:</b> <a href="https://arxiv.org/html/2306.05685v4" target="_blank" rel="noopener noreferrer">Zheng et al.: MT-Bench, §3.3–3.4</a>.</p>
-<div class="takeaway">
-      <span class="eyebrow">Takeaway
-      </span>
+<div class="takeaway" role="note" aria-label="Ghi nhớ">
       <p><span class="hl">Swap phát hiện không nhất quán,</span> không chứng minh đúng. Hiệu chuẩn positive class, TPR/TNR, precision và abstention trên holdout.</p>
     </div>
 
@@ -1327,9 +1356,7 @@ footer.site{border-top:1px solid var(--border);padding:26px 24px;text-align:cent
     </div>
 
     <p class="muted"><b>Nguồn gốc:</b> <a href="https://arxiv.org/html/2406.12045v1" target="_blank" rel="noopener noreferrer">Yao et al.: τ-bench, §3</a>.</p>
-<div class="takeaway">
-      <span class="eyebrow">Takeaway
-      </span>
+<div class="takeaway" role="note" aria-label="Ghi nhớ">
       <p><span class="hl">p/pass@1, pass@k và pass^k trả lời</span> ba câu khác nhau; pᵏ cần cùng p và độc lập. Fixed-k gate được phép khi định rõ mục tiêu và uncertainty.</p>
     </div>
 
@@ -1349,7 +1376,7 @@ footer.site{border-top:1px solid var(--border);padding:26px 24px;text-align:cent
     <!-- ============ MODULE 4 ============ -->
     <div class="container">
       <header class="module-header" data-module="4">
-        <span class="eyebrow">Module 04 · Phần IV</span>
+        <span class="eyebrow">Phần IV</span>
         <h2>Quan sát production</h2>
         <p>Trace/span hỗ trợ chẩn đoán theo policy. Pin convention/instrumentation đã kiểm; replay và online sampling bổ sung nhau khi task mix hoặc hệ thống đổi.</p>
       </header>
@@ -1416,9 +1443,7 @@ footer.site{border-top:1px solid var(--border);padding:26px 24px;text-align:cent
     </div>
 
     <p class="muted"><b>Nguồn gốc:</b> <a href="https://opentelemetry.io/docs/concepts/signals/traces/" target="_blank" rel="noopener noreferrer">OpenTelemetry: Traces</a>.</p>
-<div class="takeaway">
-      <span class="eyebrow">Takeaway
-      </span>
+<div class="takeaway" role="note" aria-label="Ghi nhớ">
       <p><span class="hl">Span biểu diễn operation, trace nối</span> chúng; không cộng duration chồng lấn hay token bị ghi trùng, và không mặc định một run luôn một trace.</p>
     </div>
 
@@ -1512,7 +1537,7 @@ footer.site{border-top:1px solid var(--border);padding:26px 24px;text-align:cent
     <div class="callout success">
       <div class="callout-title">Nguyên tắc log an toàn</div>
       <p>Allowlist metadata cần thiết, giới hạn cardinality, quyền đọc, retention và sampling; metadata vẫn có thể chứa ID nhạy cảm hoặc thông tin môi trường. Content capture tắt theo policy của bài tập; khi cần bật, kiểm quyền, redaction ở nơi phát sinh và backend thực nhận, không chỉ đặt cờ rồi giả định sạch.</p>
-      <p>Khi instrumentation triển khai cấu hình capture nội dung qua biến môi trường theo quy ước GenAI, tên biến là <code>OTEL_INSTRUMENTATION_GENAI_CAPTURE_CONTENT</code>; mặc định là <code>NO_CONTENT</code>. Kiểm tra phiên bản thư viện có hỗ trợ cấu hình này. Đưa chuỗi giả dễ nhận biết vào prompt, kết quả tool và lỗi trên staging, rồi tìm chuỗi đó ở cả bản export lẫn backend. Kiểm tra riêng các logger và hook ghi ra kho khác.</p>
+      <p>Khi instrumentation triển khai cấu hình capture nội dung qua biến môi trường theo quy ước GenAI, tên biến là <code>OTEL_<wbr>INSTRUMENTATION_<wbr>GENAI_<wbr>CAPTURE_<wbr>CONTENT</code>; mặc định là <code>NO_CONTENT</code>. Kiểm tra phiên bản thư viện có hỗ trợ cấu hình này. Đưa chuỗi giả dễ nhận biết vào prompt, kết quả tool và lỗi trên staging, rồi tìm chuỗi đó ở cả bản export lẫn backend. Kiểm tra riêng các logger và hook ghi ra kho khác.</p>
     </div>
 
     <div class="callout success">
@@ -1527,9 +1552,7 @@ footer.site{border-top:1px solid var(--border);padding:26px 24px;text-align:cent
 
     <p class="muted"><b>Nguồn gốc:</b> <a href="https://github.com/open-telemetry/semantic-conventions-genai/blob/main/docs/gen-ai/README.md" target="_blank" rel="noopener noreferrer">OpenTelemetry GenAI conventions</a>.</p>
 <p class="muted"><b>Nguồn trường và content:</b> <a href="https://github.com/open-telemetry/semantic-conventions-genai/blob/main/docs/gen-ai/client-inference.md" target="_blank" rel="noopener noreferrer">Client inference</a>; <a href="https://github.com/open-telemetry/semantic-conventions-genai/blob/main/docs/gen-ai/gen-ai-spans.md" target="_blank" rel="noopener noreferrer">GenAI spans, Content capture</a>.</p>
-<div class="takeaway">
-      <span class="eyebrow">Takeaway
-      </span>
+<div class="takeaway" role="note" aria-label="Ghi nhớ">
       <p><span class="hl">Pin convention/instrumentation đã kiểm; allowlist cả</span> metadata, kiểm capture bằng sentinel và adapter bằng fixture schema.</p>
     </div>
 
@@ -1617,9 +1640,7 @@ footer.site{border-top:1px solid var(--border);padding:26px 24px;text-align:cent
       <p>Sampling, latency, cost và ngưỡng agreement phải được chọn theo tải, mức rủi ro và baseline của team. Các tỷ lệ trong hình là cỡ pilot minh hoạ. Đặt rule dừng, owner điều tra và cách xử lý Unknown/missing trước khi chạy, không lấy một con số của bài viết khác làm chuẩn ngành.</p>
     </div>
 
-    <div class="takeaway">
-      <span class="eyebrow">Takeaway
-      </span>
+    <div class="takeaway" role="note" aria-label="Ghi nhớ">
       <p><span class="hl">Replay và online cùng giúp phát</span> hiện drift. Shape không xác định task mix; tín hiệu hành vi không phải nhãn lỗi, sample lệch cần trọng số.</p>
     </div>
 
@@ -1639,7 +1660,7 @@ footer.site{border-top:1px solid var(--border);padding:26px 24px;text-align:cent
     <!-- ============ MODULE 5 ============ -->
     <div class="container">
       <header class="module-header" data-module="5">
-        <span class="eyebrow">Module 05 · Phần V</span>
+        <span class="eyebrow">Phần V</span>
         <h2>Cổng tin cậy</h2>
         <p>Biết đo rồi thì phải gác cổng ship. Bốn bài: biến eval thành vòng phát triển (eval-driven), lên thang CI gate reporting→calibrate→blocking, dựng guardrails hard-stop ở ba điểm, và triển khai an toàn qua shadow→canary→ramp→full.</p>
       </header>
@@ -1707,7 +1728,7 @@ footer.site{border-top:1px solid var(--border);padding:26px 24px;text-align:cent
       <span class="eyebrow" style="display:block;margin-bottom:10px">Vệ sinh bộ eval: bốn quy tắc</span>
       <div class="table-wrap">
         <table>
-          <thead><tr><th style="width:200px">Quy tắc</th><th>Vì sao</th></tr></thead>
+          <thead><tr><th style="width:200px">Quy tắc</th><th class="detail-column">Vì sao</th></tr></thead>
           <tbody>
             <tr><td><b>Holdout không đụng tới</b></td><td>Cắt riêng một lát mà bạn KHÔNG bao giờ lặp prompt trên đó. Bộ bạn tinh chỉnh hằng ngày sẽ dần chỉ còn đo được khả năng khớp chính nó; holdout độc lập giúp đánh giá "có thật sự tốt lên không".</td></tr>
             <tr><td><b>Chia tầng theo nhịp</b></td><td>smoke (nhanh, mỗi PR) · full (mỗi đêm) · holdout (trước release). Chạy tất cả ở mọi PR thì hoặc quá chậm hoặc quá đắt.</td></tr>
@@ -1723,9 +1744,7 @@ footer.site{border-top:1px solid var(--border);padding:26px 24px;text-align:cent
       <p>Chọn một lỗi thật của tuần này, viết nó thành một eval case và chạy để thấy nó <em>fail</em> trước khi bạn sửa bất cứ gì. Một case cũng đã là bộ eval.</p>
     </div>
 
-    <div class="takeaway">
-      <span class="eyebrow">Takeaway
-      </span>
+    <div class="takeaway" role="note" aria-label="Ghi nhớ">
       <p><span class="hl">Tái hiện lỗi thành regression có</span> owner/version; giữ holdout độc lập và retire công khai khi contract đổi. Một case khởi đầu chưa chứng nhận reliability.</p>
     </div>
 
@@ -1811,9 +1830,7 @@ footer.site{border-top:1px solid var(--border);padding:26px 24px;text-align:cent
 
     <h4>Fixture ghép cặp có cụm chung</h4><div class="table-wrap"><table><thead><tr><th>Task / nguồn</th><th>Baseline</th><th>Candidate</th><th>Delta</th></tr></thead><tbody><tr><td>A1 / doc A</td><td>0</td><td>1</td><td>1</td></tr><tr><td>A2 / doc A</td><td>0</td><td>1</td><td>1</td></tr><tr><td>A3 / doc A</td><td>0</td><td>1</td><td>1</td></tr><tr><td>B1 / doc B</td><td>1</td><td>1</td><td>0</td></tr><tr><td>B2 / doc B</td><td>1</td><td>1</td><td>0</td></tr><tr><td>B3 / doc B</td><td>1</td><td>1</td><td>0</td></tr><tr><td>C1 / doc C</td><td>0</td><td>0</td><td>0</td></tr><tr><td>D1 / doc D</td><td>1</td><td>0</td><td>-1</td></tr></tbody></table></div><p>Fixture tổng hợp: baseline 4/8, candidate 6/8, mean delta = 2/8 = +25 điểm phần trăm. Ba gain cùng doc A là một cụm; một loss ở D. Có 8 task nhưng chỉ 4 cụm nguồn, quá ít để khẳng định cải thiện tổng quát với CI hẹp. Giữ cặp task khi resample, và resample cụm nguồn nếu muốn suy ra nguồn mới; cần thêm cụm đại diện trước quyết định rộng.</p>
 <p class="muted"><b>Nguồn gốc:</b> <a href="https://arxiv.org/html/2411.00640v1" target="_blank" rel="noopener noreferrer">Miller: Adding Error Bars to Evals, §2.2/4.2</a>.</p>
-<div class="takeaway">
-      <span class="eyebrow">Takeaway
-      </span>
+<div class="takeaway" role="note" aria-label="Ghi nhớ">
       <p><span class="hl">Rule tất định có thể đọc</span> measurement nhiễu hoặc oracle sai. Hard invariant chặn ngay; metric cần paired/cluster-aware uncertainty, không lấy min/max 5 run làm CI.</p>
     </div>
 
@@ -1900,9 +1917,7 @@ footer.site{border-top:1px solid var(--border);padding:26px 24px;text-align:cent
     </div>
 
     <p class="muted"><b>Nguồn gốc:</b> <a href="https://developers.openai.com/api/docs/guides/agent-builder-safety" target="_blank" rel="noopener noreferrer">OpenAI: Safety in building agents (Agent Builder scope)</a>.</p>
-<div class="takeaway">
-      <span class="eyebrow">Takeaway
-      </span>
+<div class="takeaway" role="note" aria-label="Ghi nhớ">
       <p><span class="hl">Kiểm trước tác dụng phụ tại</span> service và runtime; stop không rollback. Approval bind payload/state, retry dùng intent key và recovery đúng contract.</p>
     </div>
 
@@ -1979,9 +1994,7 @@ footer.site{border-top:1px solid var(--border);padding:26px 24px;text-align:cent
       <p>Với session stateful, pin session vào version/schema phù hợp rồi drain phiên cũ; chỉ đổi routing giữa chừng khi state tương thích và đã test. “Rainbow” là một tên cách triển khai, không bảo đảm session không đứt. Rollback code không tự undo giao dịch hay schema/data đã đổi; viết recovery, stop/revoke và owner trước khi ramp.</p>
     </div>
 
-    <div class="takeaway">
-      <span class="eyebrow">Takeaway
-      </span>
+    <div class="takeaway" role="note" aria-label="Ghi nhớ">
       <p><span class="hl">Rollout giới hạn exposure, không tự</span> chứng minh causal uplift. Shadow phải cô lập write; tách segment offline/online và test drain, rollback, recovery.</p>
     </div>
 
@@ -2001,7 +2014,7 @@ footer.site{border-top:1px solid var(--border);padding:26px 24px;text-align:cent
     <!-- ============ MODULE 6 ============ -->
     <div class="container">
       <header class="module-header" data-module="6">
-        <span class="eyebrow">Module 06 · Phần VI</span>
+        <span class="eyebrow">Phần VI</span>
         <h2>Vận hành</h2>
         <p>Reliability phụ thuộc model, prompt, dữ liệu và harness. Kiểm checkpoint/retry/recovery rồi nối mỗi SLI với owner, ranh giới đo và quyết định vận hành.</p>
       </header>
@@ -2078,7 +2091,7 @@ footer.site{border-top:1px solid var(--border);padding:26px 24px;text-align:cent
     <div class="course-case" id="deepseek-streaming">
 <h4>DeepSeek chat-demo: thử lỗi ngay trong stream</h4>
 <p>Câu trả lời đã hiện vài dòng rồi kết nối đóng. Đánh dấu “xong” chỉ vì hết byte sẽ che mất đáp án bị cắt. Demo tách bộ giải mã SSE (sự kiện truyền từ server), bộ cập nhật reply theo event và bước chốt trạng thái. <code>text</code>, <code>thinking</code>, tool và citation được giữ thành các block riêng.</p>
-<div class="table-wrap" role="region" tabindex="0" aria-label="Ma trận thử lỗi stream"><table><thead><tr><th scope="col">Đầu vào thử</th><th scope="col">Kết quả theo code demo</th><th scope="col">Điều cần bắt</th></tr></thead><tbody>
+<div class="table-wrap" role="region" tabindex="0" aria-label="Ma trận thử lỗi stream"><table><thead><tr><th scope="col" class="prose-column">Đầu vào thử</th><th scope="col" class="prose-column">Kết quả theo code demo</th><th scope="col">Điều cần bắt</th></tr></thead><tbody>
 <tr><td>Cắt byte giữa chữ “Việt”, giữa CR/LF hoặc giữa JSON</td><td>Ghép lại cùng event và text như luồng không chia</td><td>Một chunk mạng chưa chắc là một event</td></tr>
 <tr><td>EOF, chưa có <code>stop_reason</code> và <code>message_stop</code></td><td><code>error / interrupted</code></td><td>Text dở dang không được thành công</td></tr>
 <tr><td>Có <code>message_delta.stop_reason</code>, thiếu <code>message_stop</code></td><td>Client báo interrupted; store chấp nhận <code>done</code></td><td>Ngoại lệ tương thích được viết rõ trong store</td></tr>
@@ -2093,9 +2106,7 @@ footer.site{border-top:1px solid var(--border);padding:26px 24px;text-align:cent
 <p>Nguồn: <a href="https://github.com/deepseek-ai/chat-demo/blob/5d5dd754ebc1948e977ddb880a9eb5aa25f37b4c/src/services/api/sse.ts" target="_blank" rel="noopener noreferrer">giải mã SSE</a> · <a href="https://github.com/deepseek-ai/chat-demo/blob/5d5dd754ebc1948e977ddb880a9eb5aa25f37b4c/src/services/api/client.ts" target="_blank" rel="noopener noreferrer">kết thúc giao thức</a> · <a href="https://github.com/deepseek-ai/chat-demo/blob/5d5dd754ebc1948e977ddb880a9eb5aa25f37b4c/src/services/chat/reply.ts" target="_blank" rel="noopener noreferrer">cập nhật và Continue</a> · <a href="https://github.com/deepseek-ai/chat-demo/blob/5d5dd754ebc1948e977ddb880a9eb5aa25f37b4c/src/services/chat/store.ts" target="_blank" rel="noopener noreferrer">chốt trạng thái, lưu và retry</a>.</p>
 </div>
 
-<div class="takeaway">
-      <span class="eyebrow">Takeaway
-      </span>
+<div class="takeaway" role="note" aria-label="Ghi nhớ">
       <p><span class="hl">Reliability phụ thuộc cả model, prompt,</span> dữ liệu và harness. Checkpoint không exactly-once; retry/fallback giữ quyền, deadline và cap ngoài agent.</p>
     </div>
 
@@ -2181,7 +2192,7 @@ footer.site{border-top:1px solid var(--border);padding:26px 24px;text-align:cent
     <span class="eyebrow" style="display:block;margin-top:18px">Tờ SLI/SLO: sáu con số đáng treo lên tường</span>
     <div class="table-wrap">
       <table>
-        <thead><tr><th style="width:230px">SLI</th><th>Ngưỡng của nó là một điều kiện rollback viết sẵn</th></tr></thead>
+        <thead><tr><th style="width:230px">SLI</th><th class="detail-column">Ngưỡng của nó là một điều kiện rollback viết sẵn</th></tr></thead>
         <tbody>
           <tr><td>Task success một-shot (p)</td><td>Tụt dưới mức của bản đang chạy → dừng ramp (bài 5.4)</td></tr>
           <tr><td>p95 latency end-to-end</td><td>Vượt trần → rollback, kể cả khi chất lượng vẫn tốt</td></tr>
@@ -2205,9 +2216,7 @@ footer.site{border-top:1px solid var(--border);padding:26px 24px;text-align:cent
       <p>Mở agent của bạn. Chọn MỘT lỗi thật gần đây → biến thành một eval case (bài 5.1) → thêm một outcome check query trạng thái thật (bài 1.2) → xác nhận bạn đang trace theo policy/sampling (bài 4.1). Đó là vòng flywheel đầu tiên của bạn, khởi động.</p>
     </div>
 
-    <div class="takeaway">
-      <span class="eyebrow">Takeaway
-      </span>
+    <div class="takeaway" role="note" aria-label="Ghi nhớ">
       <p><span class="hl">So task đạt cùng tổng tiền/giờ</span> người và uncertainty; bảng fixture cho thấy quality–cost tradeoff, không có kiến trúc thắng mặc định.</p>
     </div>
 
@@ -2287,7 +2296,7 @@ footer.site{border-top:1px solid var(--border);padding:26px 24px;text-align:cent
 
     <span class="eyebrow" style="display:block;margin-top:6px">Distill · mỗi bài một dòng mang đi</span>
     <div class="table-wrap">
-      <table><thead><tr><th>Bài</th><th>Mang đi</th></tr></thead><tbody><tr><td>1.1</td><td>Một lần pass là quan sát; kiểm outcome, bất biến và nhiều lần thử. Phần mềm thường cũng có nhiễu; trace chỉ chứa những gì instrument và được phép ghi.</td></tr><tr><td>1.2</td><td>Đối soát outcome độc lập cùng policy và tác dụng phụ; lời tự báo không chứng minh commit. Nhất quán không đồng nghĩa đúng.</td></tr><tr><td>1.3</td><td>Eval, observability và gate bổ sung nhau; trace có chọn lọc và provenance giúp biến lỗi thành regression kiểm được.</td></tr><tr><td>2.1</td><td>Dùng lỗi quan sát lẫn fixture rủi ro và case bình thường; coverage quan trọng hơn một số trace “đủ saturation”.</td></tr><tr><td>2.2</td><td>Triage lỗi quan sát đầu tiên rồi rà lỗi độc lập; hotspot cần mẫu số và kiểm nguyên nhân, không chỉ đếm triệu chứng.</td></tr><tr><td>2.3</td><td>Code grader cần oracle đúng; parse JSON và so ID/quyền/amount theo hợp đồng, không dùng độ giống text để cấp quyền.</td></tr><tr><td>3.1</td><td>Rubric tách chiều, reference độc lập và đường Unknown giúp chẩn đoán; judge riêng mỗi chiều là lựa chọn cần đo, không bảo đảm.</td></tr><tr><td>3.2</td><td>Swap phát hiện không nhất quán, không chứng minh đúng. Hiệu chuẩn positive class, TPR/TNR, precision và abstention trên holdout.</td></tr><tr><td>3.3</td><td>p/pass@1, pass@k và pass^k trả lời ba câu khác nhau; pᵏ cần cùng p và độc lập. Fixed-k gate được phép khi định rõ mục tiêu và uncertainty.</td></tr><tr><td>4.1</td><td>Span biểu diễn operation, trace nối chúng; không cộng duration chồng lấn hay token bị ghi trùng, và không mặc định một run luôn một trace.</td></tr><tr><td>4.2</td><td>Pin convention/instrumentation đã kiểm; allowlist cả metadata, kiểm capture bằng sentinel và adapter bằng fixture schema.</td></tr><tr><td>4.3</td><td>Replay và online cùng giúp phát hiện drift. Shape không xác định task mix; tín hiệu hành vi không phải nhãn lỗi, sample lệch cần trọng số.</td></tr><tr><td>5.1</td><td>Tái hiện lỗi thành regression có owner/version; giữ holdout độc lập và retire công khai khi contract đổi. Một case khởi đầu chưa chứng nhận reliability.</td></tr><tr><td>5.2</td><td>Rule tất định có thể đọc measurement nhiễu hoặc oracle sai. Hard invariant chặn ngay; metric cần paired/cluster-aware uncertainty, không lấy min/max 5 run làm CI.</td></tr><tr><td>5.3</td><td>Kiểm trước tác dụng phụ tại service và runtime; stop không rollback. Approval bind payload/state, retry dùng intent key và recovery đúng contract.</td></tr><tr><td>5.4</td><td>Rollout giới hạn exposure, không tự chứng minh causal uplift. Shadow phải cô lập write; tách segment offline/online và test drain, rollback, recovery.</td></tr><tr><td>6.1</td><td>Reliability phụ thuộc cả model, prompt, dữ liệu và harness. Checkpoint không exactly-once; retry/fallback giữ quyền, deadline và cap ngoài agent.</td></tr><tr><td>6.2</td><td>So task đạt cùng tổng tiền/giờ người và uncertainty; bảng fixture cho thấy quality–cost tradeoff, không có kiến trúc thắng mặc định.</td></tr></tbody></table>
+      <table><thead><tr><th>Bài</th><th class="detail-column">Mang đi</th></tr></thead><tbody><tr><td>1.1</td><td>Một lần pass là quan sát; kiểm outcome, bất biến và nhiều lần thử. Phần mềm thường cũng có nhiễu; trace chỉ chứa những gì instrument và được phép ghi.</td></tr><tr><td>1.2</td><td>Đối soát outcome độc lập cùng policy và tác dụng phụ; lời tự báo không chứng minh commit. Nhất quán không đồng nghĩa đúng.</td></tr><tr><td>1.3</td><td>Eval, observability và gate bổ sung nhau; trace có chọn lọc và provenance giúp biến lỗi thành regression kiểm được.</td></tr><tr><td>2.1</td><td>Dùng lỗi quan sát lẫn fixture rủi ro và case bình thường; coverage quan trọng hơn một số trace “đủ saturation”.</td></tr><tr><td>2.2</td><td>Triage lỗi quan sát đầu tiên rồi rà lỗi độc lập; hotspot cần mẫu số và kiểm nguyên nhân, không chỉ đếm triệu chứng.</td></tr><tr><td>2.3</td><td>Code grader cần oracle đúng; parse JSON và so ID/quyền/amount theo hợp đồng, không dùng độ giống text để cấp quyền.</td></tr><tr><td>3.1</td><td>Rubric tách chiều, reference độc lập và đường Unknown giúp chẩn đoán; judge riêng mỗi chiều là lựa chọn cần đo, không bảo đảm.</td></tr><tr><td>3.2</td><td>Swap phát hiện không nhất quán, không chứng minh đúng. Hiệu chuẩn positive class, TPR/TNR, precision và abstention trên holdout.</td></tr><tr><td>3.3</td><td>p/pass@1, pass@k và pass^k trả lời ba câu khác nhau; pᵏ cần cùng p và độc lập. Fixed-k gate được phép khi định rõ mục tiêu và uncertainty.</td></tr><tr><td>4.1</td><td>Span biểu diễn operation, trace nối chúng; không cộng duration chồng lấn hay token bị ghi trùng, và không mặc định một run luôn một trace.</td></tr><tr><td>4.2</td><td>Pin convention/instrumentation đã kiểm; allowlist cả metadata, kiểm capture bằng sentinel và adapter bằng fixture schema.</td></tr><tr><td>4.3</td><td>Replay và online cùng giúp phát hiện drift. Shape không xác định task mix; tín hiệu hành vi không phải nhãn lỗi, sample lệch cần trọng số.</td></tr><tr><td>5.1</td><td>Tái hiện lỗi thành regression có owner/version; giữ holdout độc lập và retire công khai khi contract đổi. Một case khởi đầu chưa chứng nhận reliability.</td></tr><tr><td>5.2</td><td>Rule tất định có thể đọc measurement nhiễu hoặc oracle sai. Hard invariant chặn ngay; metric cần paired/cluster-aware uncertainty, không lấy min/max 5 run làm CI.</td></tr><tr><td>5.3</td><td>Kiểm trước tác dụng phụ tại service và runtime; stop không rollback. Approval bind payload/state, retry dùng intent key và recovery đúng contract.</td></tr><tr><td>5.4</td><td>Rollout giới hạn exposure, không tự chứng minh causal uplift. Shadow phải cô lập write; tách segment offline/online và test drain, rollback, recovery.</td></tr><tr><td>6.1</td><td>Reliability phụ thuộc cả model, prompt, dữ liệu và harness. Checkpoint không exactly-once; retry/fallback giữ quyền, deadline và cap ngoài agent.</td></tr><tr><td>6.2</td><td>So task đạt cùng tổng tiền/giờ người và uncertainty; bảng fixture cho thấy quality–cost tradeoff, không có kiến trúc thắng mặc định.</td></tr></tbody></table>
     </div>
 
     <span class="eyebrow" style="display:block;margin-top:6px">Checklist · khi dựng reliability cho agent mới</span>
@@ -2304,9 +2313,7 @@ footer.site{border-top:1px solid var(--border);padding:26px 24px;text-align:cent
       <li><h4>Rollout shadow → canary</h4><p>Đi shadow → canary → ramp → full, mỗi tầng trả lời một câu hỏi riêng; đừng nhảy thẳng 100% khi chưa có tín hiệu tương đương (5.4).</p></li>
     </ol>
 
-    <div class="takeaway">
-      <span class="eyebrow">Takeaway
-      </span>
+    <div class="takeaway" role="note" aria-label="Ghi nhớ">
       <p><span class="hl">Dùng bản đồ để chọn một</span> failure, outcome oracle và policy gate; giữ bằng chứng, uncertainty, owner và đường dừng trước khi tăng exposure.</p>
     </div>
 
@@ -2342,7 +2349,7 @@ footer.site{border-top:1px solid var(--border);padding:26px 24px;text-align:cent
       </div>
     </section>
 
-    <footer class="site">Agent Reliability &amp; Evaluation · khoá học tương tác</footer>
+    <footer class="site"><a href="index.html" lang="vi">Danh mục khóa học</a></footer>
   </main>
 </div>
 
@@ -2394,7 +2401,7 @@ function applyMode(mode){
   const dark = mode==='dark';
   document.body.dataset.mode = dark ? 'dark' : 'light';
   const b=document.getElementById('mode-toggle');
-  if(b){b.textContent=dark?'☀️':'🌙';b.setAttribute('aria-pressed',String(dark));
+  if(b){b.setAttribute('aria-pressed',String(dark));
     b.setAttribute('aria-label',dark?'Chuyển sang chế độ sáng':'Chuyển sang chế độ tối')}
 }
 async function toggleMode(){
@@ -2470,6 +2477,8 @@ function show(id){
     const l=LESSONS.find(x=>x.id===id); if(l)crumb=l.title;
   } else if(id==='overview'){crumb='Tổng quan'} else if(id==='complete'){crumb='Hoàn thành'}
   document.getElementById('tb-crumb').textContent=crumb;
+  const lessonNumber = /^m(\d+)-l(\d+)$/.exec(id);
+  document.getElementById('tb-location').textContent = lessonNumber ? `Bài ${lessonNumber[1]}.${lessonNumber[2]}` : crumb;
   document.querySelectorAll('.nav-link').forEach(a=>{
     const on=a.dataset.lesson===id; a.classList.toggle('active',on);
     if(on)a.setAttribute('aria-current','page');else a.removeAttribute('aria-current');
@@ -2477,7 +2486,7 @@ function show(id){
   const an=document.querySelector('.nav-link.active'),ns=document.querySelector('.nav-scroll');
   if(an&&ns){ns.scrollTo({top:Math.max(0,an.offsetTop-ns.clientHeight/2),behavior:'auto'})}
   sSet(LAST_KEY,id);
-  if(window.innerWidth<1024){document.getElementById('sidebar').classList.remove('open');document.getElementById('backdrop').classList.remove('show')}
+  if (window.innerWidth <= 1024) setSidebarOpen(false);
   if (curriculum) curriculum.scrollIntoView({behavior: 'instant'});
   else window.scrollTo({top:0,behavior:'instant'});
   document.getElementById('main').focus({preventScroll:true}); // screen readers announce from the top of the new lesson
@@ -2512,7 +2521,33 @@ function quizPick(el,idx){
 }
 window.quizPick=quizPick;
 
-function toggleSidebar(){document.getElementById('sidebar').classList.toggle('open');document.getElementById('backdrop').classList.toggle('show')}
+function setSidebarOpen(open) {
+  const sidebar = document.getElementById('sidebar');
+  const button = document.querySelector('.mobile-toggle');
+  sidebar.classList.toggle('open', open);
+  document.getElementById('backdrop').classList.toggle('show', open);
+  document.getElementById('main').inert = open;
+  button.setAttribute('aria-expanded', String(open));
+  button.setAttribute('aria-label', open ? 'Đóng mục lục' : 'Mở mục lục');
+}
+function toggleSidebar() {
+  setSidebarOpen(!document.getElementById('sidebar').classList.contains('open'));
+  document.querySelector('.mobile-toggle').focus({preventScroll:true});
+}
+matchMedia('(max-width:1024px)').addEventListener('change', () => setSidebarOpen(false));
+document.addEventListener('keydown', event => {
+  if (event.key === 'Escape' && document.getElementById('sidebar').classList.contains('open')) {
+    event.preventDefault();
+    toggleSidebar();
+  }
+});
+document.getElementById('nav-list').addEventListener('click', event => {
+  const link = event.target.closest('a');
+  if (link && link.hash === location.hash && document.getElementById('sidebar').classList.contains('open')) {
+    setSidebarOpen(false);
+    document.getElementById('main').focus({preventScroll:true});
+  }
+});
 window.toggleSidebar=toggleSidebar;
 
 window.addEventListener('hashchange',()=>show(location.hash.slice(1)||'overview'));

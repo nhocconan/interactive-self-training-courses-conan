@@ -25,6 +25,9 @@
  *   scaling, so this script compares the <text> rect against its <svg> rect and
  *   also checks painted primitives and clipping ancestors. Measure; do not model.
  *
+ * The same viewport sweep checks long identifiers in lesson paragraphs and
+ * dense table cells that collapse into tall, narrow strips on phones.
+ *
  * A green run is not a substitute for looking at the figure — it only proves
  * content stays inside its frame and remains reachable, not that the label sits
  * where it belongs. Large screens also retain the shared 1280px content canvas.
@@ -39,6 +42,7 @@ import { dirname, join, basename, resolve, extname } from 'node:path';
 import { homedir } from 'node:os';
 import { glob } from 'node:fs/promises';
 import { createServer } from 'node:http';
+import { probeLessonText } from './probe-lesson-text.mjs';
 
 const HERE = dirname(fileURLToPath(import.meta.url));
 const ROOT = dirname(HERE);
@@ -196,6 +200,7 @@ async function serve(dir) {
 const exe = findBrowser();
 const browser = await chromium.launch(exe ? { executablePath: exe } : {});
 let hits = 0;
+let textHits = 0;
 
 if (selfTest) {
   const page = await browser.newPage({ viewport: { width: 1920, height: 900 } });
@@ -213,6 +218,20 @@ if (selfTest) {
     await page.setContent(html);
     const actual = (await page.evaluate(PROBE)).length;
     if (actual !== expected) throw new Error(`${name}: expected ${expected} issue(s), got ${actual}`);
+    console.log(`PASS ${name}`);
+  }
+  const row = '<tr><td>' + 'A short phrase. '.repeat(20) + '</td></tr>';
+  for (const [name, content, expected] of [
+    ['squeezed table column', '<table style="width:100px">' + row + '</table>', 1],
+    ['readable scrollable table', '<div style="width:100px;overflow:auto"><table style="min-width:400px">' + row + '</table></div>', 0],
+    ['overflowing inline identifier', '<p style="width:100px"><code>' + 'long.identifier.'.repeat(4) + '</code></p>', 1],
+    ['wrapping inline identifier', '<p style="width:100px;overflow-wrap:anywhere"><code>' + 'long.identifier.'.repeat(4) + '</code></p>', 0],
+    ['clipped sidebar lesson title', '<a class="nav-link" data-lesson="one"><span class="nav-title" style="display:block;width:60px;overflow:hidden;white-space:nowrap;text-overflow:ellipsis">Planning the next action</span></a>', 1],
+    ['wrapped sidebar lesson title', '<a class="nav-link" data-lesson="one"><span class="nav-title" style="display:block;width:60px">Planning the next action</span></a>', 0],
+  ]) {
+    await page.setContent(`<article data-lesson id="fixture"><details>${content}</details></article>`);
+    const actual = await page.evaluate(probeLessonText);
+    if (actual.length !== expected) throw new Error(`${name}: expected ${expected}, found ${JSON.stringify(actual)}`);
     console.log(`PASS ${name}`);
   }
   await page.close();
@@ -243,6 +262,10 @@ for (const file of files) {
           `    "${f.text}" renders at ${f.size}px; minimum 8px.\n` +
           '    Preserve readable diagram scale in a labelled keyboard-scrollable region; keep the caption at page width.\n');
       }
+      for (const issue of await page.evaluate(probeLessonText)) {
+        textHits++;
+        console.log(`${basename(file)} | ${issue.lesson} | ${width}px | ${issue.problem}\n    "${issue.text}"`);
+      }
     }
   } finally {
     await page.close();
@@ -252,4 +275,5 @@ for (const file of files) {
 await browser.close();
 for (const { server } of servers.values()) server.close();
 console.log(`SVG clip audit: ${hits} issue(s) across ${files.length} file(s)`);
-process.exit(hits ? 1 : 0);
+console.log(`Lesson text audit: ${textHits} issue(s) across ${files.length} file(s)`);
+process.exit(hits || textHits ? 1 : 0);

@@ -101,6 +101,20 @@ out of learner-facing copy. Record verification in the pull request instead.
 Use concrete titles and descriptions; remove repeated introductions, empty
 superlatives and slogans that restate the heading.
 
+Use the complete lesson name in the contents and sidebar. Give each title the
+width to wrap at word boundaries. Keep a technical identifier intact in source
+and allow a visual break at punctuation or, if necessary, within a long token.
+Write a summary as a short paragraph. Keep the quiz question and answer state
+visually distinct from that summary.
+
+Review the published HTML with a lesson, a long answer and the phone menu
+open in turn. Inspect individual table cells and the bounds of the text inside
+each reading column. A dense table may scroll inside a labelled, keyboard-
+accessible region. Test one arrow-key scroll inside it and check that the
+current lesson stays selected. The saved drafts under `course-sources/` can
+predate the published lessons. Assemble a draft into a preview and compare its
+lesson list, navigation and layouts before replacing a published file.
+
 ## Related skills
 
 - `anti-slop-review` — fact-check & de-slop course prose before shipping.

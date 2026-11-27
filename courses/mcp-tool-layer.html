@@ -96,6 +96,7 @@ body{
    topbar toggle and persists the choice. Only surfaces + ink flip; accents
    lighten just enough to stay legible. ---- */
 body[data-mode="dark"]{
+  --on-accent:var(--bg);
   --bg:#0a0d18;        --surface:#11141f;     --surface-2:#161a27;
   --surface-3:#1b2130; --border:#232938;      --border-strong:#333b50;
   --ink:#e7e9f1;       --ink-2:#9aa3b8;       --ink-3:#7d879c;
@@ -150,37 +151,31 @@ code{font-family:var(--font-mono);font-size:.86em;background:var(--surface-2);
   display:flex;flex-direction:column;z-index:40}
 .sidebar-brand{padding:20px 20px 14px;border-bottom:1px solid var(--border)}
 .sidebar-brand-title{font-size:17px;font-weight:800;letter-spacing:-.02em}
-.sidebar-brand-title em{font-style:normal;color:var(--accent-3)}
-.sidebar-brand-sub{font-family:var(--font-mono);font-size:10.5px;color:var(--ink-3);
-  letter-spacing:.1em;text-transform:uppercase;margin-top:4px}
+.sidebar-brand-title em{font-style:normal;color:inherit}
+.sidebar-brand-sub{font-size:12px;color:var(--ink-2);margin-top:4px}
 .progress-wrap{padding:12px 20px;border-bottom:1px solid var(--border)}
-.progress-meta{display:flex;justify-content:space-between;font-family:var(--font-mono);
-  font-size:10.5px;color:var(--ink-3);text-transform:uppercase;letter-spacing:.1em;margin-bottom:6px}
+.progress-meta{display:flex;justify-content:space-between;font-size:12px;color:var(--ink-2);margin-bottom:6px}
 .progress-track{height:6px;background:var(--surface-2);border-radius:99px;overflow:hidden}
 .progress-fill{height:100%;width:0;background:var(--grad-bar);border-radius:99px;transition:width .3s ease}
 .nav-scroll{flex:1;overflow-y:auto;padding:12px 10px 24px}
 .nav-scroll::-webkit-scrollbar{width:6px}
 .nav-scroll::-webkit-scrollbar-thumb{background:var(--border-strong);border-radius:3px}
 .nav-group{margin-top:18px}.nav-group:first-child{margin-top:4px}
-.nav-part{display:flex;align-items:center;gap:8px;padding:0 10px 8px;
-  font-family:var(--font-mono);font-size:10px;letter-spacing:.16em;text-transform:uppercase;
-  color:var(--accent);font-weight:600}
-.nav-part::after{content:"";flex:1;height:1px;background:var(--border)}
-.nav-link{display:flex;align-items:center;gap:10px;padding:8px 10px;border-radius:8px;
-  font-size:13.5px;color:var(--ink-2);cursor:pointer;transition:background .12s;border-left:2px solid transparent}
+.nav-part{padding:0 10px 6px;font-size:13px;color:var(--ink);font-weight:650;line-height:1.4}
+.nav-part::after{content:none}
+.nav-link{display:flex;align-items:baseline;gap:8px;padding:8px 10px;min-height:40px;border-radius:6px;font-size:14px;color:var(--ink-2);cursor:pointer;border-left:2px solid transparent}
 .nav-link:hover{background:var(--surface-2);text-decoration:none}
 .nav-link.active{background:var(--surface-2);color:var(--ink);font-weight:600;border-left-color:var(--accent)}
-.nav-dot{width:7px;height:7px;border-radius:99px;background:var(--border-strong);flex-shrink:0;transition:background .2s}
-.nav-link.done .nav-dot{background:var(--success);box-shadow:0 0 8px color-mix(in srgb,var(--success) 45%,transparent)}
-.nav-num{font-family:var(--font-mono);font-size:10px;color:var(--ink-3);width:18px;flex-shrink:0}
-.nav-title{flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.nav-dot{align-self:baseline;width:6px;height:6px;border-radius:50%;background:var(--border-strong);flex-shrink:0}
+.nav-link.done .nav-dot{align-self:baseline;width:6px;height:6px;border-radius:50%;background:var(--border-strong);flex-shrink:0}
+.nav-num{font-family:var(--font-mono);font-size:11px;color:var(--ink-2);width:2ch;flex-shrink:0}
+.nav-title{flex:1;min-width:0;line-height:1.45;overflow-wrap:anywhere}
 
 .main{flex:1;margin-left:var(--sidebar-w);min-width:0}
 .container{max-width:var(--maxw);margin:0 auto;padding:0 24px}
 
 /* Mobile toggle + backdrop */
-.mobile-toggle{display:none;position:fixed;min-width:44px;min-height:44px;top:14px;left:14px;z-index:60;
-  background:var(--accent);color:#fff;border:none;border-radius:10px;padding:9px;cursor:pointer;box-shadow:var(--shadow-md)}
+.mobile-toggle{display:none;position:fixed;width:44px;height:44px;top:8px;left:12px;z-index:60;background:var(--surface);color:var(--ink);border:1px solid var(--border);border-radius:8px;padding:9px;cursor:pointer}
 .backdrop{display:none;position:fixed;inset:0;background:rgba(10,14,10,.5);z-index:35}
 @media (max-width:1024px){
   .sidebar{transform:translateX(-100%);transition:transform .25s ease;box-shadow:var(--shadow-lg)}
@@ -197,10 +192,7 @@ code{font-family:var(--font-mono);font-size:.86em;background:var(--surface-2);
 /* ============================================================================
    4 · TOPBAR
    ============================================================================ */
-.topbar{position:sticky;top:0;z-index:30;background:color-mix(in srgb,var(--bg) 85%,transparent);
-  backdrop-filter:blur(10px);border-bottom:1px solid var(--border);
-  display:flex;align-items:center;justify-content:space-between;padding:10px 24px;
-  font-family:var(--font-mono);font-size:11px;color:var(--ink-2)}
+.topbar{position:sticky;top:0;z-index:30;background:var(--surface);border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;gap:12px;min-height:60px;padding:8px 24px;font-family:var(--font-mono);font-size:12px;color:var(--ink-2)}
 .topbar-mini{height:3px;background:var(--surface-2);border-radius:99px;flex:1;max-width:180px;margin:0 16px;overflow:hidden}
 .topbar #tb-crumb{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;min-width:0}
 .topbar-mini-fill{height:100%;width:0;background:var(--grad-bar);transition:width .3s}
@@ -215,9 +207,9 @@ code{font-family:var(--font-mono);font-size:.86em;background:var(--surface-2);
    ============================================================================ */
 .hero{position:relative;overflow:hidden;border-bottom:1px solid var(--border);
   background:var(--surface)}
-.hero-inner{max-width:var(--maxw);margin:0 auto;padding:72px 24px 60px}
-.hero h1{font-size:clamp(2.1rem,5vw,3.4rem);font-weight:800;margin:20px 0 0;letter-spacing:-.03em}
-.hero-sub{font-size:clamp(1rem,2vw,1.2rem);color:var(--ink-2);margin-top:18px}
+.hero-inner{max-width:var(--maxw);margin:0 auto;padding:48px 24px}
+.hero h1{font-size:clamp(2rem,3.5vw,3rem);font-weight:700;margin:0;letter-spacing:-.025em;line-height:1.14;text-wrap:balance}
+.hero-sub{font-size:clamp(1rem,1.4vw,1.125rem);color:var(--ink-2);max-width:72ch;margin-top:14px;line-height:1.6}
 .chip{display:inline-flex;align-items:center;gap:6px;font-family:var(--font-mono);font-size:11px;
   color:var(--ink-2);background:var(--surface);border:1px solid var(--border);border-radius:99px;padding:6px 12px}
 .btn{display:inline-flex;align-items:center;gap:8px;font-weight:600;font-size:14px;
@@ -230,38 +222,36 @@ code{font-family:var(--font-mono);font-size:.86em;background:var(--surface-2);
 /* ============================================================================
    6 · TOC / CURRICULUM
    ============================================================================ */
-.section-pad{padding-block:56px}
-#curriculum{scroll-margin-block-start:1rem}
-.section-head{display:flex;align-items:baseline;gap:14px;margin-bottom:28px}
-.section-head h2{font-size:1.9rem}
-.section-head .line{flex:1;height:1px;background:var(--border)}
-.toc-part-label{font-family:var(--font-mono);font-size:11px;letter-spacing:.16em;text-transform:uppercase;
-  color:var(--accent);font-weight:600;margin:26px 0 12px}
-.toc-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:12px}
-.toc-card{display:flex;gap:14px;align-items:flex-start;padding:16px;border:1px solid var(--border);
-  border-radius:var(--radius);background:var(--surface);cursor:pointer;transition:transform .15s,box-shadow .15s,border-color .15s}
-.toc-card:hover{box-shadow:var(--shadow-md);border-color:var(--accent);text-decoration:none}
-.toc-card-num{font-family:var(--font-mono);font-size:20px;font-weight:700;color:var(--accent-2);line-height:1}
-.toc-card-title{display:block;font-weight:700;font-size:15px;color:var(--ink)}
-.toc-card-desc{display:block;font-size:12.5px;color:var(--ink-2);margin-top:4px;line-height:1.5}
+.section-pad{padding-block:36px}
+#curriculum{scroll-margin-block-start:76px}
+.section-head{display:flex;align-items:baseline;margin-bottom:20px}
+.section-head h2{font-size:clamp(1.45rem,2.3vw,1.85rem);line-height:1.25;text-wrap:balance}
+.section-head .line{display:none}
+.toc-part-label{font-size:1rem;line-height:1.4;color:var(--ink);font-weight:650;margin:24px 0 8px}
+.toc-grid{border-bottom:1px solid var(--border)}
+.toc-card{display:grid;grid-template-columns:3ch minmax(0,1fr);align-items:baseline;column-gap:12px;padding:14px 4px;border-top:1px solid var(--border);color:var(--ink);cursor:pointer}
+.toc-card:hover{background:var(--surface-2);text-decoration:none}
+.toc-card-num{font-family:var(--font-mono);font-size:13px;font-variant-numeric:tabular-nums;color:var(--ink-2)}
+.toc-card-title{display:block;font-weight:650;font-size:16px;line-height:1.45;color:var(--ink)}
+.toc-card-desc{display:block;font-size:14px;color:var(--ink-2);margin-top:4px;line-height:1.5}
 .toc-card>span:last-child{display:block}
 
 /* ============================================================================
    7 · LESSON PAGINATION (one lesson visible at a time)
    ============================================================================ */
 .module-header,.lesson,.pane{display:none}
-.module-header.active,.lesson.active,.pane.active{display:block;animation:fade .3s ease}
-@keyframes fade{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
-.module-header{padding:44px 0 6px}
-.module-header .eyebrow{margin-bottom:10px;display:block}
-.module-header h2{font-size:clamp(1.8rem,4vw,2.6rem);font-weight:800}
-.module-header p{color:var(--ink-2);margin-top:14px;font-size:1.05rem;max-width:62ch}
+.module-header.active,.lesson.active,.pane.active{display:block}
+
+.module-header{padding:28px 0 4px}
+.module-header .eyebrow{display:block;font:inherit;font-size:13px;letter-spacing:normal;text-transform:none;color:var(--ink-2);margin-bottom:6px}
+.module-header h2{font-size:clamp(1.35rem,2vw,1.75rem);line-height:1.25;text-wrap:balance;font-weight:650}
+.module-header p{color:var(--ink-2);margin-top:8px;font-size:1rem;max-width:72ch}
 
 .lesson{margin:22px 0 40px;background:var(--surface);border:1px solid var(--border);
   border-radius:var(--radius-lg);overflow:hidden;box-shadow:var(--shadow-sm)}
-.lesson-head{background:var(--grad);color:#fff;padding:26px 30px}
-.lesson-head .eyebrow{color:color-mix(in srgb,var(--brand-gold) 90%,#fff)}
-.lesson-head h3{color:#fff;font-size:clamp(1.4rem,3vw,1.9rem);margin-top:4px}
+.lesson-head{color:var(--ink);padding:22px 30px;border-bottom:1px solid var(--border)}
+.lesson-head .eyebrow{font:inherit;font-size:13px;letter-spacing:normal;text-transform:none;color:var(--ink-2)}
+.lesson-head h3{color:var(--ink);font-size:clamp(1.4rem,2.3vw,1.85rem);margin:4px 0 0;line-height:1.25;text-wrap:balance}
 .lesson-body{padding:26px 30px 6px;font-size:16px}
 .lesson-body>*+*{margin-top:18px}
 .lesson-body>p,.lesson-body>ul,.lesson-body>ol{max-width:75ch}
@@ -273,11 +263,11 @@ code{font-family:var(--font-mono);font-size:.86em;background:var(--surface-2);
 /* COMPONENT: Level badge (L1–L5 progression) */
 
 /* COMPONENT: Learning objectives */
-.objectives{background:var(--surface-2);border:1px solid var(--border);border-radius:var(--radius);padding:18px 20px}
+.objectives{padding:0 0 16px;border-bottom:1px solid var(--border)}
 .objectives .eyebrow{margin-bottom:8px;display:block}
-.objectives ul{list-style:none;padding:0}
-.objectives li{position:relative;padding-left:26px;color:var(--ink-2);font-size:14.5px}
-.objectives li::before{content:"→";position:absolute;left:4px;color:var(--accent-2);font-weight:700}
+.objectives ul{list-style:disc;padding-inline-start:1.3em}
+.objectives li{color:var(--ink-2);font-size:15px}
+.objectives li::before{content:none}
 
 /* COMPONENT: Callout (info / warn / success / danger / insight) */
 .callout{border-radius:var(--radius);padding:16px 18px 16px 46px;position:relative;
@@ -312,7 +302,7 @@ code{font-family:var(--font-mono);font-size:.86em;background:var(--surface-2);
 .compare-col.good li::before{content:"✓";color:var(--success)}
 
 /* COMPONENT: Mental model / concept box */
-.concept{background:var(--surface-2);border:1px solid var(--border);border-radius:var(--radius);padding:20px 22px}
+.concept{padding-block:8px}
 .concept .eyebrow{margin-bottom:8px;display:flex;align-items:center;gap:8px}
 .concept .eyebrow::before{content:"";width:8px;height:8px;border-radius:99px;background:var(--accent-2)}
 .concept h4{margin-bottom:6px}
@@ -377,26 +367,23 @@ details[open]>summary .chev{transform:rotate(90deg)}
 
 /* COMPONENT: Data table */
 .table-wrap{overflow-x:auto;border:1px solid var(--border);border-radius:var(--radius)}
-table{width:100%;border-collapse:collapse;font-size:14px;min-width:460px}
-thead th{background:var(--surface-2);text-align:left;padding:11px 14px;font-family:var(--font-mono);
-  font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-2);border-bottom:1px solid var(--border)}
+table{width:100%;border-collapse:collapse;font-size:14px}
+thead th{background:var(--surface-2);text-align:left;padding:10px 12px;font:600 14px/1.4 var(--font-body);color:var(--ink);border-bottom:1px solid var(--border)}
 tbody td{padding:11px 14px;border-bottom:1px solid var(--border);color:var(--ink);vertical-align:top}
 tbody tr:last-child td{border-bottom:none}
 tbody tr:hover{background:var(--surface-2)}
 
 /* COMPONENT: Takeaway (mandatory, once per lesson) */
-.takeaway{background:var(--grad);color:#fff;border-radius:var(--radius);padding:22px 26px;position:relative;overflow:hidden}
-.takeaway .eyebrow{color:color-mix(in srgb,var(--brand-gold) 90%,#fff);margin-bottom:8px;display:flex;align-items:center;gap:8px}
-.takeaway p{color:#fff;font-size:1.12rem;font-weight:600;line-height:1.5}
-.takeaway .hl{color:var(--brand-gold)}
+.takeaway{padding:16px 0;border-block:1px solid var(--border);color:var(--ink)}
+.takeaway .eyebrow{display:block;margin-bottom:6px;color:var(--ink-2)}
+.takeaway p{color:var(--ink);font-size:1.05rem;font-weight:500;line-height:1.6}
+.takeaway .hl{color:inherit;font-weight:700}
 
 /* COMPONENT: Quiz (mandatory, once per lesson) */
-.quiz{border:1px solid var(--border);border-radius:var(--radius);padding:20px 22px;background:var(--surface-2)}
+.quiz{padding:0}
 .quiz .eyebrow{margin-bottom:8px;display:block}
 .quiz-q{font-weight:700;color:var(--ink);margin-bottom:14px}
-.quiz-opt{display:flex;gap:12px;align-items:flex-start;width:100%;text-align:left;
-  border:2px solid var(--border);border-radius:var(--radius-sm);padding:12px 14px;background:var(--surface);
-  cursor:pointer;font-size:14.5px;color:var(--ink);transition:all .13s}
+.quiz-opt{display:flex;gap:12px;align-items:baseline;width:100%;min-height:44px;text-align:left;border:1px solid var(--border-strong);border-radius:var(--radius-sm);padding:10px 14px;background:var(--surface);cursor:pointer;font:inherit;font-size:15px;line-height:1.5;color:var(--ink)}
 .quiz-opt+.quiz-opt{margin-top:8px}
 .quiz-opt:hover:not(:disabled){border-color:var(--accent-2);background:var(--info-bg)}
 .quiz-opt:disabled{cursor:default}
@@ -419,14 +406,14 @@ tbody tr:hover{background:var(--surface-2)}
   background:var(--surface-2);cursor:pointer;transition:all .15s;text-decoration:none}
 .lesson-nav a:hover{border-color:var(--accent);background:var(--surface);transform:translateY(-1px);box-shadow:var(--shadow-md);text-decoration:none}
 .lesson-nav .nav-next{text-align:right}
-.lesson-nav .nl-label{font-family:var(--font-mono);font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-3)}
+.lesson-nav .nl-label{font-size:13px;color:var(--ink-2)}
 .lesson-nav .nl-title{font-weight:600;font-size:14px;color:var(--ink);margin-top:3px}
 .lesson-nav .nav-empty{opacity:.4;pointer-events:none;border-style:dashed}
 .lesson-nav .nav-complete{background:var(--accent);color:var(--on-accent);border-color:var(--accent);
   align-items:center;flex-direction:row;justify-content:center;gap:8px;
   font-family:var(--font-mono);font-size:11px;letter-spacing:.1em;text-transform:uppercase;font-weight:600}
-.lesson-nav .nav-complete:hover{background:var(--brand-navy-deep);transform:translateY(-1px)}
-.lesson-nav .nav-complete.done{background:var(--grad)}
+.lesson-nav .nav-complete:hover{background:var(--accent);text-decoration:underline;transform:translateY(-1px)}
+.lesson-nav .nav-complete.done{background:var(--surface-2);color:var(--ink);border-color:var(--border)}
 
 /* COMPONENT: Completion screen */
 .complete{text-align:center;padding:70px 24px}
@@ -437,7 +424,41 @@ tbody tr:hover{background:var(--surface-2)}
 footer.site{border-top:1px solid var(--border);padding:26px 24px;text-align:center;
   font-family:var(--font-mono);font-size:11px;color:var(--ink-3)}
 
-/* Print: the active lesson prints clean (chrome hidden, card flattened) */
+
+
+.toc-card:hover .toc-card-title{text-decoration:underline;text-underline-offset:.18em}
+.hero .btn-ghost{background:transparent;border-color:transparent;padding-inline:6px;color:var(--ink);text-decoration:underline;text-underline-offset:.2em}
+.topbar a[href="#overview"]{display:inline-flex;align-items:center;min-height:44px;font:500 13px/1.35 var(--font-body,sans-serif);color:var(--ink-2)}
+#overview,.pane[id],.lesson[id]{scroll-margin-block-start:76px}
+.topbar #tb-location{display:none}
+.topbar #tb-crumb,.topbar #tb-location{font:500 13px/1.35 var(--font-body,sans-serif)}
+.main:has(#overview.active) .topbar a[href="#overview"]{display:none}
+@media(min-width:840px){
+  .toc-card>span:last-child{display:grid;grid-template-columns:minmax(0,2fr) minmax(0,3fr);gap:24px;align-items:baseline}
+  .toc-card-desc{margin-top:0}
+}
+@media(max-width:1024px){
+  .sidebar{visibility:hidden;height:100dvh;max-width:calc(100vw - 36px)}
+  .topbar #tb-crumb{display:none}
+  .topbar #tb-location{display:block}
+  .sidebar.open{visibility:visible}
+  body:has(.sidebar.open){overflow:hidden}
+  body:has(.sidebar.open) .mobile-toggle svg{display:none}
+  body:has(.sidebar.open) .mobile-toggle::before,body:has(.sidebar.open) .mobile-toggle::after{content:"";position:absolute;top:50%;left:50%;width:20px;height:2px;background:currentColor;transform:translate(-50%,-50%) rotate(45deg)}
+  body:has(.sidebar.open) .mobile-toggle::after{transform:translate(-50%,-50%) rotate(-45deg)}
+  .sidebar-brand{padding-left:68px;min-height:64px}
+  .nav-link{min-height:44px}
+  .hero .hero-inner{padding-inline:18px}
+  .main .topbar{min-height:60px;padding-block:8px;padding-right:14px}
+}
+@media(max-width:640px){
+  .hero .hero-inner{padding-block:32px}
+  .lesson-nav .nav-empty{display:none}
+  .section-pad{padding-block:28px}
+}
+
+.theme-sun,[data-mode="dark"] .theme-moon{display:none}
+[data-mode="dark"] .theme-sun{display:block}
 @media print{
   .sidebar,.topbar,.mobile-toggle,.backdrop,.lesson-nav,.skip-link{display:none!important}
   .main{margin-left:0}
@@ -446,13 +467,37 @@ footer.site{border-top:1px solid var(--border);padding:26px 24px;text-align:cent
 }
 .diagram-scroll-hint{padding:7px 12px;border-bottom:1px solid var(--border);background:var(--surface-2);color:var(--ink-2);font-size:12px;font-weight:600}
 .diagram-scroll-hint[hidden]{display:none}
+
+.lesson-body,.pane{overflow-wrap:break-word}
+.lesson-body :where(p,li,summary,button,pre),.pane :where(p,li,summary,button){overflow-wrap:anywhere}
+.lesson-body :where(.objectives,.concept,.callout,.takeaway,.quiz,.accordion,.steps,.checklist){max-inline-size:76ch}
+.lesson-body .eyebrow,.quiz .eyebrow{font:600 14px/1.45 var(--font-body);letter-spacing:normal;text-transform:none;color:var(--ink-2)}
+.lesson-body .objectives ul{margin-block:0}
+.lesson-body .checklist{padding:0}
+.lesson-body .quiz-opt>span:last-child{min-width:0}
+.lesson-body .callout p+p,.lesson-body .accordion-body p+p{margin-top:.65em}
+.lesson-body .callout:is(.info,.insight,.success){padding:0;border:0;border-radius:0;background:transparent}
+.lesson-body .callout:is(.info,.insight,.success)::before{content:none}
+.lesson-body .callout:is(.info,.insight,.success) .callout-title{font-size:1rem;margin-bottom:4px}
+.lesson-body .callout:is(.info,.insight,.success) p{font-size:inherit;color:var(--ink)}
+.lesson-body .accordion-body>pre,.pane .accordion-body>pre,.lesson-body .callout>pre{white-space:pre-wrap;overflow-wrap:anywhere}
+.table-wrap th.prose-column{min-width:14rem}
+.table-wrap th.detail-column{min-width:18rem}
+.table-wrap td{overflow-wrap:break-word}
+.lesson-body a[href]:not(.btn){color:var(--ink);text-decoration:underline;text-underline-offset:.15em}
+@media (max-width:640px){
+  .lesson-body .callout{padding:14px 14px 14px 38px}
+  .lesson-body .callout::before{left:12px}
+  .accordion-body{padding:4px 14px 16px}
+  .prompt-head{flex-wrap:wrap;gap:6px 12px}
+}
 </style>
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E📚%3C/text%3E%3C/svg%3E">
 </head>
 <body data-theme="navy">
 <a href="#main" class="skip-link">Bỏ qua, tới nội dung chính</a>
 
-<button class="mobile-toggle" aria-label="Mở menu điều hướng" onclick="toggleSidebar()">
+<button class="mobile-toggle" onclick="toggleSidebar()" aria-label="Mở mục lục" aria-expanded="false" aria-controls="sidebar">
   <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
 </button>
 <div class="backdrop" id="backdrop" onclick="toggleSidebar()"></div>
@@ -474,12 +519,12 @@ footer.site{border-top:1px solid var(--border);padding:26px 24px;text-align:cent
   <!-- ============ MAIN ============ -->
   <main class="main" id="main" tabindex="-1">
     <div class="topbar">
-      <span class="mono" id="tb-crumb">Tổng quan</span>
+      <span class="mono" id="tb-crumb">Tổng quan</span><span id="tb-location" class="mono"></span>
       <div class="topbar-mini"><div class="topbar-mini-fill" id="tb-fill"></div></div>
       <div class="topbar-actions">
         <span class="mono kbd-hint" style="color:var(--ink-3)" aria-hidden="true">← → chuyển bài</span>
-        <a href="#overview" class="mono" style="cursor:pointer">⌂ Tổng quan</a>
-        <button class="mode-toggle" id="mode-toggle" onclick="toggleMode()" aria-label="Chuyển sang chế độ tối" aria-pressed="false">🌙</button>
+        <a href="#overview" class="mono" style="cursor:pointer">Tổng quan</a>
+        <button class="mode-toggle" id="mode-toggle" onclick="toggleMode()" aria-label="Chuyển sang chế độ tối" aria-pressed="false"><svg class="theme-moon" aria-hidden="true" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75"><path d="M20.5 13.4A8.8 8.8 0 0 1 10.6 3.5a8.8 8.8 0 1 0 9.9 9.9Z"/></svg><svg class="theme-sun" aria-hidden="true" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2m0 16v2M2 12h2m16 0h2M5 5l1.5 1.5m11 11L19 19M5 19l1.5-1.5m11-11L19 5"/></svg></button>
       </div>
     </div>
 
@@ -490,7 +535,7 @@ footer.site{border-top:1px solid var(--border);padding:26px 24px;text-align:cent
           <h1>MCP &amp; Tool Layer</h1>
           <p class="hero-sub">Thiết kế kết nối giữa agent, công cụ và dữ liệu. Đọc request theo MCP 2026-07-28, nhận diện client cũ dùng bản 2025-11-25, kiểm tra quyền gọi tool và chọn khi nào nên dùng API trực tiếp.</p>
           <div style="margin-top:28px;display:flex;gap:12px;flex-wrap:wrap">
-            <a class="btn btn-primary" id="start-btn">Bắt đầu học →</a>
+            <a class="btn btn-primary" id="start-btn">Bắt đầu học</a>
             <a class="btn btn-ghost" href="#curriculum">Xem chương trình</a>
           </div>
         </div>
@@ -504,7 +549,7 @@ footer.site{border-top:1px solid var(--border);padding:26px 24px;text-align:cent
       <div class="container section-pad" id="glossary">
         <div class="section-head"><h2>Bảng thuật ngữ</h2><span class="line"></span></div>
         <div class="table-wrap"><table>
-          <thead><tr><th style="width:220px">Thuật ngữ</th><th>Nghĩa (như dùng trong khoá)</th></tr></thead>
+          <thead><tr><th style="width:220px">Thuật ngữ</th><th class="detail-column">Nghĩa (như dùng trong khoá)</th></tr></thead>
           <tbody>
             <tr><td><b>MCP (Model Context Protocol)</b></td><td>Chuẩn mở kết nối AI assistant với tool và nguồn dữ liệu: mô hình lý tưởng giảm adapter từ N×M xuống N+M; kiểm thử, auth và vận hành vẫn có chi phí. Anthropic công bố 11/2024, nay do Agentic AI Foundation quản trị.</td></tr>
             <tr><td><b>Host / Client / Server</b></td><td>Host điều phối các quan hệ client/server; mỗi client làm việc với một server. Server không tự được gửi cả hội thoại, nhưng host/model có thể chuyển dữ liệu qua call; topology không bảo đảm sandbox hay chống rò rỉ.</td></tr>
@@ -530,7 +575,7 @@ footer.site{border-top:1px solid var(--border);padding:26px 24px;text-align:cent
     <!-- ============ MODULE 1 ============ -->
     <div class="container">
       <header class="module-header" data-module="1">
-        <span class="eyebrow">Module 01 · Phần I</span>
+        <span class="eyebrow">Phần I</span>
         <h2>Nền tảng — vì sao cần một chuẩn</h2>
         <p>Trước khi đọc spec, phải thấy bài toán nó giải: N client × M tool = N×M tích hợp viết tay. Ba bài này cho bạn khung nền — vì sao cần một chuẩn mở, kiến trúc host·client·server với policy và biên process cần kiểm riêng, core hiện hành và primitive deprecated với mô hình tương tác tương ứng. Khoá này giả định bạn đã có một agent gọi được tool (muốn học xây agent, xem «Loop Engineering»).</p>
       </header>
@@ -631,9 +676,7 @@ footer.site{border-top:1px solid var(--border);padding:26px 24px;text-align:cent
 
     <p class="mono" style="font-size:12.5px;color:var(--ink-3)">Khoá này giả định bạn đã có một agent gọi được tool. Muốn học xây vòng lặp agent, xem «Loop Engineering»; kỹ nghệ ngữ cảnh và harness, xem «Context &amp; Harness Engineering»; đo độ tin cậy, xem «Agent Reliability &amp; Evaluation».</p>
 
-    <div class="takeaway">
-      <span class="eyebrow">Takeaway
-      </span>
+    <div class="takeaway" role="note" aria-label="Ghi nhớ">
       <p><span class="hl">N×M→N+M là mô hình đếm đầu adapter lý tưởng</span>, không hứa tổng chi phí tích hợp tuyến tính hay mọi client gọi được mọi feature. Kiểm revision, transport, quyền và hỗ trợ capability khi cân reuse.</p>
     </div>
 
@@ -737,9 +780,7 @@ footer.site{border-top:1px solid var(--border);padding:26px 24px;text-align:cent
       </ul></div>
     </div>
 
-    <div class="takeaway">
-      <span class="eyebrow">Takeaway
-      </span>
+    <div class="takeaway" role="note" aria-label="Ghi nhớ">
       <p><span class="hl">Host điều phối chia sẻ dữ liệu; client–server 1:1 không tự cô lập server.</span> Giới hạn tham số/output được phép chuyển, credential, filesystem và egress; server phải tự kiểm tra xác thực và phân quyền.</p>
     </div>
 
@@ -829,8 +870,8 @@ footer.site{border-top:1px solid var(--border);padding:26px 24px;text-align:cent
     <div class="callout warn">
       <div class="callout-title">Trạng thái sáu primitive tính đến bản 2026-07-28</div>
       <p>Bản spec CURRENT <strong>2026-07-28</strong> đánh dấu <strong>Deprecated</strong> (SEP-2577) hai trong ba primitive phía client: <code>roots</code> (chuyển sang truyền thư mục/file qua tham số tool, resource URI hoặc cấu hình server) và <code>sampling</code> (chuyển sang tích hợp thẳng API của LLM provider). Cùng đợt, tiện ích <code>logging</code> phía server cũng vào diện deprecated (ghi ra <code>stderr</code> với stdio, hoặc dùng OpenTelemetry để quan sát). <strong><code>elicitation</code> là primitive phía client duy nhất còn hiệu lực</strong>; ba primitive phía server (<code>tools</code>, <code>resources</code>, <code>prompts</code>) không đổi.</p>
-      <p>Deprecated <em>không</em> phải đã gỡ: tính năng vẫn nằm trong spec, chỉ là đã lên lịch. Bản đầu tiên được phép gỡ chúng là bản phát hành từ 28/07/2027 trở đi. Nghĩa thực dụng: deprecation không tự làm code đang chạy hỏng; cửa sổ tối thiểu 12 tháng tính từ 28/07/2026, không phải thêm một năm từ lúc đọc. Việc gỡ còn phụ thuộc bản phát hành; kiểm client/server trước khi chuyển; nhưng đừng xây thứ <em>mới</em> lên hai primitive đó. (Riêng <code>tasks</code>, thứ bạn sẽ thấy ở bài 3.2, không bị bỏ mà chuyển ra thành extension <code>io.modelcontextprotocol/tasks</code>.)</p>
-      <p>Một đính chính về <em>cách</em> elicitation chạy trên bản CURRENT: server không còn gửi request <code>elicitation/create</code> nữa. Theo pattern <strong>Multi Round-Trip Requests (MRTR, SEP-2322)</strong>, server trả một <code>InputRequiredResult</code> (<code>resultType: "input_required"</code>) mang <code>inputRequests</code>; client thu thập input rồi <strong>gửi lại chính request cũ</strong> (với một JSON-RPC <code>id</code> mới) kèm <code>inputResponses</code>. Spec nói thẳng đây là breaking change, và áp cho cả ba: <code>elicitation/create</code>, <code>sampling/createMessage</code>, <code>roots/list</code>. Cùng đợt, <code>notifications/elicitation/complete</code> và field <code>elicitationId</code> (mới thêm ở 2025-11-25) bị gỡ. Viết server 2026-07-28 mà implement <code>elicitation/create</code> như một request server→client thì nó không bao giờ tới đích. (Xem <code>/specification/2026-07-28/basic/patterns/mrtr</code>.)</p>
+      <p>Deprecated <em>không</em> phải đã gỡ: tính năng vẫn nằm trong spec, chỉ là đã lên lịch. Bản đầu tiên được phép gỡ chúng là bản phát hành từ 28/07/2027 trở đi. Nghĩa thực dụng: deprecation không tự làm code đang chạy hỏng; cửa sổ tối thiểu 12 tháng tính từ 28/07/2026, không phải thêm một năm từ lúc đọc. Việc gỡ còn phụ thuộc bản phát hành; kiểm client/server trước khi chuyển; nhưng đừng xây thứ <em>mới</em> lên hai primitive đó. (Riêng <code>tasks</code>, thứ bạn sẽ thấy ở bài 3.2, không bị bỏ mà chuyển ra thành extension <code>io.<wbr>modelcontextprotocol/<wbr>tasks</code>.)</p>
+      <p>Một đính chính về <em>cách</em> elicitation chạy trên bản CURRENT: server không còn gửi request <code>elicitation/create</code> nữa. Theo pattern <strong>Multi Round-Trip Requests (MRTR, SEP-2322)</strong>, server trả một <code>InputRequiredResult</code> (<code>resultType: "input_required"</code>) mang <code>inputRequests</code>; client thu thập input rồi <strong>gửi lại chính request cũ</strong> (với một JSON-RPC <code>id</code> mới) kèm <code>inputResponses</code>. Spec nói thẳng đây là breaking change, và áp cho cả ba: <code>elicitation/create</code>, <code>sampling/createMessage</code>, <code>roots/list</code>. Cùng đợt, <code>notifications/<wbr>elicitation/<wbr>complete</code> và field <code>elicitationId</code> (mới thêm ở 2025-11-25) bị gỡ. Viết server 2026-07-28 mà implement <code>elicitation/create</code> như một request server→client thì nó không bao giờ tới đích. (Xem <code>/specification/<wbr>2026-<wbr>07-<wbr>28/<wbr>basic/<wbr>patterns/<wbr>mrtr</code>.)</p>
     </div>
 
     <div class="callout danger">
@@ -838,9 +879,7 @@ footer.site{border-top:1px solid var(--border);padding:26px 24px;text-align:cent
       <p>Với client thiết kế prompt như slash-command, user chọn là UX nhất quán; đừng cho model kích hoạt mà không nói rõ. Protocol cho phép cách expose khác, miễn người dùng hiểu quyền và có kiểm soát phù hợp. Resource selection cũng tùy mục đích app; nhãn interaction model không phải lệnh cấm mọi UI khác.</p>
     </div>
 
-    <div class="takeaway">
-      <span class="eyebrow">Takeaway
-      </span>
+    <div class="takeaway" role="note" aria-label="Ghi nhớ">
       <p>Thiết kế mới ưu tiên <span class="hl">tools/resources/prompts và elicitation</span>; nhận diện sampling/roots deprecated. Chọn UX rõ quyền người dùng; form không thu secret, URL mode xử lý tương tác nhạy cảm ngoài client.</p>
     </div>
 
@@ -860,7 +899,7 @@ footer.site{border-top:1px solid var(--border);padding:26px 24px;text-align:cent
     <!-- ============ MODULE 2 ============ -->
     <div class="container">
       <header class="module-header" data-module="2">
-        <span class="eyebrow">Module 02 · Phần II</span>
+        <span class="eyebrow">Phần II</span>
         <h2>Giải phẫu protocol: JSON-RPC, schema, annotation</h2>
         <p>Giờ mở nắp protocol: mọi message là JSON-RPC 2.0, request hiện hành tự mang version/capability; lifecycle cũ được tách riêng, tool khai schema cho cả đầu vào lẫn đầu ra, và annotations chỉ là hint chứ không phải hợp đồng. Ba bài này là phần «đọc spec cho đúng»: nền cho mọi quyết định thiết kế và bảo mật phía sau.</p>
       </header>
@@ -914,7 +953,7 @@ footer.site{border-top:1px solid var(--border);padding:26px 24px;text-align:cent
     <div class="callout info"><div class="callout-title">Lỗi version và discovery</div><p>Version không hỗ trợ trả <code>-32022 UnsupportedProtocolVersionError</code> kèm <code>supported</code> và <code>requested</code>. Client chọn bản cả hai hỗ trợ rồi gửi request mới, hoặc báo lỗi nếu không có giao. <code>server/discover</code> là RPC server MUST có, client MAY gọi; nó không phải bước bắt tay bắt buộc. Error <code>-32602</code> nghĩa Invalid Params, không chẩn đoán riêng lỗi version.</p></div>
     <p>Muốn nhận thay đổi danh sách tool/resource, client hiện hành mở <code>subscriptions/listen</code> với loại sự kiện cần nhận; server phải khai capability liên quan. Notification tiến độ thuộc stream của request gốc. Khi “không thấy thông báo”, kiểm revision → capability → subscription/filter → transport/log; đừng suy nguyên nhân chỉ từ sự im lặng.</p>
     <div class="callout warn"><div class="callout-title">Đọc trace legacy mà không trộn hai hợp đồng</div><p>Revision <strong>2025-11-25 trở về trước</strong> dùng initialize request → initialize response → notifications/initialized, rồi vận hành/đóng transport. Dual-era implementation có thể hỗ trợ cả hai. Trên stdio, client hiện đại nên probe server/discover để xác định era; fallback legacy phải theo transport/versioning docs. Không gửi lẫn handshake cũ vào request hiện đại rồi coi đó là core.</p></div>
-    <div class="takeaway"><span class="eyebrow">Takeaway</span><p><span class="hl">Core 2026-07-28 tự đủ metadata trên từng request.</span> Discovery tùy chọn cho client, bắt buộc server implement; capability và subscription phải đúng revision. Initialize là hợp đồng legacy, không phải bước mở đầu hiện hành.</p></div>
+    <div class="takeaway" role="note" aria-label="Ghi nhớ"><p><span class="hl">Core 2026-07-28 tự đủ metadata trên từng request.</span> Discovery tùy chọn cho client, bắt buộc server implement; capability và subscription phải đúng revision. Initialize là hợp đồng legacy, không phải bước mở đầu hiện hành.</p></div>
     <div class="quiz" data-correct="1"><span class="eyebrow">Kiểm tra nhanh</span><p class="quiz-q">Client gọi server theo revision 2026-07-28. Bước nào mô tả đúng hợp đồng core?</p>
       <button class="quiz-opt" onclick="quizPick(this,0)"><span class="quiz-letter">A</span><span>Luôn initialize rồi chờ initialized trước mọi RPC.</span></button>
       <button class="quiz-opt" onclick="quizPick(this,1)"><span class="quiz-letter">B</span><span>Mỗi request mang version và client capabilities; có thể discover trước, hoặc xử lý lỗi -32022 để chọn version tương thích.</span></button>
@@ -1037,7 +1076,7 @@ footer.site{border-top:1px solid var(--border);padding:26px 24px;text-align:cent
 
     <div class="table-wrap">
       <table>
-        <thead><tr><th>Tầng lỗi</th><th>Khi nào dùng</th><th>Ví dụ</th></tr></thead>
+        <thead><tr><th>Tầng lỗi</th><th>Khi nào dùng</th><th class="prose-column">Ví dụ</th></tr></thead>
         <tbody>
           <tr><td><strong>Protocol error</strong> (JSON-RPC <code>error</code>)</td><td>Bản thân request đã sai</td><td>Gọi tool không tồn tại; params malformed; cursor không hợp lệ (<code>-32602</code>)</td></tr>
           <tr><td><strong>Tool execution error</strong> (<code>isError: true</code> trong result)</td><td>Tool đã chạy nhưng thất bại</td><td>API bên ngoài lỗi/timeout; input sai theo business logic</td></tr>
@@ -1064,9 +1103,7 @@ footer.site{border-top:1px solid var(--border);padding:26px 24px;text-align:cent
       <p>Message lỗi tốt gồm ba thứ: <strong>trạng thái hiện tại</strong>, <strong>hành động khắc phục</strong>, và <strong>phương án thay thế</strong>. Đồng thời sanitize lỗi từ upstream trước khi trả. Stack trace thô có thể không chỉ ra cách phục hồi; message có hướng recover giúp agent chọn bước tiếp theo; vẫn cần giới hạn retry và policy.</p>
     </div>
 
-    <div class="takeaway">
-      <span class="eyebrow">Takeaway
-      </span>
+    <div class="takeaway" role="note" aria-label="Ghi nhớ">
       <p>Khai <code>outputSchema</code> và trả <code>structuredContent</code> để code hạ nguồn nhận <span class="hl">JSON có kiểu thay vì regex bới text</span>; và khi tool chạy nhưng hỏng, báo bằng <code>isError: true</code> với message model tự-sửa-được: đừng ném stack trace, đừng nhầm sang lỗi protocol.</p>
     </div>
 
@@ -1114,7 +1151,7 @@ footer.site{border-top:1px solid var(--border);padding:26px 24px;text-align:cent
 
     <div class="table-wrap">
       <table>
-        <thead><tr><th>Annotation</th><th>Nghĩa của hint</th><th>Mặc định</th></tr></thead>
+        <thead><tr><th>Annotation</th><th class="prose-column">Nghĩa của hint</th><th>Mặc định</th></tr></thead>
         <tbody>
           <tr><td><code>readOnlyHint</code></td><td>Server khai rằng tool không thay đổi môi trường</td><td><code>false</code></td></tr>
           <tr><td><code>destructiveHint</code></td><td>Server khai có thể cập nhật phá huỷ; chỉ áp dụng khi <code>readOnly=false</code></td><td><code>true</code> ⚠</td></tr>
@@ -1169,9 +1206,7 @@ footer.site{border-top:1px solid var(--border);padding:26px 24px;text-align:cent
       <p>Annotation giống nhãn "hàng dễ vỡ" người gửi tự dán lên thùng: với nguồn đã kiểm, cái nhãn có thể hỗ trợ UX theo policy, nhưng không tự cấp quyền hay chứng minh không lộ dữ liệu. Nhưng với một kiện từ người lạ, cái nhãn "vô hại" không đảm bảo bên trong không có gì nguy hiểm. Chỗ analogy gãy: thùng hàng không tự viết lại nhãn giữa đường, còn định nghĩa tool thì có thể bị đổi ngầm sau khi được duyệt (đòn "rug pull" bạn sẽ gặp ở Phần bảo mật).</p>
     </div>
 
-    <div class="takeaway">
-      <span class="eyebrow">Takeaway
-      </span>
+    <div class="takeaway" role="note" aria-label="Ghi nhớ">
       <p><span class="hl">Annotation là hint, không phải authorization hay sandbox.</span> Server khai trung thực; host coi annotation từ server chưa tin là untrusted và quyết approval theo policy đã kiểm. Giá trị mặc định không bảo đảm mọi client sẽ bật confirmation.</p>
     </div>
 
@@ -1191,7 +1226,7 @@ footer.site{border-top:1px solid var(--border);padding:26px 24px;text-align:cent
     <!-- ============ MODULE 3 ============ -->
     <div class="container">
       <header class="module-header" data-module="3">
-        <span class="eyebrow">Module 03 · Phần III</span>
+        <span class="eyebrow">Phần III</span>
         <h2>Transport & phiên bản</h2>
         <p>Protocol chạy trên dây nào và phiên bản nào: hai câu hỏi tưởng phụ mà quyết định kiến trúc deploy. Bài đầu so stdio với Streamable HTTP (và vì sao HTTP+SSE cũ bị thay); bài sau dạy cách đọc changelog spec như kỹ sư, pin version, xác định bản CURRENT và phân biệt các revision legacy khi đọc trace.</p>
       </header>
@@ -1278,9 +1313,7 @@ footer.site{border-top:1px solid var(--border);padding:26px 24px;text-align:cent
       </details>
     </div>
 
-    <div class="takeaway">
-      <span class="eyebrow">Takeaway
-      </span>
+    <div class="takeaway" role="note" aria-label="Ghi nhớ">
       <p>stdio cho server chạy local, Streamable HTTP một-endpoint cho remote, và mọi server HTTP phải <span class="hl">validate Origin header</span>, nếu không DNS rebinding biến một website bất kỳ thành kẻ gọi tool local (đúng như CVE-2025-66414).</p>
     </div>
 
@@ -1363,13 +1396,13 @@ footer.site{border-top:1px solid var(--border);padding:26px 24px;text-align:cent
 
     <div class="table-wrap">
       <table>
-        <thead><tr><th>Bản spec</th><th>Publish (GitHub Releases)</th><th>Đổi lớn cần đọc trước khi nâng</th></tr></thead>
+        <thead><tr><th>Bản spec</th><th>Publish (GitHub Releases)</th><th class="detail-column">Đổi lớn cần đọc trước khi nâng</th></tr></thead>
         <tbody>
           <tr><td class="mono">2024-11-05</td><td class="mono">2025-01-17</td><td>Public launch; HTTP+SSE</td></tr>
           <tr><td class="mono">2025-03-26</td><td class="mono">2025-03-26</td><td>OAuth 2.1; Streamable HTTP <b>thay</b> HTTP+SSE; tool annotations; <b>thêm</b> JSON-RPC batching</td></tr>
           <tr><td class="mono">2025-06-18</td><td class="mono">2025-06-18</td><td><b>Bỏ</b> batching; structured output; MCP server = OAuth Resource Server</td></tr>
           <tr><td class="mono">2025-11-25</td><td class="mono">2025-11-25</td><td><b>Bản trước</b> — vẫn là một revision legacy cần kiểm khi tương tác; OIDC discovery; tasks (thử nghiệm)</td></tr>
-          <tr><td class="mono">2026-07-28</td><td class="mono">2026-07-28<br>(<a href="https://blog.modelcontextprotocol.io/posts/2026-07-28-release-candidate/" target="_blank" rel="noopener noreferrer">công bố RC 21/05/2026</a>)</td><td><b>CURRENT — final 28/07/2026</b>; bỏ <code>initialize</code>/<code>initialized</code> và <code>Mcp-Session-Id</code>, thay bằng <code>server/discover</code> + <code>_meta</code> trên từng request; Extensions; Roots/Sampling/Logging và Dynamic Client Registration vào diện Deprecated, cửa sổ ≥ 12 tháng; <b>MRTR</b> thay request server→client (sampling/elicitation/roots giờ đi qua <code>InputRequiredResult</code> + <code>inputResponses</code>, SEP-2322); mọi result mang field bắt buộc <code>resultType</code>; <b><code>subscriptions/listen</code></b> thay GET endpoint và <code>resources/subscribe</code>; <b>bỏ SSE resumability</b> (<code>Last-Event-ID</code>); bỏ <code>ping</code>, <code>logging/setLevel</code>, <code>notifications/roots/list_changed</code>; bắt buộc header <code>Mcp-Method</code> trên mọi request, và <code>Mcp-Name</code> trên <code>tools/call</code>/<code>resources/read</code>/<code>prompts/get</code> (lệch header↔body → <code>-32020 HeaderMismatch</code>); <code>ttlMs</code> + <code>cacheScope</code> bắt buộc trên mọi list result và cả <code>resources/read</code>, qua interface <code>CacheableResult</code> (SEP-2549); dải error code mới <code>-32020..-32099</code></td></tr>
+          <tr><td class="mono">2026-07-28</td><td class="mono">2026-07-28<br>(<a href="https://blog.modelcontextprotocol.io/posts/2026-07-28-release-candidate/" target="_blank" rel="noopener noreferrer">công bố RC 21/05/2026</a>)</td><td><b>CURRENT — final 28/07/2026</b>; bỏ <code>initialize</code>/<code>initialized</code> và <code>Mcp-Session-Id</code>, thay bằng <code>server/discover</code> + <code>_meta</code> trên từng request; Extensions; Roots/Sampling/Logging và Dynamic Client Registration vào diện Deprecated, cửa sổ ≥ 12 tháng; <b>MRTR</b> thay request server→client (sampling/elicitation/roots giờ đi qua <code>InputRequiredResult</code> + <code>inputResponses</code>, SEP-2322); mọi result mang field bắt buộc <code>resultType</code>; <b><code>subscriptions/listen</code></b> thay GET endpoint và <code>resources/subscribe</code>; <b>bỏ SSE resumability</b> (<code>Last-Event-ID</code>); bỏ <code>ping</code>, <code>logging/setLevel</code>, <code>notifications/<wbr>roots/<wbr>list_<wbr>changed</code>; bắt buộc header <code>Mcp-Method</code> trên mọi request, và <code>Mcp-Name</code> trên <code>tools/call</code>/<code>resources/read</code>/<code>prompts/get</code> (lệch header↔body → <code>-32020 HeaderMismatch</code>); <code>ttlMs</code> + <code>cacheScope</code> bắt buộc trên mọi list result và cả <code>resources/read</code>, qua interface <code>CacheableResult</code> (SEP-2549); dải error code mới <code>-32020..-32099</code></td></tr>
         </tbody>
       </table>
     </div>
@@ -1381,7 +1414,7 @@ footer.site{border-top:1px solid var(--border);padding:26px 24px;text-align:cent
       <p><strong>Extensions là tùy chọn ngoài core.</strong> Hai bên phải khai support trong capabilities.extensions, nếu bên kia không hỗ trợ thì fallback core hoặc reject theo extension. Không giả định client nào cũng cài: Tasks, MCP Apps, Skills, OAuth Client Credentials và Enterprise-Managed Authorization có phạm vi/stage riêng. Kiểm identifier, stage và phiên bản extension khi chọn SDK.</p>
       <div class="table-wrap">
         <table>
-          <thead><tr><th>Extension</th><th>Nó giải bài toán gì</th></tr></thead>
+          <thead><tr><th>Extension</th><th class="prose-column">Nó giải bài toán gì</th></tr></thead>
           <tbody>
             <tr><td class="mono">io.modelcontextprotocol/tasks</td><td>Việc chạy dài: polling bằng <code>tasks/get</code>, nhận input giữa chừng bằng <code>tasks/update</code>, task handle bền (durable)</td></tr>
             <tr><td><b>Skills</b> (<span class="mono">io.modelcontextprotocol/skills</span>)</td><td>Discovery và sử dụng skill theo extension; cần client/server hỗ trợ</td></tr>
@@ -1398,9 +1431,7 @@ footer.site{border-top:1px solid var(--border);padding:26px 24px;text-align:cent
       <p>Một tài liệu <em>giả định</em> viết trước ngày release có thể gọi 2026-07-28 là RC; sau release, người đọc phải kiểm lại current/versioned docs. Ngày xuất bản tài liệu không chứng minh nó còn đúng. Ghi revision và source; dùng changelog để xác định breaking change thay vì chỉ sửa nhãn ngày.</p>
     </div>
 
-    <div class="takeaway">
-      <span class="eyebrow">Takeaway
-      </span>
+    <div class="takeaway" role="note" aria-label="Ghi nhớ">
       <p>Đừng học thuộc một bản spec, <span class="hl">pin protocol version và đọc changelog</span> trước khi nâng SDK. Theo spec: bản CURRENT là 2026-07-28 (final 28/07/2026, bỏ bắt tay <code>initialize</code>), còn 2025-11-25 vẫn là revision legacy trước; bạn cần đọc được cả hai, và cần biết SDK của mình đang nói bản nào.</p>
     </div>
 
@@ -1420,7 +1451,7 @@ footer.site{border-top:1px solid var(--border);padding:26px 24px;text-align:cent
     <!-- ============ MODULE 4 ============ -->
     <div class="container">
       <header class="module-header" data-module="4">
-        <span class="eyebrow">Module 04 · Phần IV</span>
+        <span class="eyebrow">Phần IV</span>
         <h2>Bảo mật MCP: OAuth, tấn công, phòng thủ</h2>
         <p>MCP mở ra một bề mặt tấn công đặc trưng: phần model đọc được mà user không thấy. Ba bài này đi từ luồng OAuth 2.1 đúng vai (MCP server là resource server, cộng scope và step-up), qua bề mặt tấn công ở <em>cả hai kênh</em>, rồi tới các lớp phòng thủ: hai lệnh MUST của spec, cộng những pattern hardening mà client phải tự thêm. Hai kênh đó là definition-time với ba đòn đã xảy ra thật (tool poisoning, rug pull có CVE, confused deputy) và runtime, nơi một server hoàn toàn trung thực vẫn tha chỉ thị của kẻ lạ về trong kết quả tool.</p>
       </header>
@@ -1569,9 +1600,7 @@ footer.site{border-top:1px solid var(--border);padding:26px 24px;text-align:cent
       <p>Toàn bộ luồng trên giả định <em>có một con người, có một trình duyệt, tại thời điểm consent</em>. Ngày càng nhiều caller là agent: workload cloud có danh tính riêng, hoặc sub-agent cần quyền hẹp hơn cha nó. Roadmap MCP (cập nhật 22/08/2026) đặt đây là <strong>ưu tiên số 3</strong> với hai deliverable có tên: <strong>DPoP</strong> (Demonstrating Proof of Possession: token gắn với khoá, chống replay) và <strong>agent identity/delegation</strong> qua Workload Identity Federation (SEP-1933), ID-JAG, và RFC 8693 token exchange, chính RFC 8693 bạn sẽ gặp ở bài 4.3. Đây là hướng phát triển, không phải cam kết core hay kết luận mọi cơ chế danh tính đều chưa dùng được. ID-JAG đã được dùng trong Enterprise-Managed Authorization; extension này và client credentials hiện được catalog xếp Stable. Chỉ dùng extension khi client/AS/server hỗ trợ đúng contract; pin phiên bản và kiểm quyền thực tế thay vì chờ một roadmap chung.</p>
     </div>
 
-    <div class="takeaway">
-      <span class="eyebrow">Takeaway
-      </span>
+    <div class="takeaway" role="note" aria-label="Ghi nhớ">
       <p><span class="hl">Resource server kiểm token đầy đủ và authorization từng thao tác</span>: issuer/chữ ký hoặc introspection, hạn dùng, audience, scope và quyền đối tượng/tenant. AS lo login/consent/cấp token; hai vai có thể co-host. Không có “đúng audience là đủ an toàn”.</p>
     </div>
 
@@ -1654,7 +1683,7 @@ footer.site{border-top:1px solid var(--border);padding:26px 24px;text-align:cent
 
     <div class="table-wrap">
       <table>
-        <thead><tr><th>Đòn</th><th>Cơ chế</th><th>Ca thật</th></tr></thead>
+        <thead><tr><th>Đòn</th><th class="detail-column">Cơ chế</th><th class="detail-column">Ca thật</th></tr></thead>
         <tbody>
           <tr><td><strong>Tool poisoning</strong></td><td>Chỉ thị độc nhét sẵn trong mô tả tool ngay từ đầu — invisible với user, visible với model.</td><td>WhatsApp MCP, Invariant Labs 2025-04-07.</td></tr>
           <tr><td><strong>Rug pull</strong></td><td>Thứ đã được approve <em>một lần</em> bị âm thầm đổi <em>sau khi</em> đã được tin — có thể là định nghĩa tool server phục vụ, có thể là entry cấu hình phía client. Spec không bắt buộc theo dõi thay đổi hay re-approve.</td><td>CVE-2025-54136 "MCPoison" (Cursor ≤ 1.2.4) — biến thể ở tầng <em>config</em>: sửa <code>command</code>/<code>args</code> của một entry MCP đã approve thì chạy lại không hỏi. CVE công bố 01/08/2025; bản vá 1.3. Ngày reserve CVE 16/07 không phải ngày công bố.</td></tr>
@@ -1709,9 +1738,7 @@ footer.site{border-top:1px solid var(--border);padding:26px 24px;text-align:cent
       <p><strong>MCPTox v2</strong> (arXiv 2508.14925, cập nhật 29/09/2026) mô tả 45 server, 353 tool, 1.348 test case và 20 agent; o1-mini có attack success 72,8%, refusal cao nhất trong nhóm vẫn dưới 3% (Claude 3.7 Sonnet). Đây là kết quả của bộ task/model/attack đó, không phải tỷ lệ production hay luật model mạnh hơn luôn dễ bị lừa. Nghiên cứu là bằng chứng cần eval đối kháng, không phải bảo đảm guard nào sẽ chặn được.</p>
     </div>
 
-    <div class="takeaway">
-      <span class="eyebrow">Takeaway
-      </span>
+    <div class="takeaway" role="note" aria-label="Ghi nhớ">
       <p><span class="hl">Review cả nội dung định nghĩa/config, OAuth consent và dữ liệu runtime.</span> Pin phát hiện thay đổi; provenance giúp nhận diện dữ liệu bên thứ ba; auth/egress guard ngoài model hạn chế hậu quả ở nhiều kênh. Không coi domain allowlist hay một lần approve là bảo đảm an toàn.</p>
     </div>
 
@@ -1841,9 +1868,7 @@ footer.site{border-top:1px solid var(--border);padding:26px 24px;text-align:cent
 [ ] Credential process stdio bind principal/task rõ; workload/delegated identity được audit đúng?</pre>
     </div>
 
-    <div class="takeaway">
-      <span class="eyebrow">Takeaway
-      </span>
+    <div class="takeaway" role="note" aria-label="Ghi nhớ">
       <p><span class="hl">Validate token/authorization và không passthrough.</span> Downstream grant phải đúng identity/delegation; hash-pin provenance+nội dung cùng config là hardening bổ sung. Thay description có thể đổi hành vi: review trước khi dùng, không phân loại là vô hại chỉ vì trông như typo.</p>
     </div>
 
@@ -1863,7 +1888,7 @@ footer.site{border-top:1px solid var(--border);padding:26px 24px;text-align:cent
     <!-- ============ MODULE 5 ============ -->
     <div class="container">
       <header class="module-header" data-module="5">
-        <span class="eyebrow">Module 05 · Phần V</span>
+        <span class="eyebrow">Phần V</span>
         <h2>Thiết kế server tốt</h2>
         <p>Server «chạy được» khác server «agent dùng được». Phần này trình bày thiết kế: tool description là prompt, granularity theo workflow thay vì wrap REST 1:1, ngân sách context với tool search và code execution, cách quyết định khi nào cần MCP, và cuối cùng là cách <em>đo</em>, để mọi quyết định thiết kế ở trên có một con số trả lời thay vì cảm tính.</p>
       </header>
@@ -1952,9 +1977,7 @@ footer.site{border-top:1px solid var(--border);padding:26px 24px;text-align:cent
       <p>Ở bài 4.2 bạn thấy <strong>tool poisoning</strong> lợi dụng đúng kênh này: model đọc trọn description mà người dùng chỉ thấy tóm tắt. Description vừa hướng dẫn cách dùng tool vừa có thể mang chỉ thị tấn công. Thiết kế tốt và phòng thủ dùng chung một hiểu biết.</p>
     </div>
 
-    <div class="takeaway">
-      <span class="eyebrow">Takeaway
-      </span>
+    <div class="takeaway" role="note" aria-label="Ghi nhớ">
       <p>Tool description là <span class="hl">prompt</span> — mỗi chữ trong tên/param định hình cách agent dùng tool; viết như onboarding người mới, đặt tên có namespace, và gộp tool theo workflow thay vì wrap 1:1 endpoint REST cũ, <span class="hl">nhưng không bao giờ gộp xuyên ranh giới phê duyệt</span>: gộp theo cùng principal, phạm vi dữ liệu, ý định và quyền đã duyệt; giữ checkpoint nếu cần xin quyền giữa hai thao tác. Read+write có thể là một hành động atomic hợp lệ, còn hai read vẫn có thể vượt scope riêng tư.</p>
     </div>
 
@@ -2020,7 +2043,7 @@ footer.site{border-top:1px solid var(--border);padding:26px 24px;text-align:cent
 
     <div class="callout insight">
       <div class="callout-title">Cập nhật 2026: bạn không còn phải tự viết <code>search_tools</code> nữa</div>
-      <p>Bài viết gốc mô tả progressive disclosure như thứ bạn tự dựng ở tầng ứng dụng. Từ đó tới nay nó đã thành <em>tính năng nền tảng</em>: <strong>Tool Search Tool</strong> lên public beta 24/11/2025 và <strong>GA trên Claude API ngày 17/02/2026</strong> (không cần beta header). Cơ chế: bạn vẫn gửi <em>toàn bộ</em> định nghĩa tool trong mảng <code>tools</code> mỗi request, nhưng đánh <code>defer_loading: true</code> lên những tool không cần nạp sẵn. Những tool đó bị loại khỏi prefix system prompt, và chỉ được nạp vào context khi model chủ động tìm thấy. Hai biến thể có sẵn: <code>tool_search_tool_regex_20251119</code> (model viết pattern <code>re.search()</code> của Python, tối đa 200 ký tự) và <code>tool_search_tool_bm25_20251119</code> (model hỏi bằng ngôn ngữ tự nhiên, tối đa 500 ký tự). Cả hai tìm trên tên, description, tên tham số <em>và</em> mô tả tham số — tên và description ảnh hưởng việc tool có <em>được tìm thấy</em> hay không.</p>
+      <p>Bài viết gốc mô tả progressive disclosure như thứ bạn tự dựng ở tầng ứng dụng. Từ đó tới nay nó đã thành <em>tính năng nền tảng</em>: <strong>Tool Search Tool</strong> lên public beta 24/11/2025 và <strong>GA trên Claude API ngày 17/02/2026</strong> (không cần beta header). Cơ chế: bạn vẫn gửi <em>toàn bộ</em> định nghĩa tool trong mảng <code>tools</code> mỗi request, nhưng đánh <code>defer_loading: true</code> lên những tool không cần nạp sẵn. Những tool đó bị loại khỏi prefix system prompt, và chỉ được nạp vào context khi model chủ động tìm thấy. Hai biến thể có sẵn: <code>tool_<wbr>search_<wbr>tool_<wbr>regex_<wbr>20251119</code> (model viết pattern <code>re.search()</code> của Python, tối đa 200 ký tự) và <code>tool_<wbr>search_<wbr>tool_<wbr>bm25_<wbr>20251119</code> (model hỏi bằng ngôn ngữ tự nhiên, tối đa 500 ký tự). Cả hai tìm trên tên, description, tên tham số <em>và</em> mô tả tham số — tên và description ảnh hưởng việc tool có <em>được tìm thấy</em> hay không.</p>
       <p>Trong ví dụ vendor 50+MCPtool, Anthropic báo context khoảng77K→8,7K token. Tính trực tiếp hai số làm tròn này cho <strong>≈88,7% giảm</strong>; bài viết gọi mức giảm token usage là85% nhưng không nên đồng nhất hai phép đo. Eval nội bộ của họ báo Opus 4:49%→74%, Opus 4.5:79,5%→88,1%; đó là kết quả setup/model cụ thể, không bảo đảm mọi tool library sẽ chính xác hơn.</p>
     </div>
 
@@ -2086,13 +2109,11 @@ footer.site{border-top:1px solid var(--border);padding:26px 24px;text-align:cent
       <p>Giảm số tool definitions cần cân bằng với khả năng tái dùng cache. Trong prompt caching, thứ tự dựng prefix là <strong>tools → system → messages</strong>: tool definitions nằm ở <em>đầu</em> prefix được cache. Mà cache là <em>prefix match</em> — đổi một byte ở đầu thì mọi thứ phía sau mất cache. Nên hoán tool giữa chừng một cuộc hội thoại thiệt hại vượt xa phần tool: nó <strong>làm mất cache của prefix</strong>, kể cả lịch sử hội thoại dài phía sau.</p>
       <p>Với tầng 2 ở trên: tool search <em>được thiết kế để không phá cache</em>. Tool bị defer bị loại khỏi prefix system prompt ngay từ đầu, và khi model tìm thấy một cái, API chèn <code>tool_reference</code> <em>trong dòng hội thoại</em> rồi mới bung thành định nghĩa đầy đủ; prefix không bị đụng tới. Đổi lại có một luật nhỏ dễ vấp: một tool đã <code>defer_loading: true</code> thì <strong>không</strong> được mang <code>cache_control</code> (API trả 400) — đặt breakpoint cache lên một tool không defer.</p>
       <p>(Cơ chế prefix cache và cách đọc <code>usage.*</code> dạy kỹ ở «Context &amp; Harness Engineering» bài 2.2; ở đây ta chỉ lấy phần riêng của tầng tool: tool definitions nằm ở đầu prefix.)</p>
-      <p>Ba hệ quả thực dụng. <strong>Một</strong>: cho progressive disclosure chạy <em>append-only</em>, thêm tool khi cần, đừng tráo qua tráo lại. <strong>Hai</strong>: nếu bạn thật sự cần đổi bộ tool giữa chừng thì đừng sửa mảng <code>tools</code>: tài liệu ghi thẳng rằng <em>"Modifying tool definitions"</em> làm mất <em>"Entire cache (tools, system, messages)"</em>. Đường đúng chính là cơ chế vừa mô tả ở đoạn trên: <code>defer_loading</code> + tool search, nơi tool tìm thấy đi vào hội thoại dưới dạng <code>tool_reference</code>, tài liệu nói discovery qua tool search giữ được cache theo cơ chế này. (Claude API docs, "Tool use with prompt caching".) Từ 22/09/2026 có thêm một đường thứ hai, đang beta (header <code>inline-tools-2026-09-15</code>): khai tool trong một system message giữa hội thoại để thêm tool hoặc đổi schema mà không phải sửa mảng tools hay làm mất cache theo contract beta; với MCP connector (thêm header <code>mcp-client-2026-09-15</code>), định nghĩa đó có thể là cả một MCP toolset. (Claude API release notes.) <strong>Ba</strong>: đo chứ đừng đoán, nhìn <code>usage.cache_read_input_tokens</code> trước và sau khi đổi; nếu nó về 0 giữa các request giống nhau, có một thứ đang âm thầm phá cache.</p>
+      <p>Ba hệ quả thực dụng. <strong>Một</strong>: cho progressive disclosure chạy <em>append-only</em>, thêm tool khi cần, đừng tráo qua tráo lại.</p><p><strong>Hai</strong>: nếu bạn thật sự cần đổi bộ tool giữa chừng thì đừng sửa mảng <code>tools</code>: tài liệu ghi thẳng rằng <em>"Modifying tool definitions"</em> làm mất <em>"Entire cache (tools, system, messages)"</em>. Đường đúng chính là cơ chế vừa mô tả ở đoạn trên: <code>defer_loading</code> + tool search, nơi tool tìm thấy đi vào hội thoại dưới dạng <code>tool_reference</code>, tài liệu nói discovery qua tool search giữ được cache theo cơ chế này. (Claude API docs, "Tool use with prompt caching".) Từ 22/09/2026 có thêm một đường thứ hai, đang beta (header <code>inline-tools-2026-09-15</code>): khai tool trong một system message giữa hội thoại để thêm tool hoặc đổi schema mà không phải sửa mảng tools hay làm mất cache theo contract beta; với MCP connector (thêm header <code>mcp-client-2026-09-15</code>), định nghĩa đó có thể là cả một MCP toolset. (Claude API release notes.)</p><p><strong>Ba</strong>: đo chứ đừng đoán, nhìn <code>usage.<wbr>cache_<wbr>read_<wbr>input_<wbr>tokens</code> trước và sau khi đổi; nếu nó về 0 giữa các request giống nhau, có một thứ đang âm thầm phá cache.</p>
       <p>Và phân biệt hai cần gạt khác hẳn nhau: <strong>giảm định nghĩa tool</strong> (bài này) là chuyện đầu prefix; <strong>context editing</strong> (dọn các <em>kết quả</em> tool đã cũ ra khỏi hội thoại) là chuyện đuôi prefix. Chúng giải hai vấn đề khác nhau, đừng dùng cái này thay cái kia.</p>
     </div>
 
-    <div class="takeaway">
-      <span class="eyebrow">Takeaway
-      </span>
+    <div class="takeaway" role="note" aria-label="Ghi nhớ">
       <p><span class="hl">Đo rồi chọn upfront, tool search hoặc gateway; sandbox/broker phải kiểm quyền từng call.</span> Ví dụ vendor 150K→2K giảm 98,7%; ví dụ 77K→8,7K giảm ≈88,7% theo số làm tròn. Đây là minh hoạ, không phải mức tiết kiệm chung hay ngưỡng bắt buộc1–5%.</p>
     </div>
 
@@ -2136,7 +2157,7 @@ footer.site{border-top:1px solid var(--border);padding:26px 24px;text-align:cent
       <p>MCP giải bài toán N×M: một protocol để <em>nhiều</em> client/model dùng <em>nhiều</em> server khác nhau mà không viết lại adapter mỗi lần. Giá trị đó lớn nhất khi bạn thật sự có nhiều bên dùng chung. Armin Ronacher (tác giả Flask) nêu một phản biện công khai: nếu use case chỉ chạy nội bộ, một model, ưu tiên tốc độ dev, thì <strong>CLI hoặc function calling trực tiếp</strong> có thể rẻ hơn: không tốn context tool-definition upfront, và compose được qua pipe/script. Đây là <em>quan điểm phản biện công khai, không phải khẳng định của Anthropic hay MCP maintainers</em> — nhưng là bộ lọc thực tế trước khi bỏ công dựng server. ("Tools: Code Is All You Need", 03/07/2025; "Your MCP Doesn't Need 30 Tools: It Needs Code", 18/08/2025)</p>
     </div>
 
-    <figure class="figure"><div class="table-wrap"><table><thead><tr><th>Câu hỏi</th><th>Điều cần cân nhắc</th></tr></thead><tbody><tr><td>Khác process, ngôn ngữ hoặc trust domain?</td><td>Cần giao diện trên dây; MCP là một lựa chọn cùng HTTP/API/CLI, không phải đáp án duy nhất.</td></tr><tr><td>Caller do bên khác quản lý?</td><td>Schema/discovery/version interoperability thường có giá trị hơn.</td></tr><tr><td>Nhiều client dùng chung?</td><td>Adapter chuẩn có thể giảm lặp việc; một client vẫn có thể hưởng lợi từ ecosystem/tooling.</td></tr></tbody></table></div><figcaption><b>Hình 5.3</b>. Ba câu hỏi để cân chi phí/lợi ích, không phải ba điều kiện bắt buộc đều phải CÓ. Chọn theo deployment, quyền và khả năng vận hành đã đo.</figcaption></figure>
+    <figure class="figure"><div class="table-wrap"><table><thead><tr><th>Câu hỏi</th><th class="prose-column">Điều cần cân nhắc</th></tr></thead><tbody><tr><td>Khác process, ngôn ngữ hoặc trust domain?</td><td>Cần giao diện trên dây; MCP là một lựa chọn cùng HTTP/API/CLI, không phải đáp án duy nhất.</td></tr><tr><td>Caller do bên khác quản lý?</td><td>Schema/discovery/version interoperability thường có giá trị hơn.</td></tr><tr><td>Nhiều client dùng chung?</td><td>Adapter chuẩn có thể giảm lặp việc; một client vẫn có thể hưởng lợi từ ecosystem/tooling.</td></tr></tbody></table></div><figcaption><b>Hình 5.3</b>. Ba câu hỏi để cân chi phí/lợi ích, không phải ba điều kiện bắt buộc đều phải CÓ. Chọn theo deployment, quyền và khả năng vận hành đã đo.</figcaption></figure>
 
     <p>Dùng ba câu hỏi như checklist ra quyết định, không phải định lý hay phép AND. Một server first-party cho một client vẫn có thể đáng công nếu bạn cần interoperability, tooling hoặc ranh giới triển khai; bên khác process cũng có thể dùng API/CLI đơn giản hơn.</p>
     <ol class="steps">
@@ -2147,7 +2168,7 @@ footer.site{border-top:1px solid var(--border);padding:26px 24px;text-align:cent
 
     <div class="callout insight">
       <div class="callout-title">Hộp «CLI / function calling» gộp hai thứ trái ngược nhau</div>
-      <p>Vẽ chung một hộp là tiện cho hình, nhưng hai lựa chọn đó không thay thế được nhau. <strong>CLI có hình dáng của code execution</strong>: nó compose rất mạnh: pipe, vòng lặp, <code>jq</code>, ghép mười lệnh thành một dòng, và kết quả trung gian không đi qua context (đúng cơ chế bài 5.2 vừa dạy). Cái nó dở là cổng: khi agent gõ <em>một chuỗi shell</em>, bạn còn rất ít chỗ để chen vào mà hỏi «có chắc không» hay ghi audit ở mức từng thao tác. Bạn duyệt một dòng lệnh, không phải một hành động có cấu trúc. <strong>Native function calling thì có hình dáng của cái cổng</strong>: mỗi lời gọi là một tên tool cộng một object tham số đã kiểm kiểu — soi được, log được, chặn được từng cái một; đổi lại nó compose kém, orchestrator có thể batch/compose có cấu trúc; không bắt buộc mỗi bước quay lại model.</p>
+      <p>Vẽ chung một hộp là tiện cho hình, nhưng hai lựa chọn đó không thay thế được nhau. <strong>CLI có hình dáng của code execution</strong>: nó compose rất mạnh: pipe, vòng lặp, <code>jq</code>, ghép mười lệnh thành một dòng, và kết quả trung gian không đi qua context (đúng cơ chế bài 5.2 vừa dạy). Cái nó dở là cổng: khi agent gõ <em>một chuỗi shell</em>, bạn còn rất ít chỗ để chen vào mà hỏi «có chắc không» hay ghi audit ở mức từng thao tác. Bạn duyệt một dòng lệnh, không phải một hành động có cấu trúc.</p><p><strong>Native function calling thì có hình dáng của cái cổng</strong>: mỗi lời gọi là một tên tool cộng một object tham số đã kiểm kiểu — soi được, log được, chặn được từng cái một; đổi lại nó compose kém, orchestrator có thể batch/compose có cấu trúc; không bắt buộc mỗi bước quay lại model.</p>
       <p>Nên đừng hỏi «CLI hay function calling». Hỏi: <em>việc này cần compose nhiều bước trên dữ liệu lớn, hay cần một cổng để duyệt và ghi lại?</em> So các lựa chọn trên tác vụ cụ thể.</p>
       <p><strong>Có thể phối hợp cả ba nếu tác vụ cần.</strong> Ba cơ chế phù hợp các nhu cầu khác nhau: <span class="hl">native function có thể phù hợp cho tool first-party</span> (ít transport overhead, dễ kiểm quyền từng call), <span class="hl">MCP cho thứ của bên thứ ba hoặc chạy remote</span> (nơi hợp đồng và ranh giới tin cậy đáng tiền), <span class="hl">code execution cho tác vụ nặng dữ liệu</span> (nơi kết quả trung gian không được phép đi qua context). Một hoặc nhiều cơ chế đều hợp lý nếu đáp ứng phạm vi, quyền và vận hành.</p>
     </div>
@@ -2175,9 +2196,7 @@ footer.site{border-top:1px solid var(--border);padding:26px 24px;text-align:cent
       <p>Chọn MCP cần xử lý bề mặt liên quan: OAuth/audience khi dùng HTTP có bảo vệ, credential của stdio, và các kênh injection/rug pull (bài 4.2–4.3). Chi phí context phụ thuộc client nạp định nghĩa/kết quả thế nào; deferred loading có thể giảm phần nạp sẵn. CLI/function cũng cần kiểm quyền và chống dữ liệu không tin cậy, nên so tổng chi phí thay vì coi chúng miễn rủi ro.</p>
     </div>
 
-    <div class="takeaway">
-      <span class="eyebrow">Takeaway
-      </span>
+    <div class="takeaway" role="note" aria-label="Ghi nhớ">
       <p><span class="hl">Cân ranh giới triển khai, ai quản lý caller, và nhu cầu reuse.</span> Không cần cả ba đều có mới được chọn MCP. CLI compose thuận tiện nhưng vẫn cần sandbox/broker để kiểm operation; native function và MCP đều có thể có policy/audit từng call.</p>
     </div>
 
@@ -2286,7 +2305,7 @@ footer.site{border-top:1px solid var(--border);padding:26px 24px;text-align:cent
 
     <div class="table-wrap">
       <table>
-        <thead><tr><th>Con số</th><th>Đo cái gì</th><th>Khi nó xấu, nghi bài nào trước</th></tr></thead>
+        <thead><tr><th>Con số</th><th class="prose-column">Đo cái gì</th><th class="detail-column">Khi nó xấu, nghi bài nào trước</th></tr></thead>
         <tbody>
           <tr><td><strong>Tool-selection accuracy</strong></td><td>Tỉ lệ lượt agent chọn đúng tool đáng lẽ phải chọn.</td><td>Kiểm tên/description và tool trùng nghĩa (5.1), số definitions thực nạp (5.2), model và task. Kết quả vendor không đặt một ngưỡng tool chung cho mọi hệ thống.</td></tr>
           <tr><td><strong>Calls per task</strong></td><td>Trung bình số lời gọi tool để xong một việc.</td><td>Kiểm granularity (5.1), retry, kiểm tra quyền và độ khó task; không suy wrap 1:1 chỉ từ số call.</td></tr>
@@ -2330,9 +2349,7 @@ footer.site{border-top:1px solid var(--border);padding:26px 24px;text-align:cent
 [ ] MCP Inspector cho smoke test tay — KHÔNG thay cho bộ eval</pre>
     </div>
 
-    <div class="takeaway">
-      <span class="eyebrow">Takeaway
-      </span>
+    <div class="takeaway" role="note" aria-label="Ghi nhớ">
       <p><span class="hl">Eval cần fixture, verifier và quy tắc ra quyết định rõ.</span> Bắt đầu 20–40 task rồi mở rộng coverage/held-out; đọc selection/success cùng calls/token; code verifier không xóa nhiễu của agent/task/tool. Chặn vi phạm quyền và regression có ý nghĩa theo policy, không mọi dao động đơn lẻ.</p>
     </div>
 
@@ -2353,7 +2370,7 @@ footer.site{border-top:1px solid var(--border);padding:26px 24px;text-align:cent
     <!-- ============ MODULE 6 ============ -->
     <div class="container">
       <header class="module-header" data-module="6">
-        <span class="eyebrow">Module 06 · Phần VI</span>
+        <span class="eyebrow">Phần VI</span>
         <h2>Hệ sinh thái & tổng hợp</h2>
         <p>Khép vòng: MCP đã đi từ chuẩn của một hãng thành chuẩn trung lập do foundation quản trị như thế nào (các mốc công bố), rồi ghép mọi mảnh đã học thành checklist sống trên một MCP server ví dụ.</p>
       </header>
@@ -2484,9 +2501,7 @@ footer.site{border-top:1px solid var(--border);padding:26px 24px;text-align:cent
       </details>
     </div>
 
-    <div class="takeaway">
-      <span class="eyebrow">Takeaway
-      </span>
+    <div class="takeaway" role="note" aria-label="Ghi nhớ">
       <p>Anthropic khởi xướng 2024-11-25; donation cho AAIF thuộc Linux Foundation được công bố 2025-12-09. <span class="hl">10.000+ server và 97M+ SDK downloads/tháng là số vendor báo tại ngày donation</span>, không phải phép đo hiện tại hay số người dùng độc lập. Governance và khả năng tương tác cần xem bằng chứng riêng.</p>
     </div>
 
@@ -2583,7 +2598,7 @@ footer.site{border-top:1px solid var(--border);padding:26px 24px;text-align:cent
 
     <div class="table-wrap">
       <table>
-        <thead><tr><th>Quyết định</th><th>Làm gì trên server ví dụ</th><th>Bài</th></tr></thead>
+        <thead><tr><th>Quyết định</th><th class="detail-column">Làm gì trên server ví dụ</th><th>Bài</th></tr></thead>
         <tbody>
           <tr><td>Có cần MCP không?</td><td>Đơn hàng cần nhiều client/model dùng chung → có; nếu chỉ 1 script nội bộ thì cân nhắc CLI.</td><td>5.3</td></tr>
           <tr><td>Primitive nào?</td><td>Tools cho tra/cập nhật theo UX của host; elicitation form không thu secret, URL mode cho tương tác nhạy cảm ngoài client.</td><td>1.3</td></tr>
@@ -2634,9 +2649,7 @@ footer.site{border-top:1px solid var(--border);padding:26px 24px;text-align:cent
       </details>
     </div>
 
-    <div class="takeaway">
-      <span class="eyebrow">Takeaway
-      </span>
+    <div class="takeaway" role="note" aria-label="Ghi nhớ">
       <p>Checklist yêu cầu <span class="hl">mỗi quyết định (granularity, structured output, transport, audience check, hash-pin, progressive disclosure) đều truy được về một bài đã học</span>, với hợp đồng tương thích, quyền và phép kiểm tương ứng.</p>
     </div>
 
@@ -2738,7 +2751,7 @@ footer.site{border-top:1px solid var(--border);padding:26px 24px;text-align:cent
     <span class="eyebrow" style="display:block;margin-top:6px">Distill · mỗi bài một dòng mang đi</span>
     <div class="table-wrap">
       <table>
-        <thead><tr><th>Bài</th><th>Mang đi</th></tr></thead>
+        <thead><tr><th>Bài</th><th class="detail-column">Mang đi</th></tr></thead>
         <tbody>
           <tr><td><strong>1.1</strong></td><td>N×M→N+M là mô hình đầu adapter lý tưởng; kiểm revision, transport, quyền và capability để đánh giá reuse và tổng chi phí.</td></tr>
           <tr><td><strong>1.2</strong></td><td>Host kiểm luồng dữ liệu; client–server 1:1 không phải sandbox. Host/model có thể chuyển dữ liệu giữa tool; server/process vẫn cần auth, filesystem và egress controls.</td></tr>
@@ -2775,9 +2788,7 @@ footer.site{border-top:1px solid var(--border);padding:26px 24px;text-align:cent
       <li><h4>Đo trước khi ship, đo lại sau mỗi thay đổi tool</h4><p>Bắt đầu regression+held-out tasks từ tình huống thật và edge cases; giữ fixture/model/config, dùng verifier phù hợp và chạy lặp khi cần. CI chặn safety violations hoặc regression đáng kể theo ngưỡng định trước, không mọi dao động của một run (5.4).</p></li>
     </ol>
 
-    <div class="takeaway">
-      <span class="eyebrow">Takeaway
-      </span>
+    <div class="takeaway" role="note" aria-label="Ghi nhớ">
       <p>Trang tra cứu gồm 17 dòng distill, một checklist chạy tay theo thứ tự, một bản đồ host·client·server ba lớp. Tra theo từng lớp: <span class="hl">đi từ trong ra ngoài — primitive đúng vai, schema, bảo mật, thiết kế, rồi hệ sinh thái — không bỏ lớp nào</span>.</p>
     </div>
 
@@ -2813,7 +2824,7 @@ footer.site{border-top:1px solid var(--border);padding:26px 24px;text-align:cent
       </div>
     </section>
 
-    <footer class="site">MCP &amp; Tool Layer · khoá học tương tác</footer>
+    <footer class="site"><a href="index.html" lang="vi">Danh mục khóa học</a></footer>
   </main>
 </div>
 
@@ -2864,7 +2875,7 @@ function applyMode(mode){
   const dark = mode==='dark';
   document.body.dataset.mode = dark ? 'dark' : 'light';
   const b=document.getElementById('mode-toggle');
-  if(b){b.textContent=dark?'☀️':'🌙';b.setAttribute('aria-pressed',String(dark));
+  if(b){b.setAttribute('aria-pressed',String(dark));
     b.setAttribute('aria-label',dark?'Chuyển sang chế độ sáng':'Chuyển sang chế độ tối')}
 }
 async function toggleMode(){
@@ -2940,6 +2951,8 @@ function show(id){
     const l=LESSONS.find(x=>x.id===id); if(l)crumb=l.title;
   } else if(id==='overview'){crumb='Tổng quan'} else if(id==='complete'){crumb='Hoàn thành'}
   document.getElementById('tb-crumb').textContent=crumb;
+  const lessonNumber = /^m(\d+)-l(\d+)$/.exec(id);
+  document.getElementById('tb-location').textContent = lessonNumber ? `Bài ${lessonNumber[1]}.${lessonNumber[2]}` : crumb;
   document.querySelectorAll('.nav-link').forEach(a=>{
     const on=a.dataset.lesson===id; a.classList.toggle('active',on);
     if(on)a.setAttribute('aria-current','page');else a.removeAttribute('aria-current');
@@ -2947,7 +2960,7 @@ function show(id){
   const an=document.querySelector('.nav-link.active'),ns=document.querySelector('.nav-scroll');
   if(an&&ns){ns.scrollTo({top:Math.max(0,an.offsetTop-ns.clientHeight/2),behavior:'auto'})}
   sSet(LAST_KEY,id);
-  if(window.innerWidth<1024){document.getElementById('sidebar').classList.remove('open');document.getElementById('backdrop').classList.remove('show')}
+  if (window.innerWidth <= 1024) setSidebarOpen(false);
   if (curriculum) curriculum.scrollIntoView({behavior: 'instant'});
   else window.scrollTo({top:0,behavior:'instant'});
   document.getElementById('main').focus({preventScroll:true}); // screen readers announce from the top of the new lesson
@@ -2982,7 +2995,33 @@ function quizPick(el,idx){
 }
 window.quizPick=quizPick;
 
-function toggleSidebar(){document.getElementById('sidebar').classList.toggle('open');document.getElementById('backdrop').classList.toggle('show')}
+function setSidebarOpen(open) {
+  const sidebar = document.getElementById('sidebar');
+  const button = document.querySelector('.mobile-toggle');
+  sidebar.classList.toggle('open', open);
+  document.getElementById('backdrop').classList.toggle('show', open);
+  document.getElementById('main').inert = open;
+  button.setAttribute('aria-expanded', String(open));
+  button.setAttribute('aria-label', open ? 'Đóng mục lục' : 'Mở mục lục');
+}
+function toggleSidebar() {
+  setSidebarOpen(!document.getElementById('sidebar').classList.contains('open'));
+  document.querySelector('.mobile-toggle').focus({preventScroll:true});
+}
+matchMedia('(max-width:1024px)').addEventListener('change', () => setSidebarOpen(false));
+document.addEventListener('keydown', event => {
+  if (event.key === 'Escape' && document.getElementById('sidebar').classList.contains('open')) {
+    event.preventDefault();
+    toggleSidebar();
+  }
+});
+document.getElementById('nav-list').addEventListener('click', event => {
+  const link = event.target.closest('a');
+  if (link && link.hash === location.hash && document.getElementById('sidebar').classList.contains('open')) {
+    setSidebarOpen(false);
+    document.getElementById('main').focus({preventScroll:true});
+  }
+});
 window.toggleSidebar=toggleSidebar;
 
 window.addEventListener('hashchange',()=>show(location.hash.slice(1)||'overview'));
