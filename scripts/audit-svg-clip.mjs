@@ -26,7 +26,8 @@
  *   also checks painted primitives and clipping ancestors. Measure; do not model.
  *
  * The same viewport sweep checks long identifiers in lesson paragraphs and
- * dense table cells that collapse into tall, narrow strips on phones.
+ * dense table cells that collapse into tall, narrow strips on phones. It also
+ * flags wrapped lesson prose constrained inside an otherwise empty reading row.
  *
  * A green run is not a substitute for looking at the figure — it only proves
  * content stays inside its frame and remains reachable, not that the label sits
@@ -82,8 +83,8 @@ function findBrowser() {
 }
 
 const PROBE = () => {
-  // Navigation links also have data-lesson; reveal only the lesson articles.
-  document.querySelectorAll('article[data-lesson]').forEach(a => {
+  // Keep the measured reading surfaces visible as the viewport is resized.
+  document.querySelectorAll('article[data-lesson], .module-header, #overview[data-pane], #complete[data-pane]').forEach(a => {
     a.style.display = 'block';
     a.hidden = false;
   });
@@ -221,7 +222,14 @@ if (selfTest) {
     console.log(`PASS ${name}`);
   }
   const row = '<tr><td>' + 'A short phrase. '.repeat(20) + '</td></tr>';
+  const prose = 'Compare each category total with the spreadsheet. '.repeat(6);
   for (const [name, content, expected] of [
+    ['paragraph wraps beside unused space', `<div class="lesson-body" style="width:1000px"><p style="max-width:450px">${prose}</p></div>`, 1],
+    ['completion paragraph constrained by a width cap', `<section id="complete" data-pane><div class="complete" style="width:1000px"><p style="width:430px">${prose}</p></div></section>`, 1],
+    ['capped objectives list', `<div class="lesson-body" style="width:1000px"><div class="objectives" style="max-width:450px"><ul><li>${prose}</li></ul></div></div>`, 1],
+    ['short introductory text', '<div class="lesson-body" style="width:1000px"><p style="width:450px">Choose a tool.</p></div>', 0],
+    ['paragraph wraps within full reading width', `<div class="lesson-body" style="width:450px;padding:0 120px"><p>${prose}</p></div>`, 0],
+    ['paragraphs in adjacent comparison columns', `<div class="lesson-body" style="display:grid;grid-template-columns:1fr 1fr;width:1000px"><p>${prose}</p><p>${prose}</p></div>`, 0],
     ['squeezed table column', '<table style="width:100px">' + row + '</table>', 1],
     ['readable scrollable table', '<div style="width:100px;overflow:auto"><table style="min-width:400px">' + row + '</table></div>', 0],
     ['overflowing inline identifier', '<p style="width:100px"><code>' + 'long.identifier.'.repeat(4) + '</code></p>', 1],
