@@ -92,6 +92,7 @@ feature in a browser before reporting the task as complete."*
     accounts come from the seed; credentials live in `app/.env`
     (`SEED_ADMIN_EMAIL` / `SEED_PASSWORD`, see `app/.env.example`).
   - [ ] Mobile width (Chrome DevTools at 375px).
+  - [ ] For course pages, open a lesson, expand a detail, and read a table row and a paragraph with a technical identifier at phone width. Scroll the table to its last column. Check the reading column itself for clipped text. The browser gate in `scripts/audit-svg-clip.mjs` also tests these paragraphs and flags table columns narrower than 160 px that take 12 or more lines per cell.
   - [ ] Dark mode (theme toggle).
 - [ ] **If I can't test the UI** (no browser available, etc.), say so
   explicitly in the report — don't claim success on type-check alone.

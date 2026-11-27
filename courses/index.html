@@ -30,74 +30,68 @@ html{scroll-behavior:smooth}
 body{font-family:var(--font);background:var(--bg);color:var(--ink);line-height:1.6;min-height:100vh;display:flex;flex-direction:column}
 a{color:var(--accent-2)}
 a:focus-visible,button:focus-visible{outline:3px solid var(--accent-2);outline-offset:2px;border-radius:6px}
-.topbar{position:sticky;top:0;z-index:10;display:flex;align-items:center;justify-content:space-between;gap:12px;padding:10px 20px;background:color-mix(in srgb,var(--surface) 88%,transparent);backdrop-filter:blur(8px);border-bottom:1px solid var(--border)}
-.brand{display:flex;align-items:center;gap:10px;font-weight:800;font-size:15px;color:var(--ink);text-decoration:none}
-.mode-toggle{min-width:44px;min-height:44px;border:1px solid var(--border-strong);background:var(--surface-2);color:var(--ink);border-radius:10px;font-size:17px;cursor:pointer}
-.wrap{width:min(1060px,100% - 40px);margin-inline:auto}
-.hero{padding:44px 0 0}
-.hero h1{font-size:clamp(30px,5vw,52px);line-height:1.12;letter-spacing:-.025em;margin-bottom:14px}
-.hero p{color:var(--ink-2);font-size:17px;max-width:65ch}
-.route-map{margin-top:32px;padding:24px 0;border-block:1px solid var(--border)}
-.route-map h2,.catalog-group h2{font-size:22px;line-height:1.35;margin-bottom:16px}
-.route-grid,.grid{display:grid;column-gap:32px}
-.route-grid{grid-template-columns:repeat(3,minmax(0,1fr));row-gap:16px}
-.route-grid h3,.card h3{line-height:1.35}
-.route-grid h3{font-size:16px;margin-bottom:4px}
-.route-grid p{font-size:14px;color:var(--ink-2)}
-.catalog-group{margin:36px 0}
-.grid{grid-template-columns:repeat(2,minmax(0,1fr))}
-.card{padding:18px 0;border-top:1px solid var(--border)}
-.card h3{font-size:20px;margin-bottom:6px}
-.card h3 a{color:var(--ink);text-decoration-thickness:1px;text-underline-offset:4px}
-.card h3 a:hover{color:var(--accent-2)}
-.card p{font-size:15px;color:var(--ink-2)}
-.card .course-meta{margin-top:8px;font-size:13px}
-footer{margin-top:auto;border-top:1px solid var(--border);padding:24px 0;font-size:13px;color:var(--ink-3)}
+.wrap{width:min(1080px,calc(100% - 40px));margin-inline:auto}
+.topbar{border-bottom:1px solid var(--border);background:var(--bg)}
+.topbar .wrap{display:flex;align-items:center;justify-content:space-between;min-height:56px}
+.brand{font-weight:600;color:var(--ink-2);text-decoration:none}
+.mode-toggle{display:grid;place-items:center;width:44px;height:44px;border:0;border-radius:6px;background:none;color:var(--ink-2);cursor:pointer}
+.mode-toggle:hover{background:var(--surface-2)}
+.mode-toggle svg{width:20px;height:20px;fill:none;stroke:currentColor;stroke-width:1.75;stroke-linecap:round;stroke-linejoin:round}
+.mode-toggle .sun,[data-mode="dark"] .mode-toggle .moon{display:none}
+[data-mode="dark"] .mode-toggle .sun{display:block}
+.hero{padding:clamp(28px,4vw,56px) 0 22px}
+.hero h1{font-size:clamp(30px,4vw,46px);line-height:1.16;letter-spacing:-.025em;text-wrap:balance}
+.hero p{margin-top:10px;color:var(--ink-2);font-size:17px}
+.route-map{display:flex;flex-wrap:wrap;gap:2px 24px;padding:4px 0;border-block:1px solid var(--border)}
+.route-map a{display:inline-flex;align-items:center;min-height:44px;font-weight:500;color:var(--ink-2);text-underline-offset:4px}
+.catalog-group{display:grid;grid-template-columns:minmax(180px,1fr) minmax(0,2.7fr);gap:40px;margin:40px 0 56px;scroll-margin-top:24px}
+.catalog-group h2{font-size:clamp(21px,2vw,27px);line-height:1.25;letter-spacing:-.017em;text-wrap:balance}
+.card{padding:18px 0;border-bottom:1px solid var(--border)}
+.card:first-child{padding-top:0}
+.card h3{font-size:20px;line-height:1.35;letter-spacing:-.01em;text-wrap:pretty}
+.card h3 a{color:var(--ink);text-decoration:underline;text-decoration-thickness:1px;text-decoration-color:var(--border-strong);text-underline-offset:4px}
+.card h3 a:hover,.card h3 a:focus-visible{color:var(--accent-2);text-decoration:underline;text-underline-offset:3px}
+.card p{margin-top:5px;font-size:16px;color:var(--ink-2);max-width:72ch}
+.card .course-meta{margin-top:5px;font-size:14px}
+footer{margin-top:auto;border-top:1px solid var(--border);padding:18px 0;font-size:14px;color:var(--ink-2)}
 footer .wrap{display:flex;flex-wrap:wrap;gap:8px 18px;justify-content:space-between}
-footer a{color:var(--ink-2)}
-@media(max-width:720px){
-  .hero{padding-top:32px}
-  .route-grid,.grid{grid-template-columns:1fr}
+footer a{color:inherit}
+@media(max-width:740px){
+  .wrap{width:calc(100% - 32px)}
+  .catalog-group{display:block;margin:28px 0 36px}
+  .catalog-group h2{margin:0 0 18px}
+  .route-map{column-gap:18px}
 }
 </style>
 </head>
 <body>
 <header class="topbar">
-  <a class="brand" href="./">Ghi chép tương tác · @nhocconan</a>
-  <button class="mode-toggle" id="modeToggle" aria-label="Đổi giao diện sáng/tối" title="Sáng / tối">🌙</button>
+  <div class="wrap">
+    <a class="brand" href="https://tienle.com">Tiến Lê</a>
+    <button class="mode-toggle" id="modeToggle" type="button" aria-label="Chuyển sang giao diện tối" title="Chuyển sang giao diện tối">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path class="moon" d="M20.5 14.2A8.8 8.8 0 0 1 9.8 3.5a8.8 8.8 0 1 0 10.7 10.7Z"/><g class="sun"><circle cx="12" cy="12" r="4"/><path d="M12 2v2m0 16v2M2 12h2m16 0h2M5 5l1.5 1.5m11 11L19 19M5 19l1.5-1.5m11-11L19 5"/></g></svg>
+    </button>
+  </div>
 </header>
 
 <main class="wrap">
-  <section class="hero">
-    <h1>Ghi chép về AI<br>và hệ ra quyết định</h1>
-    <p>14 khóa tự học về cách dùng AI trong công việc, xây ứng dụng và thiết kế hệ thống hỗ trợ quyết định.</p>
-  </section>
-
-  <nav class="route-map" aria-labelledby="route-title">
-    <h2 id="route-title">Nên bắt đầu từ đâu?</h2>
-    <div class="route-grid">
-      <div>
-        <h3>Dùng AI trong công việc</h3>
-        <p>Bắt đầu với <a href="ai-practical-playbook.html">Practical AI</a> để tập kiểm nguồn và số liệu. Sang <a href="ai-work-agents-practical-guide.html">AI Work Agents</a> khi cần giao việc nhiều bước.</p>
-      </div>
-      <div>
-        <h3>Lập trình tính năng AI</h3>
-        <p>Nếu đã biết Python và SQL, hãy thử <a href="ai-application-engineering.html">bài thực hành đặt phụ tùng</a>. Dùng khóa <a href="agent-reliability-evaluation.html">Reliability &amp; Evaluation</a> để thiết kế bộ kiểm thử.</p>
-      </div>
-      <div>
-        <h3>Thiết kế hệ ra quyết định</h3>
-        <p>Học <a href="dss-datawarehouse-idss-course.html">DSS &amp; Data Warehouse</a> để hiểu dữ liệu đầu vào. Tiếp tục với <a href="decision-intelligence-agentic-systems.html">Agentic Decision Systems</a> để đánh giá các phương án hành động.</p>
-      </div>
-    </div>
+  <header class="hero">
+    <h1>Khóa học về AI và hệ ra quyết định</h1>
+    <p>14 khóa tự học, từ kiểm chứng câu trả lời của AI đến thiết kế hệ thống ra quyết định.</p>
+  </header>
+  <nav class="route-map" aria-label="Đến nhóm khóa học">
+    <a href="#nen-tang">Nền tảng</a>
+    <a href="#ung-dung">Ứng dụng AI</a>
+    <a href="#quyet-dinh">Ra quyết định</a>
   </nav>
 
-  <section class="catalog-group">
+  <section class="catalog-group" id="nen-tang">
     <h2>Kiến thức nền</h2>
     <div class="grid">
       <article class="card">
         <h3><a class="go" href="ai-practical-playbook.html">Practical AI</a></h3>
         <p>Giao một việc cụ thể cho ChatGPT, Claude hoặc Gemini. Kiểm lại trích dẫn, tính lại số liệu và chọn những tệp có thể chia sẻ trước khi dùng kết quả.</p>
-        <p class="course-meta">19 bài, gồm bài tổng kết · <a href="ai-practical-playbook.en.html" hreflang="en" lang="en" aria-label="English edition: Practical AI">English</a></p>
+        <p class="course-meta">19 bài · <a href="ai-practical-playbook.en.html" hreflang="en" lang="en" aria-label="English edition: Practical AI">English</a></p>
       </article>
       <article class="card">
         <h3><a class="go" href="ai-work-agents-practical-guide.html">AI Work Agents</a></h3>
@@ -122,8 +116,8 @@ footer a{color:var(--ink-2)}
     </div>
   </section>
 
-  <section class="catalog-group">
-    <h2>Xây sản phẩm với AI</h2>
+  <section class="catalog-group" id="ung-dung">
+    <h2>Xây ứng dụng AI</h2>
     <div class="grid">
       <article class="card">
         <h3><a class="go" href="ai-application-engineering.html">Xây ứng dụng AI có kiểm thử</a></h3>
@@ -158,11 +152,11 @@ footer a{color:var(--ink-2)}
     </div>
   </section>
 
-  <section class="catalog-group">
-    <h2>Dữ liệu và hệ ra quyết định</h2>
+  <section class="catalog-group" id="quyet-dinh">
+    <h2>Dữ liệu và quyết định</h2>
     <div class="grid">
       <article class="card">
-        <h3><a class="go" href="dss-datawarehouse-idss-course.html">DSS &amp; Data Warehouse → IDSS</a></h3>
+        <h3><a class="go" href="dss-datawarehouse-idss-course.html">Kho dữ liệu và hệ hỗ trợ quyết định</a></h3>
         <p>Thiết kế kho dữ liệu cho một hệ thống bán lẻ. Theo dõi dữ liệu từ giao dịch gốc đến báo cáo, rồi xét ảnh hưởng của độ bất định lên quyết định nhập hàng.</p>
         <p class="course-meta">21 bài</p>
       </article>
@@ -190,9 +184,14 @@ footer a{color:var(--ink-2)}
 <script>
 (function(){
   var KEY='courses-hub-mode', root=document.documentElement, btn=document.getElementById('modeToggle');
-  function apply(m){ if(m==='dark'){root.setAttribute('data-mode','dark');btn.textContent='☀️';} else {root.removeAttribute('data-mode');btn.textContent='🌙';} }
+  function apply(mode){
+    root.setAttribute('data-mode',mode);
+    var action=mode==='dark'?'Chuyển sang giao diện sáng':'Chuyển sang giao diện tối';
+    btn.setAttribute('aria-label',action);
+    btn.title=action;
+  }
   var saved=null; try{saved=localStorage.getItem(KEY);}catch(e){}
-  apply(saved==='dark'?'dark':'light');
+  apply(saved==='dark'||saved==='light'?saved:matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light');
   btn.addEventListener('click',function(){
     var next=root.getAttribute('data-mode')==='dark'?'light':'dark';
     apply(next); try{localStorage.setItem(KEY,next);}catch(e){}
